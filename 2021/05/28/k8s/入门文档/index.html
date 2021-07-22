@@ -1,0 +1,778 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 4.2.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+  <meta name="baidu-site-verification" content="D033aiBRFi">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+
+
+<script id="hexo-configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    hostname: new URL('https://phpdi.github.io').hostname,
+    root: '/',
+    scheme: 'Gemini',
+    version: '7.7.0',
+    exturl: false,
+    sidebar: {"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},
+    copycode: {"enable":false,"show_result":false,"style":null},
+    back2top: {"enable":true,"sidebar":false,"scrollpercent":false},
+    bookmark: {"enable":false,"color":"#222","save":"auto"},
+    fancybox: false,
+    mediumzoom: false,
+    lazyload: false,
+    pangu: false,
+    comments: {"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},
+    algolia: {
+      appID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    },
+    localsearch: {"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},
+    path: 'search.xml',
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}
+  };
+</script>
+
+  <meta name="description" content="Kubernetes简介Kubernetes（简称K8S，K和S之间有8个字母）是用于自动部署，扩展和管理容器化应用程序的开源系统。它将组成应用程序的容器组合成逻辑单元，以便于管理和服务发现。Kubernetes 源自Google 15 年生产环境的运维经验，同时凝聚了社区的最佳创意和实践。   Kubernetes特性 服务发现与负载均衡:无需修改你的应用程序即可使用陌生的服务发现机制。 存储编">
+<meta property="og:type" content="article">
+<meta property="og:title" content="k8s&#x2F;入门文档">
+<meta property="og:url" content="https://phpdi.github.io/2021/05/28/k8s/%E5%85%A5%E9%97%A8%E6%96%87%E6%A1%A3/index.html">
+<meta property="og:site_name" content="phpdi">
+<meta property="og:description" content="Kubernetes简介Kubernetes（简称K8S，K和S之间有8个字母）是用于自动部署，扩展和管理容器化应用程序的开源系统。它将组成应用程序的容器组合成逻辑单元，以便于管理和服务发现。Kubernetes 源自Google 15 年生产环境的运维经验，同时凝聚了社区的最佳创意和实践。   Kubernetes特性 服务发现与负载均衡:无需修改你的应用程序即可使用陌生的服务发现机制。 存储编">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2021-05-28T10:04:25.150Z">
+<meta property="article:modified_time" content="2021-05-28T10:04:25.150Z">
+<meta property="article:author" content="Chen Yu">
+<meta property="article:tag" content="k8s">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="https://phpdi.github.io/2021/05/28/k8s/%E5%85%A5%E9%97%A8%E6%96%87%E6%A1%A3/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome: false,
+    isPost: true
+  };
+</script>
+
+  <title>k8s/入门文档 | phpdi</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-meta">
+
+    <div>
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">phpdi</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+        <h1 class="site-subtitle" itemprop="description">飞向自由</h1>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+</div>
+
+
+<nav class="site-nav">
+  
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>归档</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-fw fa-th"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-fw fa-user"></i>关于</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+
+</nav>
+  <div class="site-search">
+    <div class="popup search-popup">
+    <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocorrect="off" autocapitalize="none"
+           placeholder="搜索..." spellcheck="false"
+           type="text" id="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result"></div>
+
+</div>
+<div class="search-pop-overlay"></div>
+
+  </div>
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content">
+            
+
+  <div class="posts-expand">
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://phpdi.github.io/2021/05/28/k8s/%E5%85%A5%E9%97%A8%E6%96%87%E6%A1%A3/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/head.jpeg">
+      <meta itemprop="name" content="Chen Yu">
+      <meta itemprop="description" content="自律给我自由">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="phpdi">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          k8s/入门文档
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2021-05-28 18:04:25" itemprop="dateCreated datePublished" datetime="2021-05-28T18:04:25+08:00">2021-05-28</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/k8s/" itemprop="url" rel="index">
+                    <span itemprop="name">k8s</span>
+                  </a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h2 id="Kubernetes简介"><a href="#Kubernetes简介" class="headerlink" title="Kubernetes简介"></a>Kubernetes简介</h2><p>Kubernetes（简称K8S，K和S之间有8个字母）是用于自动部署，扩展和管理容器化应用程序的开源系统。它将组成应用程序的容器组合成逻辑单元，<br>以便于管理和服务发现。Kubernetes 源自Google 15 年生产环境的运维经验，同时凝聚了社区的最佳创意和实践。  </p>
+<h2 id="Kubernetes特性"><a href="#Kubernetes特性" class="headerlink" title="Kubernetes特性"></a>Kubernetes特性</h2><ul>
+<li>服务发现与负载均衡:无需修改你的应用程序即可使用陌生的服务发现机制。</li>
+<li>存储编排:自动挂载所选存储系统，包括本地存储。</li>
+<li>Secret和配置管理: 部署更新Secrets和应用程序的配置时不必重新构建容器镜像，且不必将软件堆栈配置中的秘密信息暴露出来。</li>
+<li>批量执行: 除了服务之外，Kubernetes还可以管理你的批处理和CI工作负载，在期望时替换掉失效的容器。</li>
+<li>水平扩缩:使用一个简单的命令、一个UI或基于CPU使用情况自动对应用程序进行扩缩。</li>
+<li>自动化上线和回滚: Kubernetes会分步骤地将针对应用或其配置的更改上线，同时监视应用程序运行状况以确保你不会同时终止所有实例。</li>
+<li>自动装箱:根据资源需求和其他约束自动放置容器，同时避免影响可用性。</li>
+<li>自我修复:重新启动失败的容器，在节点死亡时替换并重新调度容器，杀死不响应用户定义的健康检查的容器。</li>
+</ul>
+<h2 id="Minikube"><a href="#Minikube" class="headerlink" title="Minikube"></a>Minikube</h2><p>Minikube是一种轻量级的Kubernetes实现，可在本地计算机上创建VM并部署仅包含一个节点的简单集群，Minikube可用于Linux、MacOS和Windows系统。<br>Minikube CLI提供了用于引导集群工作的多种操作，包括启动、停止、查看状态和删除。</p>
+<h2 id="Kubernetes核心组件"><a href="#Kubernetes核心组件" class="headerlink" title="Kubernetes核心组件"></a>Kubernetes核心组件</h2><h3 id="master组件"><a href="#master组件" class="headerlink" title="master组件"></a>master组件</h3><ul>
+<li>apiserver 集群统一入口，以restful方式，交给etcd存储</li>
+<li>scheduler 节点调度，选择node节点部署应用</li>
+<li>controller-manager 处理集群中常规后台任务，一个资源对应一个控制器</li>
+<li>etcd 分布式存储数据库，保存集群相关数据</li>
+</ul>
+<h3 id="Node"><a href="#Node" class="headerlink" title="Node"></a>Node</h3><ul>
+<li>kubelet master派到node节点代表，管理本机容器</li>
+<li>kube-proxy 提供网络代理、负载均衡等操作</li>
+</ul>
+<h2 id="k8s核心概念"><a href="#k8s核心概念" class="headerlink" title="k8s核心概念"></a>k8s核心概念</h2><h3 id="Pod"><a href="#Pod" class="headerlink" title="Pod"></a>Pod</h3><ul>
+<li>k8s中最小的部署单元</li>
+<li>一组容器的集合</li>
+<li>一个Pod中的容器共享网络、存储</li>
+<li>生命周期是短暂的</li>
+</ul>
+<h3 id="controller"><a href="#controller" class="headerlink" title="controller"></a>controller</h3><ul>
+<li>确保预期的pod的副本的数量</li>
+<li>无状态的应用部署</li>
+<li>有状态的应用部署<blockquote>
+<p>确保所有的node运行一个pod,一次性任务和定时任务</p>
+</blockquote>
+</li>
+</ul>
+<h3 id="service"><a href="#service" class="headerlink" title="service"></a>service</h3><ul>
+<li>定义一组pod的访问规则</li>
+</ul>
+<h2 id="k8s-资源类型"><a href="#k8s-资源类型" class="headerlink" title="k8s 资源类型"></a>k8s 资源类型</h2><h3 id="名称空间级别的资源"><a href="#名称空间级别的资源" class="headerlink" title="名称空间级别的资源"></a>名称空间级别的资源</h3><ul>
+<li>工作负载型资源：Pod、ReplicaSet、Deployment、StatefulSet、DaemonSet、Job、CronJob</li>
+<li>服务发现及负载均衡型资源：Service 、 Ingress</li>
+<li>存储资源：Volume、CSI（容器存储接口，可以扩展各种各样的第三方存储卷）</li>
+<li>特殊类型的存储卷：ConfigMap、Secret、DownwardAPI</li>
+</ul>
+<h3 id="集群级别"><a href="#集群级别" class="headerlink" title="集群级别"></a>集群级别</h3><p>Namespace、Node、Role、ClusterRole、RoleBinding、ClusterRoleBinding</p>
+<h3 id="元数据类型"><a href="#元数据类型" class="headerlink" title="元数据类型"></a>元数据类型</h3><p>HPA、PodTemplate、LimitRange</p>
+<h2 id="必须存在的属性"><a href="#必须存在的属性" class="headerlink" title="必须存在的属性"></a>必须存在的属性</h2><table>
+<thead>
+<tr>
+<th align="center">参数名</th>
+<th align="center">字段类型</th>
+<th align="center">说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">version</td>
+<td align="center">String</td>
+<td align="center">这里指k8s api的版本，目前基本上是v1,可以使用kubectl api-versions 命令查询</td>
+</tr>
+<tr>
+<td align="center">kind</td>
+<td align="center">String</td>
+<td align="center">这里指的是yaml文件定义的资源类型和角色，比如：Pod</td>
+</tr>
+<tr>
+<td align="center">metadata</td>
+<td align="center">Object</td>
+<td align="center">元数据对象，固定值就写metadata</td>
+</tr>
+<tr>
+<td align="center">metadata.name</td>
+<td align="center">string</td>
+<td align="center">元数据对象的名字，这里由我们编写，比如命名的Pod的名字</td>
+</tr>
+<tr>
+<td align="center">metadata.namespace</td>
+<td align="center">string</td>
+<td align="center">元数据对象的命名空间，由我们自身定义</td>
+</tr>
+<tr>
+<td align="center">Spec</td>
+<td align="center">Object</td>
+<td align="center">详细定义对象，固定值</td>
+</tr>
+<tr>
+<td align="center">spec.containers[]</td>
+<td align="center">list</td>
+<td align="center">这里是spec对象的容器列表定义，是个列表</td>
+</tr>
+<tr>
+<td align="center">spec.containers[].name</td>
+<td align="center">string</td>
+<td align="center">定义容器的名称</td>
+</tr>
+<tr>
+<td align="center">spec.containers[].image</td>
+<td align="center">string</td>
+<td align="center">定义要用到的镜像名称</td>
+</tr>
+<tr>
+<td align="center">spec.containers[].imagePullPolicy</td>
+<td align="center">string</td>
+<td align="center">定义镜像拉取策略，Always(总是拉取最新镜像),Never(拉取本地镜像，没有就不用),IfNotPresent(如果本地没有镜像则拉取)</td>
+</tr>
+<tr>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center"></td>
+</tr>
+<tr>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center"></td>
+</tr>
+<tr>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center"></td>
+</tr>
+<tr>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center"></td>
+</tr>
+<tr>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center"></td>
+</tr>
+<tr>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center"></td>
+</tr>
+<tr>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center"></td>
+</tr>
+<tr>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center"></td>
+</tr>
+<tr>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center"></td>
+</tr>
+<tr>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center"></td>
+</tr>
+<tr>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center"></td>
+</tr>
+<tr>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center"></td>
+</tr>
+<tr>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center"></td>
+</tr>
+<tr>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center"></td>
+</tr>
+</tbody></table>
+<h2 id="单master集群"><a href="#单master集群" class="headerlink" title="单master集群"></a>单master集群</h2><h3 id="vmware-准备虚拟机"><a href="#vmware-准备虚拟机" class="headerlink" title="vmware 准备虚拟机"></a>vmware 准备虚拟机</h3><ul>
+<li>Nat模式 修改子网Ip 192.168.137.0 ，nat网关 192.168.137.254</li>
+<li>虚拟机内部配置ip <a href="https://blog.csdn.net/llluluyi/article/details/79041791" target="_blank" rel="noopener">https://blog.csdn.net/llluluyi/article/details/79041791</a> <blockquote>
+<blockquote>
+<p>/etc/sysconfig/network-scripts </p>
+</blockquote>
+</blockquote>
+<h3 id="环境准备"><a href="#环境准备" class="headerlink" title="环境准备"></a>环境准备</h3></li>
+<li>一台或多台机器，操作系统 centos7</li>
+<li>硬件配置，2g 2cpu 30g</li>
+<li>集群之间所有机器网络互通</li>
+<li>可以访问外网，需要拉取镜像</li>
+<li>禁用swap分区</li>
+</ul>
+<h3 id="操作系统初始化工作"><a href="#操作系统初始化工作" class="headerlink" title="操作系统初始化工作"></a>操作系统初始化工作</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line"># 关闭防火墙</span><br><span class="line">systemctl stop firewalld  # 临时处理</span><br><span class="line">systemctl disable firewalld # 永久处理</span><br><span class="line"></span><br><span class="line"># 关闭selinux</span><br><span class="line">sed -i &#39;s&#x2F;enforcing&#x2F;disabled&#x2F;&#39; &#x2F;etc&#x2F;selinux&#x2F;config # 永久</span><br><span class="line">setenforce 0 #临时</span><br><span class="line"></span><br><span class="line"># 关闭swap </span><br><span class="line">swapoff -a # 临时</span><br><span class="line">sed -ri &#39;s&#x2F;.*swap.*&#x2F;#&amp;&#x2F;&#39; &#x2F;etc&#x2F;fstab # 永久</span><br><span class="line"></span><br><span class="line"># 根据规划设置主机名</span><br><span class="line">hostnamectl set-hostname &lt;hostname&gt; </span><br><span class="line">例如：</span><br><span class="line">hostnamectl set-hostname k8s-master</span><br><span class="line">hostnamectl set-hostname node1</span><br><span class="line"></span><br><span class="line"># 在master添加hosts</span><br><span class="line">cat &gt;&gt; &#x2F;etc&#x2F;hosts &lt;&lt;EOF</span><br><span class="line">192.168.137.100 k8s-master</span><br><span class="line">192.168.137.101 k8s-node1</span><br><span class="line">192.168.137.102 k8s-node2</span><br><span class="line">192.168.137.103 k8s-node3</span><br><span class="line">EOF</span><br><span class="line"></span><br><span class="line"># 将桥接的IPv4 流量传递到iptables的链</span><br><span class="line">cat &gt; &#x2F;etc&#x2F;sysctl.d&#x2F;k8s.conf &lt;&lt; EOF</span><br><span class="line">net.bridge.bridge-nf-call-ip6tables &#x3D; 1 </span><br><span class="line">net.bridge.bridge-nf-call-iptables &#x3D; 1 </span><br><span class="line">EOF</span><br><span class="line"></span><br><span class="line">sysctl --system # 生效配置</span><br><span class="line"></span><br><span class="line"># 时间同步</span><br><span class="line">yum install ntpdate -y</span><br><span class="line">ntpdate time.windows.com</span><br></pre></td></tr></table></figure>
+
+<h3 id="所有节点安装docker-kubeadm-kubelet"><a href="#所有节点安装docker-kubeadm-kubelet" class="headerlink" title="所有节点安装docker/kubeadm/kubelet"></a>所有节点安装docker/kubeadm/kubelet</h3><h4 id="安装docker"><a href="#安装docker" class="headerlink" title="安装docker"></a>安装docker</h4><p>首先配置一下Docker的阿里yum源  </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">cat &gt;&#x2F;etc&#x2F;yum.repos.d&#x2F;docker.repo&lt;&lt;EOF</span><br><span class="line">[docker-ce-edge]</span><br><span class="line">name&#x3D;Docker CE Edge - \$basearch</span><br><span class="line">baseurl&#x3D;https:&#x2F;&#x2F;mirrors.aliyun.com&#x2F;docker-ce&#x2F;linux&#x2F;centos&#x2F;7&#x2F;\$basearch&#x2F;edge</span><br><span class="line">enabled&#x3D;1</span><br><span class="line">gpgcheck&#x3D;1</span><br><span class="line">gpgkey&#x3D;https:&#x2F;&#x2F;mirrors.aliyun.com&#x2F;docker-ce&#x2F;linux&#x2F;centos&#x2F;gpg</span><br><span class="line">EOF</span><br></pre></td></tr></table></figure>
+<p>yum方式安装docker  </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"># yum安装</span><br><span class="line">yum -y install docker-ce</span><br><span class="line"></span><br><span class="line"># 查看docker版本</span><br><span class="line">docker --version  </span><br><span class="line"></span><br><span class="line"># 启动docker</span><br><span class="line">systemctl enable docker</span><br><span class="line">systemctl start docker</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">cat &gt;&gt; &#x2F;etc&#x2F;docker&#x2F;daemon.json &lt;&lt; EOF</span><br><span class="line">&#123;</span><br><span class="line">  &quot;registry-mirrors&quot;: [&quot;https:&#x2F;&#x2F;b9pmyelo.mirror.aliyuncs.com&quot;]</span><br><span class="line">&#125;</span><br><span class="line">EOF</span><br></pre></td></tr></table></figure>
+<h4 id="安装kubeadm，kubelet和kubectl"><a href="#安装kubeadm，kubelet和kubectl" class="headerlink" title="安装kubeadm，kubelet和kubectl"></a>安装kubeadm，kubelet和kubectl</h4><p>配置一下yum的k8s软件源  </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">cat &gt; &#x2F;etc&#x2F;yum.repos.d&#x2F;kubernetes.repo &lt;&lt; EOF</span><br><span class="line">[kubernetes]</span><br><span class="line">name&#x3D;Kubernetes</span><br><span class="line">baseurl&#x3D;https:&#x2F;&#x2F;mirrors.aliyun.com&#x2F;kubernetes&#x2F;yum&#x2F;repos&#x2F;kubernetes-el7-x86_64</span><br><span class="line">enabled&#x3D;1</span><br><span class="line">gpgcheck&#x3D;0</span><br><span class="line">repo_gpgcheck&#x3D;0</span><br><span class="line">gpgkey&#x3D;https:&#x2F;&#x2F;mirrors.aliyun.com&#x2F;kubernetes&#x2F;yum&#x2F;doc&#x2F;yum-key.gpg https:&#x2F;&#x2F;mirrors.aliyun.com&#x2F;kubernetes&#x2F;yum&#x2F;doc&#x2F;rpm-package-key.gpg</span><br><span class="line">EOF</span><br></pre></td></tr></table></figure>
+<p>由于版本更新频繁，这里指定版本号部署： </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"># 安装kubelet、kubeadm、kubectl，同时指定版本</span><br><span class="line">yum install -y kubelet-1.18.0 kubeadm-1.18.0 kubectl-1.18.0</span><br><span class="line"># 设置开机启动</span><br><span class="line">systemctl enable kubelet</span><br></pre></td></tr></table></figure>
+
+<h3 id="部署Kubernetes-Master【master节点】"><a href="#部署Kubernetes-Master【master节点】" class="headerlink" title="部署Kubernetes Master【master节点】"></a>部署Kubernetes Master【master节点】</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">kubeadm init --apiserver-advertise-address&#x3D;192.168.137.100 --image-repository registry.aliyuncs.com&#x2F;google_containers --kubernetes-version v1.18.0 --service-cidr&#x3D;10.96.0.0&#x2F;12  --pod-network-cidr&#x3D;10.244.0.0&#x2F;16</span><br></pre></td></tr></table></figure>
+<p>使用kubectl工具 【master节点操作】    </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">mkdir -p $HOME&#x2F;.kube</span><br><span class="line">sudo cp -i &#x2F;etc&#x2F;kubernetes&#x2F;admin.conf $HOME&#x2F;.kube&#x2F;config</span><br><span class="line">sudo chown $(id -u):$(id -g) $HOME&#x2F;.kube&#x2F;config</span><br></pre></td></tr></table></figure>
+
+<h3 id="将节点加入到集群中"><a href="#将节点加入到集群中" class="headerlink" title="将节点加入到集群中"></a>将节点加入到集群中</h3><p>此命令由kubeadm init 时生产的</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">kubeadm join 192.168.137.100:6443 --token v17di1.mxjh3ryz2clh5mfk \</span><br><span class="line">    --discovery-token-ca-cert-hash sha256:c33735da514c8d79e2af43b37a00bcea660fe13489566235c4a1c082e100a15b</span><br></pre></td></tr></table></figure>
+<h3 id="部署CNI网络插件"><a href="#部署CNI网络插件" class="headerlink" title="部署CNI网络插件"></a>部署CNI网络插件</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"># 添加</span><br><span class="line">kubectl apply -f https:&#x2F;&#x2F;raw.githubusercontent.com&#x2F;coreos&#x2F;flannel&#x2F;master&#x2F;Documentation&#x2F;kube-flannel.yml</span><br><span class="line"></span><br><span class="line">##①首先下载v0.13.1-rc2-amd64 镜像</span><br><span class="line">##参考博客：https:&#x2F;&#x2F;www.cnblogs.com&#x2F;pyxuexi&#x2F;p&#x2F;14288591.html</span><br><span class="line">##② 导入镜像，命令，，特别提示，3个机器都需要导入，3个机器都需要导入，3个机器都需要导入，3个机器都需要导入，重要的事情说3遍。不然抱错。如果没有操作，报错后，需要删除节点，重置，在导入镜像，重新加入才行。本地就是这样操作成功的！</span><br><span class="line">docker load &lt; flanneld-v0.13.1-rc2-amd64.docker</span><br><span class="line">#####下载本地，替换将image: quay.io&#x2F;coreos&#x2F;flannel:v0.13.1-rc2 替换为 image: quay.io&#x2F;coreos&#x2F;flannel:v0.13.1-rc2-amd64</span><br><span class="line"></span><br><span class="line"># 查看状态 【kube-system是k8s中的最小单元】</span><br><span class="line">kubectl get pods -n kube-system</span><br></pre></td></tr></table></figure>
+
+<p>raw.githubusercontent.com 如果被墙，自行下载kube-flannel.yml<br>yum install  lrzsz -y # xshell 文件传输工具</p>
+<h3 id="测试k8s集群"><a href="#测试k8s集群" class="headerlink" title="测试k8s集群"></a>测试k8s集群</h3><p>在Kubernetes集群中创建一个pod，验证是否正常运行：  </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"># 下载nginx 【会联网拉取nginx镜像】</span><br><span class="line">kubectl create deployment nginx --image&#x3D;nginx</span><br><span class="line"># 查看状态</span><br><span class="line">kubectl get pod</span><br></pre></td></tr></table></figure>
+
+<p>下面我们就需要将端口暴露出去，让其它外界能够访问  </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"># 暴露端口</span><br><span class="line">kubectl expose deployment nginx --port&#x3D;80 --type&#x3D;NodePort</span><br><span class="line"># 查看一下对外的端口</span><br><span class="line">kubectl get pod,svc</span><br></pre></td></tr></table></figure>
+
+<p>浏览器访问任意节点ip:port </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http:&#x2F;&#x2F;192.168.137.103:30980&#x2F;</span><br></pre></td></tr></table></figure>
+
+
+<h2 id="K8S核心技术"><a href="#K8S核心技术" class="headerlink" title="K8S核心技术"></a>K8S核心技术</h2><h3 id="集群命令行工具-kubectl"><a href="#集群命令行工具-kubectl" class="headerlink" title="集群命令行工具 kubectl"></a>集群命令行工具 kubectl</h3><h4 id="kubectl-概述"><a href="#kubectl-概述" class="headerlink" title="kubectl 概述"></a>kubectl 概述</h4><p>kubectl 是k8s集群命令行工具，通过kubectl 能够对集群本身进行管理，并能够在集群上进行容器化应用的安装部署</p>
+<h4 id="命令格式"><a href="#命令格式" class="headerlink" title="命令格式"></a>命令格式</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">kubectl [command] [type] [name] [flags]</span><br></pre></td></tr></table></figure>
+<p>参数：  </p>
+<ul>
+<li>command：指定要对资源执行的操作，例如create、get、describe、delete</li>
+<li>type：指定资源类型，资源类型是大小写敏感的，开发者能够以单数 、复数 和 缩略的形式</li>
+<li>name：指定资源的名称，名称也是大小写敏感的，如果省略名称，则会显示所有的资源</li>
+<li>flags：指定可选的参数，例如，可用 -s 或者 -server参数指定Kubernetes API server的地址和端口</li>
+</ul>
+<h4 id="帮助命令"><a href="#帮助命令" class="headerlink" title="帮助命令"></a>帮助命令</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">kubectl --help</span><br></pre></td></tr></table></figure>
+
+<h3 id="k8s集群yaml文件详解"><a href="#k8s集群yaml文件详解" class="headerlink" title="k8s集群yaml文件详解"></a>k8s集群yaml文件详解</h3><h4 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h4><p>k8s 集群中对资源管理和资源对象编排部署都可以通过声明样式（YAML）文件来解决，也就是可以把需要对资源对象操作编辑到YAML 格式文件中，<br>我们把这种文件叫做资源清单文件，通过kubectl 命令直接使用资源清单文件就可以实现对大量的资源对象进行编排部署了。一般在我们开发的时候，都是通过配置YAML文件来部署集群的。</p>
+<p>YAML文件：就是资源清单文件，用于资源编排</p>
+<h4 id="YAML概述"><a href="#YAML概述" class="headerlink" title="YAML概述"></a>YAML概述</h4><p>YAML ：仍是一种标记语言。为了强调这种语言以数据做为中心，而不是以标记语言为重点。 </p>
+<p>YAML 是一个可读性高，用来表达数据序列的格式。 </p>
+<h4 id="YAML-基本语法"><a href="#YAML-基本语法" class="headerlink" title="YAML 基本语法"></a>YAML 基本语法</h4><ul>
+<li>使用空格做为缩进</li>
+<li>缩进的空格数目不重要，只要相同层级的元素左侧对齐即可</li>
+<li>低版本缩进时不允许使用Tab 键，只允许使用空格</li>
+<li>使用#标识注释，从这个字符一直到行尾，都会被解释器忽略</li>
+<li>使用 — 表示新的yaml文件开始</li>
+</ul>
+<h4 id="常用字段"><a href="#常用字段" class="headerlink" title="常用字段"></a>常用字段</h4><table>
+<thead>
+<tr>
+<th align="center">字段</th>
+<th align="center">含义</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">apiVersion</td>
+<td align="center">API版本</td>
+</tr>
+<tr>
+<td align="center">kind</td>
+<td align="center">资源类型</td>
+</tr>
+<tr>
+<td align="center">metadata</td>
+<td align="center">资源元数据</td>
+</tr>
+<tr>
+<td align="center">spec</td>
+<td align="center">资源规格</td>
+</tr>
+<tr>
+<td align="center">replicas</td>
+<td align="center">副本数量</td>
+</tr>
+<tr>
+<td align="center">selector</td>
+<td align="center">标签选择器</td>
+</tr>
+<tr>
+<td align="center">template</td>
+<td align="center">Pod模板</td>
+</tr>
+<tr>
+<td align="center">metadata</td>
+<td align="center">Pod元数据</td>
+</tr>
+<tr>
+<td align="center">spec</td>
+<td align="center">Pod规格</td>
+</tr>
+<tr>
+<td align="center">containers</td>
+<td align="center">容器配置</td>
+</tr>
+</tbody></table>
+<h4 id="如何快速生成yaml文件"><a href="#如何快速生成yaml文件" class="headerlink" title="如何快速生成yaml文件"></a>如何快速生成yaml文件</h4><ul>
+<li>使用kubectl create命令生成yaml 文件<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">kubectl create deployment web --image&#x3D;nginx -o yaml --dry-run&#x3D;client &gt; web.yaml</span><br></pre></td></tr></table></figure></li>
+<li>使用kubectl get 命令导出yaml文件<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">kubectl get deploy nginx -o&#x3D;yaml &gt; web1.yaml</span><br></pre></td></tr></table></figure>
+<h3 id="Pod-1"><a href="#Pod-1" class="headerlink" title="Pod"></a>Pod</h3></li>
+</ul>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/k8s/" rel="tag"># k8s</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2021/05/21/docker/mysql/" rel="prev" title="docker/mysql">
+      <i class="fa fa-chevron-left"></i> docker/mysql
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2021/06/04/k8s/harbor/" rel="next" title="k8s/harbor">
+      k8s/harbor <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+  </div>
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let activeClass = CONFIG.comments.activeClass;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Kubernetes简介"><span class="nav-number">1.</span> <span class="nav-text">Kubernetes简介</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Kubernetes特性"><span class="nav-number">2.</span> <span class="nav-text">Kubernetes特性</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Minikube"><span class="nav-number">3.</span> <span class="nav-text">Minikube</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Kubernetes核心组件"><span class="nav-number">4.</span> <span class="nav-text">Kubernetes核心组件</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#master组件"><span class="nav-number">4.1.</span> <span class="nav-text">master组件</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Node"><span class="nav-number">4.2.</span> <span class="nav-text">Node</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#k8s核心概念"><span class="nav-number">5.</span> <span class="nav-text">k8s核心概念</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Pod"><span class="nav-number">5.1.</span> <span class="nav-text">Pod</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#controller"><span class="nav-number">5.2.</span> <span class="nav-text">controller</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#service"><span class="nav-number">5.3.</span> <span class="nav-text">service</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#k8s-资源类型"><span class="nav-number">6.</span> <span class="nav-text">k8s 资源类型</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#名称空间级别的资源"><span class="nav-number">6.1.</span> <span class="nav-text">名称空间级别的资源</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#集群级别"><span class="nav-number">6.2.</span> <span class="nav-text">集群级别</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#元数据类型"><span class="nav-number">6.3.</span> <span class="nav-text">元数据类型</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#必须存在的属性"><span class="nav-number">7.</span> <span class="nav-text">必须存在的属性</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#单master集群"><span class="nav-number">8.</span> <span class="nav-text">单master集群</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#vmware-准备虚拟机"><span class="nav-number">8.1.</span> <span class="nav-text">vmware 准备虚拟机</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#环境准备"><span class="nav-number">8.2.</span> <span class="nav-text">环境准备</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#操作系统初始化工作"><span class="nav-number">8.3.</span> <span class="nav-text">操作系统初始化工作</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#所有节点安装docker-kubeadm-kubelet"><span class="nav-number">8.4.</span> <span class="nav-text">所有节点安装docker&#x2F;kubeadm&#x2F;kubelet</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#安装docker"><span class="nav-number">8.4.1.</span> <span class="nav-text">安装docker</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#安装kubeadm，kubelet和kubectl"><span class="nav-number">8.4.2.</span> <span class="nav-text">安装kubeadm，kubelet和kubectl</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#部署Kubernetes-Master【master节点】"><span class="nav-number">8.5.</span> <span class="nav-text">部署Kubernetes Master【master节点】</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#将节点加入到集群中"><span class="nav-number">8.6.</span> <span class="nav-text">将节点加入到集群中</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#部署CNI网络插件"><span class="nav-number">8.7.</span> <span class="nav-text">部署CNI网络插件</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#测试k8s集群"><span class="nav-number">8.8.</span> <span class="nav-text">测试k8s集群</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#K8S核心技术"><span class="nav-number">9.</span> <span class="nav-text">K8S核心技术</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#集群命令行工具-kubectl"><span class="nav-number">9.1.</span> <span class="nav-text">集群命令行工具 kubectl</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#kubectl-概述"><span class="nav-number">9.1.1.</span> <span class="nav-text">kubectl 概述</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#命令格式"><span class="nav-number">9.1.2.</span> <span class="nav-text">命令格式</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#帮助命令"><span class="nav-number">9.1.3.</span> <span class="nav-text">帮助命令</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#k8s集群yaml文件详解"><span class="nav-number">9.2.</span> <span class="nav-text">k8s集群yaml文件详解</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#概述"><span class="nav-number">9.2.1.</span> <span class="nav-text">概述</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#YAML概述"><span class="nav-number">9.2.2.</span> <span class="nav-text">YAML概述</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#YAML-基本语法"><span class="nav-number">9.2.3.</span> <span class="nav-text">YAML 基本语法</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#常用字段"><span class="nav-number">9.2.4.</span> <span class="nav-text">常用字段</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#如何快速生成yaml文件"><span class="nav-number">9.2.5.</span> <span class="nav-text">如何快速生成yaml文件</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Pod-1"><span class="nav-number">9.3.</span> <span class="nav-text">Pod</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Chen Yu"
+      src="/images/head.jpeg">
+  <p class="site-author-name" itemprop="name">Chen Yu</p>
+  <div class="site-description" itemprop="description">自律给我自由</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">61</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">14</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">47</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Chen Yu</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v4.2.0
+  </div>
+  <span class="post-meta-divider">|</span>
+  <div class="theme-info">主题 – <a href="https://theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a> v7.7.0
+  </div>
+
+<div>
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<span id="busuanzi_container_site_pv" style='display:none'>
+    本站总访问量 <span id="busuanzi_value_site_pv"></span> 次
+    <span class="post-meta-divider">|</span>
+</span>
+<span id="busuanzi_container_site_uv" style='display:none'>
+    有<span id="busuanzi_value_site_uv"></span>人看过我的博客啦
+</span>
+</div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>

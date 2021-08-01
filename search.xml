@@ -1,6 +1,163 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title>go/golang代码风格</title>
+    <url>/2021/08/01/go/golang%E4%BB%A3%E7%A0%81%E9%A3%8E%E6%A0%BC/</url>
+    <content><![CDATA[<h1 id="Go-Code-Review-Comments-翻译-编写优雅golang代码"><a href="#Go-Code-Review-Comments-翻译-编写优雅golang代码" class="headerlink" title="Go Code Review Comments 翻译 编写优雅golang代码"></a>Go Code Review Comments 翻译 编写优雅golang代码</h1><p>官方代码规范指南  </p>
+<h2 id="Gofmt"><a href="#Gofmt" class="headerlink" title="Gofmt"></a>Gofmt</h2><p>在 Go 代码上运行 gofmt 以自动修复大多数的机械性风格问题。几乎所有不正规的 Go 代码都在使用gofmt。本文档的剩余部分涉及非机械性风格问题。</p>
+<p>另一种方法是使用 goimports，这是gofmt的超集，gofmt可根据需要额外添加（和删除）导入行。</p>
+<a id="more"></a>
+
+<h2 id="Comment-Sentences"><a href="#Comment-Sentences" class="headerlink" title="Comment Sentences"></a>Comment Sentences</h2><p>参见 <a href="https://golang.org/doc/effective_go.html#commentary。注释文档声明应该是完整的句子，即使这看起来有些多余。这种方式使注释在提取到" target="_blank" rel="noopener">https://golang.org/doc/effective_go.html#commentary。注释文档声明应该是完整的句子，即使这看起来有些多余。这种方式使注释在提取到</a><br>godoc 文档时格式良好。注释应以所描述事物的名称开头，并以句点结束：categories:</p>
+<figure class="highlight go"><table><tr><td class="code"><pre><span class="line"><span class="comment">// Request represents a request to run a command.</span></span><br><span class="line"><span class="keyword">type</span> Request <span class="keyword">struct</span> &#123; ...</span><br><span class="line"></span><br><span class="line"><span class="comment">// Encode writes the JSON encoding of req to w.</span></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">Encode</span><span class="params">(w io.Writer, req *Request)</span></span> &#123; ...</span><br></pre></td></tr></table></figure>
+
+<p>请注意除了句点之外还有其他符号可以作为句子的有效结尾（但至少也应该是！，？）。除此之外，还有许多工具使用注释来标记类型和方法（如 easyjson： json 和 golint 的 MATCH）。这使得这条规则难以形式化。</p>
+<h2 id="Contexts"><a href="#Contexts" class="headerlink" title="Contexts"></a>Contexts</h2><p>context.Context 类型的值包含跨 API 和进程边界的安全凭证，跟踪信息，截止时间和取消信号。比如传入 RPC 请求和 HTTP 请求一直到传出相关请求， Go 程序在整个过程的函数调用链中显式地传递 Context。</p>
+<p>大多数使用 Context 的函数都应该接受 Context 作为函数的第一个参数：</p>
+<figure class="highlight go"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">F</span><span class="params">(ctx context.Context, /* other arguments */)</span></span> &#123;&#125;</span><br></pre></td></tr></table></figure>
+
+<p>从不特定于请求（request-specific）的函数可以使用 context.Background() 获取 Context，并将 err 与 Context 同时传递，即使你认为不需要。 默认情况下只传递 Context<br>；只在你有充分的理由认为这是错误的，才能直接使用context.Background()。</p>
+<p>不要将 Context 成员添加到某个 struct 类型中；而是将 ctx 参数添加到该类型的方法上。一个例外情况是当前方法签名必须与标准库或第三方库中的接口方法匹配。</p>
+<p>不要在函数签名中创建自定义 Context 类型或使用除了 Context 以外的接口。</p>
+<p>如果要传递应用程序数据，请将其放在参数，方法接收器，全局变量中，或者如果它确实应该属于 Context，则放在 Context 的 Value 属性中。</p>
+<p>所有的 Context 都是不可变的，因此可以将相同的 ctx 传递给多个共享相同截止日期，取消信号，安全凭据，跟踪等的调用。</p>
+<h2 id="Copying"><a href="#Copying" class="headerlink" title="Copying"></a>Copying</h2><p>为避免意外的别名，从另一个包复制 struct 时要小心。例如，bytes.Buffer 类型包含一个 []byte 的 slice，并且作为短字符串的优化，slice 可以引用一个短字节数组。如果复制一个 Buffer，副本中的<br>slice 可能会对原始数组进行别名操作，从而导致后续方法调用产生令人惊讶的效果。</p>
+<p>通常，如果 T 类型的方法与其指针类型 *T 相关联，请不要复制 T 类型的值。</p>
+<h2 id="Crypto-Rand"><a href="#Crypto-Rand" class="headerlink" title="Crypto Rand"></a>Crypto Rand</h2><p>不要使用包math/rand来生成密钥，即使是一次性密钥。在没有种子（seed）的情况下，生成器是完全可以被预测的。使用time.Nanoseconds()作为种 子值，熵只有几位。请使用crypto/rand的 Reader<br>作为替代，如果你倾向于使用文本，请输出成十六进制或 base64 编码：</p>
+<figure class="highlight go"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> (</span><br><span class="line"><span class="string">"crypto/rand"</span></span><br><span class="line"><span class="comment">// "encoding/base64"</span></span><br><span class="line"><span class="comment">// "encoding/hex"</span></span><br><span class="line"><span class="string">"fmt"</span></span><br><span class="line">)</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">Key</span><span class="params">()</span> <span class="title">string</span></span> &#123;</span><br><span class="line">buf := <span class="built_in">make</span>([]<span class="keyword">byte</span>, <span class="number">16</span>)</span><br><span class="line">_, err := rand.Read(buf)</span><br><span class="line"><span class="keyword">if</span> err != <span class="literal">nil</span> &#123;</span><br><span class="line"><span class="built_in">panic</span>(err)  <span class="comment">// out of randomness, should never happen</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">return</span> fmt.Sprintf(<span class="string">"%x"</span>, buf)</span><br><span class="line"><span class="comment">// or hex.EncodeToString(buf)</span></span><br><span class="line"><span class="comment">// or base64.StdEncoding.EncodeToString(buf)</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="Declaring-Empty-Slices"><a href="#Declaring-Empty-Slices" class="headerlink" title="Declaring Empty Slices"></a>Declaring Empty Slices</h2><p>当声明一个空 slice 时，倾向于用</p>
+<figure class="highlight go"><table><tr><td class="code"><pre><span class="line"><span class="keyword">var</span> t []<span class="keyword">string</span></span><br></pre></td></tr></table></figure>
+
+<p>代替</p>
+<figure class="highlight go"><table><tr><td class="code"><pre><span class="line">t := []<span class="keyword">string</span>&#123;&#125;</span><br></pre></td></tr></table></figure>
+
+<p>前者声明了一个 nil slice 值，而后者声明了一个非 nil 但是零长度的 slice。两者在功能上等同，len 和 cap 均为零，而 nil slice 是首选的风格。</p>
+<p>请注意，在部分场景下，首选非零但零长度的切片，例如编码 JSON 对象时（前者编码为 null，而后者则可以正确编码为 JSON array[]）</p>
+<p>在设计 interface 时，避免区分 nil slice 和 非 nil，零长度的 slice，因为这会导致细微的编程错误。</p>
+<h2 id="Doc-Comments"><a href="#Doc-Comments" class="headerlink" title="Doc Comments"></a>Doc Comments</h2><p>所有的顶级导出的名称都应该有 doc 注释，重要的未导出类型或函数声明也应如此。有关注释约束的更多信息，请参阅 <a href="https://golang.org/doc/effective_go.html#commentary。" target="_blank" rel="noopener">https://golang.org/doc/effective_go.html#commentary。</a></p>
+<h2 id="Don’t-Panic"><a href="#Don’t-Panic" class="headerlink" title="Don’t Panic"></a>Don’t Panic</h2><p>请参阅 <a href="https://golang.org/doc/effective_go.html#errors。不要将" target="_blank" rel="noopener">https://golang.org/doc/effective_go.html#errors。不要将</a> panic 用于正常的错误处理。使用 error 和多返回值。</p>
+<h2 id="Error-Strings"><a href="#Error-Strings" class="headerlink" title="Error Strings"></a>Error Strings</h2><p>错误信息字符串不应大写（除非以专有名词或首字母缩略词开头）或以标点符号结尾，因为它们通常是在其他上下文后打印的。 即使用fmt.Errorf(“something bad”)而不要使用fmt.Errorf(“Something bad”)<br>，因此log.Printf(“Reading %s: %v”, filename, err)的格式 中将不会出现额外的大写字母。否则这将不适用于日志记录，因为它是隐式的面向行，而不是在其他消息中组合。</p>
+<h2 id="Examples"><a href="#Examples" class="headerlink" title="Examples"></a>Examples</h2><p>添加新包时，请包含预期用法的示例：可运行的示例，或是演示完整调用链的简单测试。</p>
+<h2 id="Goroutine-Lifetimes"><a href="#Goroutine-Lifetimes" class="headerlink" title="Goroutine Lifetimes"></a>Goroutine Lifetimes</h2><p>当你生成 goroutines 时，要清楚它们何时或是否会退出。</p>
+<p>通过阻塞 channel 的发送或接收可能会引起 goroutines 的内存泄漏：即使被阻塞的 channel 无法访问，垃圾收集器也不会终止 goroutine。</p>
+<p>即使 goroutines 没有泄漏，当它们不再需要时却仍然将其留在内存中会导致其他细微且难以诊断的问题。往已经关闭的 channel 发送数据将会引发 panic。 在“结果不被需要之后”修改仍在使用的输入仍然可能导致数据竞争。并且将<br>goroutines 留在内存中任意长时间将会导致不可预测的内存使用。</p>
+<p>请尽量让并发代码足够简单，从而更容易地确认 goroutine 的生命周期。如果这不可行，请记录 goroutines 退出的时间和原因。</p>
+<h2 id="Handle-Errors"><a href="#Handle-Errors" class="headerlink" title="Handle Errors"></a>Handle Errors</h2><p>请参阅 <a href="https://golang.org/doc/effective_go.html#errors。不要使用" target="_blank" rel="noopener">https://golang.org/doc/effective_go.html#errors。不要使用</a> _ 变量丢弃 error。如果函数返回 error，请检查它以确保函数成功。 处理 error，返回<br>error，或者在真正特殊的情况下使用 panic。</p>
+<h2 id="Imports"><a href="#Imports" class="headerlink" title="Imports"></a>Imports</h2><p>避免包重命名导入，防止名称冲突；好的包名称不需要重命名。如果发生命名冲突，则更倾向于重命名最接近本地的包或特定于项目的包。</p>
+<p>包导入按组进行组织，组与组之间有空行。标准库包始终位于第一组中。</p>
+<p>推荐顺序为：</p>
+<ol>
+<li>标准库包</li>
+<li>第三方库包</li>
+<li>当前项目库包</li>
+</ol>
+<h2 id="Import-Dot"><a href="#Import-Dot" class="headerlink" title="Import Dot"></a>Import Dot</h2><p>部分包由于循环依赖，不能作为测试包的一部分进行测试时，以.形式导入它们可能很有用：</p>
+<figure class="highlight go"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">package</span> foo_test</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> (</span><br><span class="line"><span class="string">"bar/testutil"</span> <span class="comment">// also imports "foo"</span></span><br><span class="line">. <span class="string">"foo"</span></span><br><span class="line">)</span><br></pre></td></tr></table></figure>
+
+<p>在这种情况下，测试文件不能位于 foo 包中，因为它使用的 bar/testutil 依赖于 foo 包。所以我们使用import .形式使得测试文件伪装成 foo 包 的一部分，即使它不是。除了这种情况，不要在程序中使用 import<br>.。它将使程序更难阅读——因为不清楚如 Quux 这样的名称是否是当前包中或导入包中的顶级标识符。</p>
+<h2 id="In-Band-Errors"><a href="#In-Band-Errors" class="headerlink" title="In-Band Errors"></a>In-Band Errors</h2><p>在 C 和类 C 语言中，通常使函数返回 -1 或 null 之类的值用来发出错误信号或缺少结果：</p>
+<figure class="highlight go"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="comment">// Lookup returns the value for key or "" if there is no mapping for key.</span></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">Lookup</span><span class="params">(key <span class="keyword">string</span>)</span> <span class="title">string</span></span></span><br><span class="line"></span><br><span class="line"><span class="comment">// Failing to check a for an in-band error value can lead to bugs:</span></span><br><span class="line">Parse(Lookup(key))  <span class="comment">// returns "parse failure for value" instead of "no value for key"</span></span><br></pre></td></tr></table></figure>
+
+<p>Go 对多返回值的支持提供了一种更好的解决方案。函数应返回一个附加值以指示其他返回值是否有效，而不是要求客户端检查 in-band 错误值。 此附加值可能是一个 error，或者在不需要解释时可以是布尔值。它应该是最终的返回值。</p>
+<figure class="highlight go"><table><tr><td class="code"><pre><span class="line"><span class="comment">// Lookup returns the value for key or ok=false if there is no mapping for key.</span></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">Lookup</span><span class="params">(key <span class="keyword">string</span>)</span> <span class="params">(value <span class="keyword">string</span>, ok <span class="keyword">bool</span>)</span></span></span><br></pre></td></tr></table></figure>
+
+<p>这可以防止调用者错误地使用返回结果：</p>
+<figure class="highlight go"><table><tr><td class="code"><pre><span class="line">Parse(Lookup(key))  <span class="comment">// compile-time error</span></span><br></pre></td></tr></table></figure>
+
+<p>并鼓励更健壮和可读性强的代码：</p>
+<figure class="highlight go"><table><tr><td class="code"><pre><span class="line">value, ok := Lookup(key)</span><br><span class="line"><span class="keyword">if</span> !ok  &#123;</span><br><span class="line"><span class="keyword">return</span> fmt.Errorf(<span class="string">"no value for %q"</span>, key)</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">return</span> Parse(value)</span><br></pre></td></tr></table></figure>
+
+<p>此规则适用于公共导出函数，但对于未导出函数也很有用。</p>
+<p>返回值如 nil，“”，0 和 -1 在他们是函数的有效返回结果时是可接收的，即调用者不需要将它们与其他值做分别处理。</p>
+<p>某些标准库函数（如 “strings” 包中的函数）会返回 in-band 错误值。这大大简化了字符串操作，代价是需要程序员做更多事。通常，Go 代码应返回表示错误的附加值。</p>
+<h2 id="Indent-Error-Flow"><a href="#Indent-Error-Flow" class="headerlink" title="Indent Error Flow"></a>Indent Error Flow</h2><p>尝试将正常的代码路径保持在最小的缩进处，优先处理错误并缩进。通过允许快速可视化扫描正常路径来提高代码的可读性。例如，不要写：</p>
+<figure class="highlight go"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">if</span> err != <span class="literal">nil</span> &#123;</span><br><span class="line">    <span class="comment">// error handling</span></span><br><span class="line">&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">    <span class="comment">// normal code</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>相反，书写以下代码：</p>
+<figure class="highlight go"><table><tr><td class="code"><pre><span class="line"><span class="keyword">if</span> err != <span class="literal">nil</span> &#123;</span><br><span class="line">    <span class="comment">// error handling</span></span><br><span class="line">    <span class="keyword">return</span> <span class="comment">// or continue, etc.</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// normal code</span></span><br></pre></td></tr></table></figure>
+
+
+<p>如果 if 语句具有初始化语句，例如： </p>
+<figure class="highlight go"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">if</span> x, err := f(); err != <span class="literal">nil</span> &#123;</span><br><span class="line">    <span class="comment">// error handling</span></span><br><span class="line">    <span class="keyword">return</span></span><br><span class="line">&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">    <span class="comment">// use x</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>那么这可能需要将短变量声明移动到新行：</p>
+<figure class="highlight go"><table><tr><td class="code"><pre><span class="line">x, err := f()</span><br><span class="line"><span class="keyword">if</span> err != <span class="literal">nil</span> &#123;</span><br><span class="line">    <span class="comment">// error handling</span></span><br><span class="line">    <span class="keyword">return</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// use x</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="Initialisms"><a href="#Initialisms" class="headerlink" title="Initialisms"></a>Initialisms</h2><p>名称中的单词是首字母或首字母缩略词（例如 “URL” 或 “NATO” ）需要具有相同的大小写规则。例如，“URL” 应显示为 “URL” 或 “url”<br>“urlPony” 或 “URLPony” ），而不是 “Url”。举个例子：ServeHTTP 不是 ServeHttp。对于具有多个初始化 “单词” 的标识符，也应当显示为 “xmlHTTPRequest” 或 “XMLHTTPRequest”。</p>
+<p>当 “ID” 是 “identifier” 的缩写时，此规则也适用于 “ID” ，因此请写 “appID” 而不是“appId”。  </p>
+<p>由协议缓冲区编译器生成的代码不受此规则的约束。人工编写的代码比机器编写的代码要保持更高的标准。</p>
+<h2 id="Interfaces"><a href="#Interfaces" class="headerlink" title="Interfaces"></a>Interfaces</h2><p>Go 接口通常属于使用 interface 类型值的包，而不是实现这些值的包。实现包应返回具体（通常是指针或结构）类型：这样一来可以将新方法添加到实现中，而无需进行大量重构。</p>
+<p>不要在 API 的实现者端定义 “for mocking” 接口；相反，设计 API 以便可以使用真实实现的公共 API 进行测试。  </p>
+<p>在使用接口之前不要定义接口：如果没有真实的使用示例，很难看出接口是否是必要的，更不用说它应该包含哪些方法  </p>
+<figure class="highlight go"><table><tr><td class="code"><pre><span class="line"><span class="keyword">package</span> consumer  <span class="comment">// consumer.go</span></span><br><span class="line"> </span><br><span class="line"><span class="keyword">type</span> Thinger <span class="keyword">interface</span> &#123; Thing() <span class="keyword">bool</span> &#125;</span><br><span class="line"> </span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">Foo</span><span class="params">(t Thinger)</span> <span class="title">string</span></span> &#123; … &#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight go"><table><tr><td class="code"><pre><span class="line"><span class="keyword">package</span> consumer <span class="comment">// consumer_test.go</span></span><br><span class="line"> </span><br><span class="line"><span class="keyword">type</span> fakeThinger <span class="keyword">struct</span>&#123; … &#125;</span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(t fakeThinger)</span> <span class="title">Thing</span><span class="params">()</span> <span class="title">bool</span></span> &#123; … &#125;</span><br><span class="line">…</span><br><span class="line"><span class="keyword">if</span> Foo(fakeThinger&#123;…&#125;) == <span class="string">"x"</span> &#123; … &#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight go"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="comment">// DO NOT DO IT!!!</span></span><br><span class="line"><span class="keyword">package</span> producer</span><br><span class="line"> </span><br><span class="line"><span class="keyword">type</span> Thinger <span class="keyword">interface</span> &#123; Thing() <span class="keyword">bool</span> &#125;</span><br><span class="line"> </span><br><span class="line"><span class="keyword">type</span> defaultThinger <span class="keyword">struct</span>&#123; … &#125;</span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(t defaultThinger)</span> <span class="title">Thing</span><span class="params">()</span> <span class="title">bool</span></span> &#123; … &#125;</span><br><span class="line"> </span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">NewThinger</span><span class="params">()</span> <span class="title">Thinger</span></span> &#123; <span class="keyword">return</span> defaultThinger&#123; … &#125; &#125;</span><br></pre></td></tr></table></figure>
+
+<p>相反，返回一个具体的类型，让消费者模拟生产者实现。  </p>
+<figure class="highlight go"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">package</span> producer</span><br><span class="line"> </span><br><span class="line"><span class="keyword">type</span> Thinger <span class="keyword">struct</span>&#123; … &#125;</span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(t Thinger)</span> <span class="title">Thing</span><span class="params">()</span> <span class="title">bool</span></span> &#123; … &#125;</span><br><span class="line"> </span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">NewThinger</span><span class="params">()</span> <span class="title">Thinger</span></span> &#123; <span class="keyword">return</span> Thinger&#123; … &#125; &#125;</span><br></pre></td></tr></table></figure>
+
+
+<h2 id="Line-Length"><a href="#Line-Length" class="headerlink" title="Line Length"></a>Line Length</h2><p>Go代码中没有严格的行长度限制，但避免使用造成阅读障碍的长行。类似的，如果长行的可读性更好，不要为了缩短行而添加换行符——例如，行组成是重复的。</p>
+<p>大多数情况下，当人们 “不自然地” 自动换行（wrap lines）时（在函数调用或函数声明的中间，或多或少，比如，虽然有一些例外），如果它们有合理数量的<br>参数并且变量名称较短时，自动换行将是不必要的。长行似乎与长名称有关，避免名称过长有很大帮助。</p>
+<p>换句话说，换行是因为你所写的语义（作为一般规则）而不是因为行的长度。如果您发现这会产生太长的行，那么更改名称或语义，可能也会得到一个好结果。</p>
+<p>实际上，这与关于函数应该有多长的建议完全相同。没有 “永远不会有超过N行的函数” 这样的规则，但是程序中肯定会存在行数太多，功能过于微弱的函数，<br>而解决方案是改变这个函数边界的位置，而不是执着在行数上。</p>
+<h2 id="Mixed-Caps"><a href="#Mixed-Caps" class="headerlink" title="Mixed Caps"></a>Mixed Caps</h2><p>请参阅 <a href="https://golang.org/doc/effective_go.html#mixed-caps。即使" target="_blank" rel="noopener">https://golang.org/doc/effective_go.html#mixed-caps。即使</a> Go 中混合大小写的规则打破了其他语言的惯例，也是适用的。例如，<br>未导出的常量写成 maxLength 而不是MaxLength或MAX_LENGTH。</p>
+<h2 id="Named-Result-Parameters"><a href="#Named-Result-Parameters" class="headerlink" title="Named Result Parameters"></a>Named Result Parameters</h2><p>考虑一下 godoc 中会是什么样子。命名结果参数如： </p>
+<figure class="highlight go"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(n *Node)</span> <span class="title">Parent1</span><span class="params">()</span> <span class="params">(node *Node)</span></span></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(n *Node)</span> <span class="title">Parent2</span><span class="params">()</span> <span class="params">(node *Node, err error)</span></span></span><br></pre></td></tr></table></figure>
+<p>将会造成口吃现象（stutter）; 最好这样使用:  </p>
+<figure class="highlight go"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(n *Node)</span> <span class="title">Parent1</span><span class="params">()</span> *<span class="title">Node</span></span></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(n *Node)</span> <span class="title">Parent2</span><span class="params">()</span> <span class="params">(*Node, error)</span></span></span><br></pre></td></tr></table></figure>
+
+<p>另一方面，如果函数返回两个或三个相同类型的参数，或者如果从上下文中不清楚返回结果的含义，那么在某些上下文中添加命名可能很有用。<br>但是不要仅仅为了避免在函数内做结果参数的声明（var 或者 :=）而命名结果参数；这以牺牲不必要的 API 冗长性为代价，换取了一个微小的实现简洁性。</p>
+<figure class="highlight go"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(f *Foo)</span> <span class="title">Location</span><span class="params">()</span> <span class="params">(<span class="keyword">float64</span>, <span class="keyword">float64</span>, error)</span></span></span><br></pre></td></tr></table></figure>
+<p>不如以下代码清晰：</p>
+<figure class="highlight go"><table><tr><td class="code"><pre><span class="line"><span class="comment">// Location returns f's latitude and longitude.</span></span><br><span class="line"><span class="comment">// Negative values mean south and west, respectively.</span></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(f *Foo)</span> <span class="title">Location</span><span class="params">()</span> <span class="params">(lat, long <span class="keyword">float64</span>, err error)</span></span></span><br></pre></td></tr></table></figure>
+<p>如果函数行数较少，那么非命名结果参数是可以的。一旦它是一个中等规模的函数，请明确返回值。推论：仅仅因为它使得能够直接使用预命名返回而命名<br>结果参数是不值得的。文档的清晰度总比在函数中的一行两行更重要。</p>
+<p>最后，在某些情况下，您需要命名结果参数，以便在延迟闭包中更改它，这也是可以的。</p>
+<h2 id="Package-Comments"><a href="#Package-Comments" class="headerlink" title="Package Comments"></a>Package Comments</h2><p>与 godoc 呈现的所有注释一样，包注释必须出现在 package 声明的临近位置，无空行。</p>
+<figure class="highlight go"><table><tr><td class="code"><pre><span class="line"><span class="comment">// Package math provides basic constants and mathematical functions.</span></span><br><span class="line"><span class="keyword">package</span> math</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight go"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment">Package template implements data-driven templates for generating textual</span></span><br><span class="line"><span class="comment">output such as HTML.</span></span><br><span class="line"><span class="comment">....</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line"><span class="keyword">package</span> template</span><br></pre></td></tr></table></figure>
+
+<p>请注意，以小写单词开头的句子不属于包注释的可接受选项，因为注释是公开可见的，应该用适当的英语书写，包括将句子的第一个单词的首字母大写。<br>当二进制文件名称是第一个单词时，即使它与命令行调用的拼写不严格匹配，也需要对其进行大写。</p>
+<h2 id="Package-Names"><a href="#Package-Names" class="headerlink" title="Package Names"></a>Package Names</h2><p>包中名称的所有引用都将使用包名完成，因此您可以从标识符中省略该名称。例如，如果有一个 chubby 包，你不应该定义类型名称为 ChubbyFile ，<br>否则使用者将写为 chubby.ChubbyFile。而是应该命名类型名称为 File，使用时将写为 chubby.File。避免使用无意义的包名称，<br>如 util，common，misc，api，types 和 interfaces。有关更多信息，请参阅<a href="http://golang.org/doc/effective_go.html#package-names和" target="_blank" rel="noopener">http://golang.org/doc/effective_go.html#package-names和</a><br><a href="http://blog.golang.org/package-names。" target="_blank" rel="noopener">http://blog.golang.org/package-names。</a></p>
+<h2 id="Pass-Values"><a href="#Pass-Values" class="headerlink" title="Pass Values"></a>Pass Values</h2><p>要只是为了节省几个字节就将指针作为函数参数传递。如果一个函数在整个过程中只引用它的参数x作为x，那么这个参数不应该是一个指针。<br>此常见实例包括将指针传递给 string（string）或是指向接口值（*io.Reader）的指针。在这两种情况下，值本身都是固定大小，可以直接传递。<br>这个建议不适用于大型 struct ，甚至不适用于可能生长的小型 struct。</p>
+<h2 id="Receiver-Names"><a href="#Receiver-Names" class="headerlink" title="Receiver Names"></a>Receiver Names</h2><p>方法接收者的名称应该反映其身份；通常，其类型的一个或两个字母缩写就足够了（例如“client”的“c”或“cl”）。不要使用通用名称，例如“me”<br>，“this”或“self”，这是面向对象语言的典型标识符，它们更强调方法而不是函数。名称不必像方法论证那样具有描述性，因为它的作用是显而易见的，<br>不起任何记录目的。名称可以非常短，因为它几乎出现在每种类型的每个方法的每一行上；familiarity admits brevity。使用上也要保持一致：如果<br>你在一个方法中叫将接收器命名为“c”，那么在其他方法中不要把它命名为“cl”。</p>
+<h2 id="Receiver-Type"><a href="#Receiver-Type" class="headerlink" title="Receiver Type"></a>Receiver Type</h2><p>选择到底是在方法上使用值接收器还是使用指针接收器可能会很困难，尤其是对于 Go 新手程序员。如有疑问，请使用指针接收器，但有时候值接收器是有意义的，<br>通常是出于效率的原因，例如小的不变结构或基本类型的值。以下是一些有用的指导：</p>
+<ul>
+<li>如果接收器是 map，func或 chan，则不要使用指向它们的指针。如果接收器是 slice 并且该方法不重新切片或不重新分配切片，则不要使用指向它的指针。</li>
+<li>如果该方法需要改变接收器的值，则接收器必须是指针。</li>
+<li>如果接收器是包含 sync.Mutex 或类似同步字段的 struct，则接收器必须是避免复制的指针。</li>
+<li>如果接收器是大型结构或数组，则指针接收器更有效。多大才算大？假设它相当于将其包含的所有元素作为参数传递给方法。如果感觉太大，那么对接收器来说也太大了。</li>
+<li>函数或方法可以改变接收器吗（并发调用或调用某方法时继续调用相关方法或函数）？在调用方法时，值类型会创建接收器的副本，因此外部更新将不会应用于此接收器。<br>如果必须在原始接收器中看到更改效果，则接收器必须是指针。</li>
+<li>如果接收器是 struct，数组或 slice，并且其任何元素是指向可能改变的对象的指针，则更倾向于使用指针接收器，因为它将使读者更清楚地意图。</li>
+<li>如果接收器是一个小型数组或 struct，那么它自然是一个值类型（例如，类似于time.Time类型），对于没有可变字段，没有指针的类型，<br>或者只是一个简单的基本类型，如 int 或 string，值接收器是合适的。值接收器可以减少可以生成的垃圾量；<br>如果将值作为参数传递给值类型方法，则可以使用堆栈上的副本而不需要在堆上进行分配。（编译器试图避免这种分配，但它不能总是成功）因此，在没有进行分析之前，不要选择值接收器类型。</li>
+<li>最后，如有疑问，请使用指针接收器。</li>
+</ul>
+<h2 id="Synchronous-Functions"><a href="#Synchronous-Functions" class="headerlink" title="Synchronous Functions"></a>Synchronous Functions</h2><p>相比异步函数更倾向于同步函数——直接返回结果的函数，或是在返回之前已完成所有回调或 channel 操作的函数。</p>
+<p>同步函数让 goroutine 在调用中本地化，能够更容易地推断其生命周期并避免泄漏和数据竞争。同步函数也更容易测试：调用者可以传递输入并检查输出，而无需轮询或同步。</p>
+<p>如果调用者需要更多的并发性，他们可以定义和调用单独的 goroutine 中的函数来轻松实现。但是在调用者端删除不必要的并发性是非常困难的——有时是不可能的。</p>
+<h2 id="Useful-Test-Failures"><a href="#Useful-Test-Failures" class="headerlink" title="Useful Test Failures"></a>Useful Test Failures</h2><p>失败的测试也应该提供有用的消息，说明错误，展示输入内容，实际内容以及预期结果。编写一堆 assertFoo 帮助程序可能很吸引人，但请确保您的帮助程<br>序能产生有用的错误消息。假设调试失败测试的人不是你，也不是你的团队。典型的 Go 失败测试如：</p>
+<figure class="highlight go"><table><tr><td class="code"><pre><span class="line"><span class="keyword">if</span> got != tt.want &#123;</span><br><span class="line">    t.Errorf(<span class="string">"Foo(%q) = %d; want %d"</span>, tt.in, got, tt.want) <span class="comment">// or Fatalf, if test can't test anything more past this point</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>请注意，此处的命令是 实际结果!=预期结果，并且错误消息也使用该命令格式。然而一些测试框架鼓励倒写输出格式，如 预期结果 != 实际结果，<br>“预期结果为 0，实际结果为 x”，等等。但是 Go 没有这样做。</p>
+<p>如果这看起来像是打了很多字，你可能想写一个表驱动的测试。</p>
+<p>在使用具有不同输入的测试帮助程序时以消除失败测试歧义的另一种常见技术是使用不同的 TestFoo 函数包装每个调用者，而测试名称也根据对应的输入命名： </p>
+<figure class="highlight go"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">TestSingleValue</span><span class="params">(t *testing.T)</span></span> &#123; testHelper(t, []<span class="keyword">int</span>&#123;<span class="number">80</span>&#125;) &#125;</span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">TestNoValues</span><span class="params">(t *testing.T)</span></span>    &#123; testHelper(t, []<span class="keyword">int</span>&#123;&#125;) &#125;</span><br></pre></td></tr></table></figure>
+
+<p>在任何情况下，你都有责任向可能会在将来调试你的代码的开发者提供有用的消息。  </p>
+<h2 id="Variable-Names"><a href="#Variable-Names" class="headerlink" title="Variable Names"></a>Variable Names</h2><p>Go 中的变量名称应该短而不是长。对于范围域中的局部变量尤其如此。例如为 line count 定义 c 变量，为 slice index 定义 i 变量。</p>
+<p>基本规则：范围域中，越晚使用的变量，名称必须越具有描述性。对于方法接收器，一个或两个字母就足够了。诸如循环索引和读取器（Reader）之类的公共变量可以是单个字母（i，r）。更多不寻常的事物和全局变量则需要更具描述性的名称。</p>
+<h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><ul>
+<li><a href="https://github.com/golang/go/wiki/CodeReviewComments" target="_blank" rel="noopener">https://github.com/golang/go/wiki/CodeReviewComments</a></li>
+<li><a href="https://blog.csdn.net/whatday/article/details/103611264" target="_blank" rel="noopener">Go Code Review Comments 翻译 编写优雅golang代码</a></li>
+</ul>
+]]></content>
+      <categories>
+        <category>[object Object]</category>
+        <category>golang项目结构规范</category>
+      </categories>
+  </entry>
+  <entry>
     <title>k8s/k8s踩坑日志</title>
     <url>/2021/07/19/k8s/k8s%E8%B8%A9%E5%9D%91%E6%97%A5%E5%BF%97/</url>
     <content><![CDATA[<h1 id="pvc挂载不上pv"><a href="#pvc挂载不上pv" class="headerlink" title="pvc挂载不上pv"></a>pvc挂载不上pv</h1><ul>
@@ -1378,6 +1535,354 @@ sudo apt-get install gcc-mingw-w64<figure class="highlight plain"><table><tr><td
 <h1 id="ubuntu解压windows生成的zip文件时乱码问题"><a href="#ubuntu解压windows生成的zip文件时乱码问题" class="headerlink" title="ubuntu解压windows生成的zip文件时乱码问题"></a>ubuntu解压windows生成的zip文件时乱码问题</h1><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">unzip -O CP936 xxx.zip</span><br></pre></td></tr></table></figure>
 
 <h1 id="https-证书生成"><a href="#https-证书生成" class="headerlink" title="https 证书生成"></a>https 证书生成</h1><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">openssl req -newkey rsa:4096 \</span><br><span class="line">            -x509 \</span><br><span class="line">            -sha256 \</span><br><span class="line">            -days 3650 \</span><br><span class="line">            -nodes \</span><br><span class="line">            -out example.crt \</span><br><span class="line">            -keyout example.key</span><br></pre></td></tr></table></figure>]]></content>
+  </entry>
+  <entry>
+    <title>micro/延迟队列</title>
+    <url>/2021/05/19/micro/%E5%BB%B6%E8%BF%9F%E9%98%9F%E5%88%97/</url>
+    <content><![CDATA[<h2 id="如何实现延迟队列？"><a href="#如何实现延迟队列？" class="headerlink" title="如何实现延迟队列？"></a>如何实现延迟队列？</h2><p>延迟队列的需求各位应该在日常开发的场景中经常碰到。比如：<br>用户登录之后5分钟给用户做分类推送；<br>用户多少天未登录给用户做召回推送；<br>定期检查用户当前退款账单是否被商家处理等等场景。<br>一般这种场景和定时任务还是有很大的区别，定时任务是你知道任务多久该跑一次或者什么时候只跑一次，这个时间是确定的。延迟队列是当某个事件发生的<br>时候需要延迟多久触发配套事件，引子事件发生的时间不是固定的。<br>业界目前也有很多实现方案，单机版的方案就不说了，现在也没有哪个公司还是单机版的服务，今天我们一一探讨各种方案的大致实现。  </p>
+<a id="more"></a>
+
+<h2 id="Redis-zset"><a href="#Redis-zset" class="headerlink" title="Redis zset"></a>Redis zset</h2><p>这个方案比较常用，简单有效。利用 Redis 的 sorted set 结构，使用 timeStamp 作为 score，比如你的任务是要延迟5分钟，那么就在当前时间上加<br>5分钟作为 score ，轮询任务每秒只轮询 score 大于当前时间的 key即可，如果任务支持有误差，那么当没有扫描到有效数据的时候可以休眠对应时间再继续轮询。  </p>
+<h3 id="方案优劣"><a href="#方案优劣" class="headerlink" title="方案优劣"></a>方案优劣</h3><h4 id="优点"><a href="#优点" class="headerlink" title="优点"></a>优点</h4><p>简单实用，一针见血。  </p>
+<h4 id="缺点"><a href="#缺点" class="headerlink" title="缺点"></a>缺点</h4><ol>
+<li>单个 zset 肯定支持不了太大的数据量，如果你有几百万的延迟任务需求，大哥我还是劝你换一个方案；  </li>
+<li>定时器轮询方案可能会有异常终止的情况需要自己处理，同时消息处理失败的回滚方案，您也要自己处理。  </li>
+</ol>
+<p>所以，sorted set 的方案并不是一个成熟的方案，他只是一个快速可供落地的方案。</p>
+<h2 id="RabbitMQ队列"><a href="#RabbitMQ队列" class="headerlink" title="RabbitMQ队列"></a>RabbitMQ队列</h2><p>下面说一个可以落地的方案，这个方案也被大多数目前在架构中使用了 RabbitMQ 的项目组使用。不好的一点就是，捆绑 RabbitMQ，当你的架构方案是<br>要用别的 MQ 替换 RabbitMQ 的时候，你就蛋疼了（我现在正在经历）。  </p>
+<p>RabbitMQ 有两个特性，一个是 Time-To-Live Extensions，另一个是 Dead Letter Exchanges。  </p>
+<h3 id="Time-To-Live-Extensions"><a href="#Time-To-Live-Extensions" class="headerlink" title="Time-To-Live Extensions"></a>Time-To-Live Extensions</h3><p>RabbitMQ允许我们为消息或者队列设置TTL（time to live），也就是过期时间。TTL表明了一条消息可在队列中存活的最大时间，单位为毫秒。也就是说，<br>当某条消息被设置了TTL或者当某条消息进入了设置了TTL的队列时，这条消息会在经过TTL秒后 “死亡”，成为Dead Letter。如果既配置了消息的TTL，<br>又配置了队列的TTL，那么较小的那个值会被取用。  </p>
+<h3 id="Dead-Letter-Exchanges"><a href="#Dead-Letter-Exchanges" class="headerlink" title="Dead Letter Exchanges"></a>Dead Letter Exchanges</h3><p>在 RabbitMQ 中，一共有三种消息的 “死亡” 形式：  </p>
+<ul>
+<li>消息被拒绝。通过调用 basic.reject 或者 basic.nack 并且设置的 requeue 参数为 false；  </li>
+<li>消息因为设置了TTL而过期；  </li>
+<li>队列达到最大长度。  </li>
+</ul>
+<p>DLX同一般的 Exchange 没有区别，它能在任何的队列上被指定，实际上就是设置某个队列的属性。当队列中有 DLX 消息时，RabbitMQ就会自动的将 DLX<br> 消息重新发布到设置的 Exchange 中去，进而被路由到另一个队列，publish 可以监听这个队列中消息做相应的处理。</p>
+<p>由上简介大家可以看出，RabbitMQ本身是不支持延迟队列的，只是他的特性让勤劳的 中国脱发群体 急中生智（为了完成任务）弄出了这么一套可用的方案。  </p>
+<h3 id="方案实现"><a href="#方案实现" class="headerlink" title="方案实现"></a>方案实现</h3><ol>
+<li>如果有事件需要延迟那么将该事件发送到MQ 队列中，为需要延迟的消息设置一个TTL；  </li>
+<li>TTL到期后就会自动进入设置好的DLX，然后由DLX转发到配置好的实际消费队列；  </li>
+<li>消费该队列的延迟消息，处理事件。  </li>
+</ol>
+<h3 id="方案优劣-1"><a href="#方案优劣-1" class="headerlink" title="方案优劣"></a>方案优劣</h3><h4 id="优点-1"><a href="#优点-1" class="headerlink" title="优点"></a>优点</h4><p>大品牌组件，用的放心。如果面临大数据量需求可以很容易的横向扩展，同时消息支持持久化，有问题可回滚。  </p>
+<h4 id="缺点-1"><a href="#缺点-1" class="headerlink" title="缺点"></a>缺点</h4><ol>
+<li>配置麻烦，额外增加一个死信交换机和一个死信队列的配置；  </li>
+<li>RabbitMQ 是一个消息中间件，TTL 和 DLX 只是他的一个特性，将延迟队列绑定在一个功能软件的某一个特性上，可能会有风险。不要杠，<br>当你们组不用 RabbitMQ 的时候迁移很痛苦；  </li>
+<li>消息队列具有先进先出的特点，如果第一个进入队列的消息 A 的延迟是10分钟，第二个进入队列的消息B 的延迟是5分钟，期望的是谁先到 TTL谁先出，<br>但是事实是B已经到期了，而还要等到 A 的延迟10分钟结束A先出之后，B 才能出。所以在设计的时候需要考虑不同延迟的消息要放到不同的队列。<br>另外该问题官方已经给出了插件来支持：<a href="https://www.rabbitmq.com/community-plugins.html" target="_blank" rel="noopener">插件地址</a>。</li>
+</ol>
+<h2 id="基于-Netty-HashedWheelTimer类方法的实现"><a href="#基于-Netty-HashedWheelTimer类方法的实现" class="headerlink" title="基于 Netty#HashedWheelTimer类方法的实现"></a>基于 Netty#HashedWheelTimer类方法的实现</h2><p>HashedWheelTimer 是 Netty 中 的一个基础工具类，主要用来高效处理大量定时任务，且任务对时间精度要求相对不高，<br>在Netty 中的应用场景就是连接超时或者任务处理超时，一般都是操作比较快速的任务，缺点是内存占用相对较高。  </p>
+<h3 id="算法思想"><a href="#算法思想" class="headerlink" title="算法思想"></a>算法思想</h3><p>HashedWheelTimer 主要还是一个 DelayQueue 和一个时间轮算法组合。<br><img src="/2021/05/19/micro/%E5%BB%B6%E8%BF%9F%E9%98%9F%E5%88%97/1607781-20200128112134537-701752363.png" alt></p>
+<p>Hash Wheel Timer是一个环形结构，可以想象成时钟，分为很多格子，一个格子代表一段时间（越短Timer精度越高），<br>并用一个List保存在该格子上到期的所有任务。同时一个指针随着时间流逝一格一格转动，并执行对应List中所有到期的任务。</p>
+<p>以上图为例，假设一个格子是1s，则整个时间轮能表示的时间段16s。当前任务指向格子2，表明在第2s的时候有任务需要执行。任务列表中有两个任务，<br>每个任务前面的数字表示圈数。2表示当走到第2圈的时候才会执行，那么整个任务的真正执行时间其实是在12s之后执行，即第二圈走到2的时候。每推进一格，对应的每一个 slot 中的round数都要减一。整体算法就是这么个逻辑。</p>
+<h3 id="时间轮设计要点："><a href="#时间轮设计要点：" class="headerlink" title="时间轮设计要点："></a>时间轮设计要点：</h3><ul>
+<li>tick，一次时间推进，每次推进会检查/执行超时任务；  </li>
+<li>tickDuration，时间轮推进的最小单元，每隔 tickDuration 会有一次 tick，它决定了时间轮的精确程度；  </li>
+<li>bucket（ticksPerWheel），上图中的每一隔就是一个bucket，表示一个时间轮可以有多少个tick，它是存储任务的最小单元；  </li>
+<li>上层时间轮的 tickDuration 是下层时间轮的表示时间的最大范围，即：父 tickDuration = 子 tickDuration * 子 bucket 。  </li>
+</ul>
+<p>需要注意的是，这种方式任务是串行执行的。意味着你如果在时间轮中执行任务且任务耗时较长，将会出现调度超时或者任务堆积的情况。所以要将任务的执行异步化。  </p>
+<h3 id="算法的要点："><a href="#算法的要点：" class="headerlink" title="算法的要点："></a>算法的要点：</h3><ol>
+<li>任务并不是直接放在格子中的，而是维护了一个双向链表，这种数据结构非常便于插入和移除；  </li>
+<li>新添加的任务并不直接放入格子，而是先放入一个队列中，这是为了避免多线程插入任务的冲突。在每个tick运行任务之前由worker线程自动对任务进行归集和分类，插入到对应的槽位里面。  </li>
+</ol>
+<p>Netty 使用数组 + 双向链表的方式来组织时间轮，对于添加/取消操作仅做了记录，真正的操作实际发生在下一个tick。时间的推进是独立的线程在做，该线程同时也负责过期任务的执行等操作，可简单认为此步骤操作为O(n)，因为推进线程需要完全遍历timeouts、cancelledTimeouts与bucket链表，在遍历timeouts时，Netty为了避免任务过多，所以限制每次最多遍历10万个，也就是说，一个tick只能规划10万个任务，当任务量过大时，会存在超时任务执行时间延迟的现象。</p>
+<h3 id="方案优劣-2"><a href="#方案优劣-2" class="headerlink" title="方案优劣"></a>方案优劣</h3><h4 id="优点-2"><a href="#优点-2" class="headerlink" title="优点"></a>优点</h4><p>实现比较优雅。效率高。</p>
+<h4 id="缺点-2"><a href="#缺点-2" class="headerlink" title="缺点"></a>缺点</h4><ol>
+<li>无法实现HA和横向扩展，要么就使用多个时间轮。  </li>
+<li>最重要的是，实现也比较复杂，开发者需要考虑所有可能的情况。<br>目前我了解到的延迟队列在生产环境下有如上三种实现方式，每一种都有人在使用。当然没有最好的只有最适合的，你觉得 redis 能满足需求，就按照最简单的来，你要是有充足的开发周期，你也可以实现时间轮展现实力。  </li>
+</ol>
+<p>需求千万种，变化就一种：给时间都能做。  </p>
+<blockquote>
+<p>作者： rickiyang<br>出处：<a href="https://www.cnblogs.com/rickiyang/p/12237612.html" target="_blank" rel="noopener">https://www.cnblogs.com/rickiyang/p/12237612.html</a></p>
+</blockquote>
+]]></content>
+      <categories>
+        <category>micro</category>
+      </categories>
+      <tags>
+        <tag>消息队列</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>micro/微服务手记</title>
+    <url>/2021/05/19/micro/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E6%89%8B%E8%AE%B0/</url>
+    <content><![CDATA[<h1 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h1><p>微服务将单体应用系统拆分成多个分而治之的小应用,降低系统整体崩溃的风险性;同时也可根据这些小应用的不同需求调整实体机的性能</p>
+<p>微服务主要缺点是将系统复杂化,但对于本身就复杂的系统,微服务受益会很高  </p>
+<a id="more"></a>
+
+<h1 id="优缺点"><a href="#优缺点" class="headerlink" title="优缺点"></a>优缺点</h1><p>判定标准,使用微服务后开发和维护变得轻松了,而不是困难  </p>
+<h2 id="优点"><a href="#优点" class="headerlink" title="优点"></a>优点</h2><p>1.化繁为简,分散治理<br>2.服务间松耦合,服务内高内聚<br>3.服务可独立构建/部署/升级,局部更新<br>4.提高系统容错性,减少系统整体崩溃的概率<br>5.易于实现异构系统  </p>
+<h2 id="缺点"><a href="#缺点" class="headerlink" title="缺点"></a>缺点</h2><p>1.增加了运维部署的工作量与难度<br>2.增加了系统间调用逻辑的处理难度<br>3.日志更男收集和统计了<br>4.额外引入了一些非业务模块服务</p>
+<h1 id="go-micro"><a href="#go-micro" class="headerlink" title="go-micro"></a>go-micro</h1><ul>
+<li>服务发现: 支持服务注册与发现,底层支持etcd/consul/k8s</li>
+<li>负载均衡: rpc服务间的请求调度均衡策略</li>
+<li>同步通信: 基于RPC通信,支持单向/双向流通信模式</li>
+<li>异步通信: 提供pub/sub通信模型的接口</li>
+<li>高级接口: 比如服务发现,提供调用的接口是一致的</li>
+</ul>
+]]></content>
+      <categories>
+        <category>micro</category>
+      </categories>
+  </entry>
+  <entry>
+    <title>mysql/MySQL在什么情况下会使用到临时表</title>
+    <url>/2021/05/19/mysql/MySQL%E5%9C%A8%E4%BB%80%E4%B9%88%E6%83%85%E5%86%B5%E4%B8%8B%E4%BC%9A%E4%BD%BF%E7%94%A8%E5%88%B0%E4%B8%B4%E6%97%B6%E8%A1%A8/</url>
+    <content><![CDATA[<p>MySQL在执行SQL查询时可能会用到临时表，一般情况下，用到临时表就意味着性能较低。临时表存储，MySQL临时表分为“内存临时表”和“磁盘临时表”，<br>其中内存临时表使用MySQL的MEMORY存储引擎，磁盘临时表使用MySQL的MyISAM存储引擎；</p>
+<a id="more"></a>
+
+<p> 一般情况下，MySQL会先创建内存临时表，但内存临时表超过配置指定的值后，MySQL会将内存临时表导出到磁盘临时表；<br> Linux平台上缺省是/tmp目录，/tmp目录小的系统要注意啦。  </p>
+<h3 id="使用临时表的场景"><a href="#使用临时表的场景" class="headerlink" title="使用临时表的场景"></a>使用临时表的场景</h3><ul>
+<li>ORDER BY子句和GROUP BY子句不同， 例如：ORDERY BY price GROUP BY name；   </li>
+<li>在JOIN查询中，ORDER BY或者GROUP BY使用了不是第一个表的列 例如：SELECT * from TableA, TableB ORDER BY TableA.price GROUP by TableB.name<br>（我在测试的时候发现即使是使用第一个表的列，也会使用到临时表）</li>
+<li>ORDER BY中使用了DISTINCT关键字 ORDERY BY DISTINCT(price)  </li>
+<li>SELECT语句中指定了SQL_SMALL_RESULT关键字 SQL_SMALL_RESULT的意思就是告诉MySQL，结果会很小，请直接使用内存临时表，<br>不需要使用索引排序 SQL_SMALL_RESULT必须和GROUP BY、DISTINCT或DISTINCTROW一起使用 一般情况下，我们没有必要使用这个选项，<br>让MySQL服务器选择即可。  </li>
+<li>当group by 索引的时候，当数据量较小的时候不会使用临时表，当数据量（我测试的数据量在30万左右）大的时候会使用临时表</li>
+<li>当group by 不是索引的时候会使用临时表  </li>
+</ul>
+<h3 id="直接使用磁盘临时表的场景"><a href="#直接使用磁盘临时表的场景" class="headerlink" title="直接使用磁盘临时表的场景"></a>直接使用磁盘临时表的场景</h3><ul>
+<li>表包含TEXT或者BLOB列；</li>
+<li>GROUP BY 或者 DISTINCT 子句中包含长度大于512字节的列</li>
+<li>使用UNION或者UNION ALL时，SELECT子句中包含大于512字节的列；</li>
+</ul>
+<h3 id="临时表相关配置"><a href="#临时表相关配置" class="headerlink" title="临时表相关配置"></a>临时表相关配置</h3><ul>
+<li>tmp_table_size 指定系统创建的内存临时表最大大小；</li>
+<li>max_heap_table_size 指定用户创建的内存表的最大大小；<blockquote>
+<p>注意：最终的系统创建的内存临时表大小是取上述两个配置值的最小值。</p>
+</blockquote>
+</li>
+</ul>
+<h3 id="表的设计原则"><a href="#表的设计原则" class="headerlink" title="表的设计原则"></a>表的设计原则</h3><p>使用临时表一般都意味着性能比较低，特别是使用磁盘临时表，性能更慢，因此我们在实际应用中应该尽量避免临时表的使用。<br>常见的避免临时表的方法有：</p>
+<ul>
+<li><p>创建索引：在ORDER BY或者GROUP BY的列上创建索引；</p>
+</li>
+<li><p>分拆很长的列：一般情况下，TEXT、BLOB，大于512字节的字符串，基本上都是为了显示信息，而不会用于查询条件， 因此表设计的时候，<br>应该将这些列独立到另外一张表。</p>
+</li>
+</ul>
+<h3 id="SQL优化"><a href="#SQL优化" class="headerlink" title="SQL优化"></a>SQL优化</h3><p>如果表的设计已经确定，修改比较困难，那么也可以通过优化SQL语句来减少临时表的大小，以提升SQL执行效率。常见的优化SQL语句方法如下：</p>
+<ul>
+<li>拆分SQL语句，临时表主要是用于排序和分组，很多业务都是要求排序后再取出详细的分页数据，这种情况下可以将排序和取出详细数据拆分成不同的SQL，<br>以降低排序或分组时临时表的大小，提升排序和分组的效率，我们的案例就是采用这种方法。</li>
+<li>优化业务，去掉排序分组等操作，有时候业务其实并不需要排序或分组，仅仅是为了好看或者阅读方便而进行了排序，例如数据导出、数据查询等操作，<br>这种情况下去掉排序和分组对业务也没有多大影响。</li>
+</ul>
+<h3 id="如何判断使用了临时表"><a href="#如何判断使用了临时表" class="headerlink" title="如何判断使用了临时表"></a>如何判断使用了临时表</h3><p>使用explain查看执行计划，Extra列看到Using temporary就意味着使用了临时表。</p>
+]]></content>
+      <categories>
+        <category>mysql</category>
+      </categories>
+      <tags>
+        <tag>mysql临时表</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>mysql/MySQL提升课程全面讲解MySQL架构设计</title>
+    <url>/2021/05/19/mysql/MySQL%E6%8F%90%E5%8D%87%E8%AF%BE%E7%A8%8B%E5%85%A8%E9%9D%A2%E8%AE%B2%E8%A7%A3MySQL%E6%9E%B6%E6%9E%84%E8%AE%BE%E8%AE%A1/</url>
+    <content><![CDATA[<h1 id="第一章-实例和故事"><a href="#第一章-实例和故事" class="headerlink" title="第一章 实例和故事"></a>第一章 实例和故事</h1><h2 id="什么决定了电商双11大促的成败"><a href="#什么决定了电商双11大促的成败" class="headerlink" title="什么决定了电商双11大促的成败"></a>什么决定了电商双11大促的成败</h2><h2 id="在双11大促的数据库服务器"><a href="#在双11大促的数据库服务器" class="headerlink" title="在双11大促的数据库服务器"></a>在双11大促的数据库服务器</h2><h2 id="在大促中什么影响了数据库性能"><a href="#在大促中什么影响了数据库性能" class="headerlink" title="在大促中什么影响了数据库性能"></a>在大促中什么影响了数据库性能</h2><ul>
+<li>sql查询数据</li>
+<li>服务器硬件</li>
+<li>网卡流量</li>
+<li>磁盘IO<a id="more"></a>
+<h3 id="超高的QPS和TPS带来的影响"><a href="#超高的QPS和TPS带来的影响" class="headerlink" title="超高的QPS和TPS带来的影响"></a>超高的QPS和TPS带来的影响</h3>QPS: 每秒钟处理的查询量  </li>
+<li>效率底下的sql<h3 id="大量的并发和超高的CPU使用率"><a href="#大量的并发和超高的CPU使用率" class="headerlink" title="大量的并发和超高的CPU使用率"></a>大量的并发和超高的CPU使用率</h3></li>
+<li>大量的并发导致数据库连接被占满（max_connections 默认100）</li>
+<li>超高的CPU使用率，因为CPU资源耗尽而出现宕机<h3 id="磁盘IO"><a href="#磁盘IO" class="headerlink" title="磁盘IO"></a>磁盘IO</h3></li>
+<li>磁盘IO性能突然下降（使用更快的磁盘设备）</li>
+<li>其它大量消耗磁盘性能的计划任务（调整计划，做好磁盘维护）<h3 id="网卡流量"><a href="#网卡流量" class="headerlink" title="网卡流量"></a>网卡流量</h3></li>
+<li>减少从服务器的数量</li>
+<li>进行分级缓存</li>
+<li>避免使用select * 进行查询</li>
+<li>分离业务网络和服务器网络</li>
+</ul>
+<h2 id="大表带来的问题"><a href="#大表带来的问题" class="headerlink" title="大表带来的问题"></a>大表带来的问题</h2><h3 id="什么是大表"><a href="#什么是大表" class="headerlink" title="什么是大表"></a>什么是大表</h3><ul>
+<li>记录行数巨大，单表超过千万行</li>
+<li>表数据文件巨大，表数据文件超过10G<h3 id="大表对查询的影响"><a href="#大表对查询的影响" class="headerlink" title="大表对查询的影响"></a>大表对查询的影响</h3></li>
+<li>慢查询 很难在一定的时间内过滤出所需要的数据<h3 id="大表对DDL的影响"><a href="#大表对DDL的影响" class="headerlink" title="大表对DDL的影响"></a>大表对DDL的影响</h3><h4 id="建立索引需要很长的时间"><a href="#建立索引需要很长的时间" class="headerlink" title="建立索引需要很长的时间"></a>建立索引需要很长的时间</h4>mysql&lt;5.5 建立索引会锁表<br>mysql&gt;=5.5 虽然不会锁表但会引起主从延迟  </li>
+</ul>
+<h4 id="修改表结构需要长时间锁表"><a href="#修改表结构需要长时间锁表" class="headerlink" title="修改表结构需要长时间锁表"></a>修改表结构需要长时间锁表</h4><p>会造成长时间锁表<br>影响正常的数据操作  </p>
+<h4 id="如何处理数据库中的大表"><a href="#如何处理数据库中的大表" class="headerlink" title="如何处理数据库中的大表"></a>如何处理数据库中的大表</h4><ul>
+<li>分库分表把一张大表分成多个小表<br>分表的主键选择<br>分表后跨分区数据的统计和查询</li>
+<li>大表的历史数据归档减少对前后端业务的影响<br>归档的时间点的选择<br>如何进行归档操作   </li>
+</ul>
+<h2 id="大事务带来的问题"><a href="#大事务带来的问题" class="headerlink" title="大事务带来的问题"></a>大事务带来的问题</h2><h3 id="什么是事务"><a href="#什么是事务" class="headerlink" title="什么是事务"></a>什么是事务</h3><ul>
+<li>事务是数据库系统区别于其它一切文件系统的重要特性之一</li>
+<li>事务是一组具有原子性的sql语句，或是一个独立的工作单元</li>
+</ul>
+<h3 id="大事务"><a href="#大事务" class="headerlink" title="大事务"></a>大事务</h3><ul>
+<li>运行时间长，操作的数据比较多的事务<br>锁定太多的数据，造成大量的阻塞和锁超时<br>回滚时所需要时间比较长<br>执行时间长，容易造成主从延迟</li>
+</ul>
+<h3 id="如何处理大事务"><a href="#如何处理大事务" class="headerlink" title="如何处理大事务"></a>如何处理大事务</h3><ul>
+<li>避免一次处理太多的数据</li>
+<li>移出不必要在事务中的select操作</li>
+</ul>
+<h2 id="第2章-什么影响了mysql的性能"><a href="#第2章-什么影响了mysql的性能" class="headerlink" title="第2章 什么影响了mysql的性能"></a>第2章 什么影响了mysql的性能</h2>]]></content>
+      <categories>
+        <category>mysql</category>
+      </categories>
+      <tags>
+        <tag>mysql架构</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>mysql/navicat_linux破解</title>
+    <url>/2021/05/19/mysql/navicat_linux%E7%A0%B4%E8%A7%A3/</url>
+    <content><![CDATA[<h1 id="网址"><a href="#网址" class="headerlink" title="网址"></a>网址</h1><p><a href="https://rlds.tk/" target="_blank" rel="noopener">https://rlds.tk/</a></p>
+<h1 id="破解过程"><a href="#破解过程" class="headerlink" title="破解过程"></a>破解过程</h1><ol>
+<li>下载Navicat包</li>
+<li>输入序列号</li>
+<li>断网</li>
+<li>触发手动激活</li>
+<li>获取请求码</li>
+<li>恢复网络</li>
+<li>生成激活码</li>
+</ol>
+]]></content>
+  </entry>
+  <entry>
+    <title>mysql/通过Docker安装配置MySQL主从节点</title>
+    <url>/2021/05/19/mysql/%E9%80%9A%E8%BF%87Docker%E5%AE%89%E8%A3%85%E9%85%8D%E7%BD%AEMySQL%E4%B8%BB%E4%BB%8E%E8%8A%82%E7%82%B9/</url>
+    <content><![CDATA[<h2 id="拉取最新版mysql镜像"><a href="#拉取最新版mysql镜像" class="headerlink" title="拉取最新版mysql镜像"></a>拉取最新版mysql镜像</h2><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">docker pull mysql</span><br></pre></td></tr></table></figure>
+<h2 id="mysql主服务器"><a href="#mysql主服务器" class="headerlink" title="mysql主服务器"></a>mysql主服务器</h2><h3 id="启动容器"><a href="#启动容器" class="headerlink" title="启动容器"></a>启动容器</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">docker run -p 3307:3306 --name mysql_master -e MYSQL_ROOT_PASSWORD=123456 -d mysql:latest</span><br></pre></td></tr></table></figure>
+<a id="more"></a>
+
+<h3 id="修改配置并添加slave用户"><a href="#修改配置并添加slave用户" class="headerlink" title="修改配置并添加slave用户"></a>修改配置并添加slave用户</h3><p>1.进入容器</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">docker exec -it d45457d26cad &#x2F;bin&#x2F;bash</span><br></pre></td></tr></table></figure>
+
+<p>2.修改配置    </p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">apt update &amp;&amp; apt install  vim -y</span><br><span class="line">vim /etc/mysql/my.cnf</span><br><span class="line"></span><br><span class="line">[mysqld]</span><br><span class="line"><span class="comment">## 同一局域网内注意要唯一</span></span><br><span class="line">server-id=100  </span><br><span class="line"><span class="comment">## 开启二进制日志功能，可以随便取（关键）</span></span><br><span class="line"><span class="built_in">log</span>-bin=mysql-bin</span><br></pre></td></tr></table></figure>
+<p>3.添加slave用户，用于slave读取binlog</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">mysql -uroot -p123456 </span><br><span class="line"></span><br><span class="line"><span class="comment">#mysql5.7以下使用 CREATE USER 'slave'@'%' IDENTIFIED BY '123456';</span></span><br><span class="line"><span class="comment">#mysql5.8修改了默认的认证方式为caching_sha2_password ,如果使用此方式创建slave用户，</span></span><br><span class="line"><span class="comment">#那么在后面slave连接master的时候就需要使用加密方式进行连接，否则会报错：Authentication requires secure connection</span></span><br><span class="line"></span><br><span class="line">CREATE USER <span class="string">'slave'</span>@<span class="string">'%'</span> IDENTIFIED WITH mysql_native_password BY <span class="string">'123456'</span>;</span><br><span class="line"></span><br><span class="line">GRANT REPLICATION SLAVE, REPLICATION CLIENT ON *.* TO <span class="string">'slave'</span>@<span class="string">'%'</span>;</span><br></pre></td></tr></table></figure>
+
+<p>4.重启容器</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">docker restart d45457d26cad</span><br></pre></td></tr></table></figure>
+
+<h2 id="mysql从服务器"><a href="#mysql从服务器" class="headerlink" title="mysql从服务器"></a>mysql从服务器</h2><h3 id="启动容器-1"><a href="#启动容器-1" class="headerlink" title="启动容器"></a>启动容器</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">docker run -p 3308:3306 --name mysql_slave -e MYSQL_ROOT_PASSWORD=123456 -d mysql:latest</span><br></pre></td></tr></table></figure>
+<h3 id="修改配置"><a href="#修改配置" class="headerlink" title="修改配置"></a>修改配置</h3><p>1.进入容器</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">docker <span class="built_in">exec</span> -it 3e80d15d8b00 /bin/bash</span><br></pre></td></tr></table></figure>
+<p>2.修改配置    </p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">apt update &amp;&amp; apt install  vim -y</span><br><span class="line">vim /etc/mysql/my.cnf</span><br><span class="line"></span><br><span class="line">[mysqld]</span><br><span class="line"><span class="comment">## 设置server_id,注意要唯一</span></span><br><span class="line">server-id=101  </span><br><span class="line"><span class="comment">## 开启二进制日志功能，以备Slave作为其它Slave的Master时使用</span></span><br><span class="line"><span class="built_in">log</span>-bin=mysql-slave-bin   </span><br><span class="line"><span class="comment">## relay_log配置中继日志</span></span><br><span class="line">relay_log=edu-mysql-relay-bin</span><br></pre></td></tr></table></figure>
+<p>3.重启容器</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">docker restart 3e80d15d8b00</span><br><span class="line">```    </span><br><span class="line"><span class="comment">## 配置slave使其连上master    </span></span><br><span class="line">```bash</span><br><span class="line">change master to master_host=<span class="string">'192.168.11.36'</span>, master_user=<span class="string">'slave'</span>, master_password=<span class="string">'123456'</span>, master_port=3307, master_log_file=<span class="string">'mysql-bin.000001'</span>, master_log_pos= 605, master_connect_retry=30;</span><br><span class="line"></span><br><span class="line">start slave </span><br><span class="line"></span><br><span class="line">show slave status \G 查看主从状态</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>参考文章<br><a href="https://www.cnblogs.com/songwenjie/p/9371422.html" target="_blank" rel="noopener">基于Docker的Mysql主从复制搭建</a></p>
+</blockquote>
+]]></content>
+      <categories>
+        <category>mysql</category>
+      </categories>
+      <tags>
+        <tag>mysql主从同步</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>nginx/如何利用nginx进行自动化负载均衡</title>
+    <url>/2021/05/19/nginx/%E5%A6%82%E4%BD%95%E5%88%A9%E7%94%A8nginx%E8%BF%9B%E8%A1%8C%E8%87%AA%E5%8A%A8%E5%8C%96%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1/</url>
+    <content><![CDATA[<p>基于Docker + Consul + Nginx + Consul-Template + Registrator的服务自动负载均衡实现 </p>
+<a id="more"></a>
+
+<h2 id="docker-composer相关知识点"><a href="#docker-composer相关知识点" class="headerlink" title="docker-composer相关知识点"></a>docker-composer相关知识点</h2><ul>
+<li>ports 暴露容器端口到主机的任意端口或指定端口, 用法如下<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">ports:</span><br><span class="line"> </span><br><span class="line">    - &quot;80:80&quot; # 绑定容器的80端口到主机的80端口</span><br><span class="line">     </span><br><span class="line">    - &quot;9000:8080&quot; # 绑定容器的8080端口到主机的9000端口</span><br><span class="line">     </span><br><span class="line">    - &quot;443&quot; # 绑定容器的443端口到主机的任意端口，容器启动时随机分配绑定的主机端口</span><br></pre></td></tr></table></figure></li>
+<li>links 使得docker容器间通过指定的名字来和目标容器通信 <blockquote>
+<p>如果使用links则容器间通信 只能通过该使用容器的ip地址来通信或者通过宿主机的ip加上容器暴露出的端口号来通信 （这两种都有弊端）</p>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">links:</span><br><span class="line">    -  consul_server_master:consul # 当前容器中使用consul 即可获取容器consul_server_master的ip地址,便于通信</span><br></pre></td></tr></table></figure></li>
+<li>depends_on 决定容器的依赖, 也就是指定当前容器的启动顺序，必须依赖启动后才会启动<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">depends_on:</span><br><span class="line">    - lb</span><br><span class="line">    - registrator</span><br></pre></td></tr></table></figure>
+
+</li>
+</ul>
+<h2 id="consul-相关知识点"><a href="#consul-相关知识点" class="headerlink" title="consul 相关知识点"></a>consul 相关知识点</h2><ul>
+<li><p>Client模式 就是客户端模式。是 Consul 节点的一种模式，这种模式下，所有注册到当前节点的服务会被转发到 Server，本身是不持久化这些信息。</p>
+</li>
+<li><p>Server模式 表明这个 Consul 是个 Server ，这种模式下，功能和 Client 都一样，唯一不同的是，它会把所有的信息持久化的本地，这样遇到故障，信息是可以被保留的。同时可以同步多个consul客户端的数据</p>
+<blockquote>
+<p>Server 节点之间的数据一致性保证协议使用的是 raft，而 zookeeper 用的 paxos，etcd采用的也是raft</p>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">command: consul agent -server -bootstrap-expect 1 -advertise 192.168.1.181 -node consul_server_master -data-dir &#x2F;tmp&#x2F;data-dir -client 0.0.0.0 -ui</span><br><span class="line"># -bootstrap-expect&#x3D;2 表示节点个数为2个</span><br><span class="line"># -node&#x3D;consul-server-1 表示节点名称为consul-server-1</span><br><span class="line"># -client&#x3D;0.0.0.0 表示允许连接的客户端 IP</span><br><span class="line"># -bind&#x3D;10.211.55.2 表示服务端 IP为10.211.55.2</span><br><span class="line"># -datacenter&#x3D;dc1 数据中心名称</span><br><span class="line"># -join&#x3D;10.211.55.4 表示加入10.211.55.4节点的集群</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>服务发现协议 Consul 采用 http 和 DNS 协议，etcd 只支持 http </p>
+</li>
+<li><p>服务注册 Consul 支持两种方式实现服务注册，一种是通过 Consul 的服务注册 Http API，由服务自己调用 API 实现注册，另一种方式是通过 json 格式的配置文件实现注册，将需要注册的服务以 json 格式的配置文件给出。Consul 官方建议使用第二种方式。</p>
+</li>
+<li><p>服务定义参数</p>
+</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th align="center">环境变量Key</th>
+<th align="center">环境变量Value</th>
+<th align="center">说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">SERVICE_ID</td>
+<td align="center">web-001</td>
+<td align="center">可以为GUID或者可读性更强变量，保证不重复</td>
+</tr>
+<tr>
+<td align="center">SERVICE_NAME</td>
+<td align="center">web</td>
+<td align="center">如果ID没有设置，Consul会将name作为id，则有可能注册失败</td>
+</tr>
+<tr>
+<td align="center">SERVICE_TAGS</td>
+<td align="center">nodejs,web</td>
+<td align="center">服务的标签，用逗号分隔，开发者可以根据标签来查询一些信息</td>
+</tr>
+<tr>
+<td align="center">SERVICE_IGNORE</td>
+<td align="center">Boolean</td>
+<td align="center">是否忽略本Container，可以为一些不需要注册的Container添加此属性</td>
+</tr>
+</tbody></table>
+<h2 id="实现原理"><a href="#实现原理" class="headerlink" title="实现原理"></a>实现原理</h2><ul>
+<li><p>通过 Nginx 自身实现负载均衡和请求转发</p>
+</li>
+<li><p>通过 Consul-template 的 config 功能实时监控 Consul 集群节点的服务和数据的变化；<br>实时的用 Consul 节点的信息替换 Nginx 配置文件的模板，并重新加载配置文件</p>
+<blockquote>
+<p>Consul-template 和 nginx 必须安装在同一台机器上，因为 Consul-template 需要动态修改 nginx 的配置文件 nginx.conf，然后执行 nginx -s reload 命令进行路由更新，达到动态负载均衡的目的</p>
+</blockquote>
+</li>
+<li><p>registrator，它可以通过跟本地的 docker 引擎通信，来获取本地启动的容器信息，并且注册到指定的服务发现管理端。</p>
+</li>
+</ul>
+<p>数据流向： docker 容器数据-&gt; registrator -&gt; consul -&gt;consul-template -&gt; nginx</p>
+<h2 id="镜像构建"><a href="#镜像构建" class="headerlink" title="镜像构建"></a>镜像构建</h2><ul>
+<li>Consul：consul:latest</li>
+<li>Registrator：gliderlabs/registrator:latest</li>
+<li>Nginx和Consul-template：liberalman/nginx-consul-template:latest</li>
+<li>Web: yeasy/simple-web:latest</li>
+</ul>
+<h2 id="docker-compose-yml"><a href="#docker-compose-yml" class="headerlink" title="docker-compose.yml"></a>docker-compose.yml</h2><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">version: &#39;3&#39;</span><br><span class="line">#backend web application, scale this with docker-compose scale web&#x3D;3</span><br><span class="line">services:</span><br><span class="line">    web:</span><br><span class="line">      image: yeasy&#x2F;simple-web:latest</span><br><span class="line">      environment:</span><br><span class="line">        - SERVICE_80_NAME&#x3D;my-web-server</span><br><span class="line">      ports:</span><br><span class="line">      - &quot;80&quot;</span><br><span class="line">      depends_on:</span><br><span class="line">          - lb</span><br><span class="line">          - registrator  </span><br><span class="line"></span><br><span class="line">    #load balancer will automatically update the config using consul-template</span><br><span class="line">    lb:</span><br><span class="line">      image: liberalman&#x2F;nginx-consul-template:latest</span><br><span class="line">      hostname: lb</span><br><span class="line">      environment:</span><br><span class="line">          - SERVICE_IGNORE&#x3D;true</span><br><span class="line">      links:</span><br><span class="line">      -  consul_server_master:consul</span><br><span class="line">      ports:</span><br><span class="line">      - &quot;80:80&quot;</span><br><span class="line">      depends_on:</span><br><span class="line">          - consul_server_master</span><br><span class="line">          </span><br><span class="line">    consul_server_master:</span><br><span class="line">      image:  consul:latest</span><br><span class="line">      hostname: consul_server_master</span><br><span class="line">      environment:</span><br><span class="line">          - SERVICE_IGNORE&#x3D;true</span><br><span class="line">      ports:</span><br><span class="line">      - &quot;8500:8500&quot;</span><br><span class="line">      command: consul agent -server -bootstrap-expect 1 -node consul_server_master -data-dir &#x2F;tmp&#x2F;consul -client 0.0.0.0 -ui</span><br><span class="line"></span><br><span class="line">    # listen on local docker sock to register the container with public ports to the consul service</span><br><span class="line">    registrator:</span><br><span class="line">      image: gliderlabs&#x2F;registrator:master</span><br><span class="line">      hostname: registrator</span><br><span class="line">      environment:</span><br><span class="line">          - SERVICE_IGNORE&#x3D;true</span><br><span class="line">      links:</span><br><span class="line">      - consul_server_master:consul</span><br><span class="line">      depends_on:</span><br><span class="line">          - consul_server_master</span><br><span class="line">      volumes:</span><br><span class="line">      - &quot;&#x2F;var&#x2F;run&#x2F;docker.sock:&#x2F;tmp&#x2F;docker.sock&quot;</span><br><span class="line">      command: -internal consul:&#x2F;&#x2F;consul:8500</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>注意：我们使用的第三方镜像 liberalman/nginx-consul-template，Nginx 会把名称为 my-web-server的服务容器作为后台转发的目标服务器,当然你也可以自己制作镜像指定模板. </p>
+</blockquote>
+<h2 id="测试步骤"><a href="#测试步骤" class="headerlink" title="测试步骤"></a>测试步骤</h2><ol>
+<li><p>docker-compose 模板所在目录，执行</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ sudo docker-compose up</span><br></pre></td></tr></table></figure></li>
+<li><p>访问 <a href="http://localhost" target="_blank" rel="noopener">http://localhost</a> 可以看到一个 web 页面，提示实际访问的目标地址。</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">#2019-12-20 04:12:30: 19 requests from &lt;LOCAL: 172.17.0.6&gt; to WebServer &lt;172.17.0.4&gt;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>增加web 测试负载</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ sudo docker-compose scale web=3</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>重复刷新<a href="http://localhost" target="_blank" rel="noopener">http://localhost</a> 观察ip变化</p>
+</li>
+</ol>
+<h2 id="总结测试"><a href="#总结测试" class="headerlink" title="总结测试"></a>总结测试</h2><p>最先我未去指定容器的启动顺序（deponds_on） 导致docker-compose up 后访问<a href="http://localhost" target="_blank" rel="noopener">http://localhost</a> 报错 nginx 502<br>原因是因为 registrator容器先于web容器启动，导致未将web容器注册到consul 所以生成的nginx配置文件中，没用web参与负载</p>
+<p>本文搭建的consul为单节点版本 ， 集群版 <a href="https://www.jianshu.com/p/fa41434d444a" target="_blank" rel="noopener">参考文章1</a></p>
+<h2 id="参考文章"><a href="#参考文章" class="headerlink" title="参考文章"></a>参考文章</h2><ol>
+<li><a href="https://www.jianshu.com/p/fa41434d444a" target="_blank" rel="noopener">基于Docker + Consul + Nginx + Consul-Template的服务负载均衡实现</a></li>
+<li><a href="https://my.oschina.net/xiaominmin/blog/1597660" target="_blank" rel="noopener">用 consul + consul-template + registrator + nginx 打造真正可动态扩展的服务架构 </a></li>
+<li><a href="https://www.sohu.com/a/282625515_468635" target="_blank" rel="noopener">8分钟学会Consul集群搭建及微服务概念 </a></li>
+</ol>
+]]></content>
+      <categories>
+        <category>nginx</category>
+      </categories>
+      <tags>
+        <tag>自动负载均衡</tag>
+        <tag>Nginx</tag>
+      </tags>
   </entry>
   <entry>
     <title>linux/计算机原理+操作系统基础+计算机网络(慕课网)</title>
@@ -2821,6 +3326,84 @@ sudo apt-get install gcc-mingw-w64<figure class="highlight plain"><table><tr><td
       </tags>
   </entry>
   <entry>
+    <title>photography/摄影入门</title>
+    <url>/2021/05/19/photography/%E6%91%84%E5%BD%B1%E5%85%A5%E9%97%A8/</url>
+    <content><![CDATA[<h1 id="摄影"><a href="#摄影" class="headerlink" title="摄影"></a>摄影</h1><p>摄影是光与影的艺术<br>摄影的基础是控制光</p>
+<h1 id="曝光"><a href="#曝光" class="headerlink" title="曝光"></a>曝光</h1><ul>
+<li>照片过暗，曝光不足</li>
+<li>照片过亮，曝光过度</li>
+<li>照片细节指的是影像有质感，细节，明暗合理</li>
+<li>亮有细节，暗有层次（亮处不能过曝，暗处不能漆黑一片）</li>
+</ul>
+<h2 id="曝光量受那些因素的影响"><a href="#曝光量受那些因素的影响" class="headerlink" title="曝光量受那些因素的影响"></a>曝光量受那些因素的影响</h2><ul>
+<li>光圈 （大光圈，进光量大）</li>
+<li>快门 （快门越慢，进光量大）</li>
+<li>ISO (感光原件，感知光线的能力)</li>
+</ul>
+<h2 id="光圈-f"><a href="#光圈-f" class="headerlink" title="光圈(f)"></a>光圈(f)</h2><h3 id="影响进光量"><a href="#影响进光量" class="headerlink" title="影响进光量"></a>影响进光量</h3><p>光圈是一个用来控制进光量的装置，它通常在镜头内，单位大小f值常用f3.5、f5.6、f8、f11、f16、f22等系数，f值代表的是光圈的厚度，f值越小曝光量<br>越大，f值越大曝光量越小<br>单位: f3.5  </p>
+<h3 id="影响景深的变化"><a href="#影响景深的变化" class="headerlink" title="影响景深的变化"></a>影响景深的变化</h3><p>大光圈拍摄景深浅，主体清晰背景模糊<br>小光圈拍摄景深长，主体和背景都很清晰  </p>
+<h2 id="快门"><a href="#快门" class="headerlink" title="快门"></a>快门</h2><p>快门是控制进光时间的一个装置，开的越久，进来的光线越多<br>单位: 1/125秒  </p>
+<ul>
+<li>高快门凝固瞬间  </li>
+<li>慢快门记录轨迹</li>
+</ul>
+<h3 id="曝光是如何控制的"><a href="#曝光是如何控制的" class="headerlink" title="曝光是如何控制的"></a>曝光是如何控制的</h3><p>快门越慢，时间越长，进光越多<br>慢快门需要三脚架支撑，手会抖</p>
+<h2 id="ISO"><a href="#ISO" class="headerlink" title="ISO"></a>ISO</h2><p>ISO感光度是衡量传统相机所使用胶片感光速度标准的国际统一指标，其反应了胶片感光时的能力，而对于数码相机来说，其实不使用胶片，而是通过感光器件<br>CCD或CMOS以及相关的电子线路感应入射强弱。<br>感光度越高，感光能力越强，画质越粗糙，噪点多<br>感光度越低，感光能力弱，画质越细腻。<br>ISO越高，画质越差，噪点越多<br>当光圈快门没有办法控制进光量的时候，适当提高ISO,来增加照片的亮度。</p>
+<h2 id="拍摄模式（曝光模式）"><a href="#拍摄模式（曝光模式）" class="headerlink" title="拍摄模式（曝光模式）"></a>拍摄模式（曝光模式）</h2><ul>
+<li>M档–手动曝光模式</li>
+<li>A（AV）档–光圈曝光模式，也叫光圈优先模式，指的是光圈可以人为手动控制，而快门相机会自动计算</li>
+<li>S（TV）档–快门曝光模式，也叫快门优先模式，指的是快门可以人为手动控制，而光圈相机会自动计算</li>
+<li>P档–自动曝光模式</li>
+<li>A+档–全自动曝光模式<blockquote>
+<p>除开以上几种外，一般称为傻瓜模式，由程序自动控制的模式。</p>
+</blockquote>
+</li>
+</ul>
+<p>光圈、快门、ISO共同决定一张影像相对正常的曝光，共同影响照片的曝光</p>
+<h1 id="相机镜头的概念"><a href="#相机镜头的概念" class="headerlink" title="相机镜头的概念"></a>相机镜头的概念</h1><h2 id="按成像质量可以和方便性"><a href="#按成像质量可以和方便性" class="headerlink" title="按成像质量可以和方便性"></a>按成像质量可以和方便性</h2><ul>
+<li>定焦镜头</li>
+<li>变焦镜头</li>
+</ul>
+<h2 id="焦距"><a href="#焦距" class="headerlink" title="焦距"></a>焦距</h2><p>焦距越大，视角越小，镜头越长，拍摄的范围越小，拍的越远<br>焦距越小，视角越大，镜头越短，拍摄范围越大，拍的越近</p>
+<h2 id="按焦距分镜头"><a href="#按焦距分镜头" class="headerlink" title="按焦距分镜头"></a>按焦距分镜头</h2><h3 id="广角-小于24mm"><a href="#广角-小于24mm" class="headerlink" title="广角 小于24mm"></a>广角 小于24mm</h3><p>取景范围大，多用于拍摄风光、建筑等</p>
+<h3 id="标准-50mm（45-60）左右"><a href="#标准-50mm（45-60）左右" class="headerlink" title="标准 50mm（45-60）左右"></a>标准 50mm（45-60）左右</h3><p>和人眼的感觉相同适合拍摄标准人像、静物、产品等。</p>
+<h3 id="中长焦-70-135mm"><a href="#中长焦-70-135mm" class="headerlink" title="中长焦 70-135mm"></a>中长焦 70-135mm</h3><p>适合拍摄人像</p>
+<h3 id="长焦-大于135mm"><a href="#长焦-大于135mm" class="headerlink" title="长焦 大于135mm"></a>长焦 大于135mm</h3><p>取景范围小，适合拍摄动物、体育</p>
+<h2 id="镜头的影响"><a href="#镜头的影响" class="headerlink" title="镜头的影响"></a>镜头的影响</h2><p>1.影响视角范围<br>2.影响景深  </p>
+<ul>
+<li>焦距越长；景深越浅，焦距越短，景深越深；</li>
+<li>焦距越长，背景越虚化；焦距越短，背景越清晰</li>
+</ul>
+<h2 id="对焦模式"><a href="#对焦模式" class="headerlink" title="对焦模式"></a>对焦模式</h2><p>对焦点为成像清晰点</p>
+<h3 id="AF（A）-自动对焦"><a href="#AF（A）-自动对焦" class="headerlink" title="AF（A） 自动对焦"></a>AF（A） 自动对焦</h3><p>佳能三种自动对焦模式  </p>
+<ul>
+<li><p>ONE SHOT (单次对焦模式) 半按快门释放键完成对焦后，若重新构图，对焦主体改变，将进行重新对焦。</p>
+</li>
+<li><p>AI SERVO（连续对焦模式） 半按快门释放键完成对焦后，若重新构图，对焦主体改变，将进行重新对焦。 有追焦的目的，试用于运动的物体</p>
+</li>
+<li><p>AI FOCUS (自动智能对焦模式)</p>
+<h3 id="MF-M-手动对焦"><a href="#MF-M-手动对焦" class="headerlink" title="MF (M)手动对焦"></a>MF (M)手动对焦</h3><p>可以在任何的光线下按下快门的，也可以说对任何一种情况都能拍摄</p>
+</li>
+</ul>
+<h2 id="单点对焦和区域对焦"><a href="#单点对焦和区域对焦" class="headerlink" title="单点对焦和区域对焦"></a>单点对焦和区域对焦</h2><p>在不知道选择对焦点的时候选择区域对焦</p>
+<h3 id="单点对焦"><a href="#单点对焦" class="headerlink" title="单点对焦"></a>单点对焦</h3><p>单点对于个别拍摄比较多，成功率高<br>焦点在人身上，大光圈的情况下，背景虚化，人像清晰。<br>焦点对人眼睛上，</p>
+<h2 id="白平衡"><a href="#白平衡" class="headerlink" title="白平衡"></a>白平衡</h2><h2 id="前景色和背景"><a href="#前景色和背景" class="headerlink" title="前景色和背景"></a>前景色和背景</h2><h3 id="前景"><a href="#前景" class="headerlink" title="前景"></a>前景</h3><ul>
+<li>加强气氛</li>
+<li>增加画面空间层次感</li>
+<li>均衡画面</li>
+</ul>
+<h3 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h3><ul>
+<li>突出主题</li>
+<li>丰富主题的内涵</li>
+</ul>
+<h1 id="常见摄影题材和摄影技法"><a href="#常见摄影题材和摄影技法" class="headerlink" title="常见摄影题材和摄影技法"></a>常见摄影题材和摄影技法</h1><h2 id="日出、日落"><a href="#日出、日落" class="headerlink" title="日出、日落"></a>日出、日落</h2><ol>
+<li>开阔、地势高的地方</li>
+</ol>
+<h2 id="拍摄瀑布"><a href="#拍摄瀑布" class="headerlink" title="拍摄瀑布"></a>拍摄瀑布</h2><h3 id="使用高速快门（推荐）"><a href="#使用高速快门（推荐）" class="headerlink" title="使用高速快门（推荐）"></a>使用高速快门（推荐）</h3><p>使用高速快门凝结住飞溅的水花和奔流的场景（推荐）</p>
+<h3 id="使用慢速快门"><a href="#使用慢速快门" class="headerlink" title="使用慢速快门"></a>使用慢速快门</h3><p>使用慢速快门拍摄雾状的水流和整体的水泻效果<br>使用慢门，需要在光线较弱的情况下使用,例如：<br>1.合适的天气<br>2.滤镜<br>3.低ISO</p>
+]]></content>
+  </entry>
+  <entry>
     <title>linux/计算机原理+操作系统基础+计算机网络面试题</title>
     <url>/2021/05/19/linux/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%8E%9F%E7%90%86+%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E5%9F%BA%E7%A1%80+%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C%E9%9D%A2%E8%AF%95%E9%A2%98/</url>
     <content><![CDATA[<h1 id="第二章-计算机主城原理之概述篇"><a href="#第二章-计算机主城原理之概述篇" class="headerlink" title="第二章 计算机主城原理之概述篇"></a>第二章 计算机主城原理之概述篇</h1><ul>
@@ -3547,432 +4130,6 @@ sudo apt-get install gcc-mingw-w64<figure class="highlight plain"><table><tr><td
       <tags>
         <tag>linux习题</tag>
       </tags>
-  </entry>
-  <entry>
-    <title>micro/延迟队列</title>
-    <url>/2021/05/19/micro/%E5%BB%B6%E8%BF%9F%E9%98%9F%E5%88%97/</url>
-    <content><![CDATA[<h2 id="如何实现延迟队列？"><a href="#如何实现延迟队列？" class="headerlink" title="如何实现延迟队列？"></a>如何实现延迟队列？</h2><p>延迟队列的需求各位应该在日常开发的场景中经常碰到。比如：<br>用户登录之后5分钟给用户做分类推送；<br>用户多少天未登录给用户做召回推送；<br>定期检查用户当前退款账单是否被商家处理等等场景。<br>一般这种场景和定时任务还是有很大的区别，定时任务是你知道任务多久该跑一次或者什么时候只跑一次，这个时间是确定的。延迟队列是当某个事件发生的<br>时候需要延迟多久触发配套事件，引子事件发生的时间不是固定的。<br>业界目前也有很多实现方案，单机版的方案就不说了，现在也没有哪个公司还是单机版的服务，今天我们一一探讨各种方案的大致实现。  </p>
-<a id="more"></a>
-
-<h2 id="Redis-zset"><a href="#Redis-zset" class="headerlink" title="Redis zset"></a>Redis zset</h2><p>这个方案比较常用，简单有效。利用 Redis 的 sorted set 结构，使用 timeStamp 作为 score，比如你的任务是要延迟5分钟，那么就在当前时间上加<br>5分钟作为 score ，轮询任务每秒只轮询 score 大于当前时间的 key即可，如果任务支持有误差，那么当没有扫描到有效数据的时候可以休眠对应时间再继续轮询。  </p>
-<h3 id="方案优劣"><a href="#方案优劣" class="headerlink" title="方案优劣"></a>方案优劣</h3><h4 id="优点"><a href="#优点" class="headerlink" title="优点"></a>优点</h4><p>简单实用，一针见血。  </p>
-<h4 id="缺点"><a href="#缺点" class="headerlink" title="缺点"></a>缺点</h4><ol>
-<li>单个 zset 肯定支持不了太大的数据量，如果你有几百万的延迟任务需求，大哥我还是劝你换一个方案；  </li>
-<li>定时器轮询方案可能会有异常终止的情况需要自己处理，同时消息处理失败的回滚方案，您也要自己处理。  </li>
-</ol>
-<p>所以，sorted set 的方案并不是一个成熟的方案，他只是一个快速可供落地的方案。</p>
-<h2 id="RabbitMQ队列"><a href="#RabbitMQ队列" class="headerlink" title="RabbitMQ队列"></a>RabbitMQ队列</h2><p>下面说一个可以落地的方案，这个方案也被大多数目前在架构中使用了 RabbitMQ 的项目组使用。不好的一点就是，捆绑 RabbitMQ，当你的架构方案是<br>要用别的 MQ 替换 RabbitMQ 的时候，你就蛋疼了（我现在正在经历）。  </p>
-<p>RabbitMQ 有两个特性，一个是 Time-To-Live Extensions，另一个是 Dead Letter Exchanges。  </p>
-<h3 id="Time-To-Live-Extensions"><a href="#Time-To-Live-Extensions" class="headerlink" title="Time-To-Live Extensions"></a>Time-To-Live Extensions</h3><p>RabbitMQ允许我们为消息或者队列设置TTL（time to live），也就是过期时间。TTL表明了一条消息可在队列中存活的最大时间，单位为毫秒。也就是说，<br>当某条消息被设置了TTL或者当某条消息进入了设置了TTL的队列时，这条消息会在经过TTL秒后 “死亡”，成为Dead Letter。如果既配置了消息的TTL，<br>又配置了队列的TTL，那么较小的那个值会被取用。  </p>
-<h3 id="Dead-Letter-Exchanges"><a href="#Dead-Letter-Exchanges" class="headerlink" title="Dead Letter Exchanges"></a>Dead Letter Exchanges</h3><p>在 RabbitMQ 中，一共有三种消息的 “死亡” 形式：  </p>
-<ul>
-<li>消息被拒绝。通过调用 basic.reject 或者 basic.nack 并且设置的 requeue 参数为 false；  </li>
-<li>消息因为设置了TTL而过期；  </li>
-<li>队列达到最大长度。  </li>
-</ul>
-<p>DLX同一般的 Exchange 没有区别，它能在任何的队列上被指定，实际上就是设置某个队列的属性。当队列中有 DLX 消息时，RabbitMQ就会自动的将 DLX<br> 消息重新发布到设置的 Exchange 中去，进而被路由到另一个队列，publish 可以监听这个队列中消息做相应的处理。</p>
-<p>由上简介大家可以看出，RabbitMQ本身是不支持延迟队列的，只是他的特性让勤劳的 中国脱发群体 急中生智（为了完成任务）弄出了这么一套可用的方案。  </p>
-<h3 id="方案实现"><a href="#方案实现" class="headerlink" title="方案实现"></a>方案实现</h3><ol>
-<li>如果有事件需要延迟那么将该事件发送到MQ 队列中，为需要延迟的消息设置一个TTL；  </li>
-<li>TTL到期后就会自动进入设置好的DLX，然后由DLX转发到配置好的实际消费队列；  </li>
-<li>消费该队列的延迟消息，处理事件。  </li>
-</ol>
-<h3 id="方案优劣-1"><a href="#方案优劣-1" class="headerlink" title="方案优劣"></a>方案优劣</h3><h4 id="优点-1"><a href="#优点-1" class="headerlink" title="优点"></a>优点</h4><p>大品牌组件，用的放心。如果面临大数据量需求可以很容易的横向扩展，同时消息支持持久化，有问题可回滚。  </p>
-<h4 id="缺点-1"><a href="#缺点-1" class="headerlink" title="缺点"></a>缺点</h4><ol>
-<li>配置麻烦，额外增加一个死信交换机和一个死信队列的配置；  </li>
-<li>RabbitMQ 是一个消息中间件，TTL 和 DLX 只是他的一个特性，将延迟队列绑定在一个功能软件的某一个特性上，可能会有风险。不要杠，<br>当你们组不用 RabbitMQ 的时候迁移很痛苦；  </li>
-<li>消息队列具有先进先出的特点，如果第一个进入队列的消息 A 的延迟是10分钟，第二个进入队列的消息B 的延迟是5分钟，期望的是谁先到 TTL谁先出，<br>但是事实是B已经到期了，而还要等到 A 的延迟10分钟结束A先出之后，B 才能出。所以在设计的时候需要考虑不同延迟的消息要放到不同的队列。<br>另外该问题官方已经给出了插件来支持：<a href="https://www.rabbitmq.com/community-plugins.html" target="_blank" rel="noopener">插件地址</a>。</li>
-</ol>
-<h2 id="基于-Netty-HashedWheelTimer类方法的实现"><a href="#基于-Netty-HashedWheelTimer类方法的实现" class="headerlink" title="基于 Netty#HashedWheelTimer类方法的实现"></a>基于 Netty#HashedWheelTimer类方法的实现</h2><p>HashedWheelTimer 是 Netty 中 的一个基础工具类，主要用来高效处理大量定时任务，且任务对时间精度要求相对不高，<br>在Netty 中的应用场景就是连接超时或者任务处理超时，一般都是操作比较快速的任务，缺点是内存占用相对较高。  </p>
-<h3 id="算法思想"><a href="#算法思想" class="headerlink" title="算法思想"></a>算法思想</h3><p>HashedWheelTimer 主要还是一个 DelayQueue 和一个时间轮算法组合。<br><img src="/2021/05/19/micro/%E5%BB%B6%E8%BF%9F%E9%98%9F%E5%88%97/1607781-20200128112134537-701752363.png" alt></p>
-<p>Hash Wheel Timer是一个环形结构，可以想象成时钟，分为很多格子，一个格子代表一段时间（越短Timer精度越高），<br>并用一个List保存在该格子上到期的所有任务。同时一个指针随着时间流逝一格一格转动，并执行对应List中所有到期的任务。</p>
-<p>以上图为例，假设一个格子是1s，则整个时间轮能表示的时间段16s。当前任务指向格子2，表明在第2s的时候有任务需要执行。任务列表中有两个任务，<br>每个任务前面的数字表示圈数。2表示当走到第2圈的时候才会执行，那么整个任务的真正执行时间其实是在12s之后执行，即第二圈走到2的时候。每推进一格，对应的每一个 slot 中的round数都要减一。整体算法就是这么个逻辑。</p>
-<h3 id="时间轮设计要点："><a href="#时间轮设计要点：" class="headerlink" title="时间轮设计要点："></a>时间轮设计要点：</h3><ul>
-<li>tick，一次时间推进，每次推进会检查/执行超时任务；  </li>
-<li>tickDuration，时间轮推进的最小单元，每隔 tickDuration 会有一次 tick，它决定了时间轮的精确程度；  </li>
-<li>bucket（ticksPerWheel），上图中的每一隔就是一个bucket，表示一个时间轮可以有多少个tick，它是存储任务的最小单元；  </li>
-<li>上层时间轮的 tickDuration 是下层时间轮的表示时间的最大范围，即：父 tickDuration = 子 tickDuration * 子 bucket 。  </li>
-</ul>
-<p>需要注意的是，这种方式任务是串行执行的。意味着你如果在时间轮中执行任务且任务耗时较长，将会出现调度超时或者任务堆积的情况。所以要将任务的执行异步化。  </p>
-<h3 id="算法的要点："><a href="#算法的要点：" class="headerlink" title="算法的要点："></a>算法的要点：</h3><ol>
-<li>任务并不是直接放在格子中的，而是维护了一个双向链表，这种数据结构非常便于插入和移除；  </li>
-<li>新添加的任务并不直接放入格子，而是先放入一个队列中，这是为了避免多线程插入任务的冲突。在每个tick运行任务之前由worker线程自动对任务进行归集和分类，插入到对应的槽位里面。  </li>
-</ol>
-<p>Netty 使用数组 + 双向链表的方式来组织时间轮，对于添加/取消操作仅做了记录，真正的操作实际发生在下一个tick。时间的推进是独立的线程在做，该线程同时也负责过期任务的执行等操作，可简单认为此步骤操作为O(n)，因为推进线程需要完全遍历timeouts、cancelledTimeouts与bucket链表，在遍历timeouts时，Netty为了避免任务过多，所以限制每次最多遍历10万个，也就是说，一个tick只能规划10万个任务，当任务量过大时，会存在超时任务执行时间延迟的现象。</p>
-<h3 id="方案优劣-2"><a href="#方案优劣-2" class="headerlink" title="方案优劣"></a>方案优劣</h3><h4 id="优点-2"><a href="#优点-2" class="headerlink" title="优点"></a>优点</h4><p>实现比较优雅。效率高。</p>
-<h4 id="缺点-2"><a href="#缺点-2" class="headerlink" title="缺点"></a>缺点</h4><ol>
-<li>无法实现HA和横向扩展，要么就使用多个时间轮。  </li>
-<li>最重要的是，实现也比较复杂，开发者需要考虑所有可能的情况。<br>目前我了解到的延迟队列在生产环境下有如上三种实现方式，每一种都有人在使用。当然没有最好的只有最适合的，你觉得 redis 能满足需求，就按照最简单的来，你要是有充足的开发周期，你也可以实现时间轮展现实力。  </li>
-</ol>
-<p>需求千万种，变化就一种：给时间都能做。  </p>
-<blockquote>
-<p>作者： rickiyang<br>出处：<a href="https://www.cnblogs.com/rickiyang/p/12237612.html" target="_blank" rel="noopener">https://www.cnblogs.com/rickiyang/p/12237612.html</a></p>
-</blockquote>
-]]></content>
-      <categories>
-        <category>micro</category>
-      </categories>
-      <tags>
-        <tag>消息队列</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>micro/微服务手记</title>
-    <url>/2021/05/19/micro/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E6%89%8B%E8%AE%B0/</url>
-    <content><![CDATA[<h1 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h1><p>微服务将单体应用系统拆分成多个分而治之的小应用,降低系统整体崩溃的风险性;同时也可根据这些小应用的不同需求调整实体机的性能</p>
-<p>微服务主要缺点是将系统复杂化,但对于本身就复杂的系统,微服务受益会很高  </p>
-<a id="more"></a>
-
-<h1 id="优缺点"><a href="#优缺点" class="headerlink" title="优缺点"></a>优缺点</h1><p>判定标准,使用微服务后开发和维护变得轻松了,而不是困难  </p>
-<h2 id="优点"><a href="#优点" class="headerlink" title="优点"></a>优点</h2><p>1.化繁为简,分散治理<br>2.服务间松耦合,服务内高内聚<br>3.服务可独立构建/部署/升级,局部更新<br>4.提高系统容错性,减少系统整体崩溃的概率<br>5.易于实现异构系统  </p>
-<h2 id="缺点"><a href="#缺点" class="headerlink" title="缺点"></a>缺点</h2><p>1.增加了运维部署的工作量与难度<br>2.增加了系统间调用逻辑的处理难度<br>3.日志更男收集和统计了<br>4.额外引入了一些非业务模块服务</p>
-<h1 id="go-micro"><a href="#go-micro" class="headerlink" title="go-micro"></a>go-micro</h1><ul>
-<li>服务发现: 支持服务注册与发现,底层支持etcd/consul/k8s</li>
-<li>负载均衡: rpc服务间的请求调度均衡策略</li>
-<li>同步通信: 基于RPC通信,支持单向/双向流通信模式</li>
-<li>异步通信: 提供pub/sub通信模型的接口</li>
-<li>高级接口: 比如服务发现,提供调用的接口是一致的</li>
-</ul>
-]]></content>
-      <categories>
-        <category>micro</category>
-      </categories>
-  </entry>
-  <entry>
-    <title>mysql/MySQL在什么情况下会使用到临时表</title>
-    <url>/2021/05/19/mysql/MySQL%E5%9C%A8%E4%BB%80%E4%B9%88%E6%83%85%E5%86%B5%E4%B8%8B%E4%BC%9A%E4%BD%BF%E7%94%A8%E5%88%B0%E4%B8%B4%E6%97%B6%E8%A1%A8/</url>
-    <content><![CDATA[<p>MySQL在执行SQL查询时可能会用到临时表，一般情况下，用到临时表就意味着性能较低。临时表存储，MySQL临时表分为“内存临时表”和“磁盘临时表”，<br>其中内存临时表使用MySQL的MEMORY存储引擎，磁盘临时表使用MySQL的MyISAM存储引擎；</p>
-<a id="more"></a>
-
-<p> 一般情况下，MySQL会先创建内存临时表，但内存临时表超过配置指定的值后，MySQL会将内存临时表导出到磁盘临时表；<br> Linux平台上缺省是/tmp目录，/tmp目录小的系统要注意啦。  </p>
-<h3 id="使用临时表的场景"><a href="#使用临时表的场景" class="headerlink" title="使用临时表的场景"></a>使用临时表的场景</h3><ul>
-<li>ORDER BY子句和GROUP BY子句不同， 例如：ORDERY BY price GROUP BY name；   </li>
-<li>在JOIN查询中，ORDER BY或者GROUP BY使用了不是第一个表的列 例如：SELECT * from TableA, TableB ORDER BY TableA.price GROUP by TableB.name<br>（我在测试的时候发现即使是使用第一个表的列，也会使用到临时表）</li>
-<li>ORDER BY中使用了DISTINCT关键字 ORDERY BY DISTINCT(price)  </li>
-<li>SELECT语句中指定了SQL_SMALL_RESULT关键字 SQL_SMALL_RESULT的意思就是告诉MySQL，结果会很小，请直接使用内存临时表，<br>不需要使用索引排序 SQL_SMALL_RESULT必须和GROUP BY、DISTINCT或DISTINCTROW一起使用 一般情况下，我们没有必要使用这个选项，<br>让MySQL服务器选择即可。  </li>
-<li>当group by 索引的时候，当数据量较小的时候不会使用临时表，当数据量（我测试的数据量在30万左右）大的时候会使用临时表</li>
-<li>当group by 不是索引的时候会使用临时表  </li>
-</ul>
-<h3 id="直接使用磁盘临时表的场景"><a href="#直接使用磁盘临时表的场景" class="headerlink" title="直接使用磁盘临时表的场景"></a>直接使用磁盘临时表的场景</h3><ul>
-<li>表包含TEXT或者BLOB列；</li>
-<li>GROUP BY 或者 DISTINCT 子句中包含长度大于512字节的列</li>
-<li>使用UNION或者UNION ALL时，SELECT子句中包含大于512字节的列；</li>
-</ul>
-<h3 id="临时表相关配置"><a href="#临时表相关配置" class="headerlink" title="临时表相关配置"></a>临时表相关配置</h3><ul>
-<li>tmp_table_size 指定系统创建的内存临时表最大大小；</li>
-<li>max_heap_table_size 指定用户创建的内存表的最大大小；<blockquote>
-<p>注意：最终的系统创建的内存临时表大小是取上述两个配置值的最小值。</p>
-</blockquote>
-</li>
-</ul>
-<h3 id="表的设计原则"><a href="#表的设计原则" class="headerlink" title="表的设计原则"></a>表的设计原则</h3><p>使用临时表一般都意味着性能比较低，特别是使用磁盘临时表，性能更慢，因此我们在实际应用中应该尽量避免临时表的使用。<br>常见的避免临时表的方法有：</p>
-<ul>
-<li><p>创建索引：在ORDER BY或者GROUP BY的列上创建索引；</p>
-</li>
-<li><p>分拆很长的列：一般情况下，TEXT、BLOB，大于512字节的字符串，基本上都是为了显示信息，而不会用于查询条件， 因此表设计的时候，<br>应该将这些列独立到另外一张表。</p>
-</li>
-</ul>
-<h3 id="SQL优化"><a href="#SQL优化" class="headerlink" title="SQL优化"></a>SQL优化</h3><p>如果表的设计已经确定，修改比较困难，那么也可以通过优化SQL语句来减少临时表的大小，以提升SQL执行效率。常见的优化SQL语句方法如下：</p>
-<ul>
-<li>拆分SQL语句，临时表主要是用于排序和分组，很多业务都是要求排序后再取出详细的分页数据，这种情况下可以将排序和取出详细数据拆分成不同的SQL，<br>以降低排序或分组时临时表的大小，提升排序和分组的效率，我们的案例就是采用这种方法。</li>
-<li>优化业务，去掉排序分组等操作，有时候业务其实并不需要排序或分组，仅仅是为了好看或者阅读方便而进行了排序，例如数据导出、数据查询等操作，<br>这种情况下去掉排序和分组对业务也没有多大影响。</li>
-</ul>
-<h3 id="如何判断使用了临时表"><a href="#如何判断使用了临时表" class="headerlink" title="如何判断使用了临时表"></a>如何判断使用了临时表</h3><p>使用explain查看执行计划，Extra列看到Using temporary就意味着使用了临时表。</p>
-]]></content>
-      <categories>
-        <category>mysql</category>
-      </categories>
-      <tags>
-        <tag>mysql临时表</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>mysql/MySQL提升课程全面讲解MySQL架构设计</title>
-    <url>/2021/05/19/mysql/MySQL%E6%8F%90%E5%8D%87%E8%AF%BE%E7%A8%8B%E5%85%A8%E9%9D%A2%E8%AE%B2%E8%A7%A3MySQL%E6%9E%B6%E6%9E%84%E8%AE%BE%E8%AE%A1/</url>
-    <content><![CDATA[<h1 id="第一章-实例和故事"><a href="#第一章-实例和故事" class="headerlink" title="第一章 实例和故事"></a>第一章 实例和故事</h1><h2 id="什么决定了电商双11大促的成败"><a href="#什么决定了电商双11大促的成败" class="headerlink" title="什么决定了电商双11大促的成败"></a>什么决定了电商双11大促的成败</h2><h2 id="在双11大促的数据库服务器"><a href="#在双11大促的数据库服务器" class="headerlink" title="在双11大促的数据库服务器"></a>在双11大促的数据库服务器</h2><h2 id="在大促中什么影响了数据库性能"><a href="#在大促中什么影响了数据库性能" class="headerlink" title="在大促中什么影响了数据库性能"></a>在大促中什么影响了数据库性能</h2><ul>
-<li>sql查询数据</li>
-<li>服务器硬件</li>
-<li>网卡流量</li>
-<li>磁盘IO<a id="more"></a>
-<h3 id="超高的QPS和TPS带来的影响"><a href="#超高的QPS和TPS带来的影响" class="headerlink" title="超高的QPS和TPS带来的影响"></a>超高的QPS和TPS带来的影响</h3>QPS: 每秒钟处理的查询量  </li>
-<li>效率底下的sql<h3 id="大量的并发和超高的CPU使用率"><a href="#大量的并发和超高的CPU使用率" class="headerlink" title="大量的并发和超高的CPU使用率"></a>大量的并发和超高的CPU使用率</h3></li>
-<li>大量的并发导致数据库连接被占满（max_connections 默认100）</li>
-<li>超高的CPU使用率，因为CPU资源耗尽而出现宕机<h3 id="磁盘IO"><a href="#磁盘IO" class="headerlink" title="磁盘IO"></a>磁盘IO</h3></li>
-<li>磁盘IO性能突然下降（使用更快的磁盘设备）</li>
-<li>其它大量消耗磁盘性能的计划任务（调整计划，做好磁盘维护）<h3 id="网卡流量"><a href="#网卡流量" class="headerlink" title="网卡流量"></a>网卡流量</h3></li>
-<li>减少从服务器的数量</li>
-<li>进行分级缓存</li>
-<li>避免使用select * 进行查询</li>
-<li>分离业务网络和服务器网络</li>
-</ul>
-<h2 id="大表带来的问题"><a href="#大表带来的问题" class="headerlink" title="大表带来的问题"></a>大表带来的问题</h2><h3 id="什么是大表"><a href="#什么是大表" class="headerlink" title="什么是大表"></a>什么是大表</h3><ul>
-<li>记录行数巨大，单表超过千万行</li>
-<li>表数据文件巨大，表数据文件超过10G<h3 id="大表对查询的影响"><a href="#大表对查询的影响" class="headerlink" title="大表对查询的影响"></a>大表对查询的影响</h3></li>
-<li>慢查询 很难在一定的时间内过滤出所需要的数据<h3 id="大表对DDL的影响"><a href="#大表对DDL的影响" class="headerlink" title="大表对DDL的影响"></a>大表对DDL的影响</h3><h4 id="建立索引需要很长的时间"><a href="#建立索引需要很长的时间" class="headerlink" title="建立索引需要很长的时间"></a>建立索引需要很长的时间</h4>mysql&lt;5.5 建立索引会锁表<br>mysql&gt;=5.5 虽然不会锁表但会引起主从延迟  </li>
-</ul>
-<h4 id="修改表结构需要长时间锁表"><a href="#修改表结构需要长时间锁表" class="headerlink" title="修改表结构需要长时间锁表"></a>修改表结构需要长时间锁表</h4><p>会造成长时间锁表<br>影响正常的数据操作  </p>
-<h4 id="如何处理数据库中的大表"><a href="#如何处理数据库中的大表" class="headerlink" title="如何处理数据库中的大表"></a>如何处理数据库中的大表</h4><ul>
-<li>分库分表把一张大表分成多个小表<br>分表的主键选择<br>分表后跨分区数据的统计和查询</li>
-<li>大表的历史数据归档减少对前后端业务的影响<br>归档的时间点的选择<br>如何进行归档操作   </li>
-</ul>
-<h2 id="大事务带来的问题"><a href="#大事务带来的问题" class="headerlink" title="大事务带来的问题"></a>大事务带来的问题</h2><h3 id="什么是事务"><a href="#什么是事务" class="headerlink" title="什么是事务"></a>什么是事务</h3><ul>
-<li>事务是数据库系统区别于其它一切文件系统的重要特性之一</li>
-<li>事务是一组具有原子性的sql语句，或是一个独立的工作单元</li>
-</ul>
-<h3 id="大事务"><a href="#大事务" class="headerlink" title="大事务"></a>大事务</h3><ul>
-<li>运行时间长，操作的数据比较多的事务<br>锁定太多的数据，造成大量的阻塞和锁超时<br>回滚时所需要时间比较长<br>执行时间长，容易造成主从延迟</li>
-</ul>
-<h3 id="如何处理大事务"><a href="#如何处理大事务" class="headerlink" title="如何处理大事务"></a>如何处理大事务</h3><ul>
-<li>避免一次处理太多的数据</li>
-<li>移出不必要在事务中的select操作</li>
-</ul>
-<h2 id="第2章-什么影响了mysql的性能"><a href="#第2章-什么影响了mysql的性能" class="headerlink" title="第2章 什么影响了mysql的性能"></a>第2章 什么影响了mysql的性能</h2>]]></content>
-      <categories>
-        <category>mysql</category>
-      </categories>
-      <tags>
-        <tag>mysql架构</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>mysql/navicat_linux破解</title>
-    <url>/2021/05/19/mysql/navicat_linux%E7%A0%B4%E8%A7%A3/</url>
-    <content><![CDATA[<h1 id="网址"><a href="#网址" class="headerlink" title="网址"></a>网址</h1><p><a href="https://rlds.tk/" target="_blank" rel="noopener">https://rlds.tk/</a></p>
-<h1 id="破解过程"><a href="#破解过程" class="headerlink" title="破解过程"></a>破解过程</h1><ol>
-<li>下载Navicat包</li>
-<li>输入序列号</li>
-<li>断网</li>
-<li>触发手动激活</li>
-<li>获取请求码</li>
-<li>恢复网络</li>
-<li>生成激活码</li>
-</ol>
-]]></content>
-  </entry>
-  <entry>
-    <title>mysql/通过Docker安装配置MySQL主从节点</title>
-    <url>/2021/05/19/mysql/%E9%80%9A%E8%BF%87Docker%E5%AE%89%E8%A3%85%E9%85%8D%E7%BD%AEMySQL%E4%B8%BB%E4%BB%8E%E8%8A%82%E7%82%B9/</url>
-    <content><![CDATA[<h2 id="拉取最新版mysql镜像"><a href="#拉取最新版mysql镜像" class="headerlink" title="拉取最新版mysql镜像"></a>拉取最新版mysql镜像</h2><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">docker pull mysql</span><br></pre></td></tr></table></figure>
-<h2 id="mysql主服务器"><a href="#mysql主服务器" class="headerlink" title="mysql主服务器"></a>mysql主服务器</h2><h3 id="启动容器"><a href="#启动容器" class="headerlink" title="启动容器"></a>启动容器</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">docker run -p 3307:3306 --name mysql_master -e MYSQL_ROOT_PASSWORD=123456 -d mysql:latest</span><br></pre></td></tr></table></figure>
-<a id="more"></a>
-
-<h3 id="修改配置并添加slave用户"><a href="#修改配置并添加slave用户" class="headerlink" title="修改配置并添加slave用户"></a>修改配置并添加slave用户</h3><p>1.进入容器</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">docker exec -it d45457d26cad &#x2F;bin&#x2F;bash</span><br></pre></td></tr></table></figure>
-
-<p>2.修改配置    </p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">apt update &amp;&amp; apt install  vim -y</span><br><span class="line">vim /etc/mysql/my.cnf</span><br><span class="line"></span><br><span class="line">[mysqld]</span><br><span class="line"><span class="comment">## 同一局域网内注意要唯一</span></span><br><span class="line">server-id=100  </span><br><span class="line"><span class="comment">## 开启二进制日志功能，可以随便取（关键）</span></span><br><span class="line"><span class="built_in">log</span>-bin=mysql-bin</span><br></pre></td></tr></table></figure>
-<p>3.添加slave用户，用于slave读取binlog</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">mysql -uroot -p123456 </span><br><span class="line"></span><br><span class="line"><span class="comment">#mysql5.7以下使用 CREATE USER 'slave'@'%' IDENTIFIED BY '123456';</span></span><br><span class="line"><span class="comment">#mysql5.8修改了默认的认证方式为caching_sha2_password ,如果使用此方式创建slave用户，</span></span><br><span class="line"><span class="comment">#那么在后面slave连接master的时候就需要使用加密方式进行连接，否则会报错：Authentication requires secure connection</span></span><br><span class="line"></span><br><span class="line">CREATE USER <span class="string">'slave'</span>@<span class="string">'%'</span> IDENTIFIED WITH mysql_native_password BY <span class="string">'123456'</span>;</span><br><span class="line"></span><br><span class="line">GRANT REPLICATION SLAVE, REPLICATION CLIENT ON *.* TO <span class="string">'slave'</span>@<span class="string">'%'</span>;</span><br></pre></td></tr></table></figure>
-
-<p>4.重启容器</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">docker restart d45457d26cad</span><br></pre></td></tr></table></figure>
-
-<h2 id="mysql从服务器"><a href="#mysql从服务器" class="headerlink" title="mysql从服务器"></a>mysql从服务器</h2><h3 id="启动容器-1"><a href="#启动容器-1" class="headerlink" title="启动容器"></a>启动容器</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">docker run -p 3308:3306 --name mysql_slave -e MYSQL_ROOT_PASSWORD=123456 -d mysql:latest</span><br></pre></td></tr></table></figure>
-<h3 id="修改配置"><a href="#修改配置" class="headerlink" title="修改配置"></a>修改配置</h3><p>1.进入容器</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">docker <span class="built_in">exec</span> -it 3e80d15d8b00 /bin/bash</span><br></pre></td></tr></table></figure>
-<p>2.修改配置    </p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">apt update &amp;&amp; apt install  vim -y</span><br><span class="line">vim /etc/mysql/my.cnf</span><br><span class="line"></span><br><span class="line">[mysqld]</span><br><span class="line"><span class="comment">## 设置server_id,注意要唯一</span></span><br><span class="line">server-id=101  </span><br><span class="line"><span class="comment">## 开启二进制日志功能，以备Slave作为其它Slave的Master时使用</span></span><br><span class="line"><span class="built_in">log</span>-bin=mysql-slave-bin   </span><br><span class="line"><span class="comment">## relay_log配置中继日志</span></span><br><span class="line">relay_log=edu-mysql-relay-bin</span><br></pre></td></tr></table></figure>
-<p>3.重启容器</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">docker restart 3e80d15d8b00</span><br><span class="line">```    </span><br><span class="line"><span class="comment">## 配置slave使其连上master    </span></span><br><span class="line">```bash</span><br><span class="line">change master to master_host=<span class="string">'192.168.11.36'</span>, master_user=<span class="string">'slave'</span>, master_password=<span class="string">'123456'</span>, master_port=3307, master_log_file=<span class="string">'mysql-bin.000001'</span>, master_log_pos= 605, master_connect_retry=30;</span><br><span class="line"></span><br><span class="line">start slave </span><br><span class="line"></span><br><span class="line">show slave status \G 查看主从状态</span><br></pre></td></tr></table></figure>
-<blockquote>
-<p>参考文章<br><a href="https://www.cnblogs.com/songwenjie/p/9371422.html" target="_blank" rel="noopener">基于Docker的Mysql主从复制搭建</a></p>
-</blockquote>
-]]></content>
-      <categories>
-        <category>mysql</category>
-      </categories>
-      <tags>
-        <tag>mysql主从同步</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>nginx/如何利用nginx进行自动化负载均衡</title>
-    <url>/2021/05/19/nginx/%E5%A6%82%E4%BD%95%E5%88%A9%E7%94%A8nginx%E8%BF%9B%E8%A1%8C%E8%87%AA%E5%8A%A8%E5%8C%96%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1/</url>
-    <content><![CDATA[<p>基于Docker + Consul + Nginx + Consul-Template + Registrator的服务自动负载均衡实现 </p>
-<a id="more"></a>
-
-<h2 id="docker-composer相关知识点"><a href="#docker-composer相关知识点" class="headerlink" title="docker-composer相关知识点"></a>docker-composer相关知识点</h2><ul>
-<li>ports 暴露容器端口到主机的任意端口或指定端口, 用法如下<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">ports:</span><br><span class="line"> </span><br><span class="line">    - &quot;80:80&quot; # 绑定容器的80端口到主机的80端口</span><br><span class="line">     </span><br><span class="line">    - &quot;9000:8080&quot; # 绑定容器的8080端口到主机的9000端口</span><br><span class="line">     </span><br><span class="line">    - &quot;443&quot; # 绑定容器的443端口到主机的任意端口，容器启动时随机分配绑定的主机端口</span><br></pre></td></tr></table></figure></li>
-<li>links 使得docker容器间通过指定的名字来和目标容器通信 <blockquote>
-<p>如果使用links则容器间通信 只能通过该使用容器的ip地址来通信或者通过宿主机的ip加上容器暴露出的端口号来通信 （这两种都有弊端）</p>
-</blockquote>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">links:</span><br><span class="line">    -  consul_server_master:consul # 当前容器中使用consul 即可获取容器consul_server_master的ip地址,便于通信</span><br></pre></td></tr></table></figure></li>
-<li>depends_on 决定容器的依赖, 也就是指定当前容器的启动顺序，必须依赖启动后才会启动<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">depends_on:</span><br><span class="line">    - lb</span><br><span class="line">    - registrator</span><br></pre></td></tr></table></figure>
-
-</li>
-</ul>
-<h2 id="consul-相关知识点"><a href="#consul-相关知识点" class="headerlink" title="consul 相关知识点"></a>consul 相关知识点</h2><ul>
-<li><p>Client模式 就是客户端模式。是 Consul 节点的一种模式，这种模式下，所有注册到当前节点的服务会被转发到 Server，本身是不持久化这些信息。</p>
-</li>
-<li><p>Server模式 表明这个 Consul 是个 Server ，这种模式下，功能和 Client 都一样，唯一不同的是，它会把所有的信息持久化的本地，这样遇到故障，信息是可以被保留的。同时可以同步多个consul客户端的数据</p>
-<blockquote>
-<p>Server 节点之间的数据一致性保证协议使用的是 raft，而 zookeeper 用的 paxos，etcd采用的也是raft</p>
-</blockquote>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">command: consul agent -server -bootstrap-expect 1 -advertise 192.168.1.181 -node consul_server_master -data-dir &#x2F;tmp&#x2F;data-dir -client 0.0.0.0 -ui</span><br><span class="line"># -bootstrap-expect&#x3D;2 表示节点个数为2个</span><br><span class="line"># -node&#x3D;consul-server-1 表示节点名称为consul-server-1</span><br><span class="line"># -client&#x3D;0.0.0.0 表示允许连接的客户端 IP</span><br><span class="line"># -bind&#x3D;10.211.55.2 表示服务端 IP为10.211.55.2</span><br><span class="line"># -datacenter&#x3D;dc1 数据中心名称</span><br><span class="line"># -join&#x3D;10.211.55.4 表示加入10.211.55.4节点的集群</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>服务发现协议 Consul 采用 http 和 DNS 协议，etcd 只支持 http </p>
-</li>
-<li><p>服务注册 Consul 支持两种方式实现服务注册，一种是通过 Consul 的服务注册 Http API，由服务自己调用 API 实现注册，另一种方式是通过 json 格式的配置文件实现注册，将需要注册的服务以 json 格式的配置文件给出。Consul 官方建议使用第二种方式。</p>
-</li>
-<li><p>服务定义参数</p>
-</li>
-</ul>
-<table>
-<thead>
-<tr>
-<th align="center">环境变量Key</th>
-<th align="center">环境变量Value</th>
-<th align="center">说明</th>
-</tr>
-</thead>
-<tbody><tr>
-<td align="center">SERVICE_ID</td>
-<td align="center">web-001</td>
-<td align="center">可以为GUID或者可读性更强变量，保证不重复</td>
-</tr>
-<tr>
-<td align="center">SERVICE_NAME</td>
-<td align="center">web</td>
-<td align="center">如果ID没有设置，Consul会将name作为id，则有可能注册失败</td>
-</tr>
-<tr>
-<td align="center">SERVICE_TAGS</td>
-<td align="center">nodejs,web</td>
-<td align="center">服务的标签，用逗号分隔，开发者可以根据标签来查询一些信息</td>
-</tr>
-<tr>
-<td align="center">SERVICE_IGNORE</td>
-<td align="center">Boolean</td>
-<td align="center">是否忽略本Container，可以为一些不需要注册的Container添加此属性</td>
-</tr>
-</tbody></table>
-<h2 id="实现原理"><a href="#实现原理" class="headerlink" title="实现原理"></a>实现原理</h2><ul>
-<li><p>通过 Nginx 自身实现负载均衡和请求转发</p>
-</li>
-<li><p>通过 Consul-template 的 config 功能实时监控 Consul 集群节点的服务和数据的变化；<br>实时的用 Consul 节点的信息替换 Nginx 配置文件的模板，并重新加载配置文件</p>
-<blockquote>
-<p>Consul-template 和 nginx 必须安装在同一台机器上，因为 Consul-template 需要动态修改 nginx 的配置文件 nginx.conf，然后执行 nginx -s reload 命令进行路由更新，达到动态负载均衡的目的</p>
-</blockquote>
-</li>
-<li><p>registrator，它可以通过跟本地的 docker 引擎通信，来获取本地启动的容器信息，并且注册到指定的服务发现管理端。</p>
-</li>
-</ul>
-<p>数据流向： docker 容器数据-&gt; registrator -&gt; consul -&gt;consul-template -&gt; nginx</p>
-<h2 id="镜像构建"><a href="#镜像构建" class="headerlink" title="镜像构建"></a>镜像构建</h2><ul>
-<li>Consul：consul:latest</li>
-<li>Registrator：gliderlabs/registrator:latest</li>
-<li>Nginx和Consul-template：liberalman/nginx-consul-template:latest</li>
-<li>Web: yeasy/simple-web:latest</li>
-</ul>
-<h2 id="docker-compose-yml"><a href="#docker-compose-yml" class="headerlink" title="docker-compose.yml"></a>docker-compose.yml</h2><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">version: &#39;3&#39;</span><br><span class="line">#backend web application, scale this with docker-compose scale web&#x3D;3</span><br><span class="line">services:</span><br><span class="line">    web:</span><br><span class="line">      image: yeasy&#x2F;simple-web:latest</span><br><span class="line">      environment:</span><br><span class="line">        - SERVICE_80_NAME&#x3D;my-web-server</span><br><span class="line">      ports:</span><br><span class="line">      - &quot;80&quot;</span><br><span class="line">      depends_on:</span><br><span class="line">          - lb</span><br><span class="line">          - registrator  </span><br><span class="line"></span><br><span class="line">    #load balancer will automatically update the config using consul-template</span><br><span class="line">    lb:</span><br><span class="line">      image: liberalman&#x2F;nginx-consul-template:latest</span><br><span class="line">      hostname: lb</span><br><span class="line">      environment:</span><br><span class="line">          - SERVICE_IGNORE&#x3D;true</span><br><span class="line">      links:</span><br><span class="line">      -  consul_server_master:consul</span><br><span class="line">      ports:</span><br><span class="line">      - &quot;80:80&quot;</span><br><span class="line">      depends_on:</span><br><span class="line">          - consul_server_master</span><br><span class="line">          </span><br><span class="line">    consul_server_master:</span><br><span class="line">      image:  consul:latest</span><br><span class="line">      hostname: consul_server_master</span><br><span class="line">      environment:</span><br><span class="line">          - SERVICE_IGNORE&#x3D;true</span><br><span class="line">      ports:</span><br><span class="line">      - &quot;8500:8500&quot;</span><br><span class="line">      command: consul agent -server -bootstrap-expect 1 -node consul_server_master -data-dir &#x2F;tmp&#x2F;consul -client 0.0.0.0 -ui</span><br><span class="line"></span><br><span class="line">    # listen on local docker sock to register the container with public ports to the consul service</span><br><span class="line">    registrator:</span><br><span class="line">      image: gliderlabs&#x2F;registrator:master</span><br><span class="line">      hostname: registrator</span><br><span class="line">      environment:</span><br><span class="line">          - SERVICE_IGNORE&#x3D;true</span><br><span class="line">      links:</span><br><span class="line">      - consul_server_master:consul</span><br><span class="line">      depends_on:</span><br><span class="line">          - consul_server_master</span><br><span class="line">      volumes:</span><br><span class="line">      - &quot;&#x2F;var&#x2F;run&#x2F;docker.sock:&#x2F;tmp&#x2F;docker.sock&quot;</span><br><span class="line">      command: -internal consul:&#x2F;&#x2F;consul:8500</span><br></pre></td></tr></table></figure>
-<blockquote>
-<p>注意：我们使用的第三方镜像 liberalman/nginx-consul-template，Nginx 会把名称为 my-web-server的服务容器作为后台转发的目标服务器,当然你也可以自己制作镜像指定模板. </p>
-</blockquote>
-<h2 id="测试步骤"><a href="#测试步骤" class="headerlink" title="测试步骤"></a>测试步骤</h2><ol>
-<li><p>docker-compose 模板所在目录，执行</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ sudo docker-compose up</span><br></pre></td></tr></table></figure></li>
-<li><p>访问 <a href="http://localhost" target="_blank" rel="noopener">http://localhost</a> 可以看到一个 web 页面，提示实际访问的目标地址。</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">#2019-12-20 04:12:30: 19 requests from &lt;LOCAL: 172.17.0.6&gt; to WebServer &lt;172.17.0.4&gt;</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>增加web 测试负载</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ sudo docker-compose scale web=3</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>重复刷新<a href="http://localhost" target="_blank" rel="noopener">http://localhost</a> 观察ip变化</p>
-</li>
-</ol>
-<h2 id="总结测试"><a href="#总结测试" class="headerlink" title="总结测试"></a>总结测试</h2><p>最先我未去指定容器的启动顺序（deponds_on） 导致docker-compose up 后访问<a href="http://localhost" target="_blank" rel="noopener">http://localhost</a> 报错 nginx 502<br>原因是因为 registrator容器先于web容器启动，导致未将web容器注册到consul 所以生成的nginx配置文件中，没用web参与负载</p>
-<p>本文搭建的consul为单节点版本 ， 集群版 <a href="https://www.jianshu.com/p/fa41434d444a" target="_blank" rel="noopener">参考文章1</a></p>
-<h2 id="参考文章"><a href="#参考文章" class="headerlink" title="参考文章"></a>参考文章</h2><ol>
-<li><a href="https://www.jianshu.com/p/fa41434d444a" target="_blank" rel="noopener">基于Docker + Consul + Nginx + Consul-Template的服务负载均衡实现</a></li>
-<li><a href="https://my.oschina.net/xiaominmin/blog/1597660" target="_blank" rel="noopener">用 consul + consul-template + registrator + nginx 打造真正可动态扩展的服务架构 </a></li>
-<li><a href="https://www.sohu.com/a/282625515_468635" target="_blank" rel="noopener">8分钟学会Consul集群搭建及微服务概念 </a></li>
-</ol>
-]]></content>
-      <categories>
-        <category>nginx</category>
-      </categories>
-      <tags>
-        <tag>自动负载均衡</tag>
-        <tag>Nginx</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>photography/摄影入门</title>
-    <url>/2021/05/19/photography/%E6%91%84%E5%BD%B1%E5%85%A5%E9%97%A8/</url>
-    <content><![CDATA[<h1 id="摄影"><a href="#摄影" class="headerlink" title="摄影"></a>摄影</h1><p>摄影是光与影的艺术<br>摄影的基础是控制光</p>
-<h1 id="曝光"><a href="#曝光" class="headerlink" title="曝光"></a>曝光</h1><ul>
-<li>照片过暗，曝光不足</li>
-<li>照片过亮，曝光过度</li>
-<li>照片细节指的是影像有质感，细节，明暗合理</li>
-<li>亮有细节，暗有层次（亮处不能过曝，暗处不能漆黑一片）</li>
-</ul>
-<h2 id="曝光量受那些因素的影响"><a href="#曝光量受那些因素的影响" class="headerlink" title="曝光量受那些因素的影响"></a>曝光量受那些因素的影响</h2><ul>
-<li>光圈 （大光圈，进光量大）</li>
-<li>快门 （快门越慢，进光量大）</li>
-<li>ISO (感光原件，感知光线的能力)</li>
-</ul>
-<h2 id="光圈-f"><a href="#光圈-f" class="headerlink" title="光圈(f)"></a>光圈(f)</h2><h3 id="影响进光量"><a href="#影响进光量" class="headerlink" title="影响进光量"></a>影响进光量</h3><p>光圈是一个用来控制进光量的装置，它通常在镜头内，单位大小f值常用f3.5、f5.6、f8、f11、f16、f22等系数，f值代表的是光圈的厚度，f值越小曝光量<br>越大，f值越大曝光量越小<br>单位: f3.5  </p>
-<h3 id="影响景深的变化"><a href="#影响景深的变化" class="headerlink" title="影响景深的变化"></a>影响景深的变化</h3><p>大光圈拍摄景深浅，主体清晰背景模糊<br>小光圈拍摄景深长，主体和背景都很清晰  </p>
-<h2 id="快门"><a href="#快门" class="headerlink" title="快门"></a>快门</h2><p>快门是控制进光时间的一个装置，开的越久，进来的光线越多<br>单位: 1/125秒  </p>
-<ul>
-<li>高快门凝固瞬间  </li>
-<li>慢快门记录轨迹</li>
-</ul>
-<h3 id="曝光是如何控制的"><a href="#曝光是如何控制的" class="headerlink" title="曝光是如何控制的"></a>曝光是如何控制的</h3><p>快门越慢，时间越长，进光越多<br>慢快门需要三脚架支撑，手会抖</p>
-<h2 id="ISO"><a href="#ISO" class="headerlink" title="ISO"></a>ISO</h2><p>ISO感光度是衡量传统相机所使用胶片感光速度标准的国际统一指标，其反应了胶片感光时的能力，而对于数码相机来说，其实不使用胶片，而是通过感光器件<br>CCD或CMOS以及相关的电子线路感应入射强弱。<br>感光度越高，感光能力越强，画质越粗糙，噪点多<br>感光度越低，感光能力弱，画质越细腻。<br>ISO越高，画质越差，噪点越多<br>当光圈快门没有办法控制进光量的时候，适当提高ISO,来增加照片的亮度。</p>
-<h2 id="拍摄模式（曝光模式）"><a href="#拍摄模式（曝光模式）" class="headerlink" title="拍摄模式（曝光模式）"></a>拍摄模式（曝光模式）</h2><ul>
-<li>M档–手动曝光模式</li>
-<li>A（AV）档–光圈曝光模式，也叫光圈优先模式，指的是光圈可以人为手动控制，而快门相机会自动计算</li>
-<li>S（TV）档–快门曝光模式，也叫快门优先模式，指的是快门可以人为手动控制，而光圈相机会自动计算</li>
-<li>P档–自动曝光模式</li>
-<li>A+档–全自动曝光模式<blockquote>
-<p>除开以上几种外，一般称为傻瓜模式，由程序自动控制的模式。</p>
-</blockquote>
-</li>
-</ul>
-<p>光圈、快门、ISO共同决定一张影像相对正常的曝光，共同影响照片的曝光</p>
-<h1 id="相机镜头的概念"><a href="#相机镜头的概念" class="headerlink" title="相机镜头的概念"></a>相机镜头的概念</h1><h2 id="按成像质量可以和方便性"><a href="#按成像质量可以和方便性" class="headerlink" title="按成像质量可以和方便性"></a>按成像质量可以和方便性</h2><ul>
-<li>定焦镜头</li>
-<li>变焦镜头</li>
-</ul>
-<h2 id="焦距"><a href="#焦距" class="headerlink" title="焦距"></a>焦距</h2><p>焦距越大，视角越小，镜头越长，拍摄的范围越小，拍的越远<br>焦距越小，视角越大，镜头越短，拍摄范围越大，拍的越近</p>
-<h2 id="按焦距分镜头"><a href="#按焦距分镜头" class="headerlink" title="按焦距分镜头"></a>按焦距分镜头</h2><h3 id="广角-小于24mm"><a href="#广角-小于24mm" class="headerlink" title="广角 小于24mm"></a>广角 小于24mm</h3><p>取景范围大，多用于拍摄风光、建筑等</p>
-<h3 id="标准-50mm（45-60）左右"><a href="#标准-50mm（45-60）左右" class="headerlink" title="标准 50mm（45-60）左右"></a>标准 50mm（45-60）左右</h3><p>和人眼的感觉相同适合拍摄标准人像、静物、产品等。</p>
-<h3 id="中长焦-70-135mm"><a href="#中长焦-70-135mm" class="headerlink" title="中长焦 70-135mm"></a>中长焦 70-135mm</h3><p>适合拍摄人像</p>
-<h3 id="长焦-大于135mm"><a href="#长焦-大于135mm" class="headerlink" title="长焦 大于135mm"></a>长焦 大于135mm</h3><p>取景范围小，适合拍摄动物、体育</p>
-<h2 id="镜头的影响"><a href="#镜头的影响" class="headerlink" title="镜头的影响"></a>镜头的影响</h2><p>1.影响视角范围<br>2.影响景深  </p>
-<ul>
-<li>焦距越长；景深越浅，焦距越短，景深越深；</li>
-<li>焦距越长，背景越虚化；焦距越短，背景越清晰</li>
-</ul>
-<h2 id="对焦模式"><a href="#对焦模式" class="headerlink" title="对焦模式"></a>对焦模式</h2><p>对焦点为成像清晰点</p>
-<h3 id="AF（A）-自动对焦"><a href="#AF（A）-自动对焦" class="headerlink" title="AF（A） 自动对焦"></a>AF（A） 自动对焦</h3><p>佳能三种自动对焦模式  </p>
-<ul>
-<li><p>ONE SHOT (单次对焦模式) 半按快门释放键完成对焦后，若重新构图，对焦主体改变，将进行重新对焦。</p>
-</li>
-<li><p>AI SERVO（连续对焦模式） 半按快门释放键完成对焦后，若重新构图，对焦主体改变，将进行重新对焦。 有追焦的目的，试用于运动的物体</p>
-</li>
-<li><p>AI FOCUS (自动智能对焦模式)</p>
-<h3 id="MF-M-手动对焦"><a href="#MF-M-手动对焦" class="headerlink" title="MF (M)手动对焦"></a>MF (M)手动对焦</h3><p>可以在任何的光线下按下快门的，也可以说对任何一种情况都能拍摄</p>
-</li>
-</ul>
-<h2 id="单点对焦和区域对焦"><a href="#单点对焦和区域对焦" class="headerlink" title="单点对焦和区域对焦"></a>单点对焦和区域对焦</h2><p>在不知道选择对焦点的时候选择区域对焦</p>
-<h3 id="单点对焦"><a href="#单点对焦" class="headerlink" title="单点对焦"></a>单点对焦</h3><p>单点对于个别拍摄比较多，成功率高<br>焦点在人身上，大光圈的情况下，背景虚化，人像清晰。<br>焦点对人眼睛上，</p>
-<h2 id="白平衡"><a href="#白平衡" class="headerlink" title="白平衡"></a>白平衡</h2><h2 id="前景色和背景"><a href="#前景色和背景" class="headerlink" title="前景色和背景"></a>前景色和背景</h2><h3 id="前景"><a href="#前景" class="headerlink" title="前景"></a>前景</h3><ul>
-<li>加强气氛</li>
-<li>增加画面空间层次感</li>
-<li>均衡画面</li>
-</ul>
-<h3 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h3><ul>
-<li>突出主题</li>
-<li>丰富主题的内涵</li>
-</ul>
-<h1 id="常见摄影题材和摄影技法"><a href="#常见摄影题材和摄影技法" class="headerlink" title="常见摄影题材和摄影技法"></a>常见摄影题材和摄影技法</h1><h2 id="日出、日落"><a href="#日出、日落" class="headerlink" title="日出、日落"></a>日出、日落</h2><ol>
-<li>开阔、地势高的地方</li>
-</ol>
-<h2 id="拍摄瀑布"><a href="#拍摄瀑布" class="headerlink" title="拍摄瀑布"></a>拍摄瀑布</h2><h3 id="使用高速快门（推荐）"><a href="#使用高速快门（推荐）" class="headerlink" title="使用高速快门（推荐）"></a>使用高速快门（推荐）</h3><p>使用高速快门凝结住飞溅的水花和奔流的场景（推荐）</p>
-<h3 id="使用慢速快门"><a href="#使用慢速快门" class="headerlink" title="使用慢速快门"></a>使用慢速快门</h3><p>使用慢速快门拍摄雾状的水流和整体的水泻效果<br>使用慢门，需要在光线较弱的情况下使用,例如：<br>1.合适的天气<br>2.滤镜<br>3.低ISO</p>
-]]></content>
   </entry>
   <entry>
     <title>photography/构图</title>

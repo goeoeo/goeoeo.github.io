@@ -199,9 +199,102 @@
 </ul>
 ]]></content>
       <categories>
-        <category>[object Object]</category>
-        <category>golang项目结构规范</category>
+        <category>go</category>
       </categories>
+      <tags>
+        <tag>golang项目结构规范</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>go/golang项目结构规范</title>
+    <url>/2021/08/01/go/golang%E9%A1%B9%E7%9B%AE%E7%BB%93%E6%9E%84%E8%A7%84%E8%8C%83/</url>
+    <content><![CDATA[<h1 id="golang项目结构规范"><a href="#golang项目结构规范" class="headerlink" title="golang项目结构规范"></a>golang项目结构规范</h1><p><a href="https://github.com/golang-standards/project-layout" target="_blank" rel="noopener">https://github.com/golang-standards/project-layout</a> 项目总结了 Go 项目的布局，这是Go应用程序项目的基本布局，并不是Go核心开发团队<br>定义的官方标准；但是，这是Go生态系统中的一种常见的项目布局模式。</p>
+<a id="more"></a>
+
+
+
+
+<p>这是 Go 应用程序项目的基本布局。它不是核心 Go 开发团队定义的官方标准；然而，它是 Go 生态系统中一组常见的老项目和新项目的布局模式。其中一些模式比其他模式更受欢迎。它还具有许多小的增强，以及对任何足够大的实际应用程序通用的几个支持目录。</p>
+<p>如果你尝试学习 Go，或者你正在为自己建立一个 PoC 或一个玩具项目，这个项目布局是没啥必要的。从一些非常简单的事情开始(一个 <code>main.go</code> 文件绰绰有余)。随着项目的增长，请记住保持代码结构良好非常重要，否则你最终会得到一个凌乱的代码，这其中就包含大量隐藏的依赖项和全局状态。当有更多的人参与这个项目时，你将需要更多的结构。这时候，介绍一种管理包/库的通用方法是很重要的。当你有一个开源项目时，或者当你知道其他项目从你的项目存储库中导入代码时，这时候拥有私有(又名 <code>internal</code>)包和代码就很重要。克隆存储库，保留你需要的内容，删除其他所有的内容!仅仅因为它在那里并不意味着你必须全部使用它。这些模式都没有在每个项目中使用。甚至 <code>vendor</code> 模式也不是通用的。</p>
+<p>Go 1.14 <a href="https://github.com/golang/go/wiki/Modules" target="_blank" rel="noopener"><code>Go Modules</code></a> 终于可以投入生产了。除非你有特定的理由不使用它们，否则使用 <a href="https://blog.golang.org/using-go-modules" target="_blank" rel="noopener"><code>Go Modules</code></a> 。如果你使用，就无需担心 $GOPATH 以及项目放置的位置。存储库中的 <code>go.mod</code> 文件基本假定你的项目托管在 Github 上，但这不是要求。模块路径可以是任何地方，尽管第一个模块路径组件的名称中应该有一个点（当前版本的 Go 不再强制使用该模块，但如果使用稍旧的版本，如果没有 <code>mod</code> 文件构建失败的话 ，不要惊讶）。如果你想知道更多信息，请参阅 Issues <a href="https://github.com/golang/go/issues/37554" target="_blank" rel="noopener"><code>37554</code></a> 和 <a href="https://github.com/golang/go/issues/32819" target="_blank" rel="noopener"><code>32819</code></a> 。</p>
+<p>此项目布局是通用的，并且不会尝试强加一个特定的 Go 包结构。</p>
+<p>这是社区的努力。 如果看到新的模式，或者认为一个现有的模式需要更新，请提一个 issue。</p>
+<p>如果需要命名、格式和样式方面的帮助，请运行 <a href="https://golang.org/cmd/gofmt/" target="_blank" rel="noopener"><code>gofmt</code></a> 和 <a href="https://github.com/golang/lint" target="_blank" rel="noopener"><code>golint</code></a> 。还要确保阅读这些 Go 代码风格的指导方针和建议:</p>
+<ul>
+<li><a href="https://talks.golang.org/2014/names.slide" target="_blank" rel="noopener">https://talks.golang.org/2014/names.slide</a></li>
+<li><a href="https://golang.org/doc/effective_go.html#names" target="_blank" rel="noopener">https://golang.org/doc/effective_go.html#names</a></li>
+<li><a href="https://blog.golang.org/package-names" target="_blank" rel="noopener">https://blog.golang.org/package-names</a></li>
+<li><a href="https://github.com/golang/go/wiki/CodeReviewComments" target="_blank" rel="noopener">https://github.com/golang/go/wiki/CodeReviewComments</a></li>
+<li><a href="https://rakyll.org/style-packages" target="_blank" rel="noopener">Style guideline for Go packages</a> (rakyll/JBD)</li>
+</ul>
+<p>参见 <a href="https://medium.com/golang-learn/go-project-layout-e5213cdcfaa2" target="_blank" rel="noopener"><code>Go Project Layout</code></a> 了解更多的背景信息。</p>
+<p>更多关于包的命名和组织以及其他代码结构的建议:</p>
+<ul>
+<li><a href="https://www.youtube.com/watch?v=PTE4VJIdHPg" target="_blank" rel="noopener">GopherCon EU 2018: Peter Bourgon - Best Practices for Industrial Programming</a></li>
+<li><a href="https://www.youtube.com/watch?v=MzTcsI6tn-0" target="_blank" rel="noopener">GopherCon Russia 2018: Ashley McNamara + Brian Ketelsen - Go best practices.</a></li>
+<li><a href="https://www.youtube.com/watch?v=ltqV6pDKZD8" target="_blank" rel="noopener">GopherCon 2017: Edward Muller - Go Anti-Patterns</a></li>
+<li><a href="https://www.youtube.com/watch?v=oL6JBUk6tj0" target="_blank" rel="noopener">GopherCon 2018: Kat Zien - How Do You Structure Your Go Apps</a></li>
+</ul>
+<h2 id="Go-目录"><a href="#Go-目录" class="headerlink" title="Go 目录"></a>Go 目录</h2><h3 id="cmd"><a href="#cmd" class="headerlink" title="/cmd"></a><code>/cmd</code></h3><p>本项目的主干。</p>
+<p>每个应用程序的目录名应该与你想要的可执行文件的名称相匹配(例如，<code>/cmd/myapp</code>)。</p>
+<p>不要在这个目录中放置太多代码。如果你认为代码可以导入并在其他项目中使用，那么它应该位于 <code>/pkg</code> 目录中。如果代码不是可重用的，或者你不希望其他人重用它，请将该代码放到 <code>/internal</code> 目录中。你会惊讶于别人会怎么做，所以要明确你的意图!</p>
+<p>通常有一个小的 <code>main</code> 函数，从 <code>/internal</code> 和 <code>/pkg</code> 目录导入和调用代码，除此之外没有别的东西。</p>
+<p>有关示例，请参阅 <a href="cmd/README.md"><code>/cmd</code></a> 目录。</p>
+<h3 id="internal"><a href="#internal" class="headerlink" title="/internal"></a><code>/internal</code></h3><p>私有应用程序和库代码。这是你不希望其他人在其应用程序或库中导入代码。请注意，这个布局模式是由 Go 编译器本身执行的。有关更多细节，请参阅Go 1.4 <a href="https://golang.org/doc/go1.4#internalpackages" target="_blank" rel="noopener"><code>release notes</code></a> 。注意，你并不局限于顶级 <code>internal</code> 目录。在项目树的任何级别上都可以有多个内部目录。</p>
+<p>你可以选择向 internal 包中添加一些额外的结构，以分隔共享和非共享的内部代码。这不是必需的(特别是对于较小的项目)，但是最好有有可视化的线索来显示预期的包的用途。你的实际应用程序代码可以放在 <code>/internal/app</code> 目录下(例如 <code>/internal/app/myapp</code>)，这些应用程序共享的代码可以放在 <code>/internal/pkg</code> 目录下(例如 <code>/internal/pkg/myprivlib</code>)。</p>
+<h3 id="pkg"><a href="#pkg" class="headerlink" title="/pkg"></a><code>/pkg</code></h3><p>外部应用程序可以使用的库代码(例如 <code>/pkg/mypubliclib</code>)。其他项目会导入这些库，希望它们能正常工作，所以在这里放东西之前要三思:-)注意，<code>internal</code> 目录是确保私有包不可导入的更好方法，因为它是由 Go 强制执行的。<code>/pkg</code> 目录仍然是一种很好的方式，可以显式地表示该目录中的代码对于其他人来说是安全使用的好方法。由 Travis Jeffery  撰写的 <a href="https://travisjeffery.com/b/2019/11/i-ll-take-pkg-over-internal/" target="_blank" rel="noopener"><code>I&#39;ll take pkg over internal</code></a> 博客文章提供了 <code>pkg</code> 和 <code>internal</code> 目录的一个很好的概述，以及什么时候使用它们是有意义的。</p>
+<p>当根目录包含大量非 Go 组件和目录时，这也是一种将 Go 代码分组到一个位置的方法，这使得运行各种 Go 工具变得更加容易（正如在这些演讲中提到的那样: 来自 GopherCon EU 2018 的 <a href="https://www.youtube.com/watch?v=PTE4VJIdHPg" target="_blank" rel="noopener"><code>Best Practices for Industrial Programming</code></a> , <a href="https://www.youtube.com/watch?v=oL6JBUk6tj0" target="_blank" rel="noopener">GopherCon 2018: Kat Zien - How Do You Structure Your Go Apps</a> 和 <a href="https://www.youtube.com/watch?v=3gQa1LWwuzk" target="_blank" rel="noopener">GoLab 2018 - Massimiliano Pippi - Project layout patterns in Go</a> ）。</p>
+<p>如果你想查看哪个流行的 Go 存储库使用此项目布局模式，请查看 <a href="pkg/README.md"><code>/pkg</code></a> 目录。这是一种常见的布局模式，但并不是所有人都接受它，一些 Go 社区的人也不推荐它。</p>
+<p>如果你的应用程序项目真的很小，并且额外的嵌套并不能增加多少价值(除非你真的想要:-)，那就不要使用它。当它变得足够大时，你的根目录会变得非常繁琐时(尤其是当你有很多非 Go 应用组件时)，请考虑一下。</p>
+<h3 id="vendor"><a href="#vendor" class="headerlink" title="/vendor"></a><code>/vendor</code></h3><p>应用程序依赖项(手动管理或使用你喜欢的依赖项管理工具，如新的内置 <a href="https://github.com/golang/go/wiki/Modules" target="_blank" rel="noopener"><code>Go Modules</code></a> 功能)。<code>go mod vendor</code> 命令将为你创建 <code>/vendor</code> 目录。请注意，如果未使用默认情况下处于启用状态的 Go 1.14，则可能需要在 <code>go build</code> 命令中添加 <code>-mod=vendor</code> 标志。</p>
+<p>如果你正在构建一个库，那么不要提交你的应用程序依赖项。</p>
+<p>注意，自从 <a href="https://golang.org/doc/go1.13#modules" target="_blank" rel="noopener"><code>1.13</code></a> 以后，Go 还启用了模块代理功能(默认使用 <a href="https://proxy.golang.org" target="_blank" rel="noopener"><code>https://proxy.golang.org</code></a> 作为他们的模块代理服务器)。在<a href="https://blog.golang.org/module-mirror-launch" target="_blank" rel="noopener"><code>here</code></a> 阅读更多关于它的信息，看看它是否符合你的所有需求和约束。如果需要，那么你根本不需要 <code>vendor</code> 目录。</p>
+<p>国内模块代理功能默认是被墙的，七牛云有维护专门的的<a href="https://github.com/goproxy/goproxy.cn/blob/master/README.zh-CN.md" target="_blank" rel="noopener"><code>模块代理</code></a> 。</p>
+<h2 id="服务应用程序目录"><a href="#服务应用程序目录" class="headerlink" title="服务应用程序目录"></a>服务应用程序目录</h2><h3 id="api"><a href="#api" class="headerlink" title="/api"></a><code>/api</code></h3><p>OpenAPI/Swagger 规范，JSON 模式文件，协议定义文件。</p>
+<p>有关示例，请参见 <a href="api/README.md"><code>/api</code></a> 目录。</p>
+<h2 id="Web-应用程序目录"><a href="#Web-应用程序目录" class="headerlink" title="Web 应用程序目录"></a>Web 应用程序目录</h2><h3 id="web"><a href="#web" class="headerlink" title="/web"></a><code>/web</code></h3><p>特定于 Web 应用程序的组件:静态 Web 资产、服务器端模板和 SPAs。</p>
+<h2 id="通用应用目录"><a href="#通用应用目录" class="headerlink" title="通用应用目录"></a>通用应用目录</h2><h3 id="configs"><a href="#configs" class="headerlink" title="/configs"></a><code>/configs</code></h3><p>配置文件模板或默认配置。</p>
+<p>将你的 <code>confd</code> 或 <code>consul-template</code> 模板文件放在这里。</p>
+<h3 id="init"><a href="#init" class="headerlink" title="/init"></a><code>/init</code></h3><p>System init（systemd，upstart，sysv）和 process manager/supervisor（runit，supervisor）配置。</p>
+<h3 id="scripts"><a href="#scripts" class="headerlink" title="/scripts"></a><code>/scripts</code></h3><p>执行各种构建、安装、分析等操作的脚本。</p>
+<p>这些脚本保持了根级别的 Makefile 变得小而简单(例如， <a href="https://github.com/hashicorp/terraform/blob/master/Makefile" target="_blank" rel="noopener"><code>https://github.com/hashicorp/terraform/blob/master/Makefile</code></a> )。</p>
+<p>有关示例，请参见  <a href="scripts/README.md"><code>/scripts</code></a> 目录。</p>
+<h3 id="build"><a href="#build" class="headerlink" title="/build"></a><code>/build</code></h3><p>打包和持续集成。</p>
+<p>将你的云( AMI )、容器( Docker )、操作系统( deb、rpm、pkg )包配置和脚本放在 <code>/build/package</code> 目录下。</p>
+<p>将你的 CI (travis、circle、drone)配置和脚本放在 <code>/build/ci</code> 目录中。请注意，有些 CI 工具(例如 Travis CI)对配置文件的位置非常挑剔。尝试将配置文件放在 <code>/build/ci</code> 目录中，将它们链接到 CI 工具期望它们的位置(如果可能的话)。</p>
+<h3 id="deployments"><a href="#deployments" class="headerlink" title="/deployments"></a><code>/deployments</code></h3><p>IaaS、PaaS、系统和容器编排部署配置和模板(docker-compose、kubernetes/helm、mesos、terraform、bosh)。注意，在一些存储库中(特别是使用 kubernetes 部署的应用程序)，这个目录被称为 <code>/deploy</code>。</p>
+<h3 id="test"><a href="#test" class="headerlink" title="/test"></a><code>/test</code></h3><p>额外的外部测试应用程序和测试数据。你可以随时根据需求构造 <code>/test</code> 目录。对于较大的项目，有一个数据子目录是有意义的。例如，你可以使用 <code>/test/data</code> 或 <code>/test/testdata</code> (如果你需要忽略目录中的内容)。请注意，Go 还会忽略以“.”或“_”开头的目录或文件，因此在如何命名测试数据目录方面有更大的灵活性。</p>
+<p>有关示例，请参见  <a href="test/README.md"><code>/test</code></a> 目录。</p>
+<h2 id="其他目录"><a href="#其他目录" class="headerlink" title="其他目录"></a>其他目录</h2><h3 id="docs"><a href="#docs" class="headerlink" title="/docs"></a><code>/docs</code></h3><p>设计和用户文档(除了 godoc 生成的文档之外)。</p>
+<p>有关示例，请参阅 <a href="docs/README.md"><code>/docs</code></a> 目录。</p>
+<h3 id="tools"><a href="#tools" class="headerlink" title="/tools"></a><code>/tools</code></h3><p>这个项目的支持工具。注意，这些工具可以从 <code>/pkg</code> 和 <code>/internal</code> 目录导入代码。</p>
+<p>有关示例，请参见 <a href="tools/README.md"><code>/tools</code></a> 目录。</p>
+<h3 id="examples"><a href="#examples" class="headerlink" title="/examples"></a><code>/examples</code></h3><p>你的应用程序和/或公共库的示例。</p>
+<p>有关示例，请参见 <a href="examples/README.md"><code>/examples</code></a> 目录。</p>
+<h3 id="third-party"><a href="#third-party" class="headerlink" title="/third_party"></a><code>/third_party</code></h3><p>外部辅助工具，分叉代码和其他第三方工具(例如 Swagger UI)。</p>
+<h3 id="githooks"><a href="#githooks" class="headerlink" title="/githooks"></a><code>/githooks</code></h3><p>Git hooks。</p>
+<h3 id="assets"><a href="#assets" class="headerlink" title="/assets"></a><code>/assets</code></h3><p>与存储库一起使用的其他资产(图像、徽标等)。</p>
+<h3 id="website"><a href="#website" class="headerlink" title="/website"></a><code>/website</code></h3><p>如果你不使用 Github 页面，则在这里放置项目的网站数据。</p>
+<p>有关示例，请参见 <a href="website/README.md"><code>/website</code></a> 目录。</p>
+<h2 id="你不应该拥有的目录"><a href="#你不应该拥有的目录" class="headerlink" title="你不应该拥有的目录"></a>你不应该拥有的目录</h2><h3 id="src"><a href="#src" class="headerlink" title="/src"></a><code>/src</code></h3><p>有些 Go 项目确实有一个 <code>src</code> 文件夹，但这通常发生在开发人员有 Java 背景，在那里它是一种常见的模式。如果可以的话，尽量不要采用这种 Java 模式。你真的不希望你的 Go 代码或 Go 项目看起来像 Java:-)</p>
+<p>不要将项目级别 <code>src</code> 目录与 Go 用于其工作空间的 <code>src</code> 目录(如 <a href="https://golang.org/doc/code.html" target="_blank" rel="noopener"><code>How to Write Go Code</code></a> 中所述)混淆。<code>$GOPATH</code> 环境变量指向你的(当前)工作空间(默认情况下，它指向非 windows 系统上的 <code>$HOME/go</code>)。这个工作空间包括顶层 <code>/pkg</code>, <code>/bin</code> 和 <code>/src</code> 目录。你的实际项目最终是 <code>/src</code> 下的一个子目录，因此，如果你的项目中有 <code>/src</code> 目录，那么项目路径将是这样的: <code>/some/path/to/workspace/src/your_project/src/your_code.go</code>。注意，在 Go 1.11 中，可以将项目放在 <code>GOPATH</code> 之外，但这并不意味着使用这种布局模式是一个好主意。</p>
+<h2 id="Badges"><a href="#Badges" class="headerlink" title="Badges"></a>Badges</h2><ul>
+<li><p><a href="https://goreportcard.com/" target="_blank" rel="noopener">Go Report Card</a> - It will scan your code with <code>gofmt</code>, <code>go vet</code>, <code>gocyclo</code>, <code>golint</code>, <code>ineffassign</code>, <code>license</code> and <code>misspell</code>. Replace <code>github.com/golang-standards/project-layout</code> with your project reference.</p>
+</li>
+<li><p><a href="http://godoc.org" target="_blank" rel="noopener">GoDoc</a> - It will provide online version of your GoDoc generated documentation. Change the link to point to your project.</p>
+</li>
+<li><p>Release - It will show the latest release number for your project. Change the github link to point to your project.</p>
+</li>
+</ul>
+<p><a href="https://goreportcard.com/report/github.com/golang-standards/project-layout" target="_blank" rel="noopener"><img src="https://goreportcard.com/badge/github.com/golang-standards/project-layout?style=flat-square" alt="Go Report Card"></a><br><a href="http://godoc.org/github.com/golang-standards/project-layout" target="_blank" rel="noopener"><img src="https://img.shields.io/badge/godoc-reference-blue.svg?style=flat-square" alt="Go Doc"></a><br><a href="https://github.com/golang-standards/project-layout/releases/latest" target="_blank" rel="noopener"><img src="https://img.shields.io/github/release/golang-standards/project-layout.svg?style=flat-square" alt="Release"></a></p>
+<h2 id="Notes"><a href="#Notes" class="headerlink" title="Notes"></a>Notes</h2><p>A more opinionated project template with sample/reusable configs, scripts and code is a WIP.</p>
+]]></content>
+      <categories>
+        <category>go</category>
+      </categories>
+      <tags>
+        <tag>golang项目结构规范</tag>
+      </tags>
   </entry>
   <entry>
     <title>k8s/k8s踩坑日志</title>
@@ -3024,96 +3117,6 @@ sudo apt-get install gcc-mingw-w64<figure class="highlight plain"><table><tr><td
       </tags>
   </entry>
   <entry>
-    <title>micro/延迟队列</title>
-    <url>/2021/05/19/micro/%E5%BB%B6%E8%BF%9F%E9%98%9F%E5%88%97/</url>
-    <content><![CDATA[<h2 id="如何实现延迟队列？"><a href="#如何实现延迟队列？" class="headerlink" title="如何实现延迟队列？"></a>如何实现延迟队列？</h2><p>延迟队列的需求各位应该在日常开发的场景中经常碰到。比如：<br>用户登录之后5分钟给用户做分类推送；<br>用户多少天未登录给用户做召回推送；<br>定期检查用户当前退款账单是否被商家处理等等场景。<br>一般这种场景和定时任务还是有很大的区别，定时任务是你知道任务多久该跑一次或者什么时候只跑一次，这个时间是确定的。延迟队列是当某个事件发生的<br>时候需要延迟多久触发配套事件，引子事件发生的时间不是固定的。<br>业界目前也有很多实现方案，单机版的方案就不说了，现在也没有哪个公司还是单机版的服务，今天我们一一探讨各种方案的大致实现。  </p>
-<a id="more"></a>
-
-<h2 id="Redis-zset"><a href="#Redis-zset" class="headerlink" title="Redis zset"></a>Redis zset</h2><p>这个方案比较常用，简单有效。利用 Redis 的 sorted set 结构，使用 timeStamp 作为 score，比如你的任务是要延迟5分钟，那么就在当前时间上加<br>5分钟作为 score ，轮询任务每秒只轮询 score 大于当前时间的 key即可，如果任务支持有误差，那么当没有扫描到有效数据的时候可以休眠对应时间再继续轮询。  </p>
-<h3 id="方案优劣"><a href="#方案优劣" class="headerlink" title="方案优劣"></a>方案优劣</h3><h4 id="优点"><a href="#优点" class="headerlink" title="优点"></a>优点</h4><p>简单实用，一针见血。  </p>
-<h4 id="缺点"><a href="#缺点" class="headerlink" title="缺点"></a>缺点</h4><ol>
-<li>单个 zset 肯定支持不了太大的数据量，如果你有几百万的延迟任务需求，大哥我还是劝你换一个方案；  </li>
-<li>定时器轮询方案可能会有异常终止的情况需要自己处理，同时消息处理失败的回滚方案，您也要自己处理。  </li>
-</ol>
-<p>所以，sorted set 的方案并不是一个成熟的方案，他只是一个快速可供落地的方案。</p>
-<h2 id="RabbitMQ队列"><a href="#RabbitMQ队列" class="headerlink" title="RabbitMQ队列"></a>RabbitMQ队列</h2><p>下面说一个可以落地的方案，这个方案也被大多数目前在架构中使用了 RabbitMQ 的项目组使用。不好的一点就是，捆绑 RabbitMQ，当你的架构方案是<br>要用别的 MQ 替换 RabbitMQ 的时候，你就蛋疼了（我现在正在经历）。  </p>
-<p>RabbitMQ 有两个特性，一个是 Time-To-Live Extensions，另一个是 Dead Letter Exchanges。  </p>
-<h3 id="Time-To-Live-Extensions"><a href="#Time-To-Live-Extensions" class="headerlink" title="Time-To-Live Extensions"></a>Time-To-Live Extensions</h3><p>RabbitMQ允许我们为消息或者队列设置TTL（time to live），也就是过期时间。TTL表明了一条消息可在队列中存活的最大时间，单位为毫秒。也就是说，<br>当某条消息被设置了TTL或者当某条消息进入了设置了TTL的队列时，这条消息会在经过TTL秒后 “死亡”，成为Dead Letter。如果既配置了消息的TTL，<br>又配置了队列的TTL，那么较小的那个值会被取用。  </p>
-<h3 id="Dead-Letter-Exchanges"><a href="#Dead-Letter-Exchanges" class="headerlink" title="Dead Letter Exchanges"></a>Dead Letter Exchanges</h3><p>在 RabbitMQ 中，一共有三种消息的 “死亡” 形式：  </p>
-<ul>
-<li>消息被拒绝。通过调用 basic.reject 或者 basic.nack 并且设置的 requeue 参数为 false；  </li>
-<li>消息因为设置了TTL而过期；  </li>
-<li>队列达到最大长度。  </li>
-</ul>
-<p>DLX同一般的 Exchange 没有区别，它能在任何的队列上被指定，实际上就是设置某个队列的属性。当队列中有 DLX 消息时，RabbitMQ就会自动的将 DLX<br> 消息重新发布到设置的 Exchange 中去，进而被路由到另一个队列，publish 可以监听这个队列中消息做相应的处理。</p>
-<p>由上简介大家可以看出，RabbitMQ本身是不支持延迟队列的，只是他的特性让勤劳的 中国脱发群体 急中生智（为了完成任务）弄出了这么一套可用的方案。  </p>
-<h3 id="方案实现"><a href="#方案实现" class="headerlink" title="方案实现"></a>方案实现</h3><ol>
-<li>如果有事件需要延迟那么将该事件发送到MQ 队列中，为需要延迟的消息设置一个TTL；  </li>
-<li>TTL到期后就会自动进入设置好的DLX，然后由DLX转发到配置好的实际消费队列；  </li>
-<li>消费该队列的延迟消息，处理事件。  </li>
-</ol>
-<h3 id="方案优劣-1"><a href="#方案优劣-1" class="headerlink" title="方案优劣"></a>方案优劣</h3><h4 id="优点-1"><a href="#优点-1" class="headerlink" title="优点"></a>优点</h4><p>大品牌组件，用的放心。如果面临大数据量需求可以很容易的横向扩展，同时消息支持持久化，有问题可回滚。  </p>
-<h4 id="缺点-1"><a href="#缺点-1" class="headerlink" title="缺点"></a>缺点</h4><ol>
-<li>配置麻烦，额外增加一个死信交换机和一个死信队列的配置；  </li>
-<li>RabbitMQ 是一个消息中间件，TTL 和 DLX 只是他的一个特性，将延迟队列绑定在一个功能软件的某一个特性上，可能会有风险。不要杠，<br>当你们组不用 RabbitMQ 的时候迁移很痛苦；  </li>
-<li>消息队列具有先进先出的特点，如果第一个进入队列的消息 A 的延迟是10分钟，第二个进入队列的消息B 的延迟是5分钟，期望的是谁先到 TTL谁先出，<br>但是事实是B已经到期了，而还要等到 A 的延迟10分钟结束A先出之后，B 才能出。所以在设计的时候需要考虑不同延迟的消息要放到不同的队列。<br>另外该问题官方已经给出了插件来支持：<a href="https://www.rabbitmq.com/community-plugins.html" target="_blank" rel="noopener">插件地址</a>。</li>
-</ol>
-<h2 id="基于-Netty-HashedWheelTimer类方法的实现"><a href="#基于-Netty-HashedWheelTimer类方法的实现" class="headerlink" title="基于 Netty#HashedWheelTimer类方法的实现"></a>基于 Netty#HashedWheelTimer类方法的实现</h2><p>HashedWheelTimer 是 Netty 中 的一个基础工具类，主要用来高效处理大量定时任务，且任务对时间精度要求相对不高，<br>在Netty 中的应用场景就是连接超时或者任务处理超时，一般都是操作比较快速的任务，缺点是内存占用相对较高。  </p>
-<h3 id="算法思想"><a href="#算法思想" class="headerlink" title="算法思想"></a>算法思想</h3><p>HashedWheelTimer 主要还是一个 DelayQueue 和一个时间轮算法组合。<br><img src="/2021/05/19/micro/%E5%BB%B6%E8%BF%9F%E9%98%9F%E5%88%97/1607781-20200128112134537-701752363.png" alt></p>
-<p>Hash Wheel Timer是一个环形结构，可以想象成时钟，分为很多格子，一个格子代表一段时间（越短Timer精度越高），<br>并用一个List保存在该格子上到期的所有任务。同时一个指针随着时间流逝一格一格转动，并执行对应List中所有到期的任务。</p>
-<p>以上图为例，假设一个格子是1s，则整个时间轮能表示的时间段16s。当前任务指向格子2，表明在第2s的时候有任务需要执行。任务列表中有两个任务，<br>每个任务前面的数字表示圈数。2表示当走到第2圈的时候才会执行，那么整个任务的真正执行时间其实是在12s之后执行，即第二圈走到2的时候。每推进一格，对应的每一个 slot 中的round数都要减一。整体算法就是这么个逻辑。</p>
-<h3 id="时间轮设计要点："><a href="#时间轮设计要点：" class="headerlink" title="时间轮设计要点："></a>时间轮设计要点：</h3><ul>
-<li>tick，一次时间推进，每次推进会检查/执行超时任务；  </li>
-<li>tickDuration，时间轮推进的最小单元，每隔 tickDuration 会有一次 tick，它决定了时间轮的精确程度；  </li>
-<li>bucket（ticksPerWheel），上图中的每一隔就是一个bucket，表示一个时间轮可以有多少个tick，它是存储任务的最小单元；  </li>
-<li>上层时间轮的 tickDuration 是下层时间轮的表示时间的最大范围，即：父 tickDuration = 子 tickDuration * 子 bucket 。  </li>
-</ul>
-<p>需要注意的是，这种方式任务是串行执行的。意味着你如果在时间轮中执行任务且任务耗时较长，将会出现调度超时或者任务堆积的情况。所以要将任务的执行异步化。  </p>
-<h3 id="算法的要点："><a href="#算法的要点：" class="headerlink" title="算法的要点："></a>算法的要点：</h3><ol>
-<li>任务并不是直接放在格子中的，而是维护了一个双向链表，这种数据结构非常便于插入和移除；  </li>
-<li>新添加的任务并不直接放入格子，而是先放入一个队列中，这是为了避免多线程插入任务的冲突。在每个tick运行任务之前由worker线程自动对任务进行归集和分类，插入到对应的槽位里面。  </li>
-</ol>
-<p>Netty 使用数组 + 双向链表的方式来组织时间轮，对于添加/取消操作仅做了记录，真正的操作实际发生在下一个tick。时间的推进是独立的线程在做，该线程同时也负责过期任务的执行等操作，可简单认为此步骤操作为O(n)，因为推进线程需要完全遍历timeouts、cancelledTimeouts与bucket链表，在遍历timeouts时，Netty为了避免任务过多，所以限制每次最多遍历10万个，也就是说，一个tick只能规划10万个任务，当任务量过大时，会存在超时任务执行时间延迟的现象。</p>
-<h3 id="方案优劣-2"><a href="#方案优劣-2" class="headerlink" title="方案优劣"></a>方案优劣</h3><h4 id="优点-2"><a href="#优点-2" class="headerlink" title="优点"></a>优点</h4><p>实现比较优雅。效率高。</p>
-<h4 id="缺点-2"><a href="#缺点-2" class="headerlink" title="缺点"></a>缺点</h4><ol>
-<li>无法实现HA和横向扩展，要么就使用多个时间轮。  </li>
-<li>最重要的是，实现也比较复杂，开发者需要考虑所有可能的情况。<br>目前我了解到的延迟队列在生产环境下有如上三种实现方式，每一种都有人在使用。当然没有最好的只有最适合的，你觉得 redis 能满足需求，就按照最简单的来，你要是有充足的开发周期，你也可以实现时间轮展现实力。  </li>
-</ol>
-<p>需求千万种，变化就一种：给时间都能做。  </p>
-<blockquote>
-<p>作者： rickiyang<br>出处：<a href="https://www.cnblogs.com/rickiyang/p/12237612.html" target="_blank" rel="noopener">https://www.cnblogs.com/rickiyang/p/12237612.html</a></p>
-</blockquote>
-]]></content>
-      <categories>
-        <category>micro</category>
-      </categories>
-      <tags>
-        <tag>消息队列</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>micro/微服务手记</title>
-    <url>/2021/05/19/micro/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E6%89%8B%E8%AE%B0/</url>
-    <content><![CDATA[<h1 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h1><p>微服务将单体应用系统拆分成多个分而治之的小应用,降低系统整体崩溃的风险性;同时也可根据这些小应用的不同需求调整实体机的性能</p>
-<p>微服务主要缺点是将系统复杂化,但对于本身就复杂的系统,微服务受益会很高  </p>
-<a id="more"></a>
-
-<h1 id="优缺点"><a href="#优缺点" class="headerlink" title="优缺点"></a>优缺点</h1><p>判定标准,使用微服务后开发和维护变得轻松了,而不是困难  </p>
-<h2 id="优点"><a href="#优点" class="headerlink" title="优点"></a>优点</h2><p>1.化繁为简,分散治理<br>2.服务间松耦合,服务内高内聚<br>3.服务可独立构建/部署/升级,局部更新<br>4.提高系统容错性,减少系统整体崩溃的概率<br>5.易于实现异构系统  </p>
-<h2 id="缺点"><a href="#缺点" class="headerlink" title="缺点"></a>缺点</h2><p>1.增加了运维部署的工作量与难度<br>2.增加了系统间调用逻辑的处理难度<br>3.日志更男收集和统计了<br>4.额外引入了一些非业务模块服务</p>
-<h1 id="go-micro"><a href="#go-micro" class="headerlink" title="go-micro"></a>go-micro</h1><ul>
-<li>服务发现: 支持服务注册与发现,底层支持etcd/consul/k8s</li>
-<li>负载均衡: rpc服务间的请求调度均衡策略</li>
-<li>同步通信: 基于RPC通信,支持单向/双向流通信模式</li>
-<li>异步通信: 提供pub/sub通信模型的接口</li>
-<li>高级接口: 比如服务发现,提供调用的接口是一致的</li>
-</ul>
-]]></content>
-      <categories>
-        <category>micro</category>
-      </categories>
-  </entry>
-  <entry>
     <title>linux/计算机原理+操作系统基础+计算机网络面试题</title>
     <url>/2021/05/19/linux/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%8E%9F%E7%90%86+%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E5%9F%BA%E7%A1%80+%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C%E9%9D%A2%E8%AF%95%E9%A2%98/</url>
     <content><![CDATA[<h1 id="第二章-计算机主城原理之概述篇"><a href="#第二章-计算机主城原理之概述篇" class="headerlink" title="第二章 计算机主城原理之概述篇"></a>第二章 计算机主城原理之概述篇</h1><ul>
@@ -3842,6 +3845,96 @@ sudo apt-get install gcc-mingw-w64<figure class="highlight plain"><table><tr><td
       </tags>
   </entry>
   <entry>
+    <title>micro/延迟队列</title>
+    <url>/2021/05/19/micro/%E5%BB%B6%E8%BF%9F%E9%98%9F%E5%88%97/</url>
+    <content><![CDATA[<h2 id="如何实现延迟队列？"><a href="#如何实现延迟队列？" class="headerlink" title="如何实现延迟队列？"></a>如何实现延迟队列？</h2><p>延迟队列的需求各位应该在日常开发的场景中经常碰到。比如：<br>用户登录之后5分钟给用户做分类推送；<br>用户多少天未登录给用户做召回推送；<br>定期检查用户当前退款账单是否被商家处理等等场景。<br>一般这种场景和定时任务还是有很大的区别，定时任务是你知道任务多久该跑一次或者什么时候只跑一次，这个时间是确定的。延迟队列是当某个事件发生的<br>时候需要延迟多久触发配套事件，引子事件发生的时间不是固定的。<br>业界目前也有很多实现方案，单机版的方案就不说了，现在也没有哪个公司还是单机版的服务，今天我们一一探讨各种方案的大致实现。  </p>
+<a id="more"></a>
+
+<h2 id="Redis-zset"><a href="#Redis-zset" class="headerlink" title="Redis zset"></a>Redis zset</h2><p>这个方案比较常用，简单有效。利用 Redis 的 sorted set 结构，使用 timeStamp 作为 score，比如你的任务是要延迟5分钟，那么就在当前时间上加<br>5分钟作为 score ，轮询任务每秒只轮询 score 大于当前时间的 key即可，如果任务支持有误差，那么当没有扫描到有效数据的时候可以休眠对应时间再继续轮询。  </p>
+<h3 id="方案优劣"><a href="#方案优劣" class="headerlink" title="方案优劣"></a>方案优劣</h3><h4 id="优点"><a href="#优点" class="headerlink" title="优点"></a>优点</h4><p>简单实用，一针见血。  </p>
+<h4 id="缺点"><a href="#缺点" class="headerlink" title="缺点"></a>缺点</h4><ol>
+<li>单个 zset 肯定支持不了太大的数据量，如果你有几百万的延迟任务需求，大哥我还是劝你换一个方案；  </li>
+<li>定时器轮询方案可能会有异常终止的情况需要自己处理，同时消息处理失败的回滚方案，您也要自己处理。  </li>
+</ol>
+<p>所以，sorted set 的方案并不是一个成熟的方案，他只是一个快速可供落地的方案。</p>
+<h2 id="RabbitMQ队列"><a href="#RabbitMQ队列" class="headerlink" title="RabbitMQ队列"></a>RabbitMQ队列</h2><p>下面说一个可以落地的方案，这个方案也被大多数目前在架构中使用了 RabbitMQ 的项目组使用。不好的一点就是，捆绑 RabbitMQ，当你的架构方案是<br>要用别的 MQ 替换 RabbitMQ 的时候，你就蛋疼了（我现在正在经历）。  </p>
+<p>RabbitMQ 有两个特性，一个是 Time-To-Live Extensions，另一个是 Dead Letter Exchanges。  </p>
+<h3 id="Time-To-Live-Extensions"><a href="#Time-To-Live-Extensions" class="headerlink" title="Time-To-Live Extensions"></a>Time-To-Live Extensions</h3><p>RabbitMQ允许我们为消息或者队列设置TTL（time to live），也就是过期时间。TTL表明了一条消息可在队列中存活的最大时间，单位为毫秒。也就是说，<br>当某条消息被设置了TTL或者当某条消息进入了设置了TTL的队列时，这条消息会在经过TTL秒后 “死亡”，成为Dead Letter。如果既配置了消息的TTL，<br>又配置了队列的TTL，那么较小的那个值会被取用。  </p>
+<h3 id="Dead-Letter-Exchanges"><a href="#Dead-Letter-Exchanges" class="headerlink" title="Dead Letter Exchanges"></a>Dead Letter Exchanges</h3><p>在 RabbitMQ 中，一共有三种消息的 “死亡” 形式：  </p>
+<ul>
+<li>消息被拒绝。通过调用 basic.reject 或者 basic.nack 并且设置的 requeue 参数为 false；  </li>
+<li>消息因为设置了TTL而过期；  </li>
+<li>队列达到最大长度。  </li>
+</ul>
+<p>DLX同一般的 Exchange 没有区别，它能在任何的队列上被指定，实际上就是设置某个队列的属性。当队列中有 DLX 消息时，RabbitMQ就会自动的将 DLX<br> 消息重新发布到设置的 Exchange 中去，进而被路由到另一个队列，publish 可以监听这个队列中消息做相应的处理。</p>
+<p>由上简介大家可以看出，RabbitMQ本身是不支持延迟队列的，只是他的特性让勤劳的 中国脱发群体 急中生智（为了完成任务）弄出了这么一套可用的方案。  </p>
+<h3 id="方案实现"><a href="#方案实现" class="headerlink" title="方案实现"></a>方案实现</h3><ol>
+<li>如果有事件需要延迟那么将该事件发送到MQ 队列中，为需要延迟的消息设置一个TTL；  </li>
+<li>TTL到期后就会自动进入设置好的DLX，然后由DLX转发到配置好的实际消费队列；  </li>
+<li>消费该队列的延迟消息，处理事件。  </li>
+</ol>
+<h3 id="方案优劣-1"><a href="#方案优劣-1" class="headerlink" title="方案优劣"></a>方案优劣</h3><h4 id="优点-1"><a href="#优点-1" class="headerlink" title="优点"></a>优点</h4><p>大品牌组件，用的放心。如果面临大数据量需求可以很容易的横向扩展，同时消息支持持久化，有问题可回滚。  </p>
+<h4 id="缺点-1"><a href="#缺点-1" class="headerlink" title="缺点"></a>缺点</h4><ol>
+<li>配置麻烦，额外增加一个死信交换机和一个死信队列的配置；  </li>
+<li>RabbitMQ 是一个消息中间件，TTL 和 DLX 只是他的一个特性，将延迟队列绑定在一个功能软件的某一个特性上，可能会有风险。不要杠，<br>当你们组不用 RabbitMQ 的时候迁移很痛苦；  </li>
+<li>消息队列具有先进先出的特点，如果第一个进入队列的消息 A 的延迟是10分钟，第二个进入队列的消息B 的延迟是5分钟，期望的是谁先到 TTL谁先出，<br>但是事实是B已经到期了，而还要等到 A 的延迟10分钟结束A先出之后，B 才能出。所以在设计的时候需要考虑不同延迟的消息要放到不同的队列。<br>另外该问题官方已经给出了插件来支持：<a href="https://www.rabbitmq.com/community-plugins.html" target="_blank" rel="noopener">插件地址</a>。</li>
+</ol>
+<h2 id="基于-Netty-HashedWheelTimer类方法的实现"><a href="#基于-Netty-HashedWheelTimer类方法的实现" class="headerlink" title="基于 Netty#HashedWheelTimer类方法的实现"></a>基于 Netty#HashedWheelTimer类方法的实现</h2><p>HashedWheelTimer 是 Netty 中 的一个基础工具类，主要用来高效处理大量定时任务，且任务对时间精度要求相对不高，<br>在Netty 中的应用场景就是连接超时或者任务处理超时，一般都是操作比较快速的任务，缺点是内存占用相对较高。  </p>
+<h3 id="算法思想"><a href="#算法思想" class="headerlink" title="算法思想"></a>算法思想</h3><p>HashedWheelTimer 主要还是一个 DelayQueue 和一个时间轮算法组合。<br><img src="/2021/05/19/micro/%E5%BB%B6%E8%BF%9F%E9%98%9F%E5%88%97/1607781-20200128112134537-701752363.png" alt></p>
+<p>Hash Wheel Timer是一个环形结构，可以想象成时钟，分为很多格子，一个格子代表一段时间（越短Timer精度越高），<br>并用一个List保存在该格子上到期的所有任务。同时一个指针随着时间流逝一格一格转动，并执行对应List中所有到期的任务。</p>
+<p>以上图为例，假设一个格子是1s，则整个时间轮能表示的时间段16s。当前任务指向格子2，表明在第2s的时候有任务需要执行。任务列表中有两个任务，<br>每个任务前面的数字表示圈数。2表示当走到第2圈的时候才会执行，那么整个任务的真正执行时间其实是在12s之后执行，即第二圈走到2的时候。每推进一格，对应的每一个 slot 中的round数都要减一。整体算法就是这么个逻辑。</p>
+<h3 id="时间轮设计要点："><a href="#时间轮设计要点：" class="headerlink" title="时间轮设计要点："></a>时间轮设计要点：</h3><ul>
+<li>tick，一次时间推进，每次推进会检查/执行超时任务；  </li>
+<li>tickDuration，时间轮推进的最小单元，每隔 tickDuration 会有一次 tick，它决定了时间轮的精确程度；  </li>
+<li>bucket（ticksPerWheel），上图中的每一隔就是一个bucket，表示一个时间轮可以有多少个tick，它是存储任务的最小单元；  </li>
+<li>上层时间轮的 tickDuration 是下层时间轮的表示时间的最大范围，即：父 tickDuration = 子 tickDuration * 子 bucket 。  </li>
+</ul>
+<p>需要注意的是，这种方式任务是串行执行的。意味着你如果在时间轮中执行任务且任务耗时较长，将会出现调度超时或者任务堆积的情况。所以要将任务的执行异步化。  </p>
+<h3 id="算法的要点："><a href="#算法的要点：" class="headerlink" title="算法的要点："></a>算法的要点：</h3><ol>
+<li>任务并不是直接放在格子中的，而是维护了一个双向链表，这种数据结构非常便于插入和移除；  </li>
+<li>新添加的任务并不直接放入格子，而是先放入一个队列中，这是为了避免多线程插入任务的冲突。在每个tick运行任务之前由worker线程自动对任务进行归集和分类，插入到对应的槽位里面。  </li>
+</ol>
+<p>Netty 使用数组 + 双向链表的方式来组织时间轮，对于添加/取消操作仅做了记录，真正的操作实际发生在下一个tick。时间的推进是独立的线程在做，该线程同时也负责过期任务的执行等操作，可简单认为此步骤操作为O(n)，因为推进线程需要完全遍历timeouts、cancelledTimeouts与bucket链表，在遍历timeouts时，Netty为了避免任务过多，所以限制每次最多遍历10万个，也就是说，一个tick只能规划10万个任务，当任务量过大时，会存在超时任务执行时间延迟的现象。</p>
+<h3 id="方案优劣-2"><a href="#方案优劣-2" class="headerlink" title="方案优劣"></a>方案优劣</h3><h4 id="优点-2"><a href="#优点-2" class="headerlink" title="优点"></a>优点</h4><p>实现比较优雅。效率高。</p>
+<h4 id="缺点-2"><a href="#缺点-2" class="headerlink" title="缺点"></a>缺点</h4><ol>
+<li>无法实现HA和横向扩展，要么就使用多个时间轮。  </li>
+<li>最重要的是，实现也比较复杂，开发者需要考虑所有可能的情况。<br>目前我了解到的延迟队列在生产环境下有如上三种实现方式，每一种都有人在使用。当然没有最好的只有最适合的，你觉得 redis 能满足需求，就按照最简单的来，你要是有充足的开发周期，你也可以实现时间轮展现实力。  </li>
+</ol>
+<p>需求千万种，变化就一种：给时间都能做。  </p>
+<blockquote>
+<p>作者： rickiyang<br>出处：<a href="https://www.cnblogs.com/rickiyang/p/12237612.html" target="_blank" rel="noopener">https://www.cnblogs.com/rickiyang/p/12237612.html</a></p>
+</blockquote>
+]]></content>
+      <categories>
+        <category>micro</category>
+      </categories>
+      <tags>
+        <tag>消息队列</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>micro/微服务手记</title>
+    <url>/2021/05/19/micro/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E6%89%8B%E8%AE%B0/</url>
+    <content><![CDATA[<h1 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h1><p>微服务将单体应用系统拆分成多个分而治之的小应用,降低系统整体崩溃的风险性;同时也可根据这些小应用的不同需求调整实体机的性能</p>
+<p>微服务主要缺点是将系统复杂化,但对于本身就复杂的系统,微服务受益会很高  </p>
+<a id="more"></a>
+
+<h1 id="优缺点"><a href="#优缺点" class="headerlink" title="优缺点"></a>优缺点</h1><p>判定标准,使用微服务后开发和维护变得轻松了,而不是困难  </p>
+<h2 id="优点"><a href="#优点" class="headerlink" title="优点"></a>优点</h2><p>1.化繁为简,分散治理<br>2.服务间松耦合,服务内高内聚<br>3.服务可独立构建/部署/升级,局部更新<br>4.提高系统容错性,减少系统整体崩溃的概率<br>5.易于实现异构系统  </p>
+<h2 id="缺点"><a href="#缺点" class="headerlink" title="缺点"></a>缺点</h2><p>1.增加了运维部署的工作量与难度<br>2.增加了系统间调用逻辑的处理难度<br>3.日志更男收集和统计了<br>4.额外引入了一些非业务模块服务</p>
+<h1 id="go-micro"><a href="#go-micro" class="headerlink" title="go-micro"></a>go-micro</h1><ul>
+<li>服务发现: 支持服务注册与发现,底层支持etcd/consul/k8s</li>
+<li>负载均衡: rpc服务间的请求调度均衡策略</li>
+<li>同步通信: 基于RPC通信,支持单向/双向流通信模式</li>
+<li>异步通信: 提供pub/sub通信模型的接口</li>
+<li>高级接口: 比如服务发现,提供调用的接口是一致的</li>
+</ul>
+]]></content>
+      <categories>
+        <category>micro</category>
+      </categories>
+  </entry>
+  <entry>
     <title>mysql/MySQL在什么情况下会使用到临时表</title>
     <url>/2021/05/19/mysql/MySQL%E5%9C%A8%E4%BB%80%E4%B9%88%E6%83%85%E5%86%B5%E4%B8%8B%E4%BC%9A%E4%BD%BF%E7%94%A8%E5%88%B0%E4%B8%B4%E6%97%B6%E8%A1%A8/</url>
     <content><![CDATA[<p>MySQL在执行SQL查询时可能会用到临时表，一般情况下，用到临时表就意味着性能较低。临时表存储，MySQL临时表分为“内存临时表”和“磁盘临时表”，<br>其中内存临时表使用MySQL的MEMORY存储引擎，磁盘临时表使用MySQL的MyISAM存储引擎；</p>
@@ -3890,21 +3983,6 @@ sudo apt-get install gcc-mingw-w64<figure class="highlight plain"><table><tr><td
       </tags>
   </entry>
   <entry>
-    <title>mysql/navicat_linux破解</title>
-    <url>/2021/05/19/mysql/navicat_linux%E7%A0%B4%E8%A7%A3/</url>
-    <content><![CDATA[<h1 id="网址"><a href="#网址" class="headerlink" title="网址"></a>网址</h1><p><a href="https://rlds.tk/" target="_blank" rel="noopener">https://rlds.tk/</a></p>
-<h1 id="破解过程"><a href="#破解过程" class="headerlink" title="破解过程"></a>破解过程</h1><ol>
-<li>下载Navicat包</li>
-<li>输入序列号</li>
-<li>断网</li>
-<li>触发手动激活</li>
-<li>获取请求码</li>
-<li>恢复网络</li>
-<li>生成激活码</li>
-</ol>
-]]></content>
-  </entry>
-  <entry>
     <title>mysql/MySQL提升课程全面讲解MySQL架构设计</title>
     <url>/2021/05/19/mysql/MySQL%E6%8F%90%E5%8D%87%E8%AF%BE%E7%A8%8B%E5%85%A8%E9%9D%A2%E8%AE%B2%E8%A7%A3MySQL%E6%9E%B6%E6%9E%84%E8%AE%BE%E8%AE%A1/</url>
     <content><![CDATA[<h1 id="第一章-实例和故事"><a href="#第一章-实例和故事" class="headerlink" title="第一章 实例和故事"></a>第一章 实例和故事</h1><h2 id="什么决定了电商双11大促的成败"><a href="#什么决定了电商双11大促的成败" class="headerlink" title="什么决定了电商双11大促的成败"></a>什么决定了电商双11大促的成败</h2><h2 id="在双11大促的数据库服务器"><a href="#在双11大促的数据库服务器" class="headerlink" title="在双11大促的数据库服务器"></a>在双11大促的数据库服务器</h2><h2 id="在大促中什么影响了数据库性能"><a href="#在大促中什么影响了数据库性能" class="headerlink" title="在大促中什么影响了数据库性能"></a>在大促中什么影响了数据库性能</h2><ul>
@@ -3951,6 +4029,21 @@ sudo apt-get install gcc-mingw-w64<figure class="highlight plain"><table><tr><td
       <tags>
         <tag>mysql架构</tag>
       </tags>
+  </entry>
+  <entry>
+    <title>mysql/navicat_linux破解</title>
+    <url>/2021/05/19/mysql/navicat_linux%E7%A0%B4%E8%A7%A3/</url>
+    <content><![CDATA[<h1 id="网址"><a href="#网址" class="headerlink" title="网址"></a>网址</h1><p><a href="https://rlds.tk/" target="_blank" rel="noopener">https://rlds.tk/</a></p>
+<h1 id="破解过程"><a href="#破解过程" class="headerlink" title="破解过程"></a>破解过程</h1><ol>
+<li>下载Navicat包</li>
+<li>输入序列号</li>
+<li>断网</li>
+<li>触发手动激活</li>
+<li>获取请求码</li>
+<li>恢复网络</li>
+<li>生成激活码</li>
+</ol>
+]]></content>
   </entry>
   <entry>
     <title>mysql/通过Docker安装配置MySQL主从节点</title>
@@ -4196,6 +4289,99 @@ sudo apt-get install gcc-mingw-w64<figure class="highlight plain"><table><tr><td
 ]]></content>
   </entry>
   <entry>
+    <title>interview/Kafka面试题</title>
+    <url>/2021/05/19/interview/Kafka%E9%9D%A2%E8%AF%95%E9%A2%98/</url>
+    <content><![CDATA[<h2 id="Kafka的用途有哪些？使用场景如何？"><a href="#Kafka的用途有哪些？使用场景如何？" class="headerlink" title="Kafka的用途有哪些？使用场景如何？"></a>Kafka的用途有哪些？使用场景如何？</h2><ol>
+<li>日志收集：一个公司可以用Kafka可以收集各种服务的log，通过kafka以统一接口服务的方式开放给各种consumer，例如Hadoop、Hbase、Solr等  </li>
+<li>消息系统：解耦和生产者和消费者、缓存消息等</li>
+<li>用户活动跟踪：Kafka经常被用来记录web用户或者app用户的各种活动，如浏览网页、搜索、点击等活动，这些活动信息被各个服务器发布到kafka的topic中，然后订阅者通过订阅这些topic来做实时的监控分析，或者装载到Hadoop、数据仓库中做离线分析和挖掘  </li>
+<li>运营指标：Kafka也经常用来记录运营监控数据。包括收集各种分布式应用的数据，生产各种操作的集中反馈，比如报警和报告  </li>
+<li>流式处理：比如spark streaming和storm</li>
+<li>事件源</li>
+</ol>
+<a id="more"></a>
+
+<h2 id="Kafka中的ISR、AR又代表什么？ISR的伸缩又指什么"><a href="#Kafka中的ISR、AR又代表什么？ISR的伸缩又指什么" class="headerlink" title="Kafka中的ISR、AR又代表什么？ISR的伸缩又指什么"></a>Kafka中的ISR、AR又代表什么？ISR的伸缩又指什么</h2><ol>
+<li>分区中的所有副本统称为AR（Assigned Repllicas）。所有与leader副本保持一定程度同步的副本（包括Leader）组成ISR（In-Sync Replicas），ISR集合是AR集合中的一个子集。与leader副本同步滞后过多的副本（不包括leader）副本，组成OSR(Out-Sync Relipcas),由此可见：AR=ISR+OSR。</li>
+<li>ISR集合的副本必须满足:   副本所在节点必须维持着与zookeeper的连接；副本最后一条消息的offset与leader副本最后一条消息的offset之间的差值不能超出指定的阈值  </li>
+<li>每个分区的leader副本都会维护此分区的ISR集合，写请求首先由leader副本处理，之后follower副本会从leader副本上拉取写入的消息，这个过程会有一定的延迟，导致follower副本中保存的消息略少于leader副本，只要未超出阈值都是可以容忍的  </li>
+<li>ISR的伸缩指的是Kafka在启动的时候会开启两个与ISR相关的定时任务，名称分别为“isr-expiration”和”isr-change-propagation”.。isr-expiration任务会周期性的检测每个分区是否需要缩减其ISR集合。  </li>
+</ol>
+<h2 id="Kafka中的HW、LEO、LSO、LW等分别代表什么？"><a href="#Kafka中的HW、LEO、LSO、LW等分别代表什么？" class="headerlink" title="Kafka中的HW、LEO、LSO、LW等分别代表什么？"></a>Kafka中的HW、LEO、LSO、LW等分别代表什么？</h2><ol>
+<li>HW是High Watermak的缩写，俗称高水位，它表示了一个特定消息的偏移量（offset），消费之只能拉取到这个offset之前的消息。</li>
+<li>LEO是Log End Offset的缩写，它表示了当前日志文件中下一条待写入消息的offset。  </li>
+<li>LSO特指LastStableOffset。它具体与kafka的事物有关。消费端参数——isolation.level,这个参数用来配置消费者事务的隔离级别。字符串类型，“read_uncommitted”和“read_committed”。  </li>
+<li>LW是Low Watermark的缩写，俗称“低水位”，代表AR集合中最小的logStartOffset值，副本的拉取请求（FetchRequest）和删除请求（DeleteRecordRequest）都可能促使LW的增长。   </li>
+</ol>
+<h2 id="Kafka中是怎么体现消息顺序性的？具体的可参考这篇博文"><a href="#Kafka中是怎么体现消息顺序性的？具体的可参考这篇博文" class="headerlink" title="Kafka中是怎么体现消息顺序性的？具体的可参考这篇博文"></a>Kafka中是怎么体现消息顺序性的？具体的可参考这篇博文</h2><p><a href="https://www.cnblogs.com/windpoplar/p/10747696.html" target="_blank" rel="noopener">https://www.cnblogs.com/windpoplar/p/10747696.html</a> </p>
+<ol>
+<li>一个 topic，一个 partition，一个 consumer，内部单线程消费，单线程吞吐量太低，一般不会用这个。</li>
+<li>写 N 个内存 queue，具有相同 key 的数据都到同一个内存 queue；然后对于 N 个线程，每个线程分别消费一个内存 queue 即可，这样就能保证顺序性。  </li>
+</ol>
+<h2 id="Kafka中的分区器、序列化器、拦截器是否了解？它们之间的处理顺序是什么？"><a href="#Kafka中的分区器、序列化器、拦截器是否了解？它们之间的处理顺序是什么？" class="headerlink" title="Kafka中的分区器、序列化器、拦截器是否了解？它们之间的处理顺序是什么？"></a>Kafka中的分区器、序列化器、拦截器是否了解？它们之间的处理顺序是什么？</h2><p> 拦截器 -&gt; 序列化器 -&gt; 分区器 </p>
+<h2 id="Kafka生产者客户端的整体结构是什么样子的？"><a href="#Kafka生产者客户端的整体结构是什么样子的？" class="headerlink" title="Kafka生产者客户端的整体结构是什么样子的？"></a>Kafka生产者客户端的整体结构是什么样子的？</h2><p><a href="https://zhuanlan.zhihu.com/p/94412266" target="_blank" rel="noopener">https://zhuanlan.zhihu.com/p/94412266</a></p>
+<h2 id="消费组中的消费者个数如果超过topic的分区，那么就会有消费者消费不到数据”这句话是否正确？如果不正确，那么有没有什么hack的手段？"><a href="#消费组中的消费者个数如果超过topic的分区，那么就会有消费者消费不到数据”这句话是否正确？如果不正确，那么有没有什么hack的手段？" class="headerlink" title="消费组中的消费者个数如果超过topic的分区，那么就会有消费者消费不到数据”这句话是否正确？如果不正确，那么有没有什么hack的手段？"></a>消费组中的消费者个数如果超过topic的分区，那么就会有消费者消费不到数据”这句话是否正确？如果不正确，那么有没有什么hack的手段？</h2><p>不正确，通过自定义分区分配策略，可以将一个consumer指定消费所有partition。  </p>
+<h2 id="消费者提交消费位移时提交的是当前消费到的最新消息的offset还是offset-1"><a href="#消费者提交消费位移时提交的是当前消费到的最新消息的offset还是offset-1" class="headerlink" title="消费者提交消费位移时提交的是当前消费到的最新消息的offset还是offset+1?"></a>消费者提交消费位移时提交的是当前消费到的最新消息的offset还是offset+1?</h2><p>offset+1 </p>
+<h2 id="有哪些情形会造成重复消费？"><a href="#有哪些情形会造成重复消费？" class="headerlink" title="有哪些情形会造成重复消费？"></a>有哪些情形会造成重复消费？</h2><p>消费者消费后没有commit offset(程序崩溃/强行kill/消费耗时/自动提交偏移情况下unscrible)    </p>
+<h2 id="那些情景下会造成消息漏消费？"><a href="#那些情景下会造成消息漏消费？" class="headerlink" title="那些情景下会造成消息漏消费？"></a>那些情景下会造成消息漏消费？</h2><p>先提交offset，后消费，有可能造成数据的重复   </p>
+<h2 id="KafkaConsumer是非线程安全的，那么怎么样实现多线程消费？参考："><a href="#KafkaConsumer是非线程安全的，那么怎么样实现多线程消费？参考：" class="headerlink" title="KafkaConsumer是非线程安全的，那么怎么样实现多线程消费？参考："></a>KafkaConsumer是非线程安全的，那么怎么样实现多线程消费？参考：</h2><p><a href="https://blog.csdn.net/clypm/article/details/80618036" target="_blank" rel="noopener">https://blog.csdn.net/clypm/article/details/80618036</a><br>1.每个线程维护一个KafkaConsumer<br>2.维护一个或多个KafkaConsumer，同时维护多个事件处理线程(worker thread)  </p>
+<h2 id="简述消费者与消费组之间的关系"><a href="#简述消费者与消费组之间的关系" class="headerlink" title="简述消费者与消费组之间的关系"></a>简述消费者与消费组之间的关系</h2><p>消费者从属与消费组，消费偏移以消费组为单位。每个消费组可以独立消费主题的所有数据，同一消费组内消费者共同消费主题数据，每个分区只能被同一消费组内一个消费者消费。  </p>
+<h2 id="当你使用kafka-topics-sh创建（删除）了一个topic之后，Kafka背后会执行什么逻辑？"><a href="#当你使用kafka-topics-sh创建（删除）了一个topic之后，Kafka背后会执行什么逻辑？" class="headerlink" title="当你使用kafka-topics.sh创建（删除）了一个topic之后，Kafka背后会执行什么逻辑？"></a>当你使用kafka-topics.sh创建（删除）了一个topic之后，Kafka背后会执行什么逻辑？</h2><ol>
+<li>会在zookeeper中的/brokers/topics节点下创建一个新的topic节点，如：/brokers/topics/first</li>
+<li>触发Controller的监听程序</li>
+<li>kafka Controller 负责topic的创建工作，并更新metadata cache</li>
+</ol>
+<h2 id="topic的分区数可不可以增加？如果可以怎么增加？如果不可以，那又是为什么？"><a href="#topic的分区数可不可以增加？如果可以怎么增加？如果不可以，那又是为什么？" class="headerlink" title="topic的分区数可不可以增加？如果可以怎么增加？如果不可以，那又是为什么？"></a>topic的分区数可不可以增加？如果可以怎么增加？如果不可以，那又是为什么？</h2><p>可以增加<br>bin/kafka-topics.sh –zookeeper localhost:2181/kafka –alter –topic topic-config –partitions 3  </p>
+<h2 id="topic的分区数可不可以减少？如果可以怎么减少？如果不可以，那又是为什么？"><a href="#topic的分区数可不可以减少？如果可以怎么减少？如果不可以，那又是为什么？" class="headerlink" title="topic的分区数可不可以减少？如果可以怎么减少？如果不可以，那又是为什么？"></a>topic的分区数可不可以减少？如果可以怎么减少？如果不可以，那又是为什么？</h2><p>不可以减少，被删除的分区数据难以处理。 </p>
+<h2 id="创建topic时如何选择合适的分区数？"><a href="#创建topic时如何选择合适的分区数？" class="headerlink" title="创建topic时如何选择合适的分区数？"></a>创建topic时如何选择合适的分区数？</h2><p><a href="https://blog.csdn.net/weixin_42641909/article/details/89294698" target="_blank" rel="noopener">https://blog.csdn.net/weixin_42641909/article/details/89294698</a> </p>
+<p>1.创建一个只有1个分区的topic<br>2.测试这个topic的producer吞吐量和consumer吞吐量。<br>3.假设他们的值分别是Tp和Tc，单位可以是MB/s。<br>4.然后假设总的目标吞吐量是Tt，那么分区数=Tt / max（Tp，Tc）<br>例如：producer吞吐量=5m/s；consumer吞吐量=50m/s，期望吞吐量100m/s；<br>分区数=100 / 50 =2分区<br>分区数一般设置为：3-10个   </p>
+<h2 id="Kafka目前有那些内部topic，它们都有什么特征？各自的作用又是什么？"><a href="#Kafka目前有那些内部topic，它们都有什么特征？各自的作用又是什么？" class="headerlink" title="Kafka目前有那些内部topic，它们都有什么特征？各自的作用又是什么？"></a>Kafka目前有那些内部topic，它们都有什么特征？各自的作用又是什么？</h2><p>consumer_offsets 以下划线开头，保存消费组的偏移  </p>
+<h2 id="优先副本是什么？它有什么特殊的作用？"><a href="#优先副本是什么？它有什么特殊的作用？" class="headerlink" title="优先副本是什么？它有什么特殊的作用？"></a>优先副本是什么？它有什么特殊的作用？</h2><p>优先副本 会是默认的leader副本 发生leader变化时重选举会优先选择优先副本作为leader </p>
+<h2 id="Kafka有哪几处地方有分区分配的概念？简述大致的过程及原理。参考："><a href="#Kafka有哪几处地方有分区分配的概念？简述大致的过程及原理。参考：" class="headerlink" title="Kafka有哪几处地方有分区分配的概念？简述大致的过程及原理。参考："></a>Kafka有哪几处地方有分区分配的概念？简述大致的过程及原理。参考：</h2><p><a href="https://blog.csdn.net/weixin_42641909/article/details/89294698" target="_blank" rel="noopener">https://blog.csdn.net/weixin_42641909/article/details/89294698</a></p>
+<p>Kafka提供的两种分配策略： range和roundrobin，由参数partition.assignment.strategy指定，默认是range策略。<br>当以下事件发生时，Kafka 将会进行一次分区分配：<br>同一个 Consumer Group 内新增消费者<br>消费者离开当前所属的Consumer Group，包括shuts down 或 crashes<br>订阅的主题新增分区  </p>
+<h3 id="Range-strategy"><a href="#Range-strategy" class="headerlink" title="Range strategy"></a>Range strategy</h3><p>Range策略是对每个主题而言的，首先对同一个主题里面的分区按照序号进行排序，并对消费者按照字母顺序进行排序。</p>
+<h3 id="RoundRobin-strategy"><a href="#RoundRobin-strategy" class="headerlink" title="RoundRobin strategy"></a>RoundRobin strategy</h3><p>使用RoundRobin策略有两个前提条件必须满足：</p>
+<ol>
+<li>同一个Consumer Group里面的所有消费者的num.streams必须相等；</li>
+<li>每个消费者订阅的主题必须相同。<br>RoundRobin策略的工作原理：将所有主题的分区组成 TopicAndPartition 列表，然后对 TopicAndPartition 列表按照 hashCode 进行排序   </li>
+</ol>
+<h2 id="简述Kafka的日志目录结构。Kafka中有那些索引文件？-参考："><a href="#简述Kafka的日志目录结构。Kafka中有那些索引文件？-参考：" class="headerlink" title="简述Kafka的日志目录结构。Kafka中有那些索引文件？ 参考："></a>简述Kafka的日志目录结构。Kafka中有那些索引文件？ 参考：</h2><p><a href="https://zhuanlan.zhihu.com/p/94412266" target="_blank" rel="noopener">https://zhuanlan.zhihu.com/p/94412266</a></p>
+<p>每个分区对应一个文件夹，文件夹的命名为topic-0，topic-1，内部为.log和.index文件 以及 .timeindex leader-epoch-checkpoint</p>
+<h2 id="如果我指定了一个offset，Kafka怎么查找到对应的消息？参考"><a href="#如果我指定了一个offset，Kafka怎么查找到对应的消息？参考" class="headerlink" title="如果我指定了一个offset，Kafka怎么查找到对应的消息？参考"></a>如果我指定了一个offset，Kafka怎么查找到对应的消息？参考</h2><p><a href="https://blog.csdn.net/moakun/article/details/101855315" target="_blank" rel="noopener">https://blog.csdn.net/moakun/article/details/101855315</a></p>
+<ol>
+<li>通过文件名前缀数字x找到该绝对offset 对应消息所在文件  </li>
+<li>offset-x为在文件中的相对偏移</li>
+<li>通过index文件中记录的索引找到最近的消息的位置</li>
+<li>从最近位置开始逐条寻找</li>
+</ol>
+<h2 id="如果我指定了一个timestamp，Kafka怎么查找到对应的消息？"><a href="#如果我指定了一个timestamp，Kafka怎么查找到对应的消息？" class="headerlink" title="如果我指定了一个timestamp，Kafka怎么查找到对应的消息？"></a>如果我指定了一个timestamp，Kafka怎么查找到对应的消息？</h2><p><a href="https://blog.csdn.net/moakun/article/details/101855315" target="_blank" rel="noopener">https://blog.csdn.net/moakun/article/details/101855315</a><br>原理同上 但是时间的因为消息体中不带有时间戳 所以不精确</p>
+<h2 id="kafka过期数据清理"><a href="#kafka过期数据清理" class="headerlink" title="kafka过期数据清理"></a>kafka过期数据清理</h2><p>日志清理保存的策略只有delete和compact两种<br>log.cleanup.policy=delete启用删除策略<br>log.cleanup.policy=compact启用压缩策略  </p>
+<h2 id="Kafka中的幂等是怎么实现的"><a href="#Kafka中的幂等是怎么实现的" class="headerlink" title="Kafka中的幂等是怎么实现的"></a>Kafka中的幂等是怎么实现的</h2><p>Producer的幂等性指的是当发送同一条消息时，数据在Server端只会被持久化一次，数据不丟不重，但是这里的幂等性是有条件的：  </p>
+<ol>
+<li>只能保证Producer在单个会话内不丟不重，如果Producer出现意外挂掉再重启是无法保证的（幂等性情况下，是无法获取之前的状态信息，因此是无法做到跨会话级别的不丢不重）。</li>
+<li>幂等性不能跨多个Topic-Partition，只能保证单个Partition内的幂等性，当涉及多个 Topic-Partition时，这中间的状态并没有同步。</li>
+</ol>
+<h2 id="kafka事务。分享一篇大佬讲kafka事务的博客，这一篇讲的更深入："><a href="#kafka事务。分享一篇大佬讲kafka事务的博客，这一篇讲的更深入：" class="headerlink" title="kafka事务。分享一篇大佬讲kafka事务的博客，这一篇讲的更深入："></a>kafka事务。分享一篇大佬讲kafka事务的博客，这一篇讲的更深入：</h2><p><a href="http://matt33.com/2018/11/04/kafka-transaction/" target="_blank" rel="noopener">http://matt33.com/2018/11/04/kafka-transaction/</a></p>
+<p>Kafka从0.11版本开始引入了事务支持。事务可以保证Kafka在Exactly Once语义的基础上，生产和消费可以跨分区和会话，要么全部成功，要么全部失败。  </p>
+<h3 id="Producer事务"><a href="#Producer事务" class="headerlink" title="Producer事务"></a>Producer事务</h3><p>为了实现跨分区跨会话的事务，需要引入一个全局唯一的Transaction ID，并将Producer获得的PID和Transaction ID绑定。这样当Producer重启后就可以通过正在进行的Transaction ID获得原来的PID。  </p>
+<p>为了管理Transaction，Kafka引入了一个新的组件Transaction Coordinator。Producer就是通过和Transaction Coordinator交互获得Transaction ID对应的任务状态。Transaction Coordinator还负责将事务所有写入Kafka的一个内部Topic，这样即使整个服务重启，由于事务状态得到保存，进行中的事务状态可以得到恢复，从而继续进行。</p>
+<h3 id="Consumer事务"><a href="#Consumer事务" class="headerlink" title="Consumer事务"></a>Consumer事务</h3><p>上述事务机制主要是从Producer方面考虑，对于Consumer而言，事务的保证就会相对较弱，尤其时无法保证Commit的信息被精确消费。这是由于Consumer可以通过offset访问任意信息，而且不同的Segment File生命周期不同，同一事务的消息可能会出现重启后被删除的情况。   </p>
+<h2 id="Kafka中有那些地方需要选举？这些地方的选举策略又有哪些？参考："><a href="#Kafka中有那些地方需要选举？这些地方的选举策略又有哪些？参考：" class="headerlink" title="Kafka中有那些地方需要选举？这些地方的选举策略又有哪些？参考："></a>Kafka中有那些地方需要选举？这些地方的选举策略又有哪些？参考：</h2><p><a href="https://blog.csdn.net/u013256816/article/details/89369160" target="_blank" rel="noopener">https://blog.csdn.net/u013256816/article/details/89369160</a></p>
+<h3 id="控制器的选举"><a href="#控制器的选举" class="headerlink" title="控制器的选举"></a>控制器的选举</h3><p>Kafka Controller的选举是依赖Zookeeper来实现的，在Kafka集群中哪个broker能够成功创建/controller这个临时（EPHEMERAL）节点他就可以成为Kafka Controller。</p>
+<h3 id="分区leader的选举"><a href="#分区leader的选举" class="headerlink" title="分区leader的选举"></a>分区leader的选举</h3><p><a href="https://www.jianshu.com/p/1f02328a4f2e" target="_blank" rel="noopener">https://www.jianshu.com/p/1f02328a4f2e</a></p>
+<h3 id="消费者相关的选举"><a href="#消费者相关的选举" class="headerlink" title="消费者相关的选举"></a>消费者相关的选举</h3><p>组协调器GroupCoordinator需要为消费组内的消费者选举出一个消费组的leader，这个选举的算法也很简单，分两种情况分析。如果消费组内还没有leader，那么第一个加入消费组的消费者即为消费组的leader。如果某一时刻leader消费者由于某些原因退出了消费组，那么会重新选举一个新的leader。</p>
+<h2 id="Kafka中的延迟队列怎么实现？参考："><a href="#Kafka中的延迟队列怎么实现？参考：" class="headerlink" title="Kafka中的延迟队列怎么实现？参考："></a>Kafka中的延迟队列怎么实现？参考：</h2><p><a href="https://blog.csdn.net/u013256816/article/details/80697456" target="_blank" rel="noopener">https://blog.csdn.net/u013256816/article/details/80697456</a></p>
+<p>Kafka中存在大量的延迟操作，比如延迟生产、延迟拉取以及延迟删除等。Kafka并没有使用JDK自带的Timer或者DelayQueue来实现延迟的功能，而是基于时间轮自定义了一个用于实现延迟功能的定时器（SystemTimer）。JDK的Timer和DelayQueue插入和删除操作的平均时间复杂度为O(nlog(n))，并不能满足Kafka的高性能要求，而基于时间轮可以将插入和删除操作的时间复杂度都降为O(1)。Kafka中的时间轮（TimingWheel）是一个存储定时任务的环形队列，底层采用数组实现，数组中的每个元素可以存放一个定时任务列表（TimerTaskList）。TimerTaskList是一个环形的双向链表，链表中的每一项表示的都是定时任务项（TimerTaskEntry），其中封装了真正的定时任务TimerTask。时间轮由多个时间格组成，每个时间格代表当前时间轮的基本时间跨度（tickMs）。时间轮的时间格个数是固定的，可用wheelSize来表示，那么整个时间轮的总体时间跨度（interval）可以通过公式 tickMs × wheelSize计算得出。  </p>
+<h2 id="kafka实现高吞吐"><a href="#kafka实现高吞吐" class="headerlink" title="kafka实现高吞吐"></a>kafka实现高吞吐</h2><p><a href="https://blog.csdn.net/qq_39429714/article/details/84879543" target="_blank" rel="noopener">https://blog.csdn.net/qq_39429714/article/details/84879543</a></p>
+]]></content>
+      <categories>
+        <category>interview</category>
+      </categories>
+      <tags>
+        <tag>kafka面试题</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>interview/Nginx面试题</title>
     <url>/2021/05/19/interview/Nginx%E9%9D%A2%E8%AF%95%E9%A2%98/</url>
     <content><![CDATA[<h2 id="什么是Nginx？"><a href="#什么是Nginx？" class="headerlink" title="什么是Nginx？"></a>什么是Nginx？</h2><p>Nginx是一个 轻量级/高性能的反向代理Web服务器，他实现非常高效的反向代理、负载平衡，他可以处理2-3万并发连接数，官方监测能支持5万并发，现在中国使用nginx网站用户有很多，例如：新浪、网易、 腾讯等。</p>
@@ -4429,175 +4615,6 @@ sudo apt-get install gcc-mingw-w64<figure class="highlight plain"><table><tr><td
       </categories>
       <tags>
         <tag>nginx面试题</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>interview/Kafka面试题</title>
-    <url>/2021/05/19/interview/Kafka%E9%9D%A2%E8%AF%95%E9%A2%98/</url>
-    <content><![CDATA[<h2 id="Kafka的用途有哪些？使用场景如何？"><a href="#Kafka的用途有哪些？使用场景如何？" class="headerlink" title="Kafka的用途有哪些？使用场景如何？"></a>Kafka的用途有哪些？使用场景如何？</h2><ol>
-<li>日志收集：一个公司可以用Kafka可以收集各种服务的log，通过kafka以统一接口服务的方式开放给各种consumer，例如Hadoop、Hbase、Solr等  </li>
-<li>消息系统：解耦和生产者和消费者、缓存消息等</li>
-<li>用户活动跟踪：Kafka经常被用来记录web用户或者app用户的各种活动，如浏览网页、搜索、点击等活动，这些活动信息被各个服务器发布到kafka的topic中，然后订阅者通过订阅这些topic来做实时的监控分析，或者装载到Hadoop、数据仓库中做离线分析和挖掘  </li>
-<li>运营指标：Kafka也经常用来记录运营监控数据。包括收集各种分布式应用的数据，生产各种操作的集中反馈，比如报警和报告  </li>
-<li>流式处理：比如spark streaming和storm</li>
-<li>事件源</li>
-</ol>
-<a id="more"></a>
-
-<h2 id="Kafka中的ISR、AR又代表什么？ISR的伸缩又指什么"><a href="#Kafka中的ISR、AR又代表什么？ISR的伸缩又指什么" class="headerlink" title="Kafka中的ISR、AR又代表什么？ISR的伸缩又指什么"></a>Kafka中的ISR、AR又代表什么？ISR的伸缩又指什么</h2><ol>
-<li>分区中的所有副本统称为AR（Assigned Repllicas）。所有与leader副本保持一定程度同步的副本（包括Leader）组成ISR（In-Sync Replicas），ISR集合是AR集合中的一个子集。与leader副本同步滞后过多的副本（不包括leader）副本，组成OSR(Out-Sync Relipcas),由此可见：AR=ISR+OSR。</li>
-<li>ISR集合的副本必须满足:   副本所在节点必须维持着与zookeeper的连接；副本最后一条消息的offset与leader副本最后一条消息的offset之间的差值不能超出指定的阈值  </li>
-<li>每个分区的leader副本都会维护此分区的ISR集合，写请求首先由leader副本处理，之后follower副本会从leader副本上拉取写入的消息，这个过程会有一定的延迟，导致follower副本中保存的消息略少于leader副本，只要未超出阈值都是可以容忍的  </li>
-<li>ISR的伸缩指的是Kafka在启动的时候会开启两个与ISR相关的定时任务，名称分别为“isr-expiration”和”isr-change-propagation”.。isr-expiration任务会周期性的检测每个分区是否需要缩减其ISR集合。  </li>
-</ol>
-<h2 id="Kafka中的HW、LEO、LSO、LW等分别代表什么？"><a href="#Kafka中的HW、LEO、LSO、LW等分别代表什么？" class="headerlink" title="Kafka中的HW、LEO、LSO、LW等分别代表什么？"></a>Kafka中的HW、LEO、LSO、LW等分别代表什么？</h2><ol>
-<li>HW是High Watermak的缩写，俗称高水位，它表示了一个特定消息的偏移量（offset），消费之只能拉取到这个offset之前的消息。</li>
-<li>LEO是Log End Offset的缩写，它表示了当前日志文件中下一条待写入消息的offset。  </li>
-<li>LSO特指LastStableOffset。它具体与kafka的事物有关。消费端参数——isolation.level,这个参数用来配置消费者事务的隔离级别。字符串类型，“read_uncommitted”和“read_committed”。  </li>
-<li>LW是Low Watermark的缩写，俗称“低水位”，代表AR集合中最小的logStartOffset值，副本的拉取请求（FetchRequest）和删除请求（DeleteRecordRequest）都可能促使LW的增长。   </li>
-</ol>
-<h2 id="Kafka中是怎么体现消息顺序性的？具体的可参考这篇博文"><a href="#Kafka中是怎么体现消息顺序性的？具体的可参考这篇博文" class="headerlink" title="Kafka中是怎么体现消息顺序性的？具体的可参考这篇博文"></a>Kafka中是怎么体现消息顺序性的？具体的可参考这篇博文</h2><p><a href="https://www.cnblogs.com/windpoplar/p/10747696.html" target="_blank" rel="noopener">https://www.cnblogs.com/windpoplar/p/10747696.html</a> </p>
-<ol>
-<li>一个 topic，一个 partition，一个 consumer，内部单线程消费，单线程吞吐量太低，一般不会用这个。</li>
-<li>写 N 个内存 queue，具有相同 key 的数据都到同一个内存 queue；然后对于 N 个线程，每个线程分别消费一个内存 queue 即可，这样就能保证顺序性。  </li>
-</ol>
-<h2 id="Kafka中的分区器、序列化器、拦截器是否了解？它们之间的处理顺序是什么？"><a href="#Kafka中的分区器、序列化器、拦截器是否了解？它们之间的处理顺序是什么？" class="headerlink" title="Kafka中的分区器、序列化器、拦截器是否了解？它们之间的处理顺序是什么？"></a>Kafka中的分区器、序列化器、拦截器是否了解？它们之间的处理顺序是什么？</h2><p> 拦截器 -&gt; 序列化器 -&gt; 分区器 </p>
-<h2 id="Kafka生产者客户端的整体结构是什么样子的？"><a href="#Kafka生产者客户端的整体结构是什么样子的？" class="headerlink" title="Kafka生产者客户端的整体结构是什么样子的？"></a>Kafka生产者客户端的整体结构是什么样子的？</h2><p><a href="https://zhuanlan.zhihu.com/p/94412266" target="_blank" rel="noopener">https://zhuanlan.zhihu.com/p/94412266</a></p>
-<h2 id="消费组中的消费者个数如果超过topic的分区，那么就会有消费者消费不到数据”这句话是否正确？如果不正确，那么有没有什么hack的手段？"><a href="#消费组中的消费者个数如果超过topic的分区，那么就会有消费者消费不到数据”这句话是否正确？如果不正确，那么有没有什么hack的手段？" class="headerlink" title="消费组中的消费者个数如果超过topic的分区，那么就会有消费者消费不到数据”这句话是否正确？如果不正确，那么有没有什么hack的手段？"></a>消费组中的消费者个数如果超过topic的分区，那么就会有消费者消费不到数据”这句话是否正确？如果不正确，那么有没有什么hack的手段？</h2><p>不正确，通过自定义分区分配策略，可以将一个consumer指定消费所有partition。  </p>
-<h2 id="消费者提交消费位移时提交的是当前消费到的最新消息的offset还是offset-1"><a href="#消费者提交消费位移时提交的是当前消费到的最新消息的offset还是offset-1" class="headerlink" title="消费者提交消费位移时提交的是当前消费到的最新消息的offset还是offset+1?"></a>消费者提交消费位移时提交的是当前消费到的最新消息的offset还是offset+1?</h2><p>offset+1 </p>
-<h2 id="有哪些情形会造成重复消费？"><a href="#有哪些情形会造成重复消费？" class="headerlink" title="有哪些情形会造成重复消费？"></a>有哪些情形会造成重复消费？</h2><p>消费者消费后没有commit offset(程序崩溃/强行kill/消费耗时/自动提交偏移情况下unscrible)    </p>
-<h2 id="那些情景下会造成消息漏消费？"><a href="#那些情景下会造成消息漏消费？" class="headerlink" title="那些情景下会造成消息漏消费？"></a>那些情景下会造成消息漏消费？</h2><p>先提交offset，后消费，有可能造成数据的重复   </p>
-<h2 id="KafkaConsumer是非线程安全的，那么怎么样实现多线程消费？参考："><a href="#KafkaConsumer是非线程安全的，那么怎么样实现多线程消费？参考：" class="headerlink" title="KafkaConsumer是非线程安全的，那么怎么样实现多线程消费？参考："></a>KafkaConsumer是非线程安全的，那么怎么样实现多线程消费？参考：</h2><p><a href="https://blog.csdn.net/clypm/article/details/80618036" target="_blank" rel="noopener">https://blog.csdn.net/clypm/article/details/80618036</a><br>1.每个线程维护一个KafkaConsumer<br>2.维护一个或多个KafkaConsumer，同时维护多个事件处理线程(worker thread)  </p>
-<h2 id="简述消费者与消费组之间的关系"><a href="#简述消费者与消费组之间的关系" class="headerlink" title="简述消费者与消费组之间的关系"></a>简述消费者与消费组之间的关系</h2><p>消费者从属与消费组，消费偏移以消费组为单位。每个消费组可以独立消费主题的所有数据，同一消费组内消费者共同消费主题数据，每个分区只能被同一消费组内一个消费者消费。  </p>
-<h2 id="当你使用kafka-topics-sh创建（删除）了一个topic之后，Kafka背后会执行什么逻辑？"><a href="#当你使用kafka-topics-sh创建（删除）了一个topic之后，Kafka背后会执行什么逻辑？" class="headerlink" title="当你使用kafka-topics.sh创建（删除）了一个topic之后，Kafka背后会执行什么逻辑？"></a>当你使用kafka-topics.sh创建（删除）了一个topic之后，Kafka背后会执行什么逻辑？</h2><ol>
-<li>会在zookeeper中的/brokers/topics节点下创建一个新的topic节点，如：/brokers/topics/first</li>
-<li>触发Controller的监听程序</li>
-<li>kafka Controller 负责topic的创建工作，并更新metadata cache</li>
-</ol>
-<h2 id="topic的分区数可不可以增加？如果可以怎么增加？如果不可以，那又是为什么？"><a href="#topic的分区数可不可以增加？如果可以怎么增加？如果不可以，那又是为什么？" class="headerlink" title="topic的分区数可不可以增加？如果可以怎么增加？如果不可以，那又是为什么？"></a>topic的分区数可不可以增加？如果可以怎么增加？如果不可以，那又是为什么？</h2><p>可以增加<br>bin/kafka-topics.sh –zookeeper localhost:2181/kafka –alter –topic topic-config –partitions 3  </p>
-<h2 id="topic的分区数可不可以减少？如果可以怎么减少？如果不可以，那又是为什么？"><a href="#topic的分区数可不可以减少？如果可以怎么减少？如果不可以，那又是为什么？" class="headerlink" title="topic的分区数可不可以减少？如果可以怎么减少？如果不可以，那又是为什么？"></a>topic的分区数可不可以减少？如果可以怎么减少？如果不可以，那又是为什么？</h2><p>不可以减少，被删除的分区数据难以处理。 </p>
-<h2 id="创建topic时如何选择合适的分区数？"><a href="#创建topic时如何选择合适的分区数？" class="headerlink" title="创建topic时如何选择合适的分区数？"></a>创建topic时如何选择合适的分区数？</h2><p><a href="https://blog.csdn.net/weixin_42641909/article/details/89294698" target="_blank" rel="noopener">https://blog.csdn.net/weixin_42641909/article/details/89294698</a> </p>
-<p>1.创建一个只有1个分区的topic<br>2.测试这个topic的producer吞吐量和consumer吞吐量。<br>3.假设他们的值分别是Tp和Tc，单位可以是MB/s。<br>4.然后假设总的目标吞吐量是Tt，那么分区数=Tt / max（Tp，Tc）<br>例如：producer吞吐量=5m/s；consumer吞吐量=50m/s，期望吞吐量100m/s；<br>分区数=100 / 50 =2分区<br>分区数一般设置为：3-10个   </p>
-<h2 id="Kafka目前有那些内部topic，它们都有什么特征？各自的作用又是什么？"><a href="#Kafka目前有那些内部topic，它们都有什么特征？各自的作用又是什么？" class="headerlink" title="Kafka目前有那些内部topic，它们都有什么特征？各自的作用又是什么？"></a>Kafka目前有那些内部topic，它们都有什么特征？各自的作用又是什么？</h2><p>consumer_offsets 以下划线开头，保存消费组的偏移  </p>
-<h2 id="优先副本是什么？它有什么特殊的作用？"><a href="#优先副本是什么？它有什么特殊的作用？" class="headerlink" title="优先副本是什么？它有什么特殊的作用？"></a>优先副本是什么？它有什么特殊的作用？</h2><p>优先副本 会是默认的leader副本 发生leader变化时重选举会优先选择优先副本作为leader </p>
-<h2 id="Kafka有哪几处地方有分区分配的概念？简述大致的过程及原理。参考："><a href="#Kafka有哪几处地方有分区分配的概念？简述大致的过程及原理。参考：" class="headerlink" title="Kafka有哪几处地方有分区分配的概念？简述大致的过程及原理。参考："></a>Kafka有哪几处地方有分区分配的概念？简述大致的过程及原理。参考：</h2><p><a href="https://blog.csdn.net/weixin_42641909/article/details/89294698" target="_blank" rel="noopener">https://blog.csdn.net/weixin_42641909/article/details/89294698</a></p>
-<p>Kafka提供的两种分配策略： range和roundrobin，由参数partition.assignment.strategy指定，默认是range策略。<br>当以下事件发生时，Kafka 将会进行一次分区分配：<br>同一个 Consumer Group 内新增消费者<br>消费者离开当前所属的Consumer Group，包括shuts down 或 crashes<br>订阅的主题新增分区  </p>
-<h3 id="Range-strategy"><a href="#Range-strategy" class="headerlink" title="Range strategy"></a>Range strategy</h3><p>Range策略是对每个主题而言的，首先对同一个主题里面的分区按照序号进行排序，并对消费者按照字母顺序进行排序。</p>
-<h3 id="RoundRobin-strategy"><a href="#RoundRobin-strategy" class="headerlink" title="RoundRobin strategy"></a>RoundRobin strategy</h3><p>使用RoundRobin策略有两个前提条件必须满足：</p>
-<ol>
-<li>同一个Consumer Group里面的所有消费者的num.streams必须相等；</li>
-<li>每个消费者订阅的主题必须相同。<br>RoundRobin策略的工作原理：将所有主题的分区组成 TopicAndPartition 列表，然后对 TopicAndPartition 列表按照 hashCode 进行排序   </li>
-</ol>
-<h2 id="简述Kafka的日志目录结构。Kafka中有那些索引文件？-参考："><a href="#简述Kafka的日志目录结构。Kafka中有那些索引文件？-参考：" class="headerlink" title="简述Kafka的日志目录结构。Kafka中有那些索引文件？ 参考："></a>简述Kafka的日志目录结构。Kafka中有那些索引文件？ 参考：</h2><p><a href="https://zhuanlan.zhihu.com/p/94412266" target="_blank" rel="noopener">https://zhuanlan.zhihu.com/p/94412266</a></p>
-<p>每个分区对应一个文件夹，文件夹的命名为topic-0，topic-1，内部为.log和.index文件 以及 .timeindex leader-epoch-checkpoint</p>
-<h2 id="如果我指定了一个offset，Kafka怎么查找到对应的消息？参考"><a href="#如果我指定了一个offset，Kafka怎么查找到对应的消息？参考" class="headerlink" title="如果我指定了一个offset，Kafka怎么查找到对应的消息？参考"></a>如果我指定了一个offset，Kafka怎么查找到对应的消息？参考</h2><p><a href="https://blog.csdn.net/moakun/article/details/101855315" target="_blank" rel="noopener">https://blog.csdn.net/moakun/article/details/101855315</a></p>
-<ol>
-<li>通过文件名前缀数字x找到该绝对offset 对应消息所在文件  </li>
-<li>offset-x为在文件中的相对偏移</li>
-<li>通过index文件中记录的索引找到最近的消息的位置</li>
-<li>从最近位置开始逐条寻找</li>
-</ol>
-<h2 id="如果我指定了一个timestamp，Kafka怎么查找到对应的消息？"><a href="#如果我指定了一个timestamp，Kafka怎么查找到对应的消息？" class="headerlink" title="如果我指定了一个timestamp，Kafka怎么查找到对应的消息？"></a>如果我指定了一个timestamp，Kafka怎么查找到对应的消息？</h2><p><a href="https://blog.csdn.net/moakun/article/details/101855315" target="_blank" rel="noopener">https://blog.csdn.net/moakun/article/details/101855315</a><br>原理同上 但是时间的因为消息体中不带有时间戳 所以不精确</p>
-<h2 id="kafka过期数据清理"><a href="#kafka过期数据清理" class="headerlink" title="kafka过期数据清理"></a>kafka过期数据清理</h2><p>日志清理保存的策略只有delete和compact两种<br>log.cleanup.policy=delete启用删除策略<br>log.cleanup.policy=compact启用压缩策略  </p>
-<h2 id="Kafka中的幂等是怎么实现的"><a href="#Kafka中的幂等是怎么实现的" class="headerlink" title="Kafka中的幂等是怎么实现的"></a>Kafka中的幂等是怎么实现的</h2><p>Producer的幂等性指的是当发送同一条消息时，数据在Server端只会被持久化一次，数据不丟不重，但是这里的幂等性是有条件的：  </p>
-<ol>
-<li>只能保证Producer在单个会话内不丟不重，如果Producer出现意外挂掉再重启是无法保证的（幂等性情况下，是无法获取之前的状态信息，因此是无法做到跨会话级别的不丢不重）。</li>
-<li>幂等性不能跨多个Topic-Partition，只能保证单个Partition内的幂等性，当涉及多个 Topic-Partition时，这中间的状态并没有同步。</li>
-</ol>
-<h2 id="kafka事务。分享一篇大佬讲kafka事务的博客，这一篇讲的更深入："><a href="#kafka事务。分享一篇大佬讲kafka事务的博客，这一篇讲的更深入：" class="headerlink" title="kafka事务。分享一篇大佬讲kafka事务的博客，这一篇讲的更深入："></a>kafka事务。分享一篇大佬讲kafka事务的博客，这一篇讲的更深入：</h2><p><a href="http://matt33.com/2018/11/04/kafka-transaction/" target="_blank" rel="noopener">http://matt33.com/2018/11/04/kafka-transaction/</a></p>
-<p>Kafka从0.11版本开始引入了事务支持。事务可以保证Kafka在Exactly Once语义的基础上，生产和消费可以跨分区和会话，要么全部成功，要么全部失败。  </p>
-<h3 id="Producer事务"><a href="#Producer事务" class="headerlink" title="Producer事务"></a>Producer事务</h3><p>为了实现跨分区跨会话的事务，需要引入一个全局唯一的Transaction ID，并将Producer获得的PID和Transaction ID绑定。这样当Producer重启后就可以通过正在进行的Transaction ID获得原来的PID。  </p>
-<p>为了管理Transaction，Kafka引入了一个新的组件Transaction Coordinator。Producer就是通过和Transaction Coordinator交互获得Transaction ID对应的任务状态。Transaction Coordinator还负责将事务所有写入Kafka的一个内部Topic，这样即使整个服务重启，由于事务状态得到保存，进行中的事务状态可以得到恢复，从而继续进行。</p>
-<h3 id="Consumer事务"><a href="#Consumer事务" class="headerlink" title="Consumer事务"></a>Consumer事务</h3><p>上述事务机制主要是从Producer方面考虑，对于Consumer而言，事务的保证就会相对较弱，尤其时无法保证Commit的信息被精确消费。这是由于Consumer可以通过offset访问任意信息，而且不同的Segment File生命周期不同，同一事务的消息可能会出现重启后被删除的情况。   </p>
-<h2 id="Kafka中有那些地方需要选举？这些地方的选举策略又有哪些？参考："><a href="#Kafka中有那些地方需要选举？这些地方的选举策略又有哪些？参考：" class="headerlink" title="Kafka中有那些地方需要选举？这些地方的选举策略又有哪些？参考："></a>Kafka中有那些地方需要选举？这些地方的选举策略又有哪些？参考：</h2><p><a href="https://blog.csdn.net/u013256816/article/details/89369160" target="_blank" rel="noopener">https://blog.csdn.net/u013256816/article/details/89369160</a></p>
-<h3 id="控制器的选举"><a href="#控制器的选举" class="headerlink" title="控制器的选举"></a>控制器的选举</h3><p>Kafka Controller的选举是依赖Zookeeper来实现的，在Kafka集群中哪个broker能够成功创建/controller这个临时（EPHEMERAL）节点他就可以成为Kafka Controller。</p>
-<h3 id="分区leader的选举"><a href="#分区leader的选举" class="headerlink" title="分区leader的选举"></a>分区leader的选举</h3><p><a href="https://www.jianshu.com/p/1f02328a4f2e" target="_blank" rel="noopener">https://www.jianshu.com/p/1f02328a4f2e</a></p>
-<h3 id="消费者相关的选举"><a href="#消费者相关的选举" class="headerlink" title="消费者相关的选举"></a>消费者相关的选举</h3><p>组协调器GroupCoordinator需要为消费组内的消费者选举出一个消费组的leader，这个选举的算法也很简单，分两种情况分析。如果消费组内还没有leader，那么第一个加入消费组的消费者即为消费组的leader。如果某一时刻leader消费者由于某些原因退出了消费组，那么会重新选举一个新的leader。</p>
-<h2 id="Kafka中的延迟队列怎么实现？参考："><a href="#Kafka中的延迟队列怎么实现？参考：" class="headerlink" title="Kafka中的延迟队列怎么实现？参考："></a>Kafka中的延迟队列怎么实现？参考：</h2><p><a href="https://blog.csdn.net/u013256816/article/details/80697456" target="_blank" rel="noopener">https://blog.csdn.net/u013256816/article/details/80697456</a></p>
-<p>Kafka中存在大量的延迟操作，比如延迟生产、延迟拉取以及延迟删除等。Kafka并没有使用JDK自带的Timer或者DelayQueue来实现延迟的功能，而是基于时间轮自定义了一个用于实现延迟功能的定时器（SystemTimer）。JDK的Timer和DelayQueue插入和删除操作的平均时间复杂度为O(nlog(n))，并不能满足Kafka的高性能要求，而基于时间轮可以将插入和删除操作的时间复杂度都降为O(1)。Kafka中的时间轮（TimingWheel）是一个存储定时任务的环形队列，底层采用数组实现，数组中的每个元素可以存放一个定时任务列表（TimerTaskList）。TimerTaskList是一个环形的双向链表，链表中的每一项表示的都是定时任务项（TimerTaskEntry），其中封装了真正的定时任务TimerTask。时间轮由多个时间格组成，每个时间格代表当前时间轮的基本时间跨度（tickMs）。时间轮的时间格个数是固定的，可用wheelSize来表示，那么整个时间轮的总体时间跨度（interval）可以通过公式 tickMs × wheelSize计算得出。  </p>
-<h2 id="kafka实现高吞吐"><a href="#kafka实现高吞吐" class="headerlink" title="kafka实现高吞吐"></a>kafka实现高吞吐</h2><p><a href="https://blog.csdn.net/qq_39429714/article/details/84879543" target="_blank" rel="noopener">https://blog.csdn.net/qq_39429714/article/details/84879543</a></p>
-]]></content>
-      <categories>
-        <category>interview</category>
-      </categories>
-      <tags>
-        <tag>kafka面试题</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>interview/Redis面试题</title>
-    <url>/2021/05/19/interview/Redis%E9%9D%A2%E8%AF%95%E9%A2%98/</url>
-    <content><![CDATA[<h2 id="使用Redis有哪些好处"><a href="#使用Redis有哪些好处" class="headerlink" title="使用Redis有哪些好处"></a>使用Redis有哪些好处</h2><ul>
-<li>速度快，因为数据存在内存中，类似于HashMap，HashMap的优势就是查找和操作的时间复杂度都是O(1)</li>
-<li>支持丰富数据类型，支持string，list，set，sorted set，hash</li>
-<li>支持事务，操作都是原子性，所谓的原子性就是对数据的更改要么全部执行，要么全部不执行</li>
-<li>丰富的特性：可用于缓存，消息，按key设置过期时间，过期后将会自动删除<a id="more"></a>
-
-</li>
-</ul>
-<h2 id="redis相比memcached有哪些优势"><a href="#redis相比memcached有哪些优势" class="headerlink" title="redis相比memcached有哪些优势"></a>redis相比memcached有哪些优势</h2><ul>
-<li>memcached所有的值均是简单的字符串，redis作为其替代者，支持更为丰富的数据类型</li>
-<li>redis的速度比memcached快很多</li>
-<li>redis可以持久化其数据</li>
-</ul>
-<h2 id="redis常见性能问题和解决方案"><a href="#redis常见性能问题和解决方案" class="headerlink" title="redis常见性能问题和解决方案"></a>redis常见性能问题和解决方案</h2><h3 id="Master写内存快照"><a href="#Master写内存快照" class="headerlink" title="Master写内存快照"></a>Master写内存快照</h3><p>save命令调度rdbSave函数，会阻塞主线程的工作，当快照比较大时对性能影响是非常大的，会间断性暂停服务，所以Master最好不要写内存快照。 </p>
-<p>Master最好不要做任何持久化工作，包括内存快照和AOF日志文件，特别是不要启用内存快照做持久化。  </p>
-<h3 id="Master-AOF持久化"><a href="#Master-AOF持久化" class="headerlink" title="Master AOF持久化"></a>Master AOF持久化</h3><p>如果不重写AOF文件，这个持久化方式对性能的影响是最小的，但是AOF文件会不断增大，AOF文件过大会影响Master重启的恢复速度。</p>
-<p>如果数据比较关键，某个Slave开启AOF备份数据，策略为每秒同步一次。</p>
-<h3 id="Master调用BGREWRITEAOF"><a href="#Master调用BGREWRITEAOF" class="headerlink" title="Master调用BGREWRITEAOF"></a>Master调用BGREWRITEAOF</h3><p>Master调用BGREWRITEAOF重写AOF文件，AOF在重写的时候会占大量的CPU和内存资源，导致服务load过高，出现短暂服务暂停现象。</p>
-<p>将no-appendfsync-on-rewrite的配置设为yes可以缓解这个问题，设置为yes表示rewrite期间对新写操作不fsync，暂时存在内存中，等rewrite完成后再写入。最好是不开启Master的AOF备份功能。  </p>
-<h4 id="Redis主从复制的性能问题"><a href="#Redis主从复制的性能问题" class="headerlink" title="Redis主从复制的性能问题"></a>Redis主从复制的性能问题</h4><p>第一次Slave向Master同步的实现是：Slave向Master发出同步请求，Master先dump出rdb文件，然后将rdb文件全量传输给slave，然后Master把缓存的<br>命令转发给Slave，初次同步完成。第二次以及以后的同步实现是：Master将变量的快照直接实时依次发送给各个Slave。不管什么原因导致Slave和<br>Master断开重连都会重复以上过程。Redis的主从复制是建立在内存快照的持久化基础上，只要有Slave就一定会有内存快照发生。虽然Redis宣称主从<br>复制无阻塞，但由于Redis使用单线程服务，如果Master快照文件比较大，那么第一次全量传输会耗费比较长时间，且文件传输过程中Master可能无法<br>提供服务，也就是说服务会中断，对于关键服务，这个后果也是很可怕的。  </p>
-<p>尽量避免在压力较大的主库上增加从库。</p>
-<h3 id="单点故障问题"><a href="#单点故障问题" class="headerlink" title="单点故障问题"></a>单点故障问题</h3><p>由于目前Redis的主从复制还不够成熟，所以存在明显的单点故障问题，这个目前只能自己做方案解决</p>
-<p>为了Master的稳定性，主从复制不要用图状结构，用单向链表结构更稳定，即主从关系为：Master&lt;–Slave1&lt;–Slave2&lt;–Slave3…….，这样的结构也方便解<br>决单点故障问题，实现Slave对Master的替换，也即，如果Master挂了，可以立马启用Slave1做Master，其他不变。</p>
-<h2 id="MySQL里有2000w数据，redis中只存20w的数据，如何保证redis中的数据都是热点数据"><a href="#MySQL里有2000w数据，redis中只存20w的数据，如何保证redis中的数据都是热点数据" class="headerlink" title="MySQL里有2000w数据，redis中只存20w的数据，如何保证redis中的数据都是热点数据"></a>MySQL里有2000w数据，redis中只存20w的数据，如何保证redis中的数据都是热点数据</h2><h3 id="相关知识"><a href="#相关知识" class="headerlink" title="相关知识"></a>相关知识</h3><p>redis 内存数据集大小上升到一定大小的时候，就会施行数据淘汰策略。redis 提供 </p>
-<h3 id="6种数据淘汰策略"><a href="#6种数据淘汰策略" class="headerlink" title="6种数据淘汰策略"></a>6种数据淘汰策略</h3><ul>
-<li>volatile-lru 从已设置过期时间的数据集中挑选最近最少使用的数据淘汰</li>
-<li>volatile-ttl 从已设置过期时间的数据集中挑选将要过期的数据淘汰</li>
-<li>volatile-random 从已设置过期时间的数据集中任意选择数据淘汰</li>
-<li>allkeys-lru 从数据集中挑选最近最少使用的数据淘汰</li>
-<li>allkeys-random 从数据集中任意选择数据淘汰</li>
-<li>no-enviction 禁止驱逐数据<h3 id="实际操作"><a href="#实际操作" class="headerlink" title="实际操作"></a>实际操作</h3>计算一下20w数据大约占用的内存，设置Redis内存限制，设置淘汰策略，加载热数据到内存中</li>
-</ul>
-<h2 id="Memcache与Redis的区别都有哪些"><a href="#Memcache与Redis的区别都有哪些" class="headerlink" title="Memcache与Redis的区别都有哪些"></a>Memcache与Redis的区别都有哪些</h2><h3 id="存储方式"><a href="#存储方式" class="headerlink" title="存储方式"></a>存储方式</h3><ul>
-<li>Memecache把数据全部存在内存之中，断电后会挂掉，数据不能超过内存大小</li>
-<li>Redis有部份存在硬盘上，这样能保证数据的持久性。</li>
-</ul>
-<h3 id="数据支持类型"><a href="#数据支持类型" class="headerlink" title="数据支持类型"></a>数据支持类型</h3><ul>
-<li>Memcache对数据类型支持相对简单</li>
-<li>Redis有复杂的数据类型</li>
-</ul>
-<h3 id="value大小"><a href="#value大小" class="headerlink" title="value大小"></a>value大小</h3><ul>
-<li>redis最大可以达到1GB，而memcache只有1MB</li>
-</ul>
-<h2 id="redis最适合的场景"><a href="#redis最适合的场景" class="headerlink" title="redis最适合的场景"></a>redis最适合的场景</h2><h3 id="缓存"><a href="#缓存" class="headerlink" title="缓存"></a>缓存</h3><p>缓存现在几乎是所有中大型网站都在用的必杀技，合理的利用缓存不仅能够提升网站访问速度，还能大大降低数据库的压力。Redis提供了键过期功能，<br>也提供了灵活的键淘汰策略，所以，现在Redis用在缓存的场合非常多。</p>
-<h3 id="排行榜"><a href="#排行榜" class="headerlink" title="排行榜"></a>排行榜</h3><p>很多网站都有排行榜应用的，如京东的月度销量榜单、商品按时间的上新排行榜等。Redis提供的有序集合数据类构能实现各种复杂的排行榜应用。</p>
-<h3 id="计数器"><a href="#计数器" class="headerlink" title="计数器"></a>计数器</h3><p>什么是计数器，如电商网站商品的浏览量、视频网站视频的播放数等。为了保证数据实时效，每次浏览都得给+1，并发量高时如果每次都请求数据库操作无<br>疑是种挑战和压力。Redis提供的incr命令来实现计数器功能，内存操作，性能非常好，非常适用于这些计数场景。</p>
-<h3 id="分布式会话"><a href="#分布式会话" class="headerlink" title="分布式会话"></a>分布式会话</h3><p>集群模式下，在应用不多的情况下一般使用容器自带的session复制功能就能满足，当应用增多相对复杂的系统中，一般都会搭建以Redis等内存数据库为中<br>心的session服务，session不再由容器管理，而是由session服务及内存数据库管理。</p>
-<h3 id="分布式锁"><a href="#分布式锁" class="headerlink" title="分布式锁"></a>分布式锁</h3><p>在很多互联网公司中都使用了分布式技术，分布式技术带来的技术挑战是对同一个资源的并发访问，如全局ID、减库存、秒杀等场景，并发量不大的场景可<br>以使用数据库的悲观锁、乐观锁来实现，但在并发量高的场合中，利用数据库锁来控制资源的并发访问是不太理想的，大大影响了数据库的性能。<br>可以利用Redis的setnx功能来编写分布式的锁，如果设置返回1说明获取锁成功，否则获取锁失败，实际应用中要考虑的细节要更多。</p>
-<h3 id="社交网络"><a href="#社交网络" class="headerlink" title="社交网络"></a>社交网络</h3><p>点赞、踩、关注/被关注、共同好友等是社交网站的基本功能，社交网站的访问量通常来说比较大，而且传统的关系数据库类型不适合存储这种类型的数据，<br>Redis提供的哈希、集合等数据结构能很方便的的实现这些功能。</p>
-<h3 id="最新列表"><a href="#最新列表" class="headerlink" title="最新列表"></a>最新列表</h3><p>Redis列表结构，LPUSH可以在列表头部插入一个内容ID作为关键字，LTRIM可用来限制列表的数量，这样列表永远为N个ID，无需查询最新的列表，直接根据ID去到对应的内容页即可。</p>
-<h3 id="消息系统"><a href="#消息系统" class="headerlink" title="消息系统"></a>消息系统</h3><p>消息队列是大型网站必用中间件，如ActiveMQ、RabbitMQ、Kafka等流行的消息队列中间件，主要用于业务解耦、流量削峰及异步处理实时性低的业务。<br>Redis提供了发布/订阅及阻塞队列功能，能实现一个简单的消息队列系统。另外，这个不能和专业的消息中间件相比。</p>
-<h2 id="Redis的同步机制"><a href="#Redis的同步机制" class="headerlink" title="Redis的同步机制"></a>Redis的同步机制</h2><p>Redis通过主从同步机制来确保master和salve之间的数据同步</p>
-<h3 id="全量复制"><a href="#全量复制" class="headerlink" title="全量复制"></a>全量复制</h3><p>全量复制是指salve启动时进行的初始化同步。<br>全同步过程：</p>
-<ol>
-<li>在salve启动时，会向master发送一条SYNC指令。  </li>
-<li>master收到这条指令后，会启动一个备份进程将所有数据写到rdb文件中去。  </li>
-<li>更新master的状态（备份是否成功、备份时间等），然后将rdb文件内容发送给等待中的salve。  <blockquote>
-<p>master并不会立即将rdb内容发送给salve。而是为每个等待中的salve注册写事件，当salve对应的socket可以发送数据时，再讲rdb内容发送给salve。</p>
-</blockquote>
-</li>
-</ol>
-<h3 id="增量拷贝"><a href="#增量拷贝" class="headerlink" title="增量拷贝"></a>增量拷贝</h3><p>如果出现网络闪断或者命令丢失等异常情况时，当主从连接恢复后，由于从节点之前保存了自身已复制的偏移量和主节点的运行ID。因此会把它们当作psync<br>参数发送给主节点，要求进行部分复制操作<br>主节点接到psync命令后首先核对参数runId是否与自身一致，如果一致，说明之前复制的是当前主节点；之后根据参数offset在自身复制积压缓冲区查找<br>，如果偏移量之后的数据存在缓冲区中，则对从节点发送+continue响应，表示可以进行部分复制；否则进行全量复制。<br>主节点根据偏移量把复制积压缓冲区里的数据发送给从节点，保证主从复制进入正常状态。</p>
-<h2 id="是否使用过Redis集群-集群的原理是什么"><a href="#是否使用过Redis集群-集群的原理是什么" class="headerlink" title="是否使用过Redis集群,集群的原理是什么"></a>是否使用过Redis集群,集群的原理是什么</h2><h2 id="redis集群如何保证一致性"><a href="#redis集群如何保证一致性" class="headerlink" title="redis集群如何保证一致性"></a>redis集群如何保证一致性</h2><h2 id="数据库与缓存数据一致性问题"><a href="#数据库与缓存数据一致性问题" class="headerlink" title="数据库与缓存数据一致性问题"></a>数据库与缓存数据一致性问题</h2><p>Cache Aside Pattern<br>1.失效：程序先从缓存中读取数据，如果没有命中，则从数据库中读取，成功之后将数据放到缓存中<br>2.命中：程序先从缓存中读取数据，如果命中，则直接返回<br>3.更新：程序先更新数据库，在删除缓存</p>
-<p>如何解决缓存击穿问题？<br>当一个线程需要去访问这个缓存的时候，如果发现缓存为空，则需要先去竞争一个锁，如果成功则进行正常的数据库读取和写入缓存这一操作，然后再释放锁，否则就等待一段时间之后，重新尝试读取缓存，如果还没有数据就继续去竞争锁　　</p>
-<p>怎么做到强一致性？<br>上一致性协议当然是可以的，虽然成本也是非常客观的。2PC甚至是3PC本身是存在一定程度的缺陷的，所以如果要采用这个方案，那么在架构设计中要引入很多的容错，回退和兜底措施。那如果是上Paxos和Raft呢？那么你首先至少要看过这两者的相关论文，并且调研清楚目前市面上有哪些开源方案，并做好充分的验证，并且能够做到出了问题自己有能力修复…对了，我还没提到性能问题呢。</p>
-<h2 id><a href="#" class="headerlink" title></a></h2>]]></content>
-      <categories>
-        <category>interview</category>
-      </categories>
-      <tags>
-        <tag>redis面试题</tag>
       </tags>
   </entry>
   <entry>
@@ -4975,6 +4992,82 @@ sudo apt-get install gcc-mingw-w64<figure class="highlight plain"><table><tr><td
       </tags>
   </entry>
   <entry>
+    <title>interview/Redis面试题</title>
+    <url>/2021/05/19/interview/Redis%E9%9D%A2%E8%AF%95%E9%A2%98/</url>
+    <content><![CDATA[<h2 id="使用Redis有哪些好处"><a href="#使用Redis有哪些好处" class="headerlink" title="使用Redis有哪些好处"></a>使用Redis有哪些好处</h2><ul>
+<li>速度快，因为数据存在内存中，类似于HashMap，HashMap的优势就是查找和操作的时间复杂度都是O(1)</li>
+<li>支持丰富数据类型，支持string，list，set，sorted set，hash</li>
+<li>支持事务，操作都是原子性，所谓的原子性就是对数据的更改要么全部执行，要么全部不执行</li>
+<li>丰富的特性：可用于缓存，消息，按key设置过期时间，过期后将会自动删除<a id="more"></a>
+
+</li>
+</ul>
+<h2 id="redis相比memcached有哪些优势"><a href="#redis相比memcached有哪些优势" class="headerlink" title="redis相比memcached有哪些优势"></a>redis相比memcached有哪些优势</h2><ul>
+<li>memcached所有的值均是简单的字符串，redis作为其替代者，支持更为丰富的数据类型</li>
+<li>redis的速度比memcached快很多</li>
+<li>redis可以持久化其数据</li>
+</ul>
+<h2 id="redis常见性能问题和解决方案"><a href="#redis常见性能问题和解决方案" class="headerlink" title="redis常见性能问题和解决方案"></a>redis常见性能问题和解决方案</h2><h3 id="Master写内存快照"><a href="#Master写内存快照" class="headerlink" title="Master写内存快照"></a>Master写内存快照</h3><p>save命令调度rdbSave函数，会阻塞主线程的工作，当快照比较大时对性能影响是非常大的，会间断性暂停服务，所以Master最好不要写内存快照。 </p>
+<p>Master最好不要做任何持久化工作，包括内存快照和AOF日志文件，特别是不要启用内存快照做持久化。  </p>
+<h3 id="Master-AOF持久化"><a href="#Master-AOF持久化" class="headerlink" title="Master AOF持久化"></a>Master AOF持久化</h3><p>如果不重写AOF文件，这个持久化方式对性能的影响是最小的，但是AOF文件会不断增大，AOF文件过大会影响Master重启的恢复速度。</p>
+<p>如果数据比较关键，某个Slave开启AOF备份数据，策略为每秒同步一次。</p>
+<h3 id="Master调用BGREWRITEAOF"><a href="#Master调用BGREWRITEAOF" class="headerlink" title="Master调用BGREWRITEAOF"></a>Master调用BGREWRITEAOF</h3><p>Master调用BGREWRITEAOF重写AOF文件，AOF在重写的时候会占大量的CPU和内存资源，导致服务load过高，出现短暂服务暂停现象。</p>
+<p>将no-appendfsync-on-rewrite的配置设为yes可以缓解这个问题，设置为yes表示rewrite期间对新写操作不fsync，暂时存在内存中，等rewrite完成后再写入。最好是不开启Master的AOF备份功能。  </p>
+<h4 id="Redis主从复制的性能问题"><a href="#Redis主从复制的性能问题" class="headerlink" title="Redis主从复制的性能问题"></a>Redis主从复制的性能问题</h4><p>第一次Slave向Master同步的实现是：Slave向Master发出同步请求，Master先dump出rdb文件，然后将rdb文件全量传输给slave，然后Master把缓存的<br>命令转发给Slave，初次同步完成。第二次以及以后的同步实现是：Master将变量的快照直接实时依次发送给各个Slave。不管什么原因导致Slave和<br>Master断开重连都会重复以上过程。Redis的主从复制是建立在内存快照的持久化基础上，只要有Slave就一定会有内存快照发生。虽然Redis宣称主从<br>复制无阻塞，但由于Redis使用单线程服务，如果Master快照文件比较大，那么第一次全量传输会耗费比较长时间，且文件传输过程中Master可能无法<br>提供服务，也就是说服务会中断，对于关键服务，这个后果也是很可怕的。  </p>
+<p>尽量避免在压力较大的主库上增加从库。</p>
+<h3 id="单点故障问题"><a href="#单点故障问题" class="headerlink" title="单点故障问题"></a>单点故障问题</h3><p>由于目前Redis的主从复制还不够成熟，所以存在明显的单点故障问题，这个目前只能自己做方案解决</p>
+<p>为了Master的稳定性，主从复制不要用图状结构，用单向链表结构更稳定，即主从关系为：Master&lt;–Slave1&lt;–Slave2&lt;–Slave3…….，这样的结构也方便解<br>决单点故障问题，实现Slave对Master的替换，也即，如果Master挂了，可以立马启用Slave1做Master，其他不变。</p>
+<h2 id="MySQL里有2000w数据，redis中只存20w的数据，如何保证redis中的数据都是热点数据"><a href="#MySQL里有2000w数据，redis中只存20w的数据，如何保证redis中的数据都是热点数据" class="headerlink" title="MySQL里有2000w数据，redis中只存20w的数据，如何保证redis中的数据都是热点数据"></a>MySQL里有2000w数据，redis中只存20w的数据，如何保证redis中的数据都是热点数据</h2><h3 id="相关知识"><a href="#相关知识" class="headerlink" title="相关知识"></a>相关知识</h3><p>redis 内存数据集大小上升到一定大小的时候，就会施行数据淘汰策略。redis 提供 </p>
+<h3 id="6种数据淘汰策略"><a href="#6种数据淘汰策略" class="headerlink" title="6种数据淘汰策略"></a>6种数据淘汰策略</h3><ul>
+<li>volatile-lru 从已设置过期时间的数据集中挑选最近最少使用的数据淘汰</li>
+<li>volatile-ttl 从已设置过期时间的数据集中挑选将要过期的数据淘汰</li>
+<li>volatile-random 从已设置过期时间的数据集中任意选择数据淘汰</li>
+<li>allkeys-lru 从数据集中挑选最近最少使用的数据淘汰</li>
+<li>allkeys-random 从数据集中任意选择数据淘汰</li>
+<li>no-enviction 禁止驱逐数据<h3 id="实际操作"><a href="#实际操作" class="headerlink" title="实际操作"></a>实际操作</h3>计算一下20w数据大约占用的内存，设置Redis内存限制，设置淘汰策略，加载热数据到内存中</li>
+</ul>
+<h2 id="Memcache与Redis的区别都有哪些"><a href="#Memcache与Redis的区别都有哪些" class="headerlink" title="Memcache与Redis的区别都有哪些"></a>Memcache与Redis的区别都有哪些</h2><h3 id="存储方式"><a href="#存储方式" class="headerlink" title="存储方式"></a>存储方式</h3><ul>
+<li>Memecache把数据全部存在内存之中，断电后会挂掉，数据不能超过内存大小</li>
+<li>Redis有部份存在硬盘上，这样能保证数据的持久性。</li>
+</ul>
+<h3 id="数据支持类型"><a href="#数据支持类型" class="headerlink" title="数据支持类型"></a>数据支持类型</h3><ul>
+<li>Memcache对数据类型支持相对简单</li>
+<li>Redis有复杂的数据类型</li>
+</ul>
+<h3 id="value大小"><a href="#value大小" class="headerlink" title="value大小"></a>value大小</h3><ul>
+<li>redis最大可以达到1GB，而memcache只有1MB</li>
+</ul>
+<h2 id="redis最适合的场景"><a href="#redis最适合的场景" class="headerlink" title="redis最适合的场景"></a>redis最适合的场景</h2><h3 id="缓存"><a href="#缓存" class="headerlink" title="缓存"></a>缓存</h3><p>缓存现在几乎是所有中大型网站都在用的必杀技，合理的利用缓存不仅能够提升网站访问速度，还能大大降低数据库的压力。Redis提供了键过期功能，<br>也提供了灵活的键淘汰策略，所以，现在Redis用在缓存的场合非常多。</p>
+<h3 id="排行榜"><a href="#排行榜" class="headerlink" title="排行榜"></a>排行榜</h3><p>很多网站都有排行榜应用的，如京东的月度销量榜单、商品按时间的上新排行榜等。Redis提供的有序集合数据类构能实现各种复杂的排行榜应用。</p>
+<h3 id="计数器"><a href="#计数器" class="headerlink" title="计数器"></a>计数器</h3><p>什么是计数器，如电商网站商品的浏览量、视频网站视频的播放数等。为了保证数据实时效，每次浏览都得给+1，并发量高时如果每次都请求数据库操作无<br>疑是种挑战和压力。Redis提供的incr命令来实现计数器功能，内存操作，性能非常好，非常适用于这些计数场景。</p>
+<h3 id="分布式会话"><a href="#分布式会话" class="headerlink" title="分布式会话"></a>分布式会话</h3><p>集群模式下，在应用不多的情况下一般使用容器自带的session复制功能就能满足，当应用增多相对复杂的系统中，一般都会搭建以Redis等内存数据库为中<br>心的session服务，session不再由容器管理，而是由session服务及内存数据库管理。</p>
+<h3 id="分布式锁"><a href="#分布式锁" class="headerlink" title="分布式锁"></a>分布式锁</h3><p>在很多互联网公司中都使用了分布式技术，分布式技术带来的技术挑战是对同一个资源的并发访问，如全局ID、减库存、秒杀等场景，并发量不大的场景可<br>以使用数据库的悲观锁、乐观锁来实现，但在并发量高的场合中，利用数据库锁来控制资源的并发访问是不太理想的，大大影响了数据库的性能。<br>可以利用Redis的setnx功能来编写分布式的锁，如果设置返回1说明获取锁成功，否则获取锁失败，实际应用中要考虑的细节要更多。</p>
+<h3 id="社交网络"><a href="#社交网络" class="headerlink" title="社交网络"></a>社交网络</h3><p>点赞、踩、关注/被关注、共同好友等是社交网站的基本功能，社交网站的访问量通常来说比较大，而且传统的关系数据库类型不适合存储这种类型的数据，<br>Redis提供的哈希、集合等数据结构能很方便的的实现这些功能。</p>
+<h3 id="最新列表"><a href="#最新列表" class="headerlink" title="最新列表"></a>最新列表</h3><p>Redis列表结构，LPUSH可以在列表头部插入一个内容ID作为关键字，LTRIM可用来限制列表的数量，这样列表永远为N个ID，无需查询最新的列表，直接根据ID去到对应的内容页即可。</p>
+<h3 id="消息系统"><a href="#消息系统" class="headerlink" title="消息系统"></a>消息系统</h3><p>消息队列是大型网站必用中间件，如ActiveMQ、RabbitMQ、Kafka等流行的消息队列中间件，主要用于业务解耦、流量削峰及异步处理实时性低的业务。<br>Redis提供了发布/订阅及阻塞队列功能，能实现一个简单的消息队列系统。另外，这个不能和专业的消息中间件相比。</p>
+<h2 id="Redis的同步机制"><a href="#Redis的同步机制" class="headerlink" title="Redis的同步机制"></a>Redis的同步机制</h2><p>Redis通过主从同步机制来确保master和salve之间的数据同步</p>
+<h3 id="全量复制"><a href="#全量复制" class="headerlink" title="全量复制"></a>全量复制</h3><p>全量复制是指salve启动时进行的初始化同步。<br>全同步过程：</p>
+<ol>
+<li>在salve启动时，会向master发送一条SYNC指令。  </li>
+<li>master收到这条指令后，会启动一个备份进程将所有数据写到rdb文件中去。  </li>
+<li>更新master的状态（备份是否成功、备份时间等），然后将rdb文件内容发送给等待中的salve。  <blockquote>
+<p>master并不会立即将rdb内容发送给salve。而是为每个等待中的salve注册写事件，当salve对应的socket可以发送数据时，再讲rdb内容发送给salve。</p>
+</blockquote>
+</li>
+</ol>
+<h3 id="增量拷贝"><a href="#增量拷贝" class="headerlink" title="增量拷贝"></a>增量拷贝</h3><p>如果出现网络闪断或者命令丢失等异常情况时，当主从连接恢复后，由于从节点之前保存了自身已复制的偏移量和主节点的运行ID。因此会把它们当作psync<br>参数发送给主节点，要求进行部分复制操作<br>主节点接到psync命令后首先核对参数runId是否与自身一致，如果一致，说明之前复制的是当前主节点；之后根据参数offset在自身复制积压缓冲区查找<br>，如果偏移量之后的数据存在缓冲区中，则对从节点发送+continue响应，表示可以进行部分复制；否则进行全量复制。<br>主节点根据偏移量把复制积压缓冲区里的数据发送给从节点，保证主从复制进入正常状态。</p>
+<h2 id="是否使用过Redis集群-集群的原理是什么"><a href="#是否使用过Redis集群-集群的原理是什么" class="headerlink" title="是否使用过Redis集群,集群的原理是什么"></a>是否使用过Redis集群,集群的原理是什么</h2><h2 id="redis集群如何保证一致性"><a href="#redis集群如何保证一致性" class="headerlink" title="redis集群如何保证一致性"></a>redis集群如何保证一致性</h2><h2 id="数据库与缓存数据一致性问题"><a href="#数据库与缓存数据一致性问题" class="headerlink" title="数据库与缓存数据一致性问题"></a>数据库与缓存数据一致性问题</h2><p>Cache Aside Pattern<br>1.失效：程序先从缓存中读取数据，如果没有命中，则从数据库中读取，成功之后将数据放到缓存中<br>2.命中：程序先从缓存中读取数据，如果命中，则直接返回<br>3.更新：程序先更新数据库，在删除缓存</p>
+<p>如何解决缓存击穿问题？<br>当一个线程需要去访问这个缓存的时候，如果发现缓存为空，则需要先去竞争一个锁，如果成功则进行正常的数据库读取和写入缓存这一操作，然后再释放锁，否则就等待一段时间之后，重新尝试读取缓存，如果还没有数据就继续去竞争锁　　</p>
+<p>怎么做到强一致性？<br>上一致性协议当然是可以的，虽然成本也是非常客观的。2PC甚至是3PC本身是存在一定程度的缺陷的，所以如果要采用这个方案，那么在架构设计中要引入很多的容错，回退和兜底措施。那如果是上Paxos和Raft呢？那么你首先至少要看过这两者的相关论文，并且调研清楚目前市面上有哪些开源方案，并做好充分的验证，并且能够做到出了问题自己有能力修复…对了，我还没提到性能问题呢。</p>
+<h2 id><a href="#" class="headerlink" title></a></h2>]]></content>
+      <categories>
+        <category>interview</category>
+      </categories>
+      <tags>
+        <tag>redis面试题</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>interview/微服务面试题</title>
     <url>/2021/05/19/interview/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E9%9D%A2%E8%AF%95%E9%A2%98/</url>
     <content><![CDATA[<h2 id="说说微服务架构的优势。"><a href="#说说微服务架构的优势。" class="headerlink" title="说说微服务架构的优势。"></a>说说微服务架构的优势。</h2><table>
@@ -5273,13 +5366,6 @@ sudo apt-get install gcc-mingw-w64<figure class="highlight plain"><table><tr><td
       </tags>
   </entry>
   <entry>
-    <title>go/设计模式(golang版本)</title>
-    <url>/2021/05/19/go/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F(golang%E7%89%88%E6%9C%AC)/</url>
-    <content><![CDATA[<h1 id="简单工厂模式"><a href="#简单工厂模式" class="headerlink" title="简单工厂模式"></a>简单工厂模式</h1><p>go 语言没有构造函数一说，所以一般会定义NewXXX函数来初始化相关类。 NewXXX 函数返回接口时就是简单工厂模式，也就是说Golang的一般推荐做法就是简单工厂。</p>
-<h1 id="工厂方法模式"><a href="#工厂方法模式" class="headerlink" title="工厂方法模式"></a>工厂方法模式</h1><p>工厂方法模式使用子类的方式延迟生成对象到子类中实现。<br>Go中不存在继承 所以使用匿名组合来实现<br>使用单独工厂接口是构造目标接口，</p>
-]]></content>
-  </entry>
-  <entry>
     <title>go/数据结构与算法</title>
     <url>/2021/05/19/go/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/</url>
     <content><![CDATA[<h1 id="摘录自"><a href="#摘录自" class="headerlink" title="摘录自"></a>摘录自</h1><p>数据结构和算法（Golang实现）<br><a href="https://www.bookstack.cn/books/hunterhug-goa.c" target="_blank" rel="noopener">https://www.bookstack.cn/books/hunterhug-goa.c</a></p>
@@ -5388,6 +5474,13 @@ sudo apt-get install gcc-mingw-w64<figure class="highlight plain"><table><tr><td
 <li>左子树所有节点的值都小于它的根节点，右子树所有节点的值都大于它的根节点。</li>
 <li>左右子树也是一棵二叉查找树。<br>二叉查找树的特点是，一直往左儿子往下找左儿子，可以找到最小的元素，一直往右儿子找右儿子，可以找到最大的元素。</li>
 </ol>
+]]></content>
+  </entry>
+  <entry>
+    <title>go/设计模式(golang版本)</title>
+    <url>/2021/05/19/go/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F(golang%E7%89%88%E6%9C%AC)/</url>
+    <content><![CDATA[<h1 id="简单工厂模式"><a href="#简单工厂模式" class="headerlink" title="简单工厂模式"></a>简单工厂模式</h1><p>go 语言没有构造函数一说，所以一般会定义NewXXX函数来初始化相关类。 NewXXX 函数返回接口时就是简单工厂模式，也就是说Golang的一般推荐做法就是简单工厂。</p>
+<h1 id="工厂方法模式"><a href="#工厂方法模式" class="headerlink" title="工厂方法模式"></a>工厂方法模式</h1><p>工厂方法模式使用子类的方式延迟生成对象到子类中实现。<br>Go中不存在继承 所以使用匿名组合来实现<br>使用单独工厂接口是构造目标接口，</p>
 ]]></content>
   </entry>
   <entry>
@@ -5777,6 +5870,19 @@ sudo apt-get install gcc-mingw-w64<figure class="highlight plain"><table><tr><td
       </tags>
   </entry>
   <entry>
+    <title>go/go学习书籍</title>
+    <url>/2021/05/19/go/go%E5%AD%A6%E4%B9%A0%E4%B9%A6%E7%B1%8D/</url>
+    <content><![CDATA[<p>#书栈网<br><a href="https://www.bookstack.cn/" target="_blank" rel="noopener">https://www.bookstack.cn/</a></p>
+<h1 id="已读"><a href="#已读" class="headerlink" title="已读"></a>已读</h1><ul>
+<li>Go入门指南(<a href="https://www.bookstack.cn/books/the-way-to-go_ZH_CN" target="_blank" rel="noopener">https://www.bookstack.cn/books/the-way-to-go_ZH_CN</a>)</li>
+<li>GO专家编程(<a href="https://www.bookstack.cn/books/GoExpertProgramming" target="_blank" rel="noopener">https://www.bookstack.cn/books/GoExpertProgramming</a>)</li>
+</ul>
+<h1 id="阅读中"><a href="#阅读中" class="headerlink" title="阅读中"></a>阅读中</h1><ul>
+<li>Go语言中文文档(<a href="https://www.bookstack.cn/books/topgoer" target="_blank" rel="noopener">https://www.bookstack.cn/books/topgoer</a>)</li>
+</ul>
+<h2 id="context"><a href="#context" class="headerlink" title="context"></a>context</h2>]]></content>
+  </entry>
+  <entry>
     <title>go/go高级编程笔记</title>
     <url>/2021/05/19/go/go%E9%AB%98%E7%BA%A7%E7%BC%96%E7%A8%8B%E7%AC%94%E8%AE%B0/</url>
     <content><![CDATA[<p><a href="https://chai2010.cn/advanced-go-programming-book/" target="_blank" rel="noopener">go语言高级编程</a></p>
@@ -5862,19 +5968,6 @@ sudo apt-get install gcc-mingw-w64<figure class="highlight plain"><table><tr><td
       <tags>
         <tag>grpc</tag>
       </tags>
-  </entry>
-  <entry>
-    <title>go/go学习书籍</title>
-    <url>/2021/05/19/go/go%E5%AD%A6%E4%B9%A0%E4%B9%A6%E7%B1%8D/</url>
-    <content><![CDATA[<p>#书栈网<br><a href="https://www.bookstack.cn/" target="_blank" rel="noopener">https://www.bookstack.cn/</a></p>
-<h1 id="已读"><a href="#已读" class="headerlink" title="已读"></a>已读</h1><ul>
-<li>Go入门指南(<a href="https://www.bookstack.cn/books/the-way-to-go_ZH_CN" target="_blank" rel="noopener">https://www.bookstack.cn/books/the-way-to-go_ZH_CN</a>)</li>
-<li>GO专家编程(<a href="https://www.bookstack.cn/books/GoExpertProgramming" target="_blank" rel="noopener">https://www.bookstack.cn/books/GoExpertProgramming</a>)</li>
-</ul>
-<h1 id="阅读中"><a href="#阅读中" class="headerlink" title="阅读中"></a>阅读中</h1><ul>
-<li>Go语言中文文档(<a href="https://www.bookstack.cn/books/topgoer" target="_blank" rel="noopener">https://www.bookstack.cn/books/topgoer</a>)</li>
-</ul>
-<h2 id="context"><a href="#context" class="headerlink" title="context"></a>context</h2>]]></content>
   </entry>
   <entry>
     <title>go/企业级微服务网关</title>
@@ -6441,41 +6534,6 @@ sudo apt-get install gcc-mingw-w64<figure class="highlight plain"><table><tr><td
 <h3 id><a href="#" class="headerlink" title></a></h3>]]></content>
   </entry>
   <entry>
-    <title>docker/consul</title>
-    <url>/2021/05/19/docker/consul/</url>
-    <content><![CDATA[<h1 id="docker-安装consul"><a href="#docker-安装consul" class="headerlink" title="docker 安装consul"></a>docker 安装consul</h1><h2 id="参数"><a href="#参数" class="headerlink" title="参数"></a>参数</h2><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">8500 http 端口，用于 http 接口和 web ui</span><br><span class="line">8300 server rpc 端口，同一数据中心 consul server 之间通过该端口通信</span><br><span class="line">8301 serf lan 端口，同一数据中心 consul client 通过该端口通信</span><br><span class="line">8302 serf wan 端口，不同数据中心 consul server 通过该端口通信</span><br><span class="line">8600 dns 端口，用于服务发现</span><br><span class="line">-bbostrap-expect 2: 集群至少两台服务器，才能选举集群leader</span><br><span class="line">-ui：运行 web 控制台</span><br><span class="line">-bind： 监听网口，0.0.0.0 表示所有网口，如果不指定默认为127.0.0.1，则无法和容器通信</span><br><span class="line">-client ： 限制某些网口可以访问</span><br></pre></td></tr></table></figure>
-
-<h2 id="单机版"><a href="#单机版" class="headerlink" title="单机版"></a>单机版</h2><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">docker run --name consul -d -p 8500:8500 -p 8300:8300 -p 8301:8301 -p 8302:8302 -p 8600:8600 consul agent -server -bootstrap-expect 1 -ui -bind&#x3D;0.0.0.0 -client&#x3D;0.0.0.0</span><br></pre></td></tr></table></figure>]]></content>
-      <categories>
-        <category>docker</category>
-      </categories>
-      <tags>
-        <tag>docker-install-ware</tag>
-        <tag>consul</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>docker/docker-machine</title>
-    <url>/2021/05/19/docker/docker-machine/</url>
-    <content><![CDATA[<h2 id="下载"><a href="#下载" class="headerlink" title="下载"></a>下载</h2><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">base&#x3D;https:&#x2F;&#x2F;github.com&#x2F;docker&#x2F;machine&#x2F;releases&#x2F;download&#x2F;v0.16.0 &amp;&amp;</span><br><span class="line">  curl -L $base&#x2F;docker-machine-$(uname -s)-$(uname -m) &gt;&#x2F;tmp&#x2F;docker-machine &amp;&amp;</span><br><span class="line">  sudo mv &#x2F;tmp&#x2F;docker-machine &#x2F;usr&#x2F;local&#x2F;bin&#x2F;docker-machine &amp;&amp;</span><br><span class="line">  chmod +x &#x2F;usr&#x2F;local&#x2F;bin&#x2F;docker-mach</span><br></pre></td></tr></table></figure>
-<h3 id="网速慢"><a href="#网速慢" class="headerlink" title="网速慢"></a>网速慢</h3><p>使用xx_net代理</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">sudo  apt install privoxy</span><br><span class="line">export https_proxy&#x3D;127.0.0.1:8087</span><br><span class="line">export http_proxy&#x3D;127.0.0.1:8087</span><br></pre></td></tr></table></figure>
-
-<h3 id="x509问题"><a href="#x509问题" class="headerlink" title="x509问题"></a>x509问题</h3><p>curl -k 参数跳过证书验证</p>
-<h2 id="使用"><a href="#使用" class="headerlink" title="使用"></a>使用</h2><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">docker-machine create -d  virtualbox manager1</span><br><span class="line"></span><br><span class="line">输出：</span><br><span class="line">Running pre-create checks...</span><br><span class="line">(manager1) No default Boot2Docker ISO found locally, downloading the latest release...</span><br><span class="line">Error with pre-create check: &quot;Get https:&#x2F;&#x2F;api.github.com&#x2F;repos&#x2F;boot2docker&#x2F;boot2docker&#x2F;releases&#x2F;latest: x509: certificate signed by unknown authority&quot;</span><br></pre></td></tr></table></figure>
-<h3 id="直接去下载默认的iso文件"><a href="#直接去下载默认的iso文件" class="headerlink" title="直接去下载默认的iso文件"></a>直接去下载默认的iso文件</h3><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">curl -Lo ~&#x2F;.docker&#x2F;machine&#x2F;cache&#x2F;boot2docker.iso https:&#x2F;&#x2F;github.com&#x2F;boot2docker&#x2F;boot2docker&#x2F;releases&#x2F;download&#x2F;v19.03.5&#x2F;boot2docker.iso</span><br><span class="line"></span><br><span class="line">输出：</span><br><span class="line">curl: (60) SSL certificate problem: unable to get local issuer certificate</span><br><span class="line">More details here: https:&#x2F;&#x2F;curl.haxx.se&#x2F;docs&#x2F;sslcerts.html</span><br></pre></td></tr></table></figure>
-
-
-<h3 id="curl-60-SSL-certificate-problem-unable-to-get-local-issuer-certificate问题"><a href="#curl-60-SSL-certificate-problem-unable-to-get-local-issuer-certificate问题" class="headerlink" title="curl: (60) SSL certificate problem: unable to get local issuer certificate问题"></a>curl: (60) SSL certificate problem: unable to get local issuer certificate问题</h3><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">curl -k --remote-name --time-cond cacert.pem https:&#x2F;&#x2F;curl.haxx.se&#x2F;ca&#x2F;cacert.pem</span><br><span class="line"># 注意执行此命令后需要重新开终端</span><br></pre></td></tr></table></figure>
-
-<p>###　终端下载实在太慢问题</p>
-<ol>
-<li><a href="https://github.com/boot2docker/boot2docker/releases/download/v19.03.5/boot2docker.iso" target="_blank" rel="noopener">浏览器下载</a></li>
-<li>将iso文件移动到　 ~/.docker/machine/cache/boot2docker.iso</li>
-</ol>
-]]></content>
-  </entry>
-  <entry>
     <title>algo/力扣-数组和字符串</title>
     <url>/2021/05/19/algo/%E5%8A%9B%E6%89%A3-%E6%95%B0%E7%BB%84%E5%92%8C%E5%AD%97%E7%AC%A6%E4%B8%B2/</url>
     <content><![CDATA[<h2 id="集合、列表、数组"><a href="#集合、列表、数组" class="headerlink" title="集合、列表、数组"></a>集合、列表、数组</h2><h3 id="集合"><a href="#集合" class="headerlink" title="集合"></a>集合</h3><p>由一个或多个确定的元素所构成的整体。<br>集合里的元素类型不一定相同<br>集合里的元素没有顺序  </p>
@@ -6541,6 +6599,75 @@ sudo apt-get install gcc-mingw-w64<figure class="highlight plain"><table><tr><td
 <figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">func generate(numRows int) [][]int &#123;</span><br><span class="line">	var res [][]int</span><br><span class="line">	for i :&#x3D; 0; i &lt; numRows; i++ &#123;</span><br><span class="line">		arr :&#x3D; make([]int, i+1)</span><br><span class="line">		for j :&#x3D; 0; j &lt;&#x3D; i; j++ &#123;</span><br><span class="line">			if j &#x3D;&#x3D; 0 || j &#x3D;&#x3D; i &#123;</span><br><span class="line">				arr[j] &#x3D; 1</span><br><span class="line">			&#125; else &#123;</span><br><span class="line">				arr[j] &#x3D; res[i-1][j-1] + res[i-1][j]</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line">		res &#x3D; append(res, arr)</span><br><span class="line">	&#125;</span><br><span class="line">	return res</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>]]></content>
   </entry>
   <entry>
+    <title>android/ubuntu安装AndroidSDK和NDK</title>
+    <url>/2021/05/19/android/ubuntu%E5%AE%89%E8%A3%85AndroidSDK%E5%92%8CNDK/</url>
+    <content><![CDATA[<h1 id="安装java"><a href="#安装java" class="headerlink" title="安装java"></a>安装java</h1><p>参考:<br><a href="https://medium.com/@barcelos.ds/install-openjdk-11-lts-in-the-ubuntu-20-04-lts-2c06f17c990" target="_blank" rel="noopener">https://medium.com/@barcelos.ds/install-openjdk-11-lts-in-the-ubuntu-20-04-lts-2c06f17c990</a></p>
+<h2 id="下载"><a href="#下载" class="headerlink" title="下载"></a>下载</h2><p><a href="https://adoptopenjdk.net" target="_blank" rel="noopener">https://adoptopenjdk.net</a></p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">sudo mkdir ~&#x2F;DevTools</span><br><span class="line">sudo mkdir ~&#x2F;DevTools&#x2F;JDK</span><br><span class="line">sudo tar -zxvf ~&#x2F;下载&#x2F;OpenJDK11U-jdk***tar.gz -C ~&#x2F;DevTools&#x2F;JDK&#x2F;</span><br></pre></td></tr></table></figure>
+
+<h2 id="设置JAVA-HOME环境变量"><a href="#设置JAVA-HOME环境变量" class="headerlink" title="设置JAVA_HOME环境变量"></a>设置JAVA_HOME环境变量</h2><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">sudo  vim ~&#x2F;.profile</span><br><span class="line"></span><br><span class="line">DEV_TOOLS&#x3D;&quot;&#x2F;home&#x2F;$USER&#x2F;DevTools&quot;</span><br><span class="line">JAVA_HOME&#x3D;&quot;$DEV_TOOLS&#x2F;JDK&#x2F;jdk-11.0.7+10&quot;</span><br><span class="line">export JAVA_HOME</span><br><span class="line">PATH&#x3D;&quot;$JAVA_HOME&#x2F;bin:$PATH&quot;</span><br><span class="line"></span><br><span class="line">source ~&#x2F;.profile</span><br></pre></td></tr></table></figure>
+<h2 id="测试"><a href="#测试" class="headerlink" title="测试"></a>测试</h2><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">#JRE</span><br><span class="line">java --version</span><br><span class="line"></span><br><span class="line">#JDK</span><br><span class="line">javac --version</span><br></pre></td></tr></table></figure>
+
+
+<h1 id="安装Android-SDK"><a href="#安装Android-SDK" class="headerlink" title="安装Android SDK"></a>安装Android SDK</h1><p>参考:<br><a href="https://medium.com/@barcelos.ds/install-android-sdk-in-the-ubuntu-20-04-lts-without-android-studio-1b629924d6c5" target="_blank" rel="noopener">https://medium.com/@barcelos.ds/install-android-sdk-in-the-ubuntu-20-04-lts-without-android-studio-1b629924d6c5</a></p>
+<h2 id="下载命令行工具"><a href="#下载命令行工具" class="headerlink" title="下载命令行工具"></a>下载命令行工具</h2><p>网址：<a href="https://developer.android.com/studio" target="_blank" rel="noopener">https://developer.android.com/studio</a><br><img src="/2021/05/19/android/ubuntu%E5%AE%89%E8%A3%85AndroidSDK%E5%92%8CNDK/command-tools.png" alt></p>
+<h2 id="目录"><a href="#目录" class="headerlink" title="目录"></a>目录</h2><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">sudo mkdir ~&#x2F;DevTools</span><br><span class="line">sudo mkdir -P ~&#x2F;DevTools&#x2F;Android&#x2F;cmdline-tools&#x2F;latest</span><br></pre></td></tr></table></figure>
+
+<h2 id="解压放至于-DevTools-Android-cmdline-tools-latest"><a href="#解压放至于-DevTools-Android-cmdline-tools-latest" class="headerlink" title="解压放至于  ~/DevTools/Android/cmdline-tools/latest"></a>解压放至于  ~/DevTools/Android/cmdline-tools/latest</h2><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h2 id="设置ANDROID-HOME环境变量"><a href="#设置ANDROID-HOME环境变量" class="headerlink" title="设置ANDROID_HOME环境变量"></a>设置ANDROID_HOME环境变量</h2><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">sudo  vim ~&#x2F;.profile</span><br><span class="line"></span><br><span class="line">DEV_TOOLS&#x3D;&quot;&#x2F;home&#x2F;$USER&#x2F;DevTools&quot;</span><br><span class="line">JAVA_HOME&#x3D;&quot;$DEV_TOOLS&#x2F;JDK&#x2F;jdk-11.0.7+10&quot;</span><br><span class="line">ANDROID_HOME&#x3D;&quot;$DEV_TOOLS&#x2F;Android&quot;</span><br><span class="line">export JAVA_HOME</span><br><span class="line">export ANDROID_HOME</span><br><span class="line">PATH&#x3D;&quot;$JAVA_HOME&#x2F;bin:$ANDROID_HOME&#x2F;cmdline-tools&#x2F;latest&#x2F;bin:$ANDROID_HOME&#x2F;platform-tools:$PATH&quot;</span><br><span class="line"></span><br><span class="line">source ~&#x2F;.profile</span><br></pre></td></tr></table></figure>
+
+<h2 id="Install-Platform-for-Android-29"><a href="#Install-Platform-for-Android-29" class="headerlink" title="Install Platform for Android 29"></a>Install Platform for Android 29</h2><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">sdkmanager &quot;platform-tools&quot; &quot;platforms;android-29&quot;</span><br></pre></td></tr></table></figure>
+
+<h2 id="Install-Build-Tools-for-Android-29"><a href="#Install-Build-Tools-for-Android-29" class="headerlink" title="Install Build Tools for Android 29"></a>Install Build Tools for Android 29</h2><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">sdkmanager &quot;build-tools&quot; &quot;build-tools;29.0.3&quot;</span><br></pre></td></tr></table></figure>
+
+<h2 id="Accept-Android-Licenses"><a href="#Accept-Android-Licenses" class="headerlink" title="Accept Android Licenses"></a>Accept Android Licenses</h2><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">sdkmanager --licenses</span><br></pre></td></tr></table></figure>
+
+<h2 id="Update-Android-Packages-when-necessary"><a href="#Update-Android-Packages-when-necessary" class="headerlink" title="Update Android Packages when necessary:"></a>Update Android Packages when necessary:</h2><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">sdkmanager --update</span><br></pre></td></tr></table></figure>
+
+<h2 id="测试-1"><a href="#测试-1" class="headerlink" title="测试"></a>测试</h2><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">sdkmanager --version</span><br><span class="line">sdkmanager --list</span><br></pre></td></tr></table></figure>
+
+<h1 id="安装NDK"><a href="#安装NDK" class="headerlink" title="安装NDK"></a>安装NDK</h1><h2 id="官网下载"><a href="#官网下载" class="headerlink" title="官网下载"></a>官网下载</h2><p><a href="https://developer.android.com/ndk/downloads/index.html" target="_blank" rel="noopener">https://developer.android.com/ndk/downloads/index.html</a></p>
+<h2 id="解压到-DevTools-Android"><a href="#解压到-DevTools-Android" class="headerlink" title="解压到 ~/DevTools/Android"></a>解压到 ~/DevTools/Android</h2><h2 id="设置ANDROID-NDK"><a href="#设置ANDROID-NDK" class="headerlink" title="设置ANDROID_NDK"></a>设置ANDROID_NDK</h2><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">sudo  vim ~&#x2F;.profile</span><br><span class="line"></span><br><span class="line">DEV_TOOLS&#x3D;&quot;&#x2F;home&#x2F;$USER&#x2F;DevTools&quot;</span><br><span class="line">JAVA_HOME&#x3D;&quot;$DEV_TOOLS&#x2F;JDK&#x2F;jdk-11.0.9.1+1&quot;</span><br><span class="line">ANDROID_HOME&#x3D;&quot;$DEV_TOOLS&#x2F;Android&quot;</span><br><span class="line"></span><br><span class="line">export JAVA_HOME</span><br><span class="line">export ANDROID_HOME</span><br><span class="line">export ANDROID_NDK&#x3D;$ANDROID_HOME&#x2F;android-ndk-r21b</span><br><span class="line"></span><br><span class="line">export GOPATH&#x3D;&#x2F;home&#x2F;yu&#x2F;go</span><br><span class="line">export PATH&#x3D;$PATH:&#x2F;usr&#x2F;local&#x2F;go&#x2F;bin:$GOPATH&#x2F;bin:$JAVA_HOME&#x2F;bin:$ANDROID_HOME&#x2F;cmdline-tools&#x2F;latest&#x2F;bin:$ANDROID_HOME&#x2F;platform-tools:$ANDROID_NDK</span><br><span class="line">export GOROOT&#x3D;&#x2F;usr&#x2F;local&#x2F;go</span><br><span class="line">export GOPROXY&#x3D;https:&#x2F;&#x2F;goproxy.cn</span><br><span class="line"></span><br><span class="line">source ~&#x2F;.profile</span><br></pre></td></tr></table></figure>
+
+<h2 id="测试-2"><a href="#测试-2" class="headerlink" title="测试"></a>测试</h2><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">ndk-build -v</span><br></pre></td></tr></table></figure>]]></content>
+  </entry>
+  <entry>
+    <title>docker/consul</title>
+    <url>/2021/05/19/docker/consul/</url>
+    <content><![CDATA[<h1 id="docker-安装consul"><a href="#docker-安装consul" class="headerlink" title="docker 安装consul"></a>docker 安装consul</h1><h2 id="参数"><a href="#参数" class="headerlink" title="参数"></a>参数</h2><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">8500 http 端口，用于 http 接口和 web ui</span><br><span class="line">8300 server rpc 端口，同一数据中心 consul server 之间通过该端口通信</span><br><span class="line">8301 serf lan 端口，同一数据中心 consul client 通过该端口通信</span><br><span class="line">8302 serf wan 端口，不同数据中心 consul server 通过该端口通信</span><br><span class="line">8600 dns 端口，用于服务发现</span><br><span class="line">-bbostrap-expect 2: 集群至少两台服务器，才能选举集群leader</span><br><span class="line">-ui：运行 web 控制台</span><br><span class="line">-bind： 监听网口，0.0.0.0 表示所有网口，如果不指定默认为127.0.0.1，则无法和容器通信</span><br><span class="line">-client ： 限制某些网口可以访问</span><br></pre></td></tr></table></figure>
+
+<h2 id="单机版"><a href="#单机版" class="headerlink" title="单机版"></a>单机版</h2><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">docker run --name consul -d -p 8500:8500 -p 8300:8300 -p 8301:8301 -p 8302:8302 -p 8600:8600 consul agent -server -bootstrap-expect 1 -ui -bind&#x3D;0.0.0.0 -client&#x3D;0.0.0.0</span><br></pre></td></tr></table></figure>]]></content>
+      <categories>
+        <category>docker</category>
+      </categories>
+      <tags>
+        <tag>docker-install-ware</tag>
+        <tag>consul</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>docker/docker-machine</title>
+    <url>/2021/05/19/docker/docker-machine/</url>
+    <content><![CDATA[<h2 id="下载"><a href="#下载" class="headerlink" title="下载"></a>下载</h2><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">base&#x3D;https:&#x2F;&#x2F;github.com&#x2F;docker&#x2F;machine&#x2F;releases&#x2F;download&#x2F;v0.16.0 &amp;&amp;</span><br><span class="line">  curl -L $base&#x2F;docker-machine-$(uname -s)-$(uname -m) &gt;&#x2F;tmp&#x2F;docker-machine &amp;&amp;</span><br><span class="line">  sudo mv &#x2F;tmp&#x2F;docker-machine &#x2F;usr&#x2F;local&#x2F;bin&#x2F;docker-machine &amp;&amp;</span><br><span class="line">  chmod +x &#x2F;usr&#x2F;local&#x2F;bin&#x2F;docker-mach</span><br></pre></td></tr></table></figure>
+<h3 id="网速慢"><a href="#网速慢" class="headerlink" title="网速慢"></a>网速慢</h3><p>使用xx_net代理</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">sudo  apt install privoxy</span><br><span class="line">export https_proxy&#x3D;127.0.0.1:8087</span><br><span class="line">export http_proxy&#x3D;127.0.0.1:8087</span><br></pre></td></tr></table></figure>
+
+<h3 id="x509问题"><a href="#x509问题" class="headerlink" title="x509问题"></a>x509问题</h3><p>curl -k 参数跳过证书验证</p>
+<h2 id="使用"><a href="#使用" class="headerlink" title="使用"></a>使用</h2><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">docker-machine create -d  virtualbox manager1</span><br><span class="line"></span><br><span class="line">输出：</span><br><span class="line">Running pre-create checks...</span><br><span class="line">(manager1) No default Boot2Docker ISO found locally, downloading the latest release...</span><br><span class="line">Error with pre-create check: &quot;Get https:&#x2F;&#x2F;api.github.com&#x2F;repos&#x2F;boot2docker&#x2F;boot2docker&#x2F;releases&#x2F;latest: x509: certificate signed by unknown authority&quot;</span><br></pre></td></tr></table></figure>
+<h3 id="直接去下载默认的iso文件"><a href="#直接去下载默认的iso文件" class="headerlink" title="直接去下载默认的iso文件"></a>直接去下载默认的iso文件</h3><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">curl -Lo ~&#x2F;.docker&#x2F;machine&#x2F;cache&#x2F;boot2docker.iso https:&#x2F;&#x2F;github.com&#x2F;boot2docker&#x2F;boot2docker&#x2F;releases&#x2F;download&#x2F;v19.03.5&#x2F;boot2docker.iso</span><br><span class="line"></span><br><span class="line">输出：</span><br><span class="line">curl: (60) SSL certificate problem: unable to get local issuer certificate</span><br><span class="line">More details here: https:&#x2F;&#x2F;curl.haxx.se&#x2F;docs&#x2F;sslcerts.html</span><br></pre></td></tr></table></figure>
+
+
+<h3 id="curl-60-SSL-certificate-problem-unable-to-get-local-issuer-certificate问题"><a href="#curl-60-SSL-certificate-problem-unable-to-get-local-issuer-certificate问题" class="headerlink" title="curl: (60) SSL certificate problem: unable to get local issuer certificate问题"></a>curl: (60) SSL certificate problem: unable to get local issuer certificate问题</h3><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">curl -k --remote-name --time-cond cacert.pem https:&#x2F;&#x2F;curl.haxx.se&#x2F;ca&#x2F;cacert.pem</span><br><span class="line"># 注意执行此命令后需要重新开终端</span><br></pre></td></tr></table></figure>
+
+<p>###　终端下载实在太慢问题</p>
+<ol>
+<li><a href="https://github.com/boot2docker/boot2docker/releases/download/v19.03.5/boot2docker.iso" target="_blank" rel="noopener">浏览器下载</a></li>
+<li>将iso文件移动到　 ~/.docker/machine/cache/boot2docker.iso</li>
+</ol>
+]]></content>
+  </entry>
+  <entry>
     <title>docker/etcd</title>
     <url>/2021/05/19/docker/etcd/</url>
     <content><![CDATA[<h1 id="docker安装ectd"><a href="#docker安装ectd" class="headerlink" title="docker安装ectd"></a>docker安装ectd</h1><h2 id="etcd-启动参数说明"><a href="#etcd-启动参数说明" class="headerlink" title="etcd 启动参数说明"></a>etcd 启动参数说明</h2><ul>
@@ -6594,40 +6721,6 @@ sudo apt-get install gcc-mingw-w64<figure class="highlight plain"><table><tr><td
         <tag>docker-install-ware</tag>
         <tag>kafak</tag>
       </tags>
-  </entry>
-  <entry>
-    <title>android/ubuntu安装AndroidSDK和NDK</title>
-    <url>/2021/05/19/android/ubuntu%E5%AE%89%E8%A3%85AndroidSDK%E5%92%8CNDK/</url>
-    <content><![CDATA[<h1 id="安装java"><a href="#安装java" class="headerlink" title="安装java"></a>安装java</h1><p>参考:<br><a href="https://medium.com/@barcelos.ds/install-openjdk-11-lts-in-the-ubuntu-20-04-lts-2c06f17c990" target="_blank" rel="noopener">https://medium.com/@barcelos.ds/install-openjdk-11-lts-in-the-ubuntu-20-04-lts-2c06f17c990</a></p>
-<h2 id="下载"><a href="#下载" class="headerlink" title="下载"></a>下载</h2><p><a href="https://adoptopenjdk.net" target="_blank" rel="noopener">https://adoptopenjdk.net</a></p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">sudo mkdir ~&#x2F;DevTools</span><br><span class="line">sudo mkdir ~&#x2F;DevTools&#x2F;JDK</span><br><span class="line">sudo tar -zxvf ~&#x2F;下载&#x2F;OpenJDK11U-jdk***tar.gz -C ~&#x2F;DevTools&#x2F;JDK&#x2F;</span><br></pre></td></tr></table></figure>
-
-<h2 id="设置JAVA-HOME环境变量"><a href="#设置JAVA-HOME环境变量" class="headerlink" title="设置JAVA_HOME环境变量"></a>设置JAVA_HOME环境变量</h2><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">sudo  vim ~&#x2F;.profile</span><br><span class="line"></span><br><span class="line">DEV_TOOLS&#x3D;&quot;&#x2F;home&#x2F;$USER&#x2F;DevTools&quot;</span><br><span class="line">JAVA_HOME&#x3D;&quot;$DEV_TOOLS&#x2F;JDK&#x2F;jdk-11.0.7+10&quot;</span><br><span class="line">export JAVA_HOME</span><br><span class="line">PATH&#x3D;&quot;$JAVA_HOME&#x2F;bin:$PATH&quot;</span><br><span class="line"></span><br><span class="line">source ~&#x2F;.profile</span><br></pre></td></tr></table></figure>
-<h2 id="测试"><a href="#测试" class="headerlink" title="测试"></a>测试</h2><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">#JRE</span><br><span class="line">java --version</span><br><span class="line"></span><br><span class="line">#JDK</span><br><span class="line">javac --version</span><br></pre></td></tr></table></figure>
-
-
-<h1 id="安装Android-SDK"><a href="#安装Android-SDK" class="headerlink" title="安装Android SDK"></a>安装Android SDK</h1><p>参考:<br><a href="https://medium.com/@barcelos.ds/install-android-sdk-in-the-ubuntu-20-04-lts-without-android-studio-1b629924d6c5" target="_blank" rel="noopener">https://medium.com/@barcelos.ds/install-android-sdk-in-the-ubuntu-20-04-lts-without-android-studio-1b629924d6c5</a></p>
-<h2 id="下载命令行工具"><a href="#下载命令行工具" class="headerlink" title="下载命令行工具"></a>下载命令行工具</h2><p>网址：<a href="https://developer.android.com/studio" target="_blank" rel="noopener">https://developer.android.com/studio</a><br><img src="/2021/05/19/android/ubuntu%E5%AE%89%E8%A3%85AndroidSDK%E5%92%8CNDK/command-tools.png" alt></p>
-<h2 id="目录"><a href="#目录" class="headerlink" title="目录"></a>目录</h2><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">sudo mkdir ~&#x2F;DevTools</span><br><span class="line">sudo mkdir -P ~&#x2F;DevTools&#x2F;Android&#x2F;cmdline-tools&#x2F;latest</span><br></pre></td></tr></table></figure>
-
-<h2 id="解压放至于-DevTools-Android-cmdline-tools-latest"><a href="#解压放至于-DevTools-Android-cmdline-tools-latest" class="headerlink" title="解压放至于  ~/DevTools/Android/cmdline-tools/latest"></a>解压放至于  ~/DevTools/Android/cmdline-tools/latest</h2><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<h2 id="设置ANDROID-HOME环境变量"><a href="#设置ANDROID-HOME环境变量" class="headerlink" title="设置ANDROID_HOME环境变量"></a>设置ANDROID_HOME环境变量</h2><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">sudo  vim ~&#x2F;.profile</span><br><span class="line"></span><br><span class="line">DEV_TOOLS&#x3D;&quot;&#x2F;home&#x2F;$USER&#x2F;DevTools&quot;</span><br><span class="line">JAVA_HOME&#x3D;&quot;$DEV_TOOLS&#x2F;JDK&#x2F;jdk-11.0.7+10&quot;</span><br><span class="line">ANDROID_HOME&#x3D;&quot;$DEV_TOOLS&#x2F;Android&quot;</span><br><span class="line">export JAVA_HOME</span><br><span class="line">export ANDROID_HOME</span><br><span class="line">PATH&#x3D;&quot;$JAVA_HOME&#x2F;bin:$ANDROID_HOME&#x2F;cmdline-tools&#x2F;latest&#x2F;bin:$ANDROID_HOME&#x2F;platform-tools:$PATH&quot;</span><br><span class="line"></span><br><span class="line">source ~&#x2F;.profile</span><br></pre></td></tr></table></figure>
-
-<h2 id="Install-Platform-for-Android-29"><a href="#Install-Platform-for-Android-29" class="headerlink" title="Install Platform for Android 29"></a>Install Platform for Android 29</h2><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">sdkmanager &quot;platform-tools&quot; &quot;platforms;android-29&quot;</span><br></pre></td></tr></table></figure>
-
-<h2 id="Install-Build-Tools-for-Android-29"><a href="#Install-Build-Tools-for-Android-29" class="headerlink" title="Install Build Tools for Android 29"></a>Install Build Tools for Android 29</h2><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">sdkmanager &quot;build-tools&quot; &quot;build-tools;29.0.3&quot;</span><br></pre></td></tr></table></figure>
-
-<h2 id="Accept-Android-Licenses"><a href="#Accept-Android-Licenses" class="headerlink" title="Accept Android Licenses"></a>Accept Android Licenses</h2><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">sdkmanager --licenses</span><br></pre></td></tr></table></figure>
-
-<h2 id="Update-Android-Packages-when-necessary"><a href="#Update-Android-Packages-when-necessary" class="headerlink" title="Update Android Packages when necessary:"></a>Update Android Packages when necessary:</h2><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">sdkmanager --update</span><br></pre></td></tr></table></figure>
-
-<h2 id="测试-1"><a href="#测试-1" class="headerlink" title="测试"></a>测试</h2><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">sdkmanager --version</span><br><span class="line">sdkmanager --list</span><br></pre></td></tr></table></figure>
-
-<h1 id="安装NDK"><a href="#安装NDK" class="headerlink" title="安装NDK"></a>安装NDK</h1><h2 id="官网下载"><a href="#官网下载" class="headerlink" title="官网下载"></a>官网下载</h2><p><a href="https://developer.android.com/ndk/downloads/index.html" target="_blank" rel="noopener">https://developer.android.com/ndk/downloads/index.html</a></p>
-<h2 id="解压到-DevTools-Android"><a href="#解压到-DevTools-Android" class="headerlink" title="解压到 ~/DevTools/Android"></a>解压到 ~/DevTools/Android</h2><h2 id="设置ANDROID-NDK"><a href="#设置ANDROID-NDK" class="headerlink" title="设置ANDROID_NDK"></a>设置ANDROID_NDK</h2><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">sudo  vim ~&#x2F;.profile</span><br><span class="line"></span><br><span class="line">DEV_TOOLS&#x3D;&quot;&#x2F;home&#x2F;$USER&#x2F;DevTools&quot;</span><br><span class="line">JAVA_HOME&#x3D;&quot;$DEV_TOOLS&#x2F;JDK&#x2F;jdk-11.0.9.1+1&quot;</span><br><span class="line">ANDROID_HOME&#x3D;&quot;$DEV_TOOLS&#x2F;Android&quot;</span><br><span class="line"></span><br><span class="line">export JAVA_HOME</span><br><span class="line">export ANDROID_HOME</span><br><span class="line">export ANDROID_NDK&#x3D;$ANDROID_HOME&#x2F;android-ndk-r21b</span><br><span class="line"></span><br><span class="line">export GOPATH&#x3D;&#x2F;home&#x2F;yu&#x2F;go</span><br><span class="line">export PATH&#x3D;$PATH:&#x2F;usr&#x2F;local&#x2F;go&#x2F;bin:$GOPATH&#x2F;bin:$JAVA_HOME&#x2F;bin:$ANDROID_HOME&#x2F;cmdline-tools&#x2F;latest&#x2F;bin:$ANDROID_HOME&#x2F;platform-tools:$ANDROID_NDK</span><br><span class="line">export GOROOT&#x3D;&#x2F;usr&#x2F;local&#x2F;go</span><br><span class="line">export GOPROXY&#x3D;https:&#x2F;&#x2F;goproxy.cn</span><br><span class="line"></span><br><span class="line">source ~&#x2F;.profile</span><br></pre></td></tr></table></figure>
-
-<h2 id="测试-2"><a href="#测试-2" class="headerlink" title="测试"></a>测试</h2><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">ndk-build -v</span><br></pre></td></tr></table></figure>]]></content>
   </entry>
   <entry>
     <title>docker/zookeeper</title>

@@ -1,6 +1,52 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title>go/grpc客户端调用服务端报错transport is closing</title>
+    <url>/2021/08/06/go/grpc%E5%AE%A2%E6%88%B7%E7%AB%AF%E8%B0%83%E7%94%A8%E6%9C%8D%E5%8A%A1%E7%AB%AF%E6%8A%A5%E9%94%99transport%20is%20closing/</url>
+    <content><![CDATA[<h1 id="grpc客户端调用服务端报错transport-is-closing"><a href="#grpc客户端调用服务端报错transport-is-closing" class="headerlink" title="grpc客户端调用服务端报错transport is closing"></a>grpc客户端调用服务端报错transport is closing</h1><p>为什么要吧这个错误单独写一篇文章，因为这个问题我debug了3天才解决。</p>
+<h2 id="首先说下现象"><a href="#首先说下现象" class="headerlink" title="首先说下现象"></a>首先说下现象</h2><p>测试环境频繁报错，transport is closing，context canceled ，最先没有引起重视，直到导致了数据不一致才决定查这个这个问题。项目中只用了一元调用</p>
+<h2 id="grpc-client-和-server-配置"><a href="#grpc-client-和-server-配置" class="headerlink" title="grpc client 和 server 配置"></a>grpc client 和 server 配置</h2><figure class="highlight go"><table><tr><td class="code"><pre><span class="line"><span class="keyword">var</span> BackOffConfig = backoff.Config&#123;</span><br><span class="line">	BaseDelay:  <span class="number">1</span> * time.Second,</span><br><span class="line">	Multiplier: <span class="number">1</span>,</span><br><span class="line">	Jitter:     <span class="number">0.2</span>,</span><br><span class="line">	MaxDelay:   <span class="number">60</span> * time.Second,</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> KeepaliveClientConfig = keepalive.ClientParameters&#123;</span><br><span class="line">	Time:                <span class="number">10</span> * time.Second,</span><br><span class="line">	Timeout:             <span class="number">5</span> * time.Minute,</span><br><span class="line">	PermitWithoutStream: <span class="literal">true</span>,</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> KeepaliveServerConfig = keepalive.ServerParameters&#123;</span><br><span class="line">	MaxConnectionIdle:     <span class="number">15</span> * time.Second, <span class="comment">// If a client is idle for 10 seconds, send a GOAWAY</span></span><br><span class="line">	MaxConnectionAge:      <span class="number">30</span> * time.Second, <span class="comment">// If any connection is alive for more than 30 seconds, send a GOAWAY</span></span><br><span class="line">	MaxConnectionAgeGrace: <span class="number">5</span> * time.Second,  <span class="comment">// Allow 5 seconds for pending RPCs to complete before forcibly closing connections</span></span><br><span class="line">	Time:    <span class="number">5</span> * time.Second, <span class="comment">// Ping the client if it is idle for 5 seconds to ensure the connection is still active</span></span><br><span class="line">	Timeout: <span class="number">5</span> * time.Minute, <span class="comment">// Wait 1 second for the ping ack before assuming the connection is dead</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> KeepaliveEnforcementPolicy = keepalive.EnforcementPolicy&#123;</span><br><span class="line">	MinTime:             <span class="number">5</span> * time.Second,</span><br><span class="line">	PermitWithoutStream: <span class="literal">true</span>,</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>配置很平常，和grpc-go example相差不远<br>项目中多个客户端共用了grpc conn 由于配置 keepalive 所以是长连接的方式<br>握手过程:<br>grpc client (一元调用)=&gt; k8s service (由kube-proxy通过iptables/ipvs)负载均衡到 =&gt; pod </p>
+<blockquote>
+<p>这种调用方式会存在流量不均衡，后面再解决</p>
+</blockquote>
+<p><a href="https://github.com/grpc/grpc-go" target="_blank" rel="noopener">官方</a>解释的这4中情况都不是:</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line">1. mis-configured transport credentials, connection failed on handshaking</span><br><span class="line">2. bytes disrupted, possibly by a proxy in between</span><br><span class="line">3. server shutdown</span><br><span class="line">4. Keepalive parameters caused connection shutdown, for example if you have configured your server to terminate connections</span><br><span class="line">regularly to trigger DNS lookups. If this is the case, you may want to increase your MaxConnectionAgeGrace, to allow longer RPC calls to finish.</span><br></pre></td></tr></table></figure>
+
+<h2 id="可能的原因"><a href="#可能的原因" class="headerlink" title="可能的原因"></a>可能的原因</h2><h3 id="并发？"><a href="#并发？" class="headerlink" title="并发？"></a>并发？</h3><p>项目中实际使用是，go 并发接受rabbitmq的消息，然后再用rpc客户端（共享的grpc conn连接）去调用rpc server ,我在本地测试的是否，测过并发的情况<br>并发量在5000的时候没有问题，想着测试环境没有这么高的并发，变没有注意。  </p>
+<h3 id="grpc-debug"><a href="#grpc-debug" class="headerlink" title="grpc debug"></a>grpc debug</h3><p>我开启了grpc 调试模式 </p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">$ export GODEBUG&#x3D;http2debug&#x3D;2</span><br><span class="line">$ export GRPC_GO_LOG_VERBOSITY_LEVEL&#x3D;99</span><br><span class="line">$ export GRPC_GO_LOG_SEVERITY_LEVEL&#x3D;info</span><br></pre></td></tr></table></figure>
+<p>观察到每隔15秒，grpc server 会发送一个goaway的数据包到客户端，这是因为上面我们配置的MaxConnectionIdle 为15秒，通知客户端关闭连接。<br>假如client已经发送请求到服务端，服务端请求耗时，在ping timeout 时间以内网络抖动（断网在联网），服务端再响应给客户端是没有问题的，<br>但超过了这个时间，client就会报transport is closing,server 也会报context canceled 。这导致我一直认为是网络抖动的问题。</p>
+<h3 id="网络抖动？"><a href="#网络抖动？" class="headerlink" title="网络抖动？"></a>网络抖动？</h3><p>我将grpc client和grpc server 的ping timeout 调成了5分钟，此时还是有很多请求几秒钟就报transport is closing<br>因此排除了网络抖动这种情况。  </p>
+<h2 id="翻阅-https-github-com-grpc-grpc-go-的issues"><a href="#翻阅-https-github-com-grpc-grpc-go-的issues" class="headerlink" title="翻阅 https://github.com/grpc/grpc-go 的issues"></a>翻阅 <a href="https://github.com/grpc/grpc-go" target="_blank" rel="noopener">https://github.com/grpc/grpc-go</a> 的issues</h2><p>直到我看到了这个issues:<a href="https://github.com/grpc/grpc-go/issues/3297" target="_blank" rel="noopener">https://github.com/grpc/grpc-go/issues/3297</a><br>问题主描述了，他在单连接情况下遇到的the connection is draining和transport is closing<br>有人回答了他: </p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">This is caused by a race between the start of a stream on a connection and the graceful close of the connection.</span><br><span class="line">The server sends a GOAWAY when number of requests on the connection reaches the limit. But the client keeps sending new streams on this connection, until it receives the GOAWAY. The steams between server sending GOAWAY and client receiving GOAWAY will fail.</span><br><span class="line"></span><br><span class="line">The gRPC client does a retry for this kind of failures, but retry only happens once (for each RPC).</span><br><span class="line"></span><br><span class="line">How often do the errors happen? And which of the errors (&quot;connection is draining&quot; vs &quot;transport is closing&quot;) happen more often?</span><br><span class="line"></span><br><span class="line">One thing to try is to add grpc.WaitForReady(true) to the RPC.</span><br><span class="line">Another thing to think of is to handle these errors in the application code. This is what will happen when the connection (TCP) is down for whatever reason. The application should be able to handle them (retry, or fail).</span><br></pre></td></tr></table></figure>
+<p>意思是由连接上的流开始和连接的正常关闭之间的竞争引起的。 当连接上的请求数达到限制时，服务器发送 GOAWAY。但是客户端不断在这个连接上发送新的流，直到它收到 GOAWAY。服务器发送 GOAWAY 和客户端接收 GOAWAY 之间的流将失败。<br>也就是说如果server发出goaway的时候，此时grpc conn 正在发送流到服务端，这时候会产生一个竞争关系。  </p>
+<p>抱着这个想法，我重新实验了我的并发程序，我将并发数量改到10000，transport is closing 出现了。平常的并发并不会触发服务器关闭连接，而是当服务器发送GOAWAY包的时候，客户端还在<br>并发的发送数据,就会导致服务端和客户端的流丢失，从而触发服务端关闭连接，报transport is closing。 </p>
+<p>于是我将grpc server的配置改成了这样:  </p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">var KeepaliveServerConfig &#x3D; keepalive.ServerParameters&#123;</span><br><span class="line">	Time:    5 * time.Second, &#x2F;&#x2F; Ping the client if it is idle for 5 seconds to ensure the connection is still active</span><br><span class="line">	Timeout: 5 * time.Minute, &#x2F;&#x2F; Wait 1 second for the ping ack before assuming the connection is dead</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>本身我们使用的长连接，在项目中不会频繁创建连接。所以这里不用关闭它，其次即使是断网的情况下，在ping timeout 时间内，网络恢复后连接依然可以重用。最坏的情况就是断网连不上了<br>这个连接就交个操作系统去回收吧（本身 tcp 也有keepalive机制）改完上到测试环境，世界安静了，再没有transport is closing</p>
+<h2 id="注意"><a href="#注意" class="headerlink" title="注意"></a>注意</h2><ol>
+<li>使用k8s service的负载均衡是4层负载均衡，只在握手时起作用，一旦长连接建立，service的负载便没有了作用。解决这个问题需要用grpc 客户端负载均衡进行处理  </li>
+<li>在helm upgrade的时候依然会报，这是因为在关闭grpc server 没有调用 GracefulStop() 方法进行平滑停止.  </li>
+<li>GOAWAY 是http2协议包，并非grpc独有,http2实现了io多路复用，就是说可以并发的向同一个tcp连接中写数据，消息也不会错乱。  </li>
+<li>http2 同一个连接，发送连接数是有限制的，在服务端可以设置（官方并不建议调这个参数），超过这个显示，后面的请求会排队。  </li>
+</ol>
+<h2 id="参考文章"><a href="#参考文章" class="headerlink" title="参考文章"></a>参考文章</h2><ul>
+<li><a href="https://github.com/grpc/grpc-go/issues/3297" target="_blank" rel="noopener">https://github.com/grpc/grpc-go/issues/3297</a></li>
+<li><a href="https://www.jianshu.com/p/ae72ad58ecb6" target="_blank" rel="noopener">Golang信号处理和优雅退出守护进程</a></li>
+<li><a href="https://pandaychen.github.io/2020/09/01/GRPC-CLIENT-CONN-LASTING/" target="_blank" rel="noopener">https://pandaychen.github.io/2020/09/01/GRPC-CLIENT-CONN-LASTING/</a></li>
+<li><a href="https://cloud.tencent.com/developer/article/1816510" target="_blank" rel="noopener">gRPC的平滑关闭和在Kubernetes上的服务摘流方案总结</a></li>
+<li><a href="https://docs.microsoft.com/zh-cn/aspnet/core/grpc/performance?view=aspnetcore-5.0#reuse-grpc-channels" target="_blank" rel="noopener">GRPC 性能最佳做法</a></li>
+</ul>
+]]></content>
+      <categories>
+        <category>go</category>
+      </categories>
+      <tags>
+        <tag>transport is closing</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>go/golang代码风格</title>
     <url>/2021/08/01/go/golang%E4%BB%A3%E7%A0%81%E9%A3%8E%E6%A0%BC/</url>
     <content><![CDATA[<h1 id="Go-Code-Review-Comments-翻译-编写优雅golang代码"><a href="#Go-Code-Review-Comments-翻译-编写优雅golang代码" class="headerlink" title="Go Code Review Comments 翻译 编写优雅golang代码"></a>Go Code Review Comments 翻译 编写优雅golang代码</h1><p>官方代码规范指南  </p>
@@ -533,7 +579,7 @@ sudo apt-get install gcc-mingw-w64<figure class="highlight plain"><table><tr><td
 
 <h2 id="访问harbor-WEB界面"><a href="#访问harbor-WEB界面" class="headerlink" title="访问harbor WEB界面"></a>访问harbor WEB界面</h2><p><a href="http://repo.goeoeo.com" target="_blank" rel="noopener">http://repo.goeoeo.com</a>     admin    Harbor12345</p>
 <h1 id="Harbor的使用（上传下载镜像）"><a href="#Harbor的使用（上传下载镜像）" class="headerlink" title="Harbor的使用（上传下载镜像）"></a>Harbor的使用（上传下载镜像）</h1><h2 id="登录harbor"><a href="#登录harbor" class="headerlink" title="登录harbor"></a>登录harbor</h2><p>防止登录失败，我没开https,修改/etc/docker/daemon.json </p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">sudo echo &#x2F;etc&#x2F;docker&#x2F;daemon.json&lt;&lt;DATA</span><br><span class="line">&#123;</span><br><span class="line">  &quot;registry-mirrors&quot;: [&quot;https:&#x2F;&#x2F;9lrfffi7.mirror.aliyuncs.com&quot;],</span><br><span class="line">  &quot;insecure-registries&quot;:[&quot;repo.goeoeo.com&quot;,&quot;10.245.20.7:1888&quot;]</span><br><span class="line">&#125;</span><br><span class="line">DATA</span><br><span class="line"></span><br><span class="line">sudo systemctl restart docker.service</span><br><span class="line"></span><br><span class="line"># 登录</span><br><span class="line">docker login -u admin -p Harbor12345 repo.goeoeo.com</span><br><span class="line">docker login -u admin -p Harbor12345 172.31.164.128</span><br><span class="line">docker login -u admin -p Harbor12345 10.245.20.7:1888</span><br><span class="line">docker login -u admin -p Harbor12345 dockerhub.qingcloud.com:1880</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">sudo echo &#x2F;etc&#x2F;docker&#x2F;daemon.json&lt;&lt;DATA</span><br><span class="line">&#123;</span><br><span class="line">  &quot;registry-mirrors&quot;: [&quot;https:&#x2F;&#x2F;9lrfffi7.mirror.aliyuncs.com&quot;],</span><br><span class="line">  &quot;insecure-registries&quot;:[&quot;repo.goeoeo.com&quot;,&quot;10.245.20.7:1888&quot;]</span><br><span class="line">&#125;</span><br><span class="line">DATA</span><br><span class="line"></span><br><span class="line">sudo systemctl restart docker.service</span><br><span class="line"></span><br><span class="line"># 登录</span><br><span class="line">docker login -u admin -p Harbor12345 repo.goeoeo.com:8100</span><br><span class="line">docker login -u admin -p Harbor12345 172.31.164.128</span><br><span class="line">docker login -u admin -p Harbor12345 10.245.20.7:1888</span><br><span class="line">docker login -u admin -p Harbor12345 dockerhub.qingcloud.com:1880</span><br></pre></td></tr></table></figure>
 <h2 id="在Harbor上创建新项目供上传使用"><a href="#在Harbor上创建新项目供上传使用" class="headerlink" title="在Harbor上创建新项目供上传使用"></a>在Harbor上创建新项目供上传使用</h2><p>我创建了新项目 newbilling<br><img src="/2021/06/04/k8s/harbor/2021-06-04_14-59.png" alt></p>
 <h2 id="构建镜像推送"><a href="#构建镜像推送" class="headerlink" title="构建镜像推送"></a>构建镜像推送</h2><p>镜像名称需要注意 为 repo.goeoeo.com/newbilling/&lt;镜像名&gt; 的这种格式</p>
 <figure class="highlight plain"><table><tr><td class="code"><pre><span class="line"># 构建</span><br><span class="line">docker build -t repo.goeoeo.com&#x2F;newbilling&#x2F;api-gateway:v1 .</span><br><span class="line"></span><br><span class="line"># 推送</span><br><span class="line">docker push repo.goeoeo.com&#x2F;newbilling&#x2F;api-gateway:v1</span><br></pre></td></tr></table></figure>
@@ -1535,354 +1581,6 @@ sudo apt-get install gcc-mingw-w64<figure class="highlight plain"><table><tr><td
 <h1 id="ubuntu解压windows生成的zip文件时乱码问题"><a href="#ubuntu解压windows生成的zip文件时乱码问题" class="headerlink" title="ubuntu解压windows生成的zip文件时乱码问题"></a>ubuntu解压windows生成的zip文件时乱码问题</h1><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">unzip -O CP936 xxx.zip</span><br></pre></td></tr></table></figure>
 
 <h1 id="https-证书生成"><a href="#https-证书生成" class="headerlink" title="https 证书生成"></a>https 证书生成</h1><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">openssl req -newkey rsa:4096 \</span><br><span class="line">            -x509 \</span><br><span class="line">            -sha256 \</span><br><span class="line">            -days 3650 \</span><br><span class="line">            -nodes \</span><br><span class="line">            -out example.crt \</span><br><span class="line">            -keyout example.key</span><br></pre></td></tr></table></figure>]]></content>
-  </entry>
-  <entry>
-    <title>micro/延迟队列</title>
-    <url>/2021/05/19/micro/%E5%BB%B6%E8%BF%9F%E9%98%9F%E5%88%97/</url>
-    <content><![CDATA[<h2 id="如何实现延迟队列？"><a href="#如何实现延迟队列？" class="headerlink" title="如何实现延迟队列？"></a>如何实现延迟队列？</h2><p>延迟队列的需求各位应该在日常开发的场景中经常碰到。比如：<br>用户登录之后5分钟给用户做分类推送；<br>用户多少天未登录给用户做召回推送；<br>定期检查用户当前退款账单是否被商家处理等等场景。<br>一般这种场景和定时任务还是有很大的区别，定时任务是你知道任务多久该跑一次或者什么时候只跑一次，这个时间是确定的。延迟队列是当某个事件发生的<br>时候需要延迟多久触发配套事件，引子事件发生的时间不是固定的。<br>业界目前也有很多实现方案，单机版的方案就不说了，现在也没有哪个公司还是单机版的服务，今天我们一一探讨各种方案的大致实现。  </p>
-<a id="more"></a>
-
-<h2 id="Redis-zset"><a href="#Redis-zset" class="headerlink" title="Redis zset"></a>Redis zset</h2><p>这个方案比较常用，简单有效。利用 Redis 的 sorted set 结构，使用 timeStamp 作为 score，比如你的任务是要延迟5分钟，那么就在当前时间上加<br>5分钟作为 score ，轮询任务每秒只轮询 score 大于当前时间的 key即可，如果任务支持有误差，那么当没有扫描到有效数据的时候可以休眠对应时间再继续轮询。  </p>
-<h3 id="方案优劣"><a href="#方案优劣" class="headerlink" title="方案优劣"></a>方案优劣</h3><h4 id="优点"><a href="#优点" class="headerlink" title="优点"></a>优点</h4><p>简单实用，一针见血。  </p>
-<h4 id="缺点"><a href="#缺点" class="headerlink" title="缺点"></a>缺点</h4><ol>
-<li>单个 zset 肯定支持不了太大的数据量，如果你有几百万的延迟任务需求，大哥我还是劝你换一个方案；  </li>
-<li>定时器轮询方案可能会有异常终止的情况需要自己处理，同时消息处理失败的回滚方案，您也要自己处理。  </li>
-</ol>
-<p>所以，sorted set 的方案并不是一个成熟的方案，他只是一个快速可供落地的方案。</p>
-<h2 id="RabbitMQ队列"><a href="#RabbitMQ队列" class="headerlink" title="RabbitMQ队列"></a>RabbitMQ队列</h2><p>下面说一个可以落地的方案，这个方案也被大多数目前在架构中使用了 RabbitMQ 的项目组使用。不好的一点就是，捆绑 RabbitMQ，当你的架构方案是<br>要用别的 MQ 替换 RabbitMQ 的时候，你就蛋疼了（我现在正在经历）。  </p>
-<p>RabbitMQ 有两个特性，一个是 Time-To-Live Extensions，另一个是 Dead Letter Exchanges。  </p>
-<h3 id="Time-To-Live-Extensions"><a href="#Time-To-Live-Extensions" class="headerlink" title="Time-To-Live Extensions"></a>Time-To-Live Extensions</h3><p>RabbitMQ允许我们为消息或者队列设置TTL（time to live），也就是过期时间。TTL表明了一条消息可在队列中存活的最大时间，单位为毫秒。也就是说，<br>当某条消息被设置了TTL或者当某条消息进入了设置了TTL的队列时，这条消息会在经过TTL秒后 “死亡”，成为Dead Letter。如果既配置了消息的TTL，<br>又配置了队列的TTL，那么较小的那个值会被取用。  </p>
-<h3 id="Dead-Letter-Exchanges"><a href="#Dead-Letter-Exchanges" class="headerlink" title="Dead Letter Exchanges"></a>Dead Letter Exchanges</h3><p>在 RabbitMQ 中，一共有三种消息的 “死亡” 形式：  </p>
-<ul>
-<li>消息被拒绝。通过调用 basic.reject 或者 basic.nack 并且设置的 requeue 参数为 false；  </li>
-<li>消息因为设置了TTL而过期；  </li>
-<li>队列达到最大长度。  </li>
-</ul>
-<p>DLX同一般的 Exchange 没有区别，它能在任何的队列上被指定，实际上就是设置某个队列的属性。当队列中有 DLX 消息时，RabbitMQ就会自动的将 DLX<br> 消息重新发布到设置的 Exchange 中去，进而被路由到另一个队列，publish 可以监听这个队列中消息做相应的处理。</p>
-<p>由上简介大家可以看出，RabbitMQ本身是不支持延迟队列的，只是他的特性让勤劳的 中国脱发群体 急中生智（为了完成任务）弄出了这么一套可用的方案。  </p>
-<h3 id="方案实现"><a href="#方案实现" class="headerlink" title="方案实现"></a>方案实现</h3><ol>
-<li>如果有事件需要延迟那么将该事件发送到MQ 队列中，为需要延迟的消息设置一个TTL；  </li>
-<li>TTL到期后就会自动进入设置好的DLX，然后由DLX转发到配置好的实际消费队列；  </li>
-<li>消费该队列的延迟消息，处理事件。  </li>
-</ol>
-<h3 id="方案优劣-1"><a href="#方案优劣-1" class="headerlink" title="方案优劣"></a>方案优劣</h3><h4 id="优点-1"><a href="#优点-1" class="headerlink" title="优点"></a>优点</h4><p>大品牌组件，用的放心。如果面临大数据量需求可以很容易的横向扩展，同时消息支持持久化，有问题可回滚。  </p>
-<h4 id="缺点-1"><a href="#缺点-1" class="headerlink" title="缺点"></a>缺点</h4><ol>
-<li>配置麻烦，额外增加一个死信交换机和一个死信队列的配置；  </li>
-<li>RabbitMQ 是一个消息中间件，TTL 和 DLX 只是他的一个特性，将延迟队列绑定在一个功能软件的某一个特性上，可能会有风险。不要杠，<br>当你们组不用 RabbitMQ 的时候迁移很痛苦；  </li>
-<li>消息队列具有先进先出的特点，如果第一个进入队列的消息 A 的延迟是10分钟，第二个进入队列的消息B 的延迟是5分钟，期望的是谁先到 TTL谁先出，<br>但是事实是B已经到期了，而还要等到 A 的延迟10分钟结束A先出之后，B 才能出。所以在设计的时候需要考虑不同延迟的消息要放到不同的队列。<br>另外该问题官方已经给出了插件来支持：<a href="https://www.rabbitmq.com/community-plugins.html" target="_blank" rel="noopener">插件地址</a>。</li>
-</ol>
-<h2 id="基于-Netty-HashedWheelTimer类方法的实现"><a href="#基于-Netty-HashedWheelTimer类方法的实现" class="headerlink" title="基于 Netty#HashedWheelTimer类方法的实现"></a>基于 Netty#HashedWheelTimer类方法的实现</h2><p>HashedWheelTimer 是 Netty 中 的一个基础工具类，主要用来高效处理大量定时任务，且任务对时间精度要求相对不高，<br>在Netty 中的应用场景就是连接超时或者任务处理超时，一般都是操作比较快速的任务，缺点是内存占用相对较高。  </p>
-<h3 id="算法思想"><a href="#算法思想" class="headerlink" title="算法思想"></a>算法思想</h3><p>HashedWheelTimer 主要还是一个 DelayQueue 和一个时间轮算法组合。<br><img src="/2021/05/19/micro/%E5%BB%B6%E8%BF%9F%E9%98%9F%E5%88%97/1607781-20200128112134537-701752363.png" alt></p>
-<p>Hash Wheel Timer是一个环形结构，可以想象成时钟，分为很多格子，一个格子代表一段时间（越短Timer精度越高），<br>并用一个List保存在该格子上到期的所有任务。同时一个指针随着时间流逝一格一格转动，并执行对应List中所有到期的任务。</p>
-<p>以上图为例，假设一个格子是1s，则整个时间轮能表示的时间段16s。当前任务指向格子2，表明在第2s的时候有任务需要执行。任务列表中有两个任务，<br>每个任务前面的数字表示圈数。2表示当走到第2圈的时候才会执行，那么整个任务的真正执行时间其实是在12s之后执行，即第二圈走到2的时候。每推进一格，对应的每一个 slot 中的round数都要减一。整体算法就是这么个逻辑。</p>
-<h3 id="时间轮设计要点："><a href="#时间轮设计要点：" class="headerlink" title="时间轮设计要点："></a>时间轮设计要点：</h3><ul>
-<li>tick，一次时间推进，每次推进会检查/执行超时任务；  </li>
-<li>tickDuration，时间轮推进的最小单元，每隔 tickDuration 会有一次 tick，它决定了时间轮的精确程度；  </li>
-<li>bucket（ticksPerWheel），上图中的每一隔就是一个bucket，表示一个时间轮可以有多少个tick，它是存储任务的最小单元；  </li>
-<li>上层时间轮的 tickDuration 是下层时间轮的表示时间的最大范围，即：父 tickDuration = 子 tickDuration * 子 bucket 。  </li>
-</ul>
-<p>需要注意的是，这种方式任务是串行执行的。意味着你如果在时间轮中执行任务且任务耗时较长，将会出现调度超时或者任务堆积的情况。所以要将任务的执行异步化。  </p>
-<h3 id="算法的要点："><a href="#算法的要点：" class="headerlink" title="算法的要点："></a>算法的要点：</h3><ol>
-<li>任务并不是直接放在格子中的，而是维护了一个双向链表，这种数据结构非常便于插入和移除；  </li>
-<li>新添加的任务并不直接放入格子，而是先放入一个队列中，这是为了避免多线程插入任务的冲突。在每个tick运行任务之前由worker线程自动对任务进行归集和分类，插入到对应的槽位里面。  </li>
-</ol>
-<p>Netty 使用数组 + 双向链表的方式来组织时间轮，对于添加/取消操作仅做了记录，真正的操作实际发生在下一个tick。时间的推进是独立的线程在做，该线程同时也负责过期任务的执行等操作，可简单认为此步骤操作为O(n)，因为推进线程需要完全遍历timeouts、cancelledTimeouts与bucket链表，在遍历timeouts时，Netty为了避免任务过多，所以限制每次最多遍历10万个，也就是说，一个tick只能规划10万个任务，当任务量过大时，会存在超时任务执行时间延迟的现象。</p>
-<h3 id="方案优劣-2"><a href="#方案优劣-2" class="headerlink" title="方案优劣"></a>方案优劣</h3><h4 id="优点-2"><a href="#优点-2" class="headerlink" title="优点"></a>优点</h4><p>实现比较优雅。效率高。</p>
-<h4 id="缺点-2"><a href="#缺点-2" class="headerlink" title="缺点"></a>缺点</h4><ol>
-<li>无法实现HA和横向扩展，要么就使用多个时间轮。  </li>
-<li>最重要的是，实现也比较复杂，开发者需要考虑所有可能的情况。<br>目前我了解到的延迟队列在生产环境下有如上三种实现方式，每一种都有人在使用。当然没有最好的只有最适合的，你觉得 redis 能满足需求，就按照最简单的来，你要是有充足的开发周期，你也可以实现时间轮展现实力。  </li>
-</ol>
-<p>需求千万种，变化就一种：给时间都能做。  </p>
-<blockquote>
-<p>作者： rickiyang<br>出处：<a href="https://www.cnblogs.com/rickiyang/p/12237612.html" target="_blank" rel="noopener">https://www.cnblogs.com/rickiyang/p/12237612.html</a></p>
-</blockquote>
-]]></content>
-      <categories>
-        <category>micro</category>
-      </categories>
-      <tags>
-        <tag>消息队列</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>micro/微服务手记</title>
-    <url>/2021/05/19/micro/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E6%89%8B%E8%AE%B0/</url>
-    <content><![CDATA[<h1 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h1><p>微服务将单体应用系统拆分成多个分而治之的小应用,降低系统整体崩溃的风险性;同时也可根据这些小应用的不同需求调整实体机的性能</p>
-<p>微服务主要缺点是将系统复杂化,但对于本身就复杂的系统,微服务受益会很高  </p>
-<a id="more"></a>
-
-<h1 id="优缺点"><a href="#优缺点" class="headerlink" title="优缺点"></a>优缺点</h1><p>判定标准,使用微服务后开发和维护变得轻松了,而不是困难  </p>
-<h2 id="优点"><a href="#优点" class="headerlink" title="优点"></a>优点</h2><p>1.化繁为简,分散治理<br>2.服务间松耦合,服务内高内聚<br>3.服务可独立构建/部署/升级,局部更新<br>4.提高系统容错性,减少系统整体崩溃的概率<br>5.易于实现异构系统  </p>
-<h2 id="缺点"><a href="#缺点" class="headerlink" title="缺点"></a>缺点</h2><p>1.增加了运维部署的工作量与难度<br>2.增加了系统间调用逻辑的处理难度<br>3.日志更男收集和统计了<br>4.额外引入了一些非业务模块服务</p>
-<h1 id="go-micro"><a href="#go-micro" class="headerlink" title="go-micro"></a>go-micro</h1><ul>
-<li>服务发现: 支持服务注册与发现,底层支持etcd/consul/k8s</li>
-<li>负载均衡: rpc服务间的请求调度均衡策略</li>
-<li>同步通信: 基于RPC通信,支持单向/双向流通信模式</li>
-<li>异步通信: 提供pub/sub通信模型的接口</li>
-<li>高级接口: 比如服务发现,提供调用的接口是一致的</li>
-</ul>
-]]></content>
-      <categories>
-        <category>micro</category>
-      </categories>
-  </entry>
-  <entry>
-    <title>mysql/MySQL在什么情况下会使用到临时表</title>
-    <url>/2021/05/19/mysql/MySQL%E5%9C%A8%E4%BB%80%E4%B9%88%E6%83%85%E5%86%B5%E4%B8%8B%E4%BC%9A%E4%BD%BF%E7%94%A8%E5%88%B0%E4%B8%B4%E6%97%B6%E8%A1%A8/</url>
-    <content><![CDATA[<p>MySQL在执行SQL查询时可能会用到临时表，一般情况下，用到临时表就意味着性能较低。临时表存储，MySQL临时表分为“内存临时表”和“磁盘临时表”，<br>其中内存临时表使用MySQL的MEMORY存储引擎，磁盘临时表使用MySQL的MyISAM存储引擎；</p>
-<a id="more"></a>
-
-<p> 一般情况下，MySQL会先创建内存临时表，但内存临时表超过配置指定的值后，MySQL会将内存临时表导出到磁盘临时表；<br> Linux平台上缺省是/tmp目录，/tmp目录小的系统要注意啦。  </p>
-<h3 id="使用临时表的场景"><a href="#使用临时表的场景" class="headerlink" title="使用临时表的场景"></a>使用临时表的场景</h3><ul>
-<li>ORDER BY子句和GROUP BY子句不同， 例如：ORDERY BY price GROUP BY name；   </li>
-<li>在JOIN查询中，ORDER BY或者GROUP BY使用了不是第一个表的列 例如：SELECT * from TableA, TableB ORDER BY TableA.price GROUP by TableB.name<br>（我在测试的时候发现即使是使用第一个表的列，也会使用到临时表）</li>
-<li>ORDER BY中使用了DISTINCT关键字 ORDERY BY DISTINCT(price)  </li>
-<li>SELECT语句中指定了SQL_SMALL_RESULT关键字 SQL_SMALL_RESULT的意思就是告诉MySQL，结果会很小，请直接使用内存临时表，<br>不需要使用索引排序 SQL_SMALL_RESULT必须和GROUP BY、DISTINCT或DISTINCTROW一起使用 一般情况下，我们没有必要使用这个选项，<br>让MySQL服务器选择即可。  </li>
-<li>当group by 索引的时候，当数据量较小的时候不会使用临时表，当数据量（我测试的数据量在30万左右）大的时候会使用临时表</li>
-<li>当group by 不是索引的时候会使用临时表  </li>
-</ul>
-<h3 id="直接使用磁盘临时表的场景"><a href="#直接使用磁盘临时表的场景" class="headerlink" title="直接使用磁盘临时表的场景"></a>直接使用磁盘临时表的场景</h3><ul>
-<li>表包含TEXT或者BLOB列；</li>
-<li>GROUP BY 或者 DISTINCT 子句中包含长度大于512字节的列</li>
-<li>使用UNION或者UNION ALL时，SELECT子句中包含大于512字节的列；</li>
-</ul>
-<h3 id="临时表相关配置"><a href="#临时表相关配置" class="headerlink" title="临时表相关配置"></a>临时表相关配置</h3><ul>
-<li>tmp_table_size 指定系统创建的内存临时表最大大小；</li>
-<li>max_heap_table_size 指定用户创建的内存表的最大大小；<blockquote>
-<p>注意：最终的系统创建的内存临时表大小是取上述两个配置值的最小值。</p>
-</blockquote>
-</li>
-</ul>
-<h3 id="表的设计原则"><a href="#表的设计原则" class="headerlink" title="表的设计原则"></a>表的设计原则</h3><p>使用临时表一般都意味着性能比较低，特别是使用磁盘临时表，性能更慢，因此我们在实际应用中应该尽量避免临时表的使用。<br>常见的避免临时表的方法有：</p>
-<ul>
-<li><p>创建索引：在ORDER BY或者GROUP BY的列上创建索引；</p>
-</li>
-<li><p>分拆很长的列：一般情况下，TEXT、BLOB，大于512字节的字符串，基本上都是为了显示信息，而不会用于查询条件， 因此表设计的时候，<br>应该将这些列独立到另外一张表。</p>
-</li>
-</ul>
-<h3 id="SQL优化"><a href="#SQL优化" class="headerlink" title="SQL优化"></a>SQL优化</h3><p>如果表的设计已经确定，修改比较困难，那么也可以通过优化SQL语句来减少临时表的大小，以提升SQL执行效率。常见的优化SQL语句方法如下：</p>
-<ul>
-<li>拆分SQL语句，临时表主要是用于排序和分组，很多业务都是要求排序后再取出详细的分页数据，这种情况下可以将排序和取出详细数据拆分成不同的SQL，<br>以降低排序或分组时临时表的大小，提升排序和分组的效率，我们的案例就是采用这种方法。</li>
-<li>优化业务，去掉排序分组等操作，有时候业务其实并不需要排序或分组，仅仅是为了好看或者阅读方便而进行了排序，例如数据导出、数据查询等操作，<br>这种情况下去掉排序和分组对业务也没有多大影响。</li>
-</ul>
-<h3 id="如何判断使用了临时表"><a href="#如何判断使用了临时表" class="headerlink" title="如何判断使用了临时表"></a>如何判断使用了临时表</h3><p>使用explain查看执行计划，Extra列看到Using temporary就意味着使用了临时表。</p>
-]]></content>
-      <categories>
-        <category>mysql</category>
-      </categories>
-      <tags>
-        <tag>mysql临时表</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>mysql/MySQL提升课程全面讲解MySQL架构设计</title>
-    <url>/2021/05/19/mysql/MySQL%E6%8F%90%E5%8D%87%E8%AF%BE%E7%A8%8B%E5%85%A8%E9%9D%A2%E8%AE%B2%E8%A7%A3MySQL%E6%9E%B6%E6%9E%84%E8%AE%BE%E8%AE%A1/</url>
-    <content><![CDATA[<h1 id="第一章-实例和故事"><a href="#第一章-实例和故事" class="headerlink" title="第一章 实例和故事"></a>第一章 实例和故事</h1><h2 id="什么决定了电商双11大促的成败"><a href="#什么决定了电商双11大促的成败" class="headerlink" title="什么决定了电商双11大促的成败"></a>什么决定了电商双11大促的成败</h2><h2 id="在双11大促的数据库服务器"><a href="#在双11大促的数据库服务器" class="headerlink" title="在双11大促的数据库服务器"></a>在双11大促的数据库服务器</h2><h2 id="在大促中什么影响了数据库性能"><a href="#在大促中什么影响了数据库性能" class="headerlink" title="在大促中什么影响了数据库性能"></a>在大促中什么影响了数据库性能</h2><ul>
-<li>sql查询数据</li>
-<li>服务器硬件</li>
-<li>网卡流量</li>
-<li>磁盘IO<a id="more"></a>
-<h3 id="超高的QPS和TPS带来的影响"><a href="#超高的QPS和TPS带来的影响" class="headerlink" title="超高的QPS和TPS带来的影响"></a>超高的QPS和TPS带来的影响</h3>QPS: 每秒钟处理的查询量  </li>
-<li>效率底下的sql<h3 id="大量的并发和超高的CPU使用率"><a href="#大量的并发和超高的CPU使用率" class="headerlink" title="大量的并发和超高的CPU使用率"></a>大量的并发和超高的CPU使用率</h3></li>
-<li>大量的并发导致数据库连接被占满（max_connections 默认100）</li>
-<li>超高的CPU使用率，因为CPU资源耗尽而出现宕机<h3 id="磁盘IO"><a href="#磁盘IO" class="headerlink" title="磁盘IO"></a>磁盘IO</h3></li>
-<li>磁盘IO性能突然下降（使用更快的磁盘设备）</li>
-<li>其它大量消耗磁盘性能的计划任务（调整计划，做好磁盘维护）<h3 id="网卡流量"><a href="#网卡流量" class="headerlink" title="网卡流量"></a>网卡流量</h3></li>
-<li>减少从服务器的数量</li>
-<li>进行分级缓存</li>
-<li>避免使用select * 进行查询</li>
-<li>分离业务网络和服务器网络</li>
-</ul>
-<h2 id="大表带来的问题"><a href="#大表带来的问题" class="headerlink" title="大表带来的问题"></a>大表带来的问题</h2><h3 id="什么是大表"><a href="#什么是大表" class="headerlink" title="什么是大表"></a>什么是大表</h3><ul>
-<li>记录行数巨大，单表超过千万行</li>
-<li>表数据文件巨大，表数据文件超过10G<h3 id="大表对查询的影响"><a href="#大表对查询的影响" class="headerlink" title="大表对查询的影响"></a>大表对查询的影响</h3></li>
-<li>慢查询 很难在一定的时间内过滤出所需要的数据<h3 id="大表对DDL的影响"><a href="#大表对DDL的影响" class="headerlink" title="大表对DDL的影响"></a>大表对DDL的影响</h3><h4 id="建立索引需要很长的时间"><a href="#建立索引需要很长的时间" class="headerlink" title="建立索引需要很长的时间"></a>建立索引需要很长的时间</h4>mysql&lt;5.5 建立索引会锁表<br>mysql&gt;=5.5 虽然不会锁表但会引起主从延迟  </li>
-</ul>
-<h4 id="修改表结构需要长时间锁表"><a href="#修改表结构需要长时间锁表" class="headerlink" title="修改表结构需要长时间锁表"></a>修改表结构需要长时间锁表</h4><p>会造成长时间锁表<br>影响正常的数据操作  </p>
-<h4 id="如何处理数据库中的大表"><a href="#如何处理数据库中的大表" class="headerlink" title="如何处理数据库中的大表"></a>如何处理数据库中的大表</h4><ul>
-<li>分库分表把一张大表分成多个小表<br>分表的主键选择<br>分表后跨分区数据的统计和查询</li>
-<li>大表的历史数据归档减少对前后端业务的影响<br>归档的时间点的选择<br>如何进行归档操作   </li>
-</ul>
-<h2 id="大事务带来的问题"><a href="#大事务带来的问题" class="headerlink" title="大事务带来的问题"></a>大事务带来的问题</h2><h3 id="什么是事务"><a href="#什么是事务" class="headerlink" title="什么是事务"></a>什么是事务</h3><ul>
-<li>事务是数据库系统区别于其它一切文件系统的重要特性之一</li>
-<li>事务是一组具有原子性的sql语句，或是一个独立的工作单元</li>
-</ul>
-<h3 id="大事务"><a href="#大事务" class="headerlink" title="大事务"></a>大事务</h3><ul>
-<li>运行时间长，操作的数据比较多的事务<br>锁定太多的数据，造成大量的阻塞和锁超时<br>回滚时所需要时间比较长<br>执行时间长，容易造成主从延迟</li>
-</ul>
-<h3 id="如何处理大事务"><a href="#如何处理大事务" class="headerlink" title="如何处理大事务"></a>如何处理大事务</h3><ul>
-<li>避免一次处理太多的数据</li>
-<li>移出不必要在事务中的select操作</li>
-</ul>
-<h2 id="第2章-什么影响了mysql的性能"><a href="#第2章-什么影响了mysql的性能" class="headerlink" title="第2章 什么影响了mysql的性能"></a>第2章 什么影响了mysql的性能</h2>]]></content>
-      <categories>
-        <category>mysql</category>
-      </categories>
-      <tags>
-        <tag>mysql架构</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>mysql/navicat_linux破解</title>
-    <url>/2021/05/19/mysql/navicat_linux%E7%A0%B4%E8%A7%A3/</url>
-    <content><![CDATA[<h1 id="网址"><a href="#网址" class="headerlink" title="网址"></a>网址</h1><p><a href="https://rlds.tk/" target="_blank" rel="noopener">https://rlds.tk/</a></p>
-<h1 id="破解过程"><a href="#破解过程" class="headerlink" title="破解过程"></a>破解过程</h1><ol>
-<li>下载Navicat包</li>
-<li>输入序列号</li>
-<li>断网</li>
-<li>触发手动激活</li>
-<li>获取请求码</li>
-<li>恢复网络</li>
-<li>生成激活码</li>
-</ol>
-]]></content>
-  </entry>
-  <entry>
-    <title>mysql/通过Docker安装配置MySQL主从节点</title>
-    <url>/2021/05/19/mysql/%E9%80%9A%E8%BF%87Docker%E5%AE%89%E8%A3%85%E9%85%8D%E7%BD%AEMySQL%E4%B8%BB%E4%BB%8E%E8%8A%82%E7%82%B9/</url>
-    <content><![CDATA[<h2 id="拉取最新版mysql镜像"><a href="#拉取最新版mysql镜像" class="headerlink" title="拉取最新版mysql镜像"></a>拉取最新版mysql镜像</h2><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">docker pull mysql</span><br></pre></td></tr></table></figure>
-<h2 id="mysql主服务器"><a href="#mysql主服务器" class="headerlink" title="mysql主服务器"></a>mysql主服务器</h2><h3 id="启动容器"><a href="#启动容器" class="headerlink" title="启动容器"></a>启动容器</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">docker run -p 3307:3306 --name mysql_master -e MYSQL_ROOT_PASSWORD=123456 -d mysql:latest</span><br></pre></td></tr></table></figure>
-<a id="more"></a>
-
-<h3 id="修改配置并添加slave用户"><a href="#修改配置并添加slave用户" class="headerlink" title="修改配置并添加slave用户"></a>修改配置并添加slave用户</h3><p>1.进入容器</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">docker exec -it d45457d26cad &#x2F;bin&#x2F;bash</span><br></pre></td></tr></table></figure>
-
-<p>2.修改配置    </p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">apt update &amp;&amp; apt install  vim -y</span><br><span class="line">vim /etc/mysql/my.cnf</span><br><span class="line"></span><br><span class="line">[mysqld]</span><br><span class="line"><span class="comment">## 同一局域网内注意要唯一</span></span><br><span class="line">server-id=100  </span><br><span class="line"><span class="comment">## 开启二进制日志功能，可以随便取（关键）</span></span><br><span class="line"><span class="built_in">log</span>-bin=mysql-bin</span><br></pre></td></tr></table></figure>
-<p>3.添加slave用户，用于slave读取binlog</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">mysql -uroot -p123456 </span><br><span class="line"></span><br><span class="line"><span class="comment">#mysql5.7以下使用 CREATE USER 'slave'@'%' IDENTIFIED BY '123456';</span></span><br><span class="line"><span class="comment">#mysql5.8修改了默认的认证方式为caching_sha2_password ,如果使用此方式创建slave用户，</span></span><br><span class="line"><span class="comment">#那么在后面slave连接master的时候就需要使用加密方式进行连接，否则会报错：Authentication requires secure connection</span></span><br><span class="line"></span><br><span class="line">CREATE USER <span class="string">'slave'</span>@<span class="string">'%'</span> IDENTIFIED WITH mysql_native_password BY <span class="string">'123456'</span>;</span><br><span class="line"></span><br><span class="line">GRANT REPLICATION SLAVE, REPLICATION CLIENT ON *.* TO <span class="string">'slave'</span>@<span class="string">'%'</span>;</span><br></pre></td></tr></table></figure>
-
-<p>4.重启容器</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">docker restart d45457d26cad</span><br></pre></td></tr></table></figure>
-
-<h2 id="mysql从服务器"><a href="#mysql从服务器" class="headerlink" title="mysql从服务器"></a>mysql从服务器</h2><h3 id="启动容器-1"><a href="#启动容器-1" class="headerlink" title="启动容器"></a>启动容器</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">docker run -p 3308:3306 --name mysql_slave -e MYSQL_ROOT_PASSWORD=123456 -d mysql:latest</span><br></pre></td></tr></table></figure>
-<h3 id="修改配置"><a href="#修改配置" class="headerlink" title="修改配置"></a>修改配置</h3><p>1.进入容器</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">docker <span class="built_in">exec</span> -it 3e80d15d8b00 /bin/bash</span><br></pre></td></tr></table></figure>
-<p>2.修改配置    </p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">apt update &amp;&amp; apt install  vim -y</span><br><span class="line">vim /etc/mysql/my.cnf</span><br><span class="line"></span><br><span class="line">[mysqld]</span><br><span class="line"><span class="comment">## 设置server_id,注意要唯一</span></span><br><span class="line">server-id=101  </span><br><span class="line"><span class="comment">## 开启二进制日志功能，以备Slave作为其它Slave的Master时使用</span></span><br><span class="line"><span class="built_in">log</span>-bin=mysql-slave-bin   </span><br><span class="line"><span class="comment">## relay_log配置中继日志</span></span><br><span class="line">relay_log=edu-mysql-relay-bin</span><br></pre></td></tr></table></figure>
-<p>3.重启容器</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">docker restart 3e80d15d8b00</span><br><span class="line">```    </span><br><span class="line"><span class="comment">## 配置slave使其连上master    </span></span><br><span class="line">```bash</span><br><span class="line">change master to master_host=<span class="string">'192.168.11.36'</span>, master_user=<span class="string">'slave'</span>, master_password=<span class="string">'123456'</span>, master_port=3307, master_log_file=<span class="string">'mysql-bin.000001'</span>, master_log_pos= 605, master_connect_retry=30;</span><br><span class="line"></span><br><span class="line">start slave </span><br><span class="line"></span><br><span class="line">show slave status \G 查看主从状态</span><br></pre></td></tr></table></figure>
-<blockquote>
-<p>参考文章<br><a href="https://www.cnblogs.com/songwenjie/p/9371422.html" target="_blank" rel="noopener">基于Docker的Mysql主从复制搭建</a></p>
-</blockquote>
-]]></content>
-      <categories>
-        <category>mysql</category>
-      </categories>
-      <tags>
-        <tag>mysql主从同步</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>nginx/如何利用nginx进行自动化负载均衡</title>
-    <url>/2021/05/19/nginx/%E5%A6%82%E4%BD%95%E5%88%A9%E7%94%A8nginx%E8%BF%9B%E8%A1%8C%E8%87%AA%E5%8A%A8%E5%8C%96%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1/</url>
-    <content><![CDATA[<p>基于Docker + Consul + Nginx + Consul-Template + Registrator的服务自动负载均衡实现 </p>
-<a id="more"></a>
-
-<h2 id="docker-composer相关知识点"><a href="#docker-composer相关知识点" class="headerlink" title="docker-composer相关知识点"></a>docker-composer相关知识点</h2><ul>
-<li>ports 暴露容器端口到主机的任意端口或指定端口, 用法如下<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">ports:</span><br><span class="line"> </span><br><span class="line">    - &quot;80:80&quot; # 绑定容器的80端口到主机的80端口</span><br><span class="line">     </span><br><span class="line">    - &quot;9000:8080&quot; # 绑定容器的8080端口到主机的9000端口</span><br><span class="line">     </span><br><span class="line">    - &quot;443&quot; # 绑定容器的443端口到主机的任意端口，容器启动时随机分配绑定的主机端口</span><br></pre></td></tr></table></figure></li>
-<li>links 使得docker容器间通过指定的名字来和目标容器通信 <blockquote>
-<p>如果使用links则容器间通信 只能通过该使用容器的ip地址来通信或者通过宿主机的ip加上容器暴露出的端口号来通信 （这两种都有弊端）</p>
-</blockquote>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">links:</span><br><span class="line">    -  consul_server_master:consul # 当前容器中使用consul 即可获取容器consul_server_master的ip地址,便于通信</span><br></pre></td></tr></table></figure></li>
-<li>depends_on 决定容器的依赖, 也就是指定当前容器的启动顺序，必须依赖启动后才会启动<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">depends_on:</span><br><span class="line">    - lb</span><br><span class="line">    - registrator</span><br></pre></td></tr></table></figure>
-
-</li>
-</ul>
-<h2 id="consul-相关知识点"><a href="#consul-相关知识点" class="headerlink" title="consul 相关知识点"></a>consul 相关知识点</h2><ul>
-<li><p>Client模式 就是客户端模式。是 Consul 节点的一种模式，这种模式下，所有注册到当前节点的服务会被转发到 Server，本身是不持久化这些信息。</p>
-</li>
-<li><p>Server模式 表明这个 Consul 是个 Server ，这种模式下，功能和 Client 都一样，唯一不同的是，它会把所有的信息持久化的本地，这样遇到故障，信息是可以被保留的。同时可以同步多个consul客户端的数据</p>
-<blockquote>
-<p>Server 节点之间的数据一致性保证协议使用的是 raft，而 zookeeper 用的 paxos，etcd采用的也是raft</p>
-</blockquote>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">command: consul agent -server -bootstrap-expect 1 -advertise 192.168.1.181 -node consul_server_master -data-dir &#x2F;tmp&#x2F;data-dir -client 0.0.0.0 -ui</span><br><span class="line"># -bootstrap-expect&#x3D;2 表示节点个数为2个</span><br><span class="line"># -node&#x3D;consul-server-1 表示节点名称为consul-server-1</span><br><span class="line"># -client&#x3D;0.0.0.0 表示允许连接的客户端 IP</span><br><span class="line"># -bind&#x3D;10.211.55.2 表示服务端 IP为10.211.55.2</span><br><span class="line"># -datacenter&#x3D;dc1 数据中心名称</span><br><span class="line"># -join&#x3D;10.211.55.4 表示加入10.211.55.4节点的集群</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>服务发现协议 Consul 采用 http 和 DNS 协议，etcd 只支持 http </p>
-</li>
-<li><p>服务注册 Consul 支持两种方式实现服务注册，一种是通过 Consul 的服务注册 Http API，由服务自己调用 API 实现注册，另一种方式是通过 json 格式的配置文件实现注册，将需要注册的服务以 json 格式的配置文件给出。Consul 官方建议使用第二种方式。</p>
-</li>
-<li><p>服务定义参数</p>
-</li>
-</ul>
-<table>
-<thead>
-<tr>
-<th align="center">环境变量Key</th>
-<th align="center">环境变量Value</th>
-<th align="center">说明</th>
-</tr>
-</thead>
-<tbody><tr>
-<td align="center">SERVICE_ID</td>
-<td align="center">web-001</td>
-<td align="center">可以为GUID或者可读性更强变量，保证不重复</td>
-</tr>
-<tr>
-<td align="center">SERVICE_NAME</td>
-<td align="center">web</td>
-<td align="center">如果ID没有设置，Consul会将name作为id，则有可能注册失败</td>
-</tr>
-<tr>
-<td align="center">SERVICE_TAGS</td>
-<td align="center">nodejs,web</td>
-<td align="center">服务的标签，用逗号分隔，开发者可以根据标签来查询一些信息</td>
-</tr>
-<tr>
-<td align="center">SERVICE_IGNORE</td>
-<td align="center">Boolean</td>
-<td align="center">是否忽略本Container，可以为一些不需要注册的Container添加此属性</td>
-</tr>
-</tbody></table>
-<h2 id="实现原理"><a href="#实现原理" class="headerlink" title="实现原理"></a>实现原理</h2><ul>
-<li><p>通过 Nginx 自身实现负载均衡和请求转发</p>
-</li>
-<li><p>通过 Consul-template 的 config 功能实时监控 Consul 集群节点的服务和数据的变化；<br>实时的用 Consul 节点的信息替换 Nginx 配置文件的模板，并重新加载配置文件</p>
-<blockquote>
-<p>Consul-template 和 nginx 必须安装在同一台机器上，因为 Consul-template 需要动态修改 nginx 的配置文件 nginx.conf，然后执行 nginx -s reload 命令进行路由更新，达到动态负载均衡的目的</p>
-</blockquote>
-</li>
-<li><p>registrator，它可以通过跟本地的 docker 引擎通信，来获取本地启动的容器信息，并且注册到指定的服务发现管理端。</p>
-</li>
-</ul>
-<p>数据流向： docker 容器数据-&gt; registrator -&gt; consul -&gt;consul-template -&gt; nginx</p>
-<h2 id="镜像构建"><a href="#镜像构建" class="headerlink" title="镜像构建"></a>镜像构建</h2><ul>
-<li>Consul：consul:latest</li>
-<li>Registrator：gliderlabs/registrator:latest</li>
-<li>Nginx和Consul-template：liberalman/nginx-consul-template:latest</li>
-<li>Web: yeasy/simple-web:latest</li>
-</ul>
-<h2 id="docker-compose-yml"><a href="#docker-compose-yml" class="headerlink" title="docker-compose.yml"></a>docker-compose.yml</h2><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">version: &#39;3&#39;</span><br><span class="line">#backend web application, scale this with docker-compose scale web&#x3D;3</span><br><span class="line">services:</span><br><span class="line">    web:</span><br><span class="line">      image: yeasy&#x2F;simple-web:latest</span><br><span class="line">      environment:</span><br><span class="line">        - SERVICE_80_NAME&#x3D;my-web-server</span><br><span class="line">      ports:</span><br><span class="line">      - &quot;80&quot;</span><br><span class="line">      depends_on:</span><br><span class="line">          - lb</span><br><span class="line">          - registrator  </span><br><span class="line"></span><br><span class="line">    #load balancer will automatically update the config using consul-template</span><br><span class="line">    lb:</span><br><span class="line">      image: liberalman&#x2F;nginx-consul-template:latest</span><br><span class="line">      hostname: lb</span><br><span class="line">      environment:</span><br><span class="line">          - SERVICE_IGNORE&#x3D;true</span><br><span class="line">      links:</span><br><span class="line">      -  consul_server_master:consul</span><br><span class="line">      ports:</span><br><span class="line">      - &quot;80:80&quot;</span><br><span class="line">      depends_on:</span><br><span class="line">          - consul_server_master</span><br><span class="line">          </span><br><span class="line">    consul_server_master:</span><br><span class="line">      image:  consul:latest</span><br><span class="line">      hostname: consul_server_master</span><br><span class="line">      environment:</span><br><span class="line">          - SERVICE_IGNORE&#x3D;true</span><br><span class="line">      ports:</span><br><span class="line">      - &quot;8500:8500&quot;</span><br><span class="line">      command: consul agent -server -bootstrap-expect 1 -node consul_server_master -data-dir &#x2F;tmp&#x2F;consul -client 0.0.0.0 -ui</span><br><span class="line"></span><br><span class="line">    # listen on local docker sock to register the container with public ports to the consul service</span><br><span class="line">    registrator:</span><br><span class="line">      image: gliderlabs&#x2F;registrator:master</span><br><span class="line">      hostname: registrator</span><br><span class="line">      environment:</span><br><span class="line">          - SERVICE_IGNORE&#x3D;true</span><br><span class="line">      links:</span><br><span class="line">      - consul_server_master:consul</span><br><span class="line">      depends_on:</span><br><span class="line">          - consul_server_master</span><br><span class="line">      volumes:</span><br><span class="line">      - &quot;&#x2F;var&#x2F;run&#x2F;docker.sock:&#x2F;tmp&#x2F;docker.sock&quot;</span><br><span class="line">      command: -internal consul:&#x2F;&#x2F;consul:8500</span><br></pre></td></tr></table></figure>
-<blockquote>
-<p>注意：我们使用的第三方镜像 liberalman/nginx-consul-template，Nginx 会把名称为 my-web-server的服务容器作为后台转发的目标服务器,当然你也可以自己制作镜像指定模板. </p>
-</blockquote>
-<h2 id="测试步骤"><a href="#测试步骤" class="headerlink" title="测试步骤"></a>测试步骤</h2><ol>
-<li><p>docker-compose 模板所在目录，执行</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ sudo docker-compose up</span><br></pre></td></tr></table></figure></li>
-<li><p>访问 <a href="http://localhost" target="_blank" rel="noopener">http://localhost</a> 可以看到一个 web 页面，提示实际访问的目标地址。</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">#2019-12-20 04:12:30: 19 requests from &lt;LOCAL: 172.17.0.6&gt; to WebServer &lt;172.17.0.4&gt;</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>增加web 测试负载</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ sudo docker-compose scale web=3</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>重复刷新<a href="http://localhost" target="_blank" rel="noopener">http://localhost</a> 观察ip变化</p>
-</li>
-</ol>
-<h2 id="总结测试"><a href="#总结测试" class="headerlink" title="总结测试"></a>总结测试</h2><p>最先我未去指定容器的启动顺序（deponds_on） 导致docker-compose up 后访问<a href="http://localhost" target="_blank" rel="noopener">http://localhost</a> 报错 nginx 502<br>原因是因为 registrator容器先于web容器启动，导致未将web容器注册到consul 所以生成的nginx配置文件中，没用web参与负载</p>
-<p>本文搭建的consul为单节点版本 ， 集群版 <a href="https://www.jianshu.com/p/fa41434d444a" target="_blank" rel="noopener">参考文章1</a></p>
-<h2 id="参考文章"><a href="#参考文章" class="headerlink" title="参考文章"></a>参考文章</h2><ol>
-<li><a href="https://www.jianshu.com/p/fa41434d444a" target="_blank" rel="noopener">基于Docker + Consul + Nginx + Consul-Template的服务负载均衡实现</a></li>
-<li><a href="https://my.oschina.net/xiaominmin/blog/1597660" target="_blank" rel="noopener">用 consul + consul-template + registrator + nginx 打造真正可动态扩展的服务架构 </a></li>
-<li><a href="https://www.sohu.com/a/282625515_468635" target="_blank" rel="noopener">8分钟学会Consul集群搭建及微服务概念 </a></li>
-</ol>
-]]></content>
-      <categories>
-        <category>nginx</category>
-      </categories>
-      <tags>
-        <tag>自动负载均衡</tag>
-        <tag>Nginx</tag>
-      </tags>
   </entry>
   <entry>
     <title>linux/计算机原理+操作系统基础+计算机网络(慕课网)</title>
@@ -3326,82 +3024,94 @@ sudo apt-get install gcc-mingw-w64<figure class="highlight plain"><table><tr><td
       </tags>
   </entry>
   <entry>
-    <title>photography/摄影入门</title>
-    <url>/2021/05/19/photography/%E6%91%84%E5%BD%B1%E5%85%A5%E9%97%A8/</url>
-    <content><![CDATA[<h1 id="摄影"><a href="#摄影" class="headerlink" title="摄影"></a>摄影</h1><p>摄影是光与影的艺术<br>摄影的基础是控制光</p>
-<h1 id="曝光"><a href="#曝光" class="headerlink" title="曝光"></a>曝光</h1><ul>
-<li>照片过暗，曝光不足</li>
-<li>照片过亮，曝光过度</li>
-<li>照片细节指的是影像有质感，细节，明暗合理</li>
-<li>亮有细节，暗有层次（亮处不能过曝，暗处不能漆黑一片）</li>
-</ul>
-<h2 id="曝光量受那些因素的影响"><a href="#曝光量受那些因素的影响" class="headerlink" title="曝光量受那些因素的影响"></a>曝光量受那些因素的影响</h2><ul>
-<li>光圈 （大光圈，进光量大）</li>
-<li>快门 （快门越慢，进光量大）</li>
-<li>ISO (感光原件，感知光线的能力)</li>
-</ul>
-<h2 id="光圈-f"><a href="#光圈-f" class="headerlink" title="光圈(f)"></a>光圈(f)</h2><h3 id="影响进光量"><a href="#影响进光量" class="headerlink" title="影响进光量"></a>影响进光量</h3><p>光圈是一个用来控制进光量的装置，它通常在镜头内，单位大小f值常用f3.5、f5.6、f8、f11、f16、f22等系数，f值代表的是光圈的厚度，f值越小曝光量<br>越大，f值越大曝光量越小<br>单位: f3.5  </p>
-<h3 id="影响景深的变化"><a href="#影响景深的变化" class="headerlink" title="影响景深的变化"></a>影响景深的变化</h3><p>大光圈拍摄景深浅，主体清晰背景模糊<br>小光圈拍摄景深长，主体和背景都很清晰  </p>
-<h2 id="快门"><a href="#快门" class="headerlink" title="快门"></a>快门</h2><p>快门是控制进光时间的一个装置，开的越久，进来的光线越多<br>单位: 1/125秒  </p>
-<ul>
-<li>高快门凝固瞬间  </li>
-<li>慢快门记录轨迹</li>
-</ul>
-<h3 id="曝光是如何控制的"><a href="#曝光是如何控制的" class="headerlink" title="曝光是如何控制的"></a>曝光是如何控制的</h3><p>快门越慢，时间越长，进光越多<br>慢快门需要三脚架支撑，手会抖</p>
-<h2 id="ISO"><a href="#ISO" class="headerlink" title="ISO"></a>ISO</h2><p>ISO感光度是衡量传统相机所使用胶片感光速度标准的国际统一指标，其反应了胶片感光时的能力，而对于数码相机来说，其实不使用胶片，而是通过感光器件<br>CCD或CMOS以及相关的电子线路感应入射强弱。<br>感光度越高，感光能力越强，画质越粗糙，噪点多<br>感光度越低，感光能力弱，画质越细腻。<br>ISO越高，画质越差，噪点越多<br>当光圈快门没有办法控制进光量的时候，适当提高ISO,来增加照片的亮度。</p>
-<h2 id="拍摄模式（曝光模式）"><a href="#拍摄模式（曝光模式）" class="headerlink" title="拍摄模式（曝光模式）"></a>拍摄模式（曝光模式）</h2><ul>
-<li>M档–手动曝光模式</li>
-<li>A（AV）档–光圈曝光模式，也叫光圈优先模式，指的是光圈可以人为手动控制，而快门相机会自动计算</li>
-<li>S（TV）档–快门曝光模式，也叫快门优先模式，指的是快门可以人为手动控制，而光圈相机会自动计算</li>
-<li>P档–自动曝光模式</li>
-<li>A+档–全自动曝光模式<blockquote>
-<p>除开以上几种外，一般称为傻瓜模式，由程序自动控制的模式。</p>
-</blockquote>
-</li>
-</ul>
-<p>光圈、快门、ISO共同决定一张影像相对正常的曝光，共同影响照片的曝光</p>
-<h1 id="相机镜头的概念"><a href="#相机镜头的概念" class="headerlink" title="相机镜头的概念"></a>相机镜头的概念</h1><h2 id="按成像质量可以和方便性"><a href="#按成像质量可以和方便性" class="headerlink" title="按成像质量可以和方便性"></a>按成像质量可以和方便性</h2><ul>
-<li>定焦镜头</li>
-<li>变焦镜头</li>
-</ul>
-<h2 id="焦距"><a href="#焦距" class="headerlink" title="焦距"></a>焦距</h2><p>焦距越大，视角越小，镜头越长，拍摄的范围越小，拍的越远<br>焦距越小，视角越大，镜头越短，拍摄范围越大，拍的越近</p>
-<h2 id="按焦距分镜头"><a href="#按焦距分镜头" class="headerlink" title="按焦距分镜头"></a>按焦距分镜头</h2><h3 id="广角-小于24mm"><a href="#广角-小于24mm" class="headerlink" title="广角 小于24mm"></a>广角 小于24mm</h3><p>取景范围大，多用于拍摄风光、建筑等</p>
-<h3 id="标准-50mm（45-60）左右"><a href="#标准-50mm（45-60）左右" class="headerlink" title="标准 50mm（45-60）左右"></a>标准 50mm（45-60）左右</h3><p>和人眼的感觉相同适合拍摄标准人像、静物、产品等。</p>
-<h3 id="中长焦-70-135mm"><a href="#中长焦-70-135mm" class="headerlink" title="中长焦 70-135mm"></a>中长焦 70-135mm</h3><p>适合拍摄人像</p>
-<h3 id="长焦-大于135mm"><a href="#长焦-大于135mm" class="headerlink" title="长焦 大于135mm"></a>长焦 大于135mm</h3><p>取景范围小，适合拍摄动物、体育</p>
-<h2 id="镜头的影响"><a href="#镜头的影响" class="headerlink" title="镜头的影响"></a>镜头的影响</h2><p>1.影响视角范围<br>2.影响景深  </p>
-<ul>
-<li>焦距越长；景深越浅，焦距越短，景深越深；</li>
-<li>焦距越长，背景越虚化；焦距越短，背景越清晰</li>
-</ul>
-<h2 id="对焦模式"><a href="#对焦模式" class="headerlink" title="对焦模式"></a>对焦模式</h2><p>对焦点为成像清晰点</p>
-<h3 id="AF（A）-自动对焦"><a href="#AF（A）-自动对焦" class="headerlink" title="AF（A） 自动对焦"></a>AF（A） 自动对焦</h3><p>佳能三种自动对焦模式  </p>
-<ul>
-<li><p>ONE SHOT (单次对焦模式) 半按快门释放键完成对焦后，若重新构图，对焦主体改变，将进行重新对焦。</p>
-</li>
-<li><p>AI SERVO（连续对焦模式） 半按快门释放键完成对焦后，若重新构图，对焦主体改变，将进行重新对焦。 有追焦的目的，试用于运动的物体</p>
-</li>
-<li><p>AI FOCUS (自动智能对焦模式)</p>
-<h3 id="MF-M-手动对焦"><a href="#MF-M-手动对焦" class="headerlink" title="MF (M)手动对焦"></a>MF (M)手动对焦</h3><p>可以在任何的光线下按下快门的，也可以说对任何一种情况都能拍摄</p>
-</li>
-</ul>
-<h2 id="单点对焦和区域对焦"><a href="#单点对焦和区域对焦" class="headerlink" title="单点对焦和区域对焦"></a>单点对焦和区域对焦</h2><p>在不知道选择对焦点的时候选择区域对焦</p>
-<h3 id="单点对焦"><a href="#单点对焦" class="headerlink" title="单点对焦"></a>单点对焦</h3><p>单点对于个别拍摄比较多，成功率高<br>焦点在人身上，大光圈的情况下，背景虚化，人像清晰。<br>焦点对人眼睛上，</p>
-<h2 id="白平衡"><a href="#白平衡" class="headerlink" title="白平衡"></a>白平衡</h2><h2 id="前景色和背景"><a href="#前景色和背景" class="headerlink" title="前景色和背景"></a>前景色和背景</h2><h3 id="前景"><a href="#前景" class="headerlink" title="前景"></a>前景</h3><ul>
-<li>加强气氛</li>
-<li>增加画面空间层次感</li>
-<li>均衡画面</li>
-</ul>
-<h3 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h3><ul>
-<li>突出主题</li>
-<li>丰富主题的内涵</li>
-</ul>
-<h1 id="常见摄影题材和摄影技法"><a href="#常见摄影题材和摄影技法" class="headerlink" title="常见摄影题材和摄影技法"></a>常见摄影题材和摄影技法</h1><h2 id="日出、日落"><a href="#日出、日落" class="headerlink" title="日出、日落"></a>日出、日落</h2><ol>
-<li>开阔、地势高的地方</li>
+    <title>micro/延迟队列</title>
+    <url>/2021/05/19/micro/%E5%BB%B6%E8%BF%9F%E9%98%9F%E5%88%97/</url>
+    <content><![CDATA[<h2 id="如何实现延迟队列？"><a href="#如何实现延迟队列？" class="headerlink" title="如何实现延迟队列？"></a>如何实现延迟队列？</h2><p>延迟队列的需求各位应该在日常开发的场景中经常碰到。比如：<br>用户登录之后5分钟给用户做分类推送；<br>用户多少天未登录给用户做召回推送；<br>定期检查用户当前退款账单是否被商家处理等等场景。<br>一般这种场景和定时任务还是有很大的区别，定时任务是你知道任务多久该跑一次或者什么时候只跑一次，这个时间是确定的。延迟队列是当某个事件发生的<br>时候需要延迟多久触发配套事件，引子事件发生的时间不是固定的。<br>业界目前也有很多实现方案，单机版的方案就不说了，现在也没有哪个公司还是单机版的服务，今天我们一一探讨各种方案的大致实现。  </p>
+<a id="more"></a>
+
+<h2 id="Redis-zset"><a href="#Redis-zset" class="headerlink" title="Redis zset"></a>Redis zset</h2><p>这个方案比较常用，简单有效。利用 Redis 的 sorted set 结构，使用 timeStamp 作为 score，比如你的任务是要延迟5分钟，那么就在当前时间上加<br>5分钟作为 score ，轮询任务每秒只轮询 score 大于当前时间的 key即可，如果任务支持有误差，那么当没有扫描到有效数据的时候可以休眠对应时间再继续轮询。  </p>
+<h3 id="方案优劣"><a href="#方案优劣" class="headerlink" title="方案优劣"></a>方案优劣</h3><h4 id="优点"><a href="#优点" class="headerlink" title="优点"></a>优点</h4><p>简单实用，一针见血。  </p>
+<h4 id="缺点"><a href="#缺点" class="headerlink" title="缺点"></a>缺点</h4><ol>
+<li>单个 zset 肯定支持不了太大的数据量，如果你有几百万的延迟任务需求，大哥我还是劝你换一个方案；  </li>
+<li>定时器轮询方案可能会有异常终止的情况需要自己处理，同时消息处理失败的回滚方案，您也要自己处理。  </li>
 </ol>
-<h2 id="拍摄瀑布"><a href="#拍摄瀑布" class="headerlink" title="拍摄瀑布"></a>拍摄瀑布</h2><h3 id="使用高速快门（推荐）"><a href="#使用高速快门（推荐）" class="headerlink" title="使用高速快门（推荐）"></a>使用高速快门（推荐）</h3><p>使用高速快门凝结住飞溅的水花和奔流的场景（推荐）</p>
-<h3 id="使用慢速快门"><a href="#使用慢速快门" class="headerlink" title="使用慢速快门"></a>使用慢速快门</h3><p>使用慢速快门拍摄雾状的水流和整体的水泻效果<br>使用慢门，需要在光线较弱的情况下使用,例如：<br>1.合适的天气<br>2.滤镜<br>3.低ISO</p>
+<p>所以，sorted set 的方案并不是一个成熟的方案，他只是一个快速可供落地的方案。</p>
+<h2 id="RabbitMQ队列"><a href="#RabbitMQ队列" class="headerlink" title="RabbitMQ队列"></a>RabbitMQ队列</h2><p>下面说一个可以落地的方案，这个方案也被大多数目前在架构中使用了 RabbitMQ 的项目组使用。不好的一点就是，捆绑 RabbitMQ，当你的架构方案是<br>要用别的 MQ 替换 RabbitMQ 的时候，你就蛋疼了（我现在正在经历）。  </p>
+<p>RabbitMQ 有两个特性，一个是 Time-To-Live Extensions，另一个是 Dead Letter Exchanges。  </p>
+<h3 id="Time-To-Live-Extensions"><a href="#Time-To-Live-Extensions" class="headerlink" title="Time-To-Live Extensions"></a>Time-To-Live Extensions</h3><p>RabbitMQ允许我们为消息或者队列设置TTL（time to live），也就是过期时间。TTL表明了一条消息可在队列中存活的最大时间，单位为毫秒。也就是说，<br>当某条消息被设置了TTL或者当某条消息进入了设置了TTL的队列时，这条消息会在经过TTL秒后 “死亡”，成为Dead Letter。如果既配置了消息的TTL，<br>又配置了队列的TTL，那么较小的那个值会被取用。  </p>
+<h3 id="Dead-Letter-Exchanges"><a href="#Dead-Letter-Exchanges" class="headerlink" title="Dead Letter Exchanges"></a>Dead Letter Exchanges</h3><p>在 RabbitMQ 中，一共有三种消息的 “死亡” 形式：  </p>
+<ul>
+<li>消息被拒绝。通过调用 basic.reject 或者 basic.nack 并且设置的 requeue 参数为 false；  </li>
+<li>消息因为设置了TTL而过期；  </li>
+<li>队列达到最大长度。  </li>
+</ul>
+<p>DLX同一般的 Exchange 没有区别，它能在任何的队列上被指定，实际上就是设置某个队列的属性。当队列中有 DLX 消息时，RabbitMQ就会自动的将 DLX<br> 消息重新发布到设置的 Exchange 中去，进而被路由到另一个队列，publish 可以监听这个队列中消息做相应的处理。</p>
+<p>由上简介大家可以看出，RabbitMQ本身是不支持延迟队列的，只是他的特性让勤劳的 中国脱发群体 急中生智（为了完成任务）弄出了这么一套可用的方案。  </p>
+<h3 id="方案实现"><a href="#方案实现" class="headerlink" title="方案实现"></a>方案实现</h3><ol>
+<li>如果有事件需要延迟那么将该事件发送到MQ 队列中，为需要延迟的消息设置一个TTL；  </li>
+<li>TTL到期后就会自动进入设置好的DLX，然后由DLX转发到配置好的实际消费队列；  </li>
+<li>消费该队列的延迟消息，处理事件。  </li>
+</ol>
+<h3 id="方案优劣-1"><a href="#方案优劣-1" class="headerlink" title="方案优劣"></a>方案优劣</h3><h4 id="优点-1"><a href="#优点-1" class="headerlink" title="优点"></a>优点</h4><p>大品牌组件，用的放心。如果面临大数据量需求可以很容易的横向扩展，同时消息支持持久化，有问题可回滚。  </p>
+<h4 id="缺点-1"><a href="#缺点-1" class="headerlink" title="缺点"></a>缺点</h4><ol>
+<li>配置麻烦，额外增加一个死信交换机和一个死信队列的配置；  </li>
+<li>RabbitMQ 是一个消息中间件，TTL 和 DLX 只是他的一个特性，将延迟队列绑定在一个功能软件的某一个特性上，可能会有风险。不要杠，<br>当你们组不用 RabbitMQ 的时候迁移很痛苦；  </li>
+<li>消息队列具有先进先出的特点，如果第一个进入队列的消息 A 的延迟是10分钟，第二个进入队列的消息B 的延迟是5分钟，期望的是谁先到 TTL谁先出，<br>但是事实是B已经到期了，而还要等到 A 的延迟10分钟结束A先出之后，B 才能出。所以在设计的时候需要考虑不同延迟的消息要放到不同的队列。<br>另外该问题官方已经给出了插件来支持：<a href="https://www.rabbitmq.com/community-plugins.html" target="_blank" rel="noopener">插件地址</a>。</li>
+</ol>
+<h2 id="基于-Netty-HashedWheelTimer类方法的实现"><a href="#基于-Netty-HashedWheelTimer类方法的实现" class="headerlink" title="基于 Netty#HashedWheelTimer类方法的实现"></a>基于 Netty#HashedWheelTimer类方法的实现</h2><p>HashedWheelTimer 是 Netty 中 的一个基础工具类，主要用来高效处理大量定时任务，且任务对时间精度要求相对不高，<br>在Netty 中的应用场景就是连接超时或者任务处理超时，一般都是操作比较快速的任务，缺点是内存占用相对较高。  </p>
+<h3 id="算法思想"><a href="#算法思想" class="headerlink" title="算法思想"></a>算法思想</h3><p>HashedWheelTimer 主要还是一个 DelayQueue 和一个时间轮算法组合。<br><img src="/2021/05/19/micro/%E5%BB%B6%E8%BF%9F%E9%98%9F%E5%88%97/1607781-20200128112134537-701752363.png" alt></p>
+<p>Hash Wheel Timer是一个环形结构，可以想象成时钟，分为很多格子，一个格子代表一段时间（越短Timer精度越高），<br>并用一个List保存在该格子上到期的所有任务。同时一个指针随着时间流逝一格一格转动，并执行对应List中所有到期的任务。</p>
+<p>以上图为例，假设一个格子是1s，则整个时间轮能表示的时间段16s。当前任务指向格子2，表明在第2s的时候有任务需要执行。任务列表中有两个任务，<br>每个任务前面的数字表示圈数。2表示当走到第2圈的时候才会执行，那么整个任务的真正执行时间其实是在12s之后执行，即第二圈走到2的时候。每推进一格，对应的每一个 slot 中的round数都要减一。整体算法就是这么个逻辑。</p>
+<h3 id="时间轮设计要点："><a href="#时间轮设计要点：" class="headerlink" title="时间轮设计要点："></a>时间轮设计要点：</h3><ul>
+<li>tick，一次时间推进，每次推进会检查/执行超时任务；  </li>
+<li>tickDuration，时间轮推进的最小单元，每隔 tickDuration 会有一次 tick，它决定了时间轮的精确程度；  </li>
+<li>bucket（ticksPerWheel），上图中的每一隔就是一个bucket，表示一个时间轮可以有多少个tick，它是存储任务的最小单元；  </li>
+<li>上层时间轮的 tickDuration 是下层时间轮的表示时间的最大范围，即：父 tickDuration = 子 tickDuration * 子 bucket 。  </li>
+</ul>
+<p>需要注意的是，这种方式任务是串行执行的。意味着你如果在时间轮中执行任务且任务耗时较长，将会出现调度超时或者任务堆积的情况。所以要将任务的执行异步化。  </p>
+<h3 id="算法的要点："><a href="#算法的要点：" class="headerlink" title="算法的要点："></a>算法的要点：</h3><ol>
+<li>任务并不是直接放在格子中的，而是维护了一个双向链表，这种数据结构非常便于插入和移除；  </li>
+<li>新添加的任务并不直接放入格子，而是先放入一个队列中，这是为了避免多线程插入任务的冲突。在每个tick运行任务之前由worker线程自动对任务进行归集和分类，插入到对应的槽位里面。  </li>
+</ol>
+<p>Netty 使用数组 + 双向链表的方式来组织时间轮，对于添加/取消操作仅做了记录，真正的操作实际发生在下一个tick。时间的推进是独立的线程在做，该线程同时也负责过期任务的执行等操作，可简单认为此步骤操作为O(n)，因为推进线程需要完全遍历timeouts、cancelledTimeouts与bucket链表，在遍历timeouts时，Netty为了避免任务过多，所以限制每次最多遍历10万个，也就是说，一个tick只能规划10万个任务，当任务量过大时，会存在超时任务执行时间延迟的现象。</p>
+<h3 id="方案优劣-2"><a href="#方案优劣-2" class="headerlink" title="方案优劣"></a>方案优劣</h3><h4 id="优点-2"><a href="#优点-2" class="headerlink" title="优点"></a>优点</h4><p>实现比较优雅。效率高。</p>
+<h4 id="缺点-2"><a href="#缺点-2" class="headerlink" title="缺点"></a>缺点</h4><ol>
+<li>无法实现HA和横向扩展，要么就使用多个时间轮。  </li>
+<li>最重要的是，实现也比较复杂，开发者需要考虑所有可能的情况。<br>目前我了解到的延迟队列在生产环境下有如上三种实现方式，每一种都有人在使用。当然没有最好的只有最适合的，你觉得 redis 能满足需求，就按照最简单的来，你要是有充足的开发周期，你也可以实现时间轮展现实力。  </li>
+</ol>
+<p>需求千万种，变化就一种：给时间都能做。  </p>
+<blockquote>
+<p>作者： rickiyang<br>出处：<a href="https://www.cnblogs.com/rickiyang/p/12237612.html" target="_blank" rel="noopener">https://www.cnblogs.com/rickiyang/p/12237612.html</a></p>
+</blockquote>
 ]]></content>
+      <categories>
+        <category>micro</category>
+      </categories>
+      <tags>
+        <tag>消息队列</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>micro/微服务手记</title>
+    <url>/2021/05/19/micro/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E6%89%8B%E8%AE%B0/</url>
+    <content><![CDATA[<h1 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h1><p>微服务将单体应用系统拆分成多个分而治之的小应用,降低系统整体崩溃的风险性;同时也可根据这些小应用的不同需求调整实体机的性能</p>
+<p>微服务主要缺点是将系统复杂化,但对于本身就复杂的系统,微服务受益会很高  </p>
+<a id="more"></a>
+
+<h1 id="优缺点"><a href="#优缺点" class="headerlink" title="优缺点"></a>优缺点</h1><p>判定标准,使用微服务后开发和维护变得轻松了,而不是困难  </p>
+<h2 id="优点"><a href="#优点" class="headerlink" title="优点"></a>优点</h2><p>1.化繁为简,分散治理<br>2.服务间松耦合,服务内高内聚<br>3.服务可独立构建/部署/升级,局部更新<br>4.提高系统容错性,减少系统整体崩溃的概率<br>5.易于实现异构系统  </p>
+<h2 id="缺点"><a href="#缺点" class="headerlink" title="缺点"></a>缺点</h2><p>1.增加了运维部署的工作量与难度<br>2.增加了系统间调用逻辑的处理难度<br>3.日志更男收集和统计了<br>4.额外引入了一些非业务模块服务</p>
+<h1 id="go-micro"><a href="#go-micro" class="headerlink" title="go-micro"></a>go-micro</h1><ul>
+<li>服务发现: 支持服务注册与发现,底层支持etcd/consul/k8s</li>
+<li>负载均衡: rpc服务间的请求调度均衡策略</li>
+<li>同步通信: 基于RPC通信,支持单向/双向流通信模式</li>
+<li>异步通信: 提供pub/sub通信模型的接口</li>
+<li>高级接口: 比如服务发现,提供调用的接口是一致的</li>
+</ul>
+]]></content>
+      <categories>
+        <category>micro</category>
+      </categories>
   </entry>
   <entry>
     <title>linux/计算机原理+操作系统基础+计算机网络面试题</title>
@@ -4132,6 +3842,342 @@ sudo apt-get install gcc-mingw-w64<figure class="highlight plain"><table><tr><td
       </tags>
   </entry>
   <entry>
+    <title>mysql/MySQL在什么情况下会使用到临时表</title>
+    <url>/2021/05/19/mysql/MySQL%E5%9C%A8%E4%BB%80%E4%B9%88%E6%83%85%E5%86%B5%E4%B8%8B%E4%BC%9A%E4%BD%BF%E7%94%A8%E5%88%B0%E4%B8%B4%E6%97%B6%E8%A1%A8/</url>
+    <content><![CDATA[<p>MySQL在执行SQL查询时可能会用到临时表，一般情况下，用到临时表就意味着性能较低。临时表存储，MySQL临时表分为“内存临时表”和“磁盘临时表”，<br>其中内存临时表使用MySQL的MEMORY存储引擎，磁盘临时表使用MySQL的MyISAM存储引擎；</p>
+<a id="more"></a>
+
+<p> 一般情况下，MySQL会先创建内存临时表，但内存临时表超过配置指定的值后，MySQL会将内存临时表导出到磁盘临时表；<br> Linux平台上缺省是/tmp目录，/tmp目录小的系统要注意啦。  </p>
+<h3 id="使用临时表的场景"><a href="#使用临时表的场景" class="headerlink" title="使用临时表的场景"></a>使用临时表的场景</h3><ul>
+<li>ORDER BY子句和GROUP BY子句不同， 例如：ORDERY BY price GROUP BY name；   </li>
+<li>在JOIN查询中，ORDER BY或者GROUP BY使用了不是第一个表的列 例如：SELECT * from TableA, TableB ORDER BY TableA.price GROUP by TableB.name<br>（我在测试的时候发现即使是使用第一个表的列，也会使用到临时表）</li>
+<li>ORDER BY中使用了DISTINCT关键字 ORDERY BY DISTINCT(price)  </li>
+<li>SELECT语句中指定了SQL_SMALL_RESULT关键字 SQL_SMALL_RESULT的意思就是告诉MySQL，结果会很小，请直接使用内存临时表，<br>不需要使用索引排序 SQL_SMALL_RESULT必须和GROUP BY、DISTINCT或DISTINCTROW一起使用 一般情况下，我们没有必要使用这个选项，<br>让MySQL服务器选择即可。  </li>
+<li>当group by 索引的时候，当数据量较小的时候不会使用临时表，当数据量（我测试的数据量在30万左右）大的时候会使用临时表</li>
+<li>当group by 不是索引的时候会使用临时表  </li>
+</ul>
+<h3 id="直接使用磁盘临时表的场景"><a href="#直接使用磁盘临时表的场景" class="headerlink" title="直接使用磁盘临时表的场景"></a>直接使用磁盘临时表的场景</h3><ul>
+<li>表包含TEXT或者BLOB列；</li>
+<li>GROUP BY 或者 DISTINCT 子句中包含长度大于512字节的列</li>
+<li>使用UNION或者UNION ALL时，SELECT子句中包含大于512字节的列；</li>
+</ul>
+<h3 id="临时表相关配置"><a href="#临时表相关配置" class="headerlink" title="临时表相关配置"></a>临时表相关配置</h3><ul>
+<li>tmp_table_size 指定系统创建的内存临时表最大大小；</li>
+<li>max_heap_table_size 指定用户创建的内存表的最大大小；<blockquote>
+<p>注意：最终的系统创建的内存临时表大小是取上述两个配置值的最小值。</p>
+</blockquote>
+</li>
+</ul>
+<h3 id="表的设计原则"><a href="#表的设计原则" class="headerlink" title="表的设计原则"></a>表的设计原则</h3><p>使用临时表一般都意味着性能比较低，特别是使用磁盘临时表，性能更慢，因此我们在实际应用中应该尽量避免临时表的使用。<br>常见的避免临时表的方法有：</p>
+<ul>
+<li><p>创建索引：在ORDER BY或者GROUP BY的列上创建索引；</p>
+</li>
+<li><p>分拆很长的列：一般情况下，TEXT、BLOB，大于512字节的字符串，基本上都是为了显示信息，而不会用于查询条件， 因此表设计的时候，<br>应该将这些列独立到另外一张表。</p>
+</li>
+</ul>
+<h3 id="SQL优化"><a href="#SQL优化" class="headerlink" title="SQL优化"></a>SQL优化</h3><p>如果表的设计已经确定，修改比较困难，那么也可以通过优化SQL语句来减少临时表的大小，以提升SQL执行效率。常见的优化SQL语句方法如下：</p>
+<ul>
+<li>拆分SQL语句，临时表主要是用于排序和分组，很多业务都是要求排序后再取出详细的分页数据，这种情况下可以将排序和取出详细数据拆分成不同的SQL，<br>以降低排序或分组时临时表的大小，提升排序和分组的效率，我们的案例就是采用这种方法。</li>
+<li>优化业务，去掉排序分组等操作，有时候业务其实并不需要排序或分组，仅仅是为了好看或者阅读方便而进行了排序，例如数据导出、数据查询等操作，<br>这种情况下去掉排序和分组对业务也没有多大影响。</li>
+</ul>
+<h3 id="如何判断使用了临时表"><a href="#如何判断使用了临时表" class="headerlink" title="如何判断使用了临时表"></a>如何判断使用了临时表</h3><p>使用explain查看执行计划，Extra列看到Using temporary就意味着使用了临时表。</p>
+]]></content>
+      <categories>
+        <category>mysql</category>
+      </categories>
+      <tags>
+        <tag>mysql临时表</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>mysql/navicat_linux破解</title>
+    <url>/2021/05/19/mysql/navicat_linux%E7%A0%B4%E8%A7%A3/</url>
+    <content><![CDATA[<h1 id="网址"><a href="#网址" class="headerlink" title="网址"></a>网址</h1><p><a href="https://rlds.tk/" target="_blank" rel="noopener">https://rlds.tk/</a></p>
+<h1 id="破解过程"><a href="#破解过程" class="headerlink" title="破解过程"></a>破解过程</h1><ol>
+<li>下载Navicat包</li>
+<li>输入序列号</li>
+<li>断网</li>
+<li>触发手动激活</li>
+<li>获取请求码</li>
+<li>恢复网络</li>
+<li>生成激活码</li>
+</ol>
+]]></content>
+  </entry>
+  <entry>
+    <title>mysql/MySQL提升课程全面讲解MySQL架构设计</title>
+    <url>/2021/05/19/mysql/MySQL%E6%8F%90%E5%8D%87%E8%AF%BE%E7%A8%8B%E5%85%A8%E9%9D%A2%E8%AE%B2%E8%A7%A3MySQL%E6%9E%B6%E6%9E%84%E8%AE%BE%E8%AE%A1/</url>
+    <content><![CDATA[<h1 id="第一章-实例和故事"><a href="#第一章-实例和故事" class="headerlink" title="第一章 实例和故事"></a>第一章 实例和故事</h1><h2 id="什么决定了电商双11大促的成败"><a href="#什么决定了电商双11大促的成败" class="headerlink" title="什么决定了电商双11大促的成败"></a>什么决定了电商双11大促的成败</h2><h2 id="在双11大促的数据库服务器"><a href="#在双11大促的数据库服务器" class="headerlink" title="在双11大促的数据库服务器"></a>在双11大促的数据库服务器</h2><h2 id="在大促中什么影响了数据库性能"><a href="#在大促中什么影响了数据库性能" class="headerlink" title="在大促中什么影响了数据库性能"></a>在大促中什么影响了数据库性能</h2><ul>
+<li>sql查询数据</li>
+<li>服务器硬件</li>
+<li>网卡流量</li>
+<li>磁盘IO<a id="more"></a>
+<h3 id="超高的QPS和TPS带来的影响"><a href="#超高的QPS和TPS带来的影响" class="headerlink" title="超高的QPS和TPS带来的影响"></a>超高的QPS和TPS带来的影响</h3>QPS: 每秒钟处理的查询量  </li>
+<li>效率底下的sql<h3 id="大量的并发和超高的CPU使用率"><a href="#大量的并发和超高的CPU使用率" class="headerlink" title="大量的并发和超高的CPU使用率"></a>大量的并发和超高的CPU使用率</h3></li>
+<li>大量的并发导致数据库连接被占满（max_connections 默认100）</li>
+<li>超高的CPU使用率，因为CPU资源耗尽而出现宕机<h3 id="磁盘IO"><a href="#磁盘IO" class="headerlink" title="磁盘IO"></a>磁盘IO</h3></li>
+<li>磁盘IO性能突然下降（使用更快的磁盘设备）</li>
+<li>其它大量消耗磁盘性能的计划任务（调整计划，做好磁盘维护）<h3 id="网卡流量"><a href="#网卡流量" class="headerlink" title="网卡流量"></a>网卡流量</h3></li>
+<li>减少从服务器的数量</li>
+<li>进行分级缓存</li>
+<li>避免使用select * 进行查询</li>
+<li>分离业务网络和服务器网络</li>
+</ul>
+<h2 id="大表带来的问题"><a href="#大表带来的问题" class="headerlink" title="大表带来的问题"></a>大表带来的问题</h2><h3 id="什么是大表"><a href="#什么是大表" class="headerlink" title="什么是大表"></a>什么是大表</h3><ul>
+<li>记录行数巨大，单表超过千万行</li>
+<li>表数据文件巨大，表数据文件超过10G<h3 id="大表对查询的影响"><a href="#大表对查询的影响" class="headerlink" title="大表对查询的影响"></a>大表对查询的影响</h3></li>
+<li>慢查询 很难在一定的时间内过滤出所需要的数据<h3 id="大表对DDL的影响"><a href="#大表对DDL的影响" class="headerlink" title="大表对DDL的影响"></a>大表对DDL的影响</h3><h4 id="建立索引需要很长的时间"><a href="#建立索引需要很长的时间" class="headerlink" title="建立索引需要很长的时间"></a>建立索引需要很长的时间</h4>mysql&lt;5.5 建立索引会锁表<br>mysql&gt;=5.5 虽然不会锁表但会引起主从延迟  </li>
+</ul>
+<h4 id="修改表结构需要长时间锁表"><a href="#修改表结构需要长时间锁表" class="headerlink" title="修改表结构需要长时间锁表"></a>修改表结构需要长时间锁表</h4><p>会造成长时间锁表<br>影响正常的数据操作  </p>
+<h4 id="如何处理数据库中的大表"><a href="#如何处理数据库中的大表" class="headerlink" title="如何处理数据库中的大表"></a>如何处理数据库中的大表</h4><ul>
+<li>分库分表把一张大表分成多个小表<br>分表的主键选择<br>分表后跨分区数据的统计和查询</li>
+<li>大表的历史数据归档减少对前后端业务的影响<br>归档的时间点的选择<br>如何进行归档操作   </li>
+</ul>
+<h2 id="大事务带来的问题"><a href="#大事务带来的问题" class="headerlink" title="大事务带来的问题"></a>大事务带来的问题</h2><h3 id="什么是事务"><a href="#什么是事务" class="headerlink" title="什么是事务"></a>什么是事务</h3><ul>
+<li>事务是数据库系统区别于其它一切文件系统的重要特性之一</li>
+<li>事务是一组具有原子性的sql语句，或是一个独立的工作单元</li>
+</ul>
+<h3 id="大事务"><a href="#大事务" class="headerlink" title="大事务"></a>大事务</h3><ul>
+<li>运行时间长，操作的数据比较多的事务<br>锁定太多的数据，造成大量的阻塞和锁超时<br>回滚时所需要时间比较长<br>执行时间长，容易造成主从延迟</li>
+</ul>
+<h3 id="如何处理大事务"><a href="#如何处理大事务" class="headerlink" title="如何处理大事务"></a>如何处理大事务</h3><ul>
+<li>避免一次处理太多的数据</li>
+<li>移出不必要在事务中的select操作</li>
+</ul>
+<h2 id="第2章-什么影响了mysql的性能"><a href="#第2章-什么影响了mysql的性能" class="headerlink" title="第2章 什么影响了mysql的性能"></a>第2章 什么影响了mysql的性能</h2>]]></content>
+      <categories>
+        <category>mysql</category>
+      </categories>
+      <tags>
+        <tag>mysql架构</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>mysql/通过Docker安装配置MySQL主从节点</title>
+    <url>/2021/05/19/mysql/%E9%80%9A%E8%BF%87Docker%E5%AE%89%E8%A3%85%E9%85%8D%E7%BD%AEMySQL%E4%B8%BB%E4%BB%8E%E8%8A%82%E7%82%B9/</url>
+    <content><![CDATA[<h2 id="拉取最新版mysql镜像"><a href="#拉取最新版mysql镜像" class="headerlink" title="拉取最新版mysql镜像"></a>拉取最新版mysql镜像</h2><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">docker pull mysql</span><br></pre></td></tr></table></figure>
+<h2 id="mysql主服务器"><a href="#mysql主服务器" class="headerlink" title="mysql主服务器"></a>mysql主服务器</h2><h3 id="启动容器"><a href="#启动容器" class="headerlink" title="启动容器"></a>启动容器</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">docker run -p 3307:3306 --name mysql_master -e MYSQL_ROOT_PASSWORD=123456 -d mysql:latest</span><br></pre></td></tr></table></figure>
+<a id="more"></a>
+
+<h3 id="修改配置并添加slave用户"><a href="#修改配置并添加slave用户" class="headerlink" title="修改配置并添加slave用户"></a>修改配置并添加slave用户</h3><p>1.进入容器</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">docker exec -it d45457d26cad &#x2F;bin&#x2F;bash</span><br></pre></td></tr></table></figure>
+
+<p>2.修改配置    </p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">apt update &amp;&amp; apt install  vim -y</span><br><span class="line">vim /etc/mysql/my.cnf</span><br><span class="line"></span><br><span class="line">[mysqld]</span><br><span class="line"><span class="comment">## 同一局域网内注意要唯一</span></span><br><span class="line">server-id=100  </span><br><span class="line"><span class="comment">## 开启二进制日志功能，可以随便取（关键）</span></span><br><span class="line"><span class="built_in">log</span>-bin=mysql-bin</span><br></pre></td></tr></table></figure>
+<p>3.添加slave用户，用于slave读取binlog</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">mysql -uroot -p123456 </span><br><span class="line"></span><br><span class="line"><span class="comment">#mysql5.7以下使用 CREATE USER 'slave'@'%' IDENTIFIED BY '123456';</span></span><br><span class="line"><span class="comment">#mysql5.8修改了默认的认证方式为caching_sha2_password ,如果使用此方式创建slave用户，</span></span><br><span class="line"><span class="comment">#那么在后面slave连接master的时候就需要使用加密方式进行连接，否则会报错：Authentication requires secure connection</span></span><br><span class="line"></span><br><span class="line">CREATE USER <span class="string">'slave'</span>@<span class="string">'%'</span> IDENTIFIED WITH mysql_native_password BY <span class="string">'123456'</span>;</span><br><span class="line"></span><br><span class="line">GRANT REPLICATION SLAVE, REPLICATION CLIENT ON *.* TO <span class="string">'slave'</span>@<span class="string">'%'</span>;</span><br></pre></td></tr></table></figure>
+
+<p>4.重启容器</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">docker restart d45457d26cad</span><br></pre></td></tr></table></figure>
+
+<h2 id="mysql从服务器"><a href="#mysql从服务器" class="headerlink" title="mysql从服务器"></a>mysql从服务器</h2><h3 id="启动容器-1"><a href="#启动容器-1" class="headerlink" title="启动容器"></a>启动容器</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">docker run -p 3308:3306 --name mysql_slave -e MYSQL_ROOT_PASSWORD=123456 -d mysql:latest</span><br></pre></td></tr></table></figure>
+<h3 id="修改配置"><a href="#修改配置" class="headerlink" title="修改配置"></a>修改配置</h3><p>1.进入容器</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">docker <span class="built_in">exec</span> -it 3e80d15d8b00 /bin/bash</span><br></pre></td></tr></table></figure>
+<p>2.修改配置    </p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">apt update &amp;&amp; apt install  vim -y</span><br><span class="line">vim /etc/mysql/my.cnf</span><br><span class="line"></span><br><span class="line">[mysqld]</span><br><span class="line"><span class="comment">## 设置server_id,注意要唯一</span></span><br><span class="line">server-id=101  </span><br><span class="line"><span class="comment">## 开启二进制日志功能，以备Slave作为其它Slave的Master时使用</span></span><br><span class="line"><span class="built_in">log</span>-bin=mysql-slave-bin   </span><br><span class="line"><span class="comment">## relay_log配置中继日志</span></span><br><span class="line">relay_log=edu-mysql-relay-bin</span><br></pre></td></tr></table></figure>
+<p>3.重启容器</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">docker restart 3e80d15d8b00</span><br><span class="line">```    </span><br><span class="line"><span class="comment">## 配置slave使其连上master    </span></span><br><span class="line">```bash</span><br><span class="line">change master to master_host=<span class="string">'192.168.11.36'</span>, master_user=<span class="string">'slave'</span>, master_password=<span class="string">'123456'</span>, master_port=3307, master_log_file=<span class="string">'mysql-bin.000001'</span>, master_log_pos= 605, master_connect_retry=30;</span><br><span class="line"></span><br><span class="line">start slave </span><br><span class="line"></span><br><span class="line">show slave status \G 查看主从状态</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>参考文章<br><a href="https://www.cnblogs.com/songwenjie/p/9371422.html" target="_blank" rel="noopener">基于Docker的Mysql主从复制搭建</a></p>
+</blockquote>
+]]></content>
+      <categories>
+        <category>mysql</category>
+      </categories>
+      <tags>
+        <tag>mysql主从同步</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>nginx/如何利用nginx进行自动化负载均衡</title>
+    <url>/2021/05/19/nginx/%E5%A6%82%E4%BD%95%E5%88%A9%E7%94%A8nginx%E8%BF%9B%E8%A1%8C%E8%87%AA%E5%8A%A8%E5%8C%96%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1/</url>
+    <content><![CDATA[<p>基于Docker + Consul + Nginx + Consul-Template + Registrator的服务自动负载均衡实现 </p>
+<a id="more"></a>
+
+<h2 id="docker-composer相关知识点"><a href="#docker-composer相关知识点" class="headerlink" title="docker-composer相关知识点"></a>docker-composer相关知识点</h2><ul>
+<li>ports 暴露容器端口到主机的任意端口或指定端口, 用法如下<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">ports:</span><br><span class="line"> </span><br><span class="line">    - &quot;80:80&quot; # 绑定容器的80端口到主机的80端口</span><br><span class="line">     </span><br><span class="line">    - &quot;9000:8080&quot; # 绑定容器的8080端口到主机的9000端口</span><br><span class="line">     </span><br><span class="line">    - &quot;443&quot; # 绑定容器的443端口到主机的任意端口，容器启动时随机分配绑定的主机端口</span><br></pre></td></tr></table></figure></li>
+<li>links 使得docker容器间通过指定的名字来和目标容器通信 <blockquote>
+<p>如果使用links则容器间通信 只能通过该使用容器的ip地址来通信或者通过宿主机的ip加上容器暴露出的端口号来通信 （这两种都有弊端）</p>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">links:</span><br><span class="line">    -  consul_server_master:consul # 当前容器中使用consul 即可获取容器consul_server_master的ip地址,便于通信</span><br></pre></td></tr></table></figure></li>
+<li>depends_on 决定容器的依赖, 也就是指定当前容器的启动顺序，必须依赖启动后才会启动<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">depends_on:</span><br><span class="line">    - lb</span><br><span class="line">    - registrator</span><br></pre></td></tr></table></figure>
+
+</li>
+</ul>
+<h2 id="consul-相关知识点"><a href="#consul-相关知识点" class="headerlink" title="consul 相关知识点"></a>consul 相关知识点</h2><ul>
+<li><p>Client模式 就是客户端模式。是 Consul 节点的一种模式，这种模式下，所有注册到当前节点的服务会被转发到 Server，本身是不持久化这些信息。</p>
+</li>
+<li><p>Server模式 表明这个 Consul 是个 Server ，这种模式下，功能和 Client 都一样，唯一不同的是，它会把所有的信息持久化的本地，这样遇到故障，信息是可以被保留的。同时可以同步多个consul客户端的数据</p>
+<blockquote>
+<p>Server 节点之间的数据一致性保证协议使用的是 raft，而 zookeeper 用的 paxos，etcd采用的也是raft</p>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">command: consul agent -server -bootstrap-expect 1 -advertise 192.168.1.181 -node consul_server_master -data-dir &#x2F;tmp&#x2F;data-dir -client 0.0.0.0 -ui</span><br><span class="line"># -bootstrap-expect&#x3D;2 表示节点个数为2个</span><br><span class="line"># -node&#x3D;consul-server-1 表示节点名称为consul-server-1</span><br><span class="line"># -client&#x3D;0.0.0.0 表示允许连接的客户端 IP</span><br><span class="line"># -bind&#x3D;10.211.55.2 表示服务端 IP为10.211.55.2</span><br><span class="line"># -datacenter&#x3D;dc1 数据中心名称</span><br><span class="line"># -join&#x3D;10.211.55.4 表示加入10.211.55.4节点的集群</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>服务发现协议 Consul 采用 http 和 DNS 协议，etcd 只支持 http </p>
+</li>
+<li><p>服务注册 Consul 支持两种方式实现服务注册，一种是通过 Consul 的服务注册 Http API，由服务自己调用 API 实现注册，另一种方式是通过 json 格式的配置文件实现注册，将需要注册的服务以 json 格式的配置文件给出。Consul 官方建议使用第二种方式。</p>
+</li>
+<li><p>服务定义参数</p>
+</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th align="center">环境变量Key</th>
+<th align="center">环境变量Value</th>
+<th align="center">说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">SERVICE_ID</td>
+<td align="center">web-001</td>
+<td align="center">可以为GUID或者可读性更强变量，保证不重复</td>
+</tr>
+<tr>
+<td align="center">SERVICE_NAME</td>
+<td align="center">web</td>
+<td align="center">如果ID没有设置，Consul会将name作为id，则有可能注册失败</td>
+</tr>
+<tr>
+<td align="center">SERVICE_TAGS</td>
+<td align="center">nodejs,web</td>
+<td align="center">服务的标签，用逗号分隔，开发者可以根据标签来查询一些信息</td>
+</tr>
+<tr>
+<td align="center">SERVICE_IGNORE</td>
+<td align="center">Boolean</td>
+<td align="center">是否忽略本Container，可以为一些不需要注册的Container添加此属性</td>
+</tr>
+</tbody></table>
+<h2 id="实现原理"><a href="#实现原理" class="headerlink" title="实现原理"></a>实现原理</h2><ul>
+<li><p>通过 Nginx 自身实现负载均衡和请求转发</p>
+</li>
+<li><p>通过 Consul-template 的 config 功能实时监控 Consul 集群节点的服务和数据的变化；<br>实时的用 Consul 节点的信息替换 Nginx 配置文件的模板，并重新加载配置文件</p>
+<blockquote>
+<p>Consul-template 和 nginx 必须安装在同一台机器上，因为 Consul-template 需要动态修改 nginx 的配置文件 nginx.conf，然后执行 nginx -s reload 命令进行路由更新，达到动态负载均衡的目的</p>
+</blockquote>
+</li>
+<li><p>registrator，它可以通过跟本地的 docker 引擎通信，来获取本地启动的容器信息，并且注册到指定的服务发现管理端。</p>
+</li>
+</ul>
+<p>数据流向： docker 容器数据-&gt; registrator -&gt; consul -&gt;consul-template -&gt; nginx</p>
+<h2 id="镜像构建"><a href="#镜像构建" class="headerlink" title="镜像构建"></a>镜像构建</h2><ul>
+<li>Consul：consul:latest</li>
+<li>Registrator：gliderlabs/registrator:latest</li>
+<li>Nginx和Consul-template：liberalman/nginx-consul-template:latest</li>
+<li>Web: yeasy/simple-web:latest</li>
+</ul>
+<h2 id="docker-compose-yml"><a href="#docker-compose-yml" class="headerlink" title="docker-compose.yml"></a>docker-compose.yml</h2><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">version: &#39;3&#39;</span><br><span class="line">#backend web application, scale this with docker-compose scale web&#x3D;3</span><br><span class="line">services:</span><br><span class="line">    web:</span><br><span class="line">      image: yeasy&#x2F;simple-web:latest</span><br><span class="line">      environment:</span><br><span class="line">        - SERVICE_80_NAME&#x3D;my-web-server</span><br><span class="line">      ports:</span><br><span class="line">      - &quot;80&quot;</span><br><span class="line">      depends_on:</span><br><span class="line">          - lb</span><br><span class="line">          - registrator  </span><br><span class="line"></span><br><span class="line">    #load balancer will automatically update the config using consul-template</span><br><span class="line">    lb:</span><br><span class="line">      image: liberalman&#x2F;nginx-consul-template:latest</span><br><span class="line">      hostname: lb</span><br><span class="line">      environment:</span><br><span class="line">          - SERVICE_IGNORE&#x3D;true</span><br><span class="line">      links:</span><br><span class="line">      -  consul_server_master:consul</span><br><span class="line">      ports:</span><br><span class="line">      - &quot;80:80&quot;</span><br><span class="line">      depends_on:</span><br><span class="line">          - consul_server_master</span><br><span class="line">          </span><br><span class="line">    consul_server_master:</span><br><span class="line">      image:  consul:latest</span><br><span class="line">      hostname: consul_server_master</span><br><span class="line">      environment:</span><br><span class="line">          - SERVICE_IGNORE&#x3D;true</span><br><span class="line">      ports:</span><br><span class="line">      - &quot;8500:8500&quot;</span><br><span class="line">      command: consul agent -server -bootstrap-expect 1 -node consul_server_master -data-dir &#x2F;tmp&#x2F;consul -client 0.0.0.0 -ui</span><br><span class="line"></span><br><span class="line">    # listen on local docker sock to register the container with public ports to the consul service</span><br><span class="line">    registrator:</span><br><span class="line">      image: gliderlabs&#x2F;registrator:master</span><br><span class="line">      hostname: registrator</span><br><span class="line">      environment:</span><br><span class="line">          - SERVICE_IGNORE&#x3D;true</span><br><span class="line">      links:</span><br><span class="line">      - consul_server_master:consul</span><br><span class="line">      depends_on:</span><br><span class="line">          - consul_server_master</span><br><span class="line">      volumes:</span><br><span class="line">      - &quot;&#x2F;var&#x2F;run&#x2F;docker.sock:&#x2F;tmp&#x2F;docker.sock&quot;</span><br><span class="line">      command: -internal consul:&#x2F;&#x2F;consul:8500</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>注意：我们使用的第三方镜像 liberalman/nginx-consul-template，Nginx 会把名称为 my-web-server的服务容器作为后台转发的目标服务器,当然你也可以自己制作镜像指定模板. </p>
+</blockquote>
+<h2 id="测试步骤"><a href="#测试步骤" class="headerlink" title="测试步骤"></a>测试步骤</h2><ol>
+<li><p>docker-compose 模板所在目录，执行</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ sudo docker-compose up</span><br></pre></td></tr></table></figure></li>
+<li><p>访问 <a href="http://localhost" target="_blank" rel="noopener">http://localhost</a> 可以看到一个 web 页面，提示实际访问的目标地址。</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">#2019-12-20 04:12:30: 19 requests from &lt;LOCAL: 172.17.0.6&gt; to WebServer &lt;172.17.0.4&gt;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>增加web 测试负载</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ sudo docker-compose scale web=3</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>重复刷新<a href="http://localhost" target="_blank" rel="noopener">http://localhost</a> 观察ip变化</p>
+</li>
+</ol>
+<h2 id="总结测试"><a href="#总结测试" class="headerlink" title="总结测试"></a>总结测试</h2><p>最先我未去指定容器的启动顺序（deponds_on） 导致docker-compose up 后访问<a href="http://localhost" target="_blank" rel="noopener">http://localhost</a> 报错 nginx 502<br>原因是因为 registrator容器先于web容器启动，导致未将web容器注册到consul 所以生成的nginx配置文件中，没用web参与负载</p>
+<p>本文搭建的consul为单节点版本 ， 集群版 <a href="https://www.jianshu.com/p/fa41434d444a" target="_blank" rel="noopener">参考文章1</a></p>
+<h2 id="参考文章"><a href="#参考文章" class="headerlink" title="参考文章"></a>参考文章</h2><ol>
+<li><a href="https://www.jianshu.com/p/fa41434d444a" target="_blank" rel="noopener">基于Docker + Consul + Nginx + Consul-Template的服务负载均衡实现</a></li>
+<li><a href="https://my.oschina.net/xiaominmin/blog/1597660" target="_blank" rel="noopener">用 consul + consul-template + registrator + nginx 打造真正可动态扩展的服务架构 </a></li>
+<li><a href="https://www.sohu.com/a/282625515_468635" target="_blank" rel="noopener">8分钟学会Consul集群搭建及微服务概念 </a></li>
+</ol>
+]]></content>
+      <categories>
+        <category>nginx</category>
+      </categories>
+      <tags>
+        <tag>自动负载均衡</tag>
+        <tag>Nginx</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>photography/摄影入门</title>
+    <url>/2021/05/19/photography/%E6%91%84%E5%BD%B1%E5%85%A5%E9%97%A8/</url>
+    <content><![CDATA[<h1 id="摄影"><a href="#摄影" class="headerlink" title="摄影"></a>摄影</h1><p>摄影是光与影的艺术<br>摄影的基础是控制光</p>
+<h1 id="曝光"><a href="#曝光" class="headerlink" title="曝光"></a>曝光</h1><ul>
+<li>照片过暗，曝光不足</li>
+<li>照片过亮，曝光过度</li>
+<li>照片细节指的是影像有质感，细节，明暗合理</li>
+<li>亮有细节，暗有层次（亮处不能过曝，暗处不能漆黑一片）</li>
+</ul>
+<h2 id="曝光量受那些因素的影响"><a href="#曝光量受那些因素的影响" class="headerlink" title="曝光量受那些因素的影响"></a>曝光量受那些因素的影响</h2><ul>
+<li>光圈 （大光圈，进光量大）</li>
+<li>快门 （快门越慢，进光量大）</li>
+<li>ISO (感光原件，感知光线的能力)</li>
+</ul>
+<h2 id="光圈-f"><a href="#光圈-f" class="headerlink" title="光圈(f)"></a>光圈(f)</h2><h3 id="影响进光量"><a href="#影响进光量" class="headerlink" title="影响进光量"></a>影响进光量</h3><p>光圈是一个用来控制进光量的装置，它通常在镜头内，单位大小f值常用f3.5、f5.6、f8、f11、f16、f22等系数，f值代表的是光圈的厚度，f值越小曝光量<br>越大，f值越大曝光量越小<br>单位: f3.5  </p>
+<h3 id="影响景深的变化"><a href="#影响景深的变化" class="headerlink" title="影响景深的变化"></a>影响景深的变化</h3><p>大光圈拍摄景深浅，主体清晰背景模糊<br>小光圈拍摄景深长，主体和背景都很清晰  </p>
+<h2 id="快门"><a href="#快门" class="headerlink" title="快门"></a>快门</h2><p>快门是控制进光时间的一个装置，开的越久，进来的光线越多<br>单位: 1/125秒  </p>
+<ul>
+<li>高快门凝固瞬间  </li>
+<li>慢快门记录轨迹</li>
+</ul>
+<h3 id="曝光是如何控制的"><a href="#曝光是如何控制的" class="headerlink" title="曝光是如何控制的"></a>曝光是如何控制的</h3><p>快门越慢，时间越长，进光越多<br>慢快门需要三脚架支撑，手会抖</p>
+<h2 id="ISO"><a href="#ISO" class="headerlink" title="ISO"></a>ISO</h2><p>ISO感光度是衡量传统相机所使用胶片感光速度标准的国际统一指标，其反应了胶片感光时的能力，而对于数码相机来说，其实不使用胶片，而是通过感光器件<br>CCD或CMOS以及相关的电子线路感应入射强弱。<br>感光度越高，感光能力越强，画质越粗糙，噪点多<br>感光度越低，感光能力弱，画质越细腻。<br>ISO越高，画质越差，噪点越多<br>当光圈快门没有办法控制进光量的时候，适当提高ISO,来增加照片的亮度。</p>
+<h2 id="拍摄模式（曝光模式）"><a href="#拍摄模式（曝光模式）" class="headerlink" title="拍摄模式（曝光模式）"></a>拍摄模式（曝光模式）</h2><ul>
+<li>M档–手动曝光模式</li>
+<li>A（AV）档–光圈曝光模式，也叫光圈优先模式，指的是光圈可以人为手动控制，而快门相机会自动计算</li>
+<li>S（TV）档–快门曝光模式，也叫快门优先模式，指的是快门可以人为手动控制，而光圈相机会自动计算</li>
+<li>P档–自动曝光模式</li>
+<li>A+档–全自动曝光模式<blockquote>
+<p>除开以上几种外，一般称为傻瓜模式，由程序自动控制的模式。</p>
+</blockquote>
+</li>
+</ul>
+<p>光圈、快门、ISO共同决定一张影像相对正常的曝光，共同影响照片的曝光</p>
+<h1 id="相机镜头的概念"><a href="#相机镜头的概念" class="headerlink" title="相机镜头的概念"></a>相机镜头的概念</h1><h2 id="按成像质量可以和方便性"><a href="#按成像质量可以和方便性" class="headerlink" title="按成像质量可以和方便性"></a>按成像质量可以和方便性</h2><ul>
+<li>定焦镜头</li>
+<li>变焦镜头</li>
+</ul>
+<h2 id="焦距"><a href="#焦距" class="headerlink" title="焦距"></a>焦距</h2><p>焦距越大，视角越小，镜头越长，拍摄的范围越小，拍的越远<br>焦距越小，视角越大，镜头越短，拍摄范围越大，拍的越近</p>
+<h2 id="按焦距分镜头"><a href="#按焦距分镜头" class="headerlink" title="按焦距分镜头"></a>按焦距分镜头</h2><h3 id="广角-小于24mm"><a href="#广角-小于24mm" class="headerlink" title="广角 小于24mm"></a>广角 小于24mm</h3><p>取景范围大，多用于拍摄风光、建筑等</p>
+<h3 id="标准-50mm（45-60）左右"><a href="#标准-50mm（45-60）左右" class="headerlink" title="标准 50mm（45-60）左右"></a>标准 50mm（45-60）左右</h3><p>和人眼的感觉相同适合拍摄标准人像、静物、产品等。</p>
+<h3 id="中长焦-70-135mm"><a href="#中长焦-70-135mm" class="headerlink" title="中长焦 70-135mm"></a>中长焦 70-135mm</h3><p>适合拍摄人像</p>
+<h3 id="长焦-大于135mm"><a href="#长焦-大于135mm" class="headerlink" title="长焦 大于135mm"></a>长焦 大于135mm</h3><p>取景范围小，适合拍摄动物、体育</p>
+<h2 id="镜头的影响"><a href="#镜头的影响" class="headerlink" title="镜头的影响"></a>镜头的影响</h2><p>1.影响视角范围<br>2.影响景深  </p>
+<ul>
+<li>焦距越长；景深越浅，焦距越短，景深越深；</li>
+<li>焦距越长，背景越虚化；焦距越短，背景越清晰</li>
+</ul>
+<h2 id="对焦模式"><a href="#对焦模式" class="headerlink" title="对焦模式"></a>对焦模式</h2><p>对焦点为成像清晰点</p>
+<h3 id="AF（A）-自动对焦"><a href="#AF（A）-自动对焦" class="headerlink" title="AF（A） 自动对焦"></a>AF（A） 自动对焦</h3><p>佳能三种自动对焦模式  </p>
+<ul>
+<li><p>ONE SHOT (单次对焦模式) 半按快门释放键完成对焦后，若重新构图，对焦主体改变，将进行重新对焦。</p>
+</li>
+<li><p>AI SERVO（连续对焦模式） 半按快门释放键完成对焦后，若重新构图，对焦主体改变，将进行重新对焦。 有追焦的目的，试用于运动的物体</p>
+</li>
+<li><p>AI FOCUS (自动智能对焦模式)</p>
+<h3 id="MF-M-手动对焦"><a href="#MF-M-手动对焦" class="headerlink" title="MF (M)手动对焦"></a>MF (M)手动对焦</h3><p>可以在任何的光线下按下快门的，也可以说对任何一种情况都能拍摄</p>
+</li>
+</ul>
+<h2 id="单点对焦和区域对焦"><a href="#单点对焦和区域对焦" class="headerlink" title="单点对焦和区域对焦"></a>单点对焦和区域对焦</h2><p>在不知道选择对焦点的时候选择区域对焦</p>
+<h3 id="单点对焦"><a href="#单点对焦" class="headerlink" title="单点对焦"></a>单点对焦</h3><p>单点对于个别拍摄比较多，成功率高<br>焦点在人身上，大光圈的情况下，背景虚化，人像清晰。<br>焦点对人眼睛上，</p>
+<h2 id="白平衡"><a href="#白平衡" class="headerlink" title="白平衡"></a>白平衡</h2><h2 id="前景色和背景"><a href="#前景色和背景" class="headerlink" title="前景色和背景"></a>前景色和背景</h2><h3 id="前景"><a href="#前景" class="headerlink" title="前景"></a>前景</h3><ul>
+<li>加强气氛</li>
+<li>增加画面空间层次感</li>
+<li>均衡画面</li>
+</ul>
+<h3 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h3><ul>
+<li>突出主题</li>
+<li>丰富主题的内涵</li>
+</ul>
+<h1 id="常见摄影题材和摄影技法"><a href="#常见摄影题材和摄影技法" class="headerlink" title="常见摄影题材和摄影技法"></a>常见摄影题材和摄影技法</h1><h2 id="日出、日落"><a href="#日出、日落" class="headerlink" title="日出、日落"></a>日出、日落</h2><ol>
+<li>开阔、地势高的地方</li>
+</ol>
+<h2 id="拍摄瀑布"><a href="#拍摄瀑布" class="headerlink" title="拍摄瀑布"></a>拍摄瀑布</h2><h3 id="使用高速快门（推荐）"><a href="#使用高速快门（推荐）" class="headerlink" title="使用高速快门（推荐）"></a>使用高速快门（推荐）</h3><p>使用高速快门凝结住飞溅的水花和奔流的场景（推荐）</p>
+<h3 id="使用慢速快门"><a href="#使用慢速快门" class="headerlink" title="使用慢速快门"></a>使用慢速快门</h3><p>使用慢速快门拍摄雾状的水流和整体的水泻效果<br>使用慢门，需要在光线较弱的情况下使用,例如：<br>1.合适的天气<br>2.滤镜<br>3.低ISO</p>
+]]></content>
+  </entry>
+  <entry>
     <title>photography/构图</title>
     <url>/2021/05/19/photography/%E6%9E%84%E5%9B%BE/</url>
     <content><![CDATA[<h1 id="点构图"><a href="#点构图" class="headerlink" title="点构图"></a>点构图</h1><h2 id="中心点构图"><a href="#中心点构图" class="headerlink" title="中心点构图"></a>中心点构图</h2><p>画面主体放在中心点<br><img src="/2021/05/19/photography/%E6%9E%84%E5%9B%BE/%E4%B8%AD%E5%BF%83%E7%82%B9%E6%9E%84%E5%9B%BE.png" alt></p>
@@ -4148,6 +4194,242 @@ sudo apt-get install gcc-mingw-w64<figure class="highlight plain"><table><tr><td
 <h2 id="重复构图"><a href="#重复构图" class="headerlink" title="重复构图"></a>重复构图</h2><p>当画面中有比较多重复元素时，把画面中的元素进行重复排列<br>注意事项：重复构图中的元素排列最好基于某一种排列逻辑</p>
 <h2 id="对比构图"><a href="#对比构图" class="headerlink" title="对比构图"></a>对比构图</h2><p>在重复的元素中运用某一种方式（颜色、动静、光影等）突出其中的某一个元素</p>
 ]]></content>
+  </entry>
+  <entry>
+    <title>interview/Nginx面试题</title>
+    <url>/2021/05/19/interview/Nginx%E9%9D%A2%E8%AF%95%E9%A2%98/</url>
+    <content><![CDATA[<h2 id="什么是Nginx？"><a href="#什么是Nginx？" class="headerlink" title="什么是Nginx？"></a>什么是Nginx？</h2><p>Nginx是一个 轻量级/高性能的反向代理Web服务器，他实现非常高效的反向代理、负载平衡，他可以处理2-3万并发连接数，官方监测能支持5万并发，现在中国使用nginx网站用户有很多，例如：新浪、网易、 腾讯等。</p>
+<a id="more"></a>
+
+<h2 id="为什么要用Nginx？"><a href="#为什么要用Nginx？" class="headerlink" title="为什么要用Nginx？"></a>为什么要用Nginx？</h2><p>跨平台、配置简单、方向代理、高并发连接：处理2-3万并发连接数，官方监测能支持5万并发，内存消耗小：开启10个nginx才占150M内存 ，nginx处理静态文件好，耗费内存少，  </p>
+<p>而且Nginx内置的健康检查功能：如果有一个服务器宕机，会做一个健康检查，再发送的请求就不会发送到宕机的服务器了。重新将请求提交到其他的节点上。  </p>
+<p>使用Nginx的话还能<br>1.节省宽带：支持GZIP压缩，可以添加浏览器本地缓存<br>2.稳定性高：宕机的概率非常小<br>3.接收用户请求是异步的  </p>
+<h2 id="为什么Nginx性能这么高？"><a href="#为什么Nginx性能这么高？" class="headerlink" title="为什么Nginx性能这么高？"></a>为什么Nginx性能这么高？</h2><p>因为他的事件处理机制：异步非阻塞事件处理机制：运用了epoll模型，提供了一个队列，排队解决</p>
+<h2 id="Nginx怎么处理请求的？"><a href="#Nginx怎么处理请求的？" class="headerlink" title="Nginx怎么处理请求的？"></a>Nginx怎么处理请求的？</h2><p>nginx接收一个请求后，首先由listen和server_name指令匹配server模块，再匹配server模块里的location，location就是实际地址  </p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">server &#123;            						# 第一个Server区块开始，表示一个独立的虚拟主机站点</span><br><span class="line">    listen       80；      					# 提供服务的端口，默认80</span><br><span class="line">    server_name  localhost；       			# 提供服务的域名主机名</span><br><span class="line">    location &#x2F; &#123;            				# 第一个location区块开始</span><br><span class="line">        root   html；       				# 站点的根目录，相当于Nginx的安装目录</span><br><span class="line">        index  index.html index.htm；      	# 默认的首页文件，多个用空格分开</span><br><span class="line">    &#125;          								# 第一个location区块结果</span><br></pre></td></tr></table></figure>
+
+<h2 id="什么是正向代理和反向代理？"><a href="#什么是正向代理和反向代理？" class="headerlink" title="什么是正向代理和反向代理？"></a>什么是正向代理和反向代理？</h2><p>正向代理就是一个人发送一个请求直接就到达了目标的服务器<br>反方代理就是请求统一被Nginx接收，nginx反向代理服务器接收到之后，按照一定的规 则分发给了后端的业务处理服务器进行处理了</p>
+<h2 id="使用“反向代理服务器的优点是什么"><a href="#使用“反向代理服务器的优点是什么" class="headerlink" title="使用“反向代理服务器的优点是什么?"></a>使用“反向代理服务器的优点是什么?</h2><p>反向代理服务器可以隐藏源服务器的存在和特征。它充当互联网云和web服务器之间的中间层。这对于安全方面来说是很好的，特别是当您使用web托管服务时。  </p>
+<h2 id="Nginx的优缺点？"><a href="#Nginx的优缺点？" class="headerlink" title="Nginx的优缺点？"></a>Nginx的优缺点？</h2><h3 id="优点"><a href="#优点" class="headerlink" title="优点"></a>优点</h3><ul>
+<li>占内存小，可实现高并发连接，处理响应快</li>
+<li>可实现http服务器、虚拟主机、方向代理、负载均衡</li>
+<li>Nginx配置简单</li>
+<li>可以不暴露正式的服务器IP地址</li>
+</ul>
+<h3 id="缺点"><a href="#缺点" class="headerlink" title="缺点"></a>缺点</h3><p>动态处理差：nginx处理静态文件好,耗费内存少，但是处理动态页面则很鸡肋，现在一般前端用nginx作为反向代理抗住压力，  </p>
+<h2 id="Nginx应用场景？"><a href="#Nginx应用场景？" class="headerlink" title="Nginx应用场景？"></a>Nginx应用场景？</h2><p>1.http服务器。Nginx是一个http服务可以独立提供http服务。可以做网页静态服务器。<br>2.虚拟主机。可以实现在一台服务器虚拟出多个网站，例如个人网站使用的虚拟机。<br>3.反向代理，负载均衡。当网站的访问量达到一定程度后，单台服务器不能满足用户的请求时，需要用多台服务器集群可以使用nginx做反向代理。并且多台服务器可以平均分担负载，不会应为某台服务器负载高宕机而某台服务器闲置的情况。<br>4.nginz 中也可以配置安全管理、比如可以使用Nginx搭建API接口网关,对每个接口服务进行拦截。 </p>
+<h2 id="Nginx目录结构有哪些？"><a href="#Nginx目录结构有哪些？" class="headerlink" title="Nginx目录结构有哪些？"></a>Nginx目录结构有哪些？</h2><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">[root@localhost ~]# tree &#x2F;usr&#x2F;local&#x2F;nginx</span><br><span class="line">&#x2F;usr&#x2F;local&#x2F;nginx</span><br><span class="line">├── client_body_temp</span><br><span class="line">├── conf                             # Nginx所有配置文件的目录</span><br><span class="line">│   ├── fastcgi.conf                 # fastcgi相关参数的配置文件</span><br><span class="line">│   ├── fastcgi.conf.default         # fastcgi.conf的原始备份文件</span><br><span class="line">│   ├── fastcgi_params               # fastcgi的参数文件</span><br><span class="line">│   ├── fastcgi_params.default       </span><br><span class="line">│   ├── koi-utf</span><br><span class="line">│   ├── koi-win</span><br><span class="line">│   ├── mime.types                   # 媒体类型</span><br><span class="line">│   ├── mime.types.default</span><br><span class="line">│   ├── nginx.conf                   # Nginx主配置文件</span><br><span class="line">│   ├── nginx.conf.default</span><br><span class="line">│   ├── scgi_params                  # scgi相关参数文件</span><br><span class="line">│   ├── scgi_params.default  </span><br><span class="line">│   ├── uwsgi_params                 # uwsgi相关参数文件</span><br><span class="line">│   ├── uwsgi_params.default</span><br><span class="line">│   └── win-utf</span><br><span class="line">├── fastcgi_temp                     # fastcgi临时数据目录</span><br><span class="line">├── html                             # Nginx默认站点目录</span><br><span class="line">│   ├── 50x.html                     # 错误页面优雅替代显示文件，例如当出现502错误时会调用此页面</span><br><span class="line">│   └── index.html                   # 默认的首页文件</span><br><span class="line">├── logs                             # Nginx日志目录</span><br><span class="line">│   ├── access.log                   # 访问日志文件</span><br><span class="line">│   ├── error.log                    # 错误日志文件</span><br><span class="line">│   └── nginx.pid                    # pid文件，Nginx进程启动后，会把所有进程的ID号写到此文件</span><br><span class="line">├── proxy_temp                       # 临时目录</span><br><span class="line">├── sbin                             # Nginx命令目录</span><br><span class="line">│   └── nginx                        # Nginx的启动命令</span><br><span class="line">├── scgi_temp                        # 临时目录</span><br><span class="line">└── uwsgi_temp                       # 临时目录</span><br></pre></td></tr></table></figure>
+
+<h2 id="Nginx配置文件nginx-conf有哪些属性模块"><a href="#Nginx配置文件nginx-conf有哪些属性模块" class="headerlink" title="Nginx配置文件nginx.conf有哪些属性模块?"></a>Nginx配置文件nginx.conf有哪些属性模块?</h2><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">worker_processes  1；                					# worker进程的数量</span><br><span class="line">events &#123;                              					# 事件区块开始</span><br><span class="line">    worker_connections  1024；            				# 每个worker进程支持的最大连接数</span><br><span class="line">&#125;                                    					# 事件区块结束</span><br><span class="line">http &#123;                               					# HTTP区块开始</span><br><span class="line">    include       mime.types；            				# Nginx支持的媒体类型库文件</span><br><span class="line">    default_type  application&#x2F;octet-stream；     		# 默认的媒体类型</span><br><span class="line">    sendfile        on；       							# 开启高效传输模式</span><br><span class="line">    keepalive_timeout  65；       						# 连接超时</span><br><span class="line">    server &#123;            								# 第一个Server区块开始，表示一个独立的虚拟主机站点</span><br><span class="line">        listen       80；      							# 提供服务的端口，默认80</span><br><span class="line">        server_name  localhost；       					# 提供服务的域名主机名</span><br><span class="line">        location &#x2F; &#123;            						# 第一个location区块开始</span><br><span class="line">            root   html；       						# 站点的根目录，相当于Nginx的安装目录</span><br><span class="line">            index  index.html index.htm；      			# 默认的首页文件，多个用空格分开</span><br><span class="line">        &#125;          										# 第一个location区块结果</span><br><span class="line">        error_page   500502503504  &#x2F;50x.html；     		# 出现对应的http状态码时，使用50x.html回应客户</span><br><span class="line">        location &#x3D; &#x2F;50x.html &#123;          				# location区块开始，访问50x.html</span><br><span class="line">            root   html；      							# 指定对应的站点目录为html</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="Nginx静态资源"><a href="#Nginx静态资源" class="headerlink" title="Nginx静态资源?"></a>Nginx静态资源?</h2><p>静态资源访问，就是存放在nginx的html页面，我们可以自己编写</p>
+<h2 id="如何用Nginx解决前端跨域问题？"><a href="#如何用Nginx解决前端跨域问题？" class="headerlink" title="如何用Nginx解决前端跨域问题？"></a>如何用Nginx解决前端跨域问题？</h2><p>使用Nginx转发请求。把跨域的接口写成调本域的接口，然后将这些接口转发到真正的请求地址。</p>
+<h2 id="Nginx虚拟主机怎么配置"><a href="#Nginx虚拟主机怎么配置" class="headerlink" title="Nginx虚拟主机怎么配置?"></a>Nginx虚拟主机怎么配置?</h2><p>基于域名的虚拟主机，通过域名来区分虚拟主机——应用：外部网站<br>基于端口的虚拟主机，通过端口来区分虚拟主机——应用：公司内部网站，外部网站的管理后台<br>基于ip的虚拟主机。  </p>
+<h3 id="基于虚拟主机配置域名"><a href="#基于虚拟主机配置域名" class="headerlink" title="基于虚拟主机配置域名"></a>基于虚拟主机配置域名</h3><p>需要建立/data/www /data/bbs目录，windows本地hosts添加虚拟机ip地址对应的域名解析；对应域名网站目录下新增index.html文件；</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">#当客户端访问www.lijie.com,监听端口号为80,直接跳转到data&#x2F;www目录下文件</span><br><span class="line">    server &#123;</span><br><span class="line">        listen       80;</span><br><span class="line">        server_name  www.lijie.com;</span><br><span class="line">        location &#x2F; &#123;</span><br><span class="line">            root   data&#x2F;www;</span><br><span class="line">            index  index.html index.htm;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">	#当客户端访问www.lijie.com,监听端口号为80,直接跳转到data&#x2F;bbs目录下文件</span><br><span class="line">	 server &#123;</span><br><span class="line">        listen       80;</span><br><span class="line">        server_name  bbs.lijie.com;</span><br><span class="line">        location &#x2F; &#123;</span><br><span class="line">            root   data&#x2F;bbs;</span><br><span class="line">            index  index.html index.htm;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="基于端口的虚拟主机"><a href="#基于端口的虚拟主机" class="headerlink" title="基于端口的虚拟主机"></a>基于端口的虚拟主机</h3><p>使用端口来区分，浏览器使用域名或ip地址:端口号 访问  </p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">#当客户端访问www.lijie.com,监听端口号为8080,直接跳转到data&#x2F;www目录下文件</span><br><span class="line"> server &#123;</span><br><span class="line">       listen       8080;</span><br><span class="line">       server_name  8080.lijie.com;</span><br><span class="line">       location &#x2F; &#123;</span><br><span class="line">           root   data&#x2F;www;</span><br><span class="line">           index  index.html index.htm;</span><br><span class="line">       &#125;</span><br><span class="line">   &#125;</span><br><span class="line"></span><br><span class="line">#当客户端访问www.lijie.com,监听端口号为80直接跳转到真实ip服务器地址 127.0.0.1:8080</span><br><span class="line">server &#123;</span><br><span class="line">       listen       80;</span><br><span class="line">       server_name  www.lijie.com;</span><br><span class="line">       location &#x2F; &#123;</span><br><span class="line">	 	proxy_pass http:&#x2F;&#x2F;127.0.0.1:8080;</span><br><span class="line">           index  index.html index.htm;</span><br><span class="line">       &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+<h2 id="location的作用是什么？"><a href="#location的作用是什么？" class="headerlink" title="location的作用是什么？"></a>location的作用是什么？</h2><p>location指令的作用是根据用户请求的URI来执行不同的应用，也就是根据用户请求的网站URL进行匹配，匹配成功即进行相关的操作。  </p>
+<table>
+<thead>
+<tr>
+<th align="center">匹配符</th>
+<th align="center">匹配规则</th>
+<th align="center">优先级</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">=</td>
+<td align="center">精确匹配</td>
+<td align="center">1</td>
+</tr>
+<tr>
+<td align="center">^~</td>
+<td align="center">以某个字符串开头</td>
+<td align="center">2</td>
+</tr>
+<tr>
+<td align="center">~</td>
+<td align="center">区分大小写的正则匹配</td>
+<td align="center">3</td>
+</tr>
+<tr>
+<td align="center">~*</td>
+<td align="center">不区分大小写的正则匹配</td>
+<td align="center">4</td>
+</tr>
+<tr>
+<td align="center">!~</td>
+<td align="center">区分大小写不匹配的正则</td>
+<td align="center">5</td>
+</tr>
+<tr>
+<td align="center">!~*</td>
+<td align="center">不区分大小写不匹配的正则</td>
+<td align="center">6</td>
+</tr>
+<tr>
+<td align="center">/</td>
+<td align="center">通用匹配，任何请求都会匹配到</td>
+<td align="center">7</td>
+</tr>
+</tbody></table>
+<h2 id="Location正则案例"><a href="#Location正则案例" class="headerlink" title="Location正则案例"></a>Location正则案例</h2><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">#优先级1,精确匹配，根路径</span><br><span class="line">    location &#x3D;&#x2F; &#123;</span><br><span class="line">        return 400;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    #优先级2,以某个字符串开头,以av开头的，优先匹配这里，区分大小写</span><br><span class="line">    location ^~ &#x2F;av &#123;</span><br><span class="line">       root &#x2F;data&#x2F;av&#x2F;;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    #优先级3，区分大小写的正则匹配，匹配&#x2F;media*****路径</span><br><span class="line">    location ~ &#x2F;media &#123;</span><br><span class="line">          alias &#x2F;data&#x2F;static&#x2F;;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    #优先级4 ，不区分大小写的正则匹配，所有的****.jpg|gif|png 都走这里</span><br><span class="line">    location ~* .*\.(jpg|gif|png|js|css)$ &#123;</span><br><span class="line">       root  &#x2F;data&#x2F;av&#x2F;;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    #优先7，通用匹配</span><br><span class="line">    location &#x2F; &#123;</span><br><span class="line">        return 403;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="限流怎么做的？"><a href="#限流怎么做的？" class="headerlink" title="限流怎么做的？"></a>限流怎么做的？</h2><p>Nginx限流就是限制用户请求速度，防止服务器受不了</p>
+<p>限流有3种  </p>
+<ol>
+<li>正常限制访问频率（正常流量）  </li>
+<li>突发限制访问频率（突发流量）</li>
+<li>限制并发连接数  </li>
+</ol>
+<p>Nginx的限流都是基于漏桶流算法，底下会说道什么是桶铜流</p>
+<h3 id="正常限制访问频率（正常流量）"><a href="#正常限制访问频率（正常流量）" class="headerlink" title="正常限制访问频率（正常流量）"></a>正常限制访问频率（正常流量）</h3><p>限制一个用户发送的请求，我Nginx多久接收一个请求。<br>Nginx中使用ngx_http_limit_req_module模块来限制的访问频率，限制的原理实质是基于漏桶算法原理来实现的。在nginx.conf配置文件中可以使用limit_req_zone命令及limit_req命令限制单个IP的请求处理频率。  </p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">#定义限流维度，一个用户一分钟一个请求进来，多余的全部漏掉</span><br><span class="line">limit_req_zone $binary_remote_addr zone&#x3D;one:10m rate&#x3D;1r&#x2F;m;</span><br><span class="line"></span><br><span class="line">#绑定限流维度</span><br><span class="line">server&#123;</span><br><span class="line">	</span><br><span class="line">	location&#x2F;seckill.html&#123;</span><br><span class="line">		limit_req zone&#x3D;zone;	</span><br><span class="line">		proxy_pass http:&#x2F;&#x2F;lj_seckill;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>1r/s代表1秒一个请求，1r/m一分钟接收一个请求， 如果Nginx这时还有别人的请求没有处理完，Nginx就会拒绝处理该用户请求。  </p>
+<h3 id="突发限制访问频率（突发流量）："><a href="#突发限制访问频率（突发流量）：" class="headerlink" title="突发限制访问频率（突发流量）："></a>突发限制访问频率（突发流量）：</h3><p>上面的配置一定程度可以限制访问频率，但是也存在着一个问题：如果突发流量超出请求被拒绝处理，无法处理活动时候的突发流量，这时候应该如何进一步处理呢？Nginx提供burst参数结合nodelay参数可以解决流量突发的问题，可以设置能处理的超过设置的请求数外能额外处理的请求数。我们可以将之前的例子添加burst参数以及nodelay参数：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">#定义限流维度，一个用户一分钟一个请求进来，多余的全部漏掉</span><br><span class="line">limit_req_zone $binary_remote_addr zone&#x3D;one:10m rate&#x3D;1r&#x2F;m;</span><br><span class="line"></span><br><span class="line">#绑定限流维度</span><br><span class="line">server&#123;</span><br><span class="line">	</span><br><span class="line">	location&#x2F;seckill.html&#123;</span><br><span class="line">		limit_req zone&#x3D;zone burst&#x3D;5 nodelay;</span><br><span class="line">		proxy_pass http:&#x2F;&#x2F;lj_seckill;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>为什么就多了一个 burst=5 nodelay; 呢，多了这个可以代表Nginx对于一个用户的请求会立即处理前五个，多余的就慢慢来落，没有其他用户的请求我就处理你的，有其他的请求的话我Nginx就漏掉不接受你的请求  </p>
+<h3 id="限制并发连接数"><a href="#限制并发连接数" class="headerlink" title="限制并发连接数"></a>限制并发连接数</h3><p>Nginx中的ngx_http_limit_conn_module模块提供了限制并发连接数的功能，可以使用limit_conn_zone指令以及limit_conn执行进行配置。接下来我们可以通过一个简单的例子来看下：  </p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">http &#123;</span><br><span class="line">    limit_conn_zone $binary_remote_addr zone&#x3D;myip:10m;</span><br><span class="line">    limit_conn_zone $server_name zone&#x3D;myServerName:10m;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">server &#123;</span><br><span class="line">    location &#x2F; &#123;</span><br><span class="line">        limit_conn myip 10;</span><br><span class="line">        limit_conn myServerName 100;</span><br><span class="line">        rewrite &#x2F; http:&#x2F;&#x2F;www.lijie.net permanent;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>上面配置了单个IP同时并发连接数最多只能10个连接，并且设置了整个虚拟服务器同时最大并发数最多只能100个链接。当然，只有当请求的header被服务器处理后，虚拟服务器的连接数才会计数。刚才有提到过Nginx是基于漏桶算法原理实现的，实际上限流一般都是基于漏桶算法和令牌桶算法实现的。</p>
+<h2 id="漏桶流算法和令牌桶算法知道？"><a href="#漏桶流算法和令牌桶算法知道？" class="headerlink" title="漏桶流算法和令牌桶算法知道？"></a>漏桶流算法和令牌桶算法知道？</h2><h3 id="漏桶算法"><a href="#漏桶算法" class="headerlink" title="漏桶算法"></a>漏桶算法</h3><p>漏桶算法是网络世界中流量整形或速率限制时经常使用的一种算法，它的主要目的是控制数据注入到网络的速率，平滑网络上的突发流量。漏桶算法提供了一种机制，通过它，突发流量可以被整形以便为网络提供一个稳定的流量。也就是我们刚才所讲的情况。漏桶算法提供的机制实际上就是刚才的案例：突发流量会进入到一个漏桶，漏桶会按照我们定义的速率依次处理请求，如果水流过大也就是突发流量过大就会直接溢出，则多余的请求会被拒绝。所以漏桶算法能控制数据的传输速率。</p>
+<h3 id="令牌桶算法"><a href="#令牌桶算法" class="headerlink" title="令牌桶算法"></a>令牌桶算法</h3><p>令牌桶算法是网络流量整形和速率限制中最常使用的一种算法。典型情况下，令牌桶算法用来控制发送到网络上的数据的数目，并允许突发数据的发送。Google开源项目Guava中的RateLimiter使用的就是令牌桶控制算法。令牌桶算法的机制如下：存在一个大小固定的令牌桶，会以恒定的速率源源不断产生令牌。如果令牌消耗速率小于生产令牌的速度，令牌就会一直产生直至装满整个令牌桶。<br><img src="/2021/05/19/interview/Nginx%E9%9D%A2%E8%AF%95%E9%A2%98/20200411193930872.png" alt></p>
+<h2 id="为什么要做动静分离？"><a href="#为什么要做动静分离？" class="headerlink" title="为什么要做动静分离？"></a>为什么要做动静分离？</h2><ul>
+<li>Nginx是当下最热的Web容器，网站优化的重要点在于静态化网站，网站静态化的关键点则是是动静分离，动静分离是让动态网站里的动态网页根据一定规则把不变的资源和经常变的资源区分开来，动静资源做好了拆分以后，我们则根据静态资源的特点将其做缓存操作。</li>
+<li>让静态的资源只走静态资源服务器，动态的走动态的服务器</li>
+<li>Nginx的静态处理能力很强，但是动态处理能力不足，因此，在企业中常用动静分离技术。</li>
+<li>对于静态资源比如图片，js，css等文件，我们则在反向代理服务器nginx中进行缓存。这样浏览器在请求一个静态资源时，代理服务器nginx就可以直接处理，无需将请求转发给后端服务器tomcat。<br>若用户请求的动态文件，比如servlet,jsp则转发给Tomcat服务器处理，从而实现动静分离。这也是反向代理服务器的一个重要的作用。</li>
+</ul>
+<h2 id="Nginx怎么做的动静分离？"><a href="#Nginx怎么做的动静分离？" class="headerlink" title="Nginx怎么做的动静分离？"></a>Nginx怎么做的动静分离？</h2><p>只需要指定路径对应的目录。location/可以使用正则表达式匹配。并指定对应的硬盘中的目录 </p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">location &#x2F;image&#x2F; &#123;</span><br><span class="line">    root   &#x2F;usr&#x2F;local&#x2F;static&#x2F;;</span><br><span class="line">    autoindex on;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="Nginx负载均衡的算法怎么实现的-策略有哪些"><a href="#Nginx负载均衡的算法怎么实现的-策略有哪些" class="headerlink" title="Nginx负载均衡的算法怎么实现的?策略有哪些?"></a>Nginx负载均衡的算法怎么实现的?策略有哪些?</h2><p>为了避免服务器崩溃，大家会通过负载均衡的方式来分担服务器压力。将对台服务器组成一个集群，当用户访问时，先访问到一个转发服务器，再由转发服务器将访问分发到压力更小的服务器。  </p>
+<p>Nginx负载均衡实现的策略有以下五种: </p>
+<h3 id="轮询-默认"><a href="#轮询-默认" class="headerlink" title="轮询(默认)"></a>轮询(默认)</h3><p>每个请求按时间顺序逐一分配到不同的后端服务器，如果后端某个服务器宕机，能自动剔除故障系统。</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">upstream backserver &#123; </span><br><span class="line"> server 192.168.0.12; </span><br><span class="line"> server 192.168.0.13; </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="权重-weight"><a href="#权重-weight" class="headerlink" title="权重 weight"></a>权重 weight</h3><ul>
+<li>weight的值越大分配</li>
+<li>到的访问概率越高，主要用于后端每台服务器性能不均衡的情况下。其次是为在主从的情况下设置不同的权值，达到合理有效的地利用主机资源。<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">upstream backserver &#123; </span><br><span class="line"> server 192.168.0.12 weight&#x3D;2; </span><br><span class="line"> server 192.168.0.13 weight&#x3D;8; </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+权重越高，在被访问的概率越大，如上例，分别是20%，80%。  </li>
+</ul>
+<h3 id="ip-hash-IP绑定"><a href="#ip-hash-IP绑定" class="headerlink" title="ip_hash( IP绑定)"></a>ip_hash( IP绑定)</h3><p>每个请求按访问IP的哈希结果分配，使来自同一个IP的访客固定访问一台后端服务器，并且可以有效解决动态网页存在的session共享问题  </p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">upstream backserver &#123; </span><br><span class="line"> ip_hash; </span><br><span class="line"> server 192.168.0.12:88; </span><br><span class="line"> server 192.168.0.13:80; </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="fair-第三方插件"><a href="#fair-第三方插件" class="headerlink" title="fair(第三方插件)"></a>fair(第三方插件)</h3><p>必须安装upstream_fair模块。<br>对比 weight、ip_hash更加智能的负载均衡算法，fair算法可以根据页面大小和加载时间长短智能地进行负载均衡，响应时间短的优先分配。  </p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">upstream backserver &#123; </span><br><span class="line"> server server1; </span><br><span class="line"> server server2; </span><br><span class="line"> fair; </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>哪个服务器的响应速度快，就将请求分配到那个服务器上。  </p>
+<h3 id="url-hash-第三方插件"><a href="#url-hash-第三方插件" class="headerlink" title="url_hash(第三方插件)"></a>url_hash(第三方插件)</h3><p>必须安装Nginx的hash软件包<br>按访问url的hash结果来分配请求，使每个url定向到同一个后端服务器，可以进一步提高后端缓存服务器的效率。  </p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">upstream backserver &#123; </span><br><span class="line"> server squid1:3128; </span><br><span class="line"> server squid2:3128; </span><br><span class="line"> hash $request_uri; </span><br><span class="line"> hash_method crc32; </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="Nginx配置高可用性怎么配置？"><a href="#Nginx配置高可用性怎么配置？" class="headerlink" title="Nginx配置高可用性怎么配置？"></a>Nginx配置高可用性怎么配置？</h2><p>当上游服务器(真实访问服务器)，一旦出现故障或者是没有及时相应的话，应该直接轮训到下一台服务器，保证服务器的高可用<br>Nginx配置代码：  </p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">server &#123;</span><br><span class="line">        listen       80;</span><br><span class="line">        server_name  www.lijie.com;</span><br><span class="line">        location &#x2F; &#123;</span><br><span class="line">		    ### 指定上游服务器负载均衡服务器</span><br><span class="line">		    proxy_pass http:&#x2F;&#x2F;backServer;</span><br><span class="line">			###nginx与上游服务器(真实访问的服务器)超时时间 后端服务器连接的超时时间_发起握手等候响应超时时间</span><br><span class="line">			proxy_connect_timeout 1s;</span><br><span class="line">			###nginx发送给上游服务器(真实访问的服务器)超时时间</span><br><span class="line">            proxy_send_timeout 1s;</span><br><span class="line">			### nginx接受上游服务器(真实访问的服务器)超时时间</span><br><span class="line">            proxy_read_timeout 1s;</span><br><span class="line">            index  index.html index.htm;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+<h2 id="Nginx怎么判断别IP不可访问？"><a href="#Nginx怎么判断别IP不可访问？" class="headerlink" title="Nginx怎么判断别IP不可访问？"></a>Nginx怎么判断别IP不可访问？</h2><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line"># 如果访问的ip地址为192.168.9.115,则返回403</span><br><span class="line">  if  ($remote_addr &#x3D; 192.168.9.115) &#123;  </span><br><span class="line">      return 403;  </span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="怎么限制浏览器访问？"><a href="#怎么限制浏览器访问？" class="headerlink" title="怎么限制浏览器访问？"></a>怎么限制浏览器访问？</h2><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">## 不允许谷歌浏览器访问 如果是谷歌浏览器返回500</span><br><span class="line">	if ($http_user_agent ~ Chrome) &#123;   </span><br><span class="line">       return 500;  </span><br><span class="line">   &#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="Rewrite全局变量是什么？"><a href="#Rewrite全局变量是什么？" class="headerlink" title="Rewrite全局变量是什么？"></a>Rewrite全局变量是什么？</h2><table>
+<thead>
+<tr>
+<th align="center">变量</th>
+<th align="center">含义</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">$args</td>
+<td align="center">这个变量等于请求行中的参数，同$query_string</td>
+</tr>
+<tr>
+<td align="center">$content length</td>
+<td align="center">请求头中的Content-length字段。</td>
+</tr>
+<tr>
+<td align="center">$content_type</td>
+<td align="center">请求头中的Content-Type字段。</td>
+</tr>
+<tr>
+<td align="center">$document_root</td>
+<td align="center">当前请求在root指令中指定的值。</td>
+</tr>
+<tr>
+<td align="center">$host</td>
+<td align="center">请求主机头字段，否则为服务器名称。</td>
+</tr>
+<tr>
+<td align="center">$http_user_agent</td>
+<td align="center">客户端agent信息</td>
+</tr>
+<tr>
+<td align="center">$http_cookie</td>
+<td align="center">客户端cookie信息</td>
+</tr>
+<tr>
+<td align="center">$limit_rate</td>
+<td align="center">这个变量可以限制连接速率。</td>
+</tr>
+<tr>
+<td align="center">$request_method</td>
+<td align="center">客户端请求的动作，通常为GET或POST。</td>
+</tr>
+<tr>
+<td align="center">$remote_addr</td>
+<td align="center">客户端的IP地址。</td>
+</tr>
+<tr>
+<td align="center">$remote_port</td>
+<td align="center">客户端的端口。</td>
+</tr>
+<tr>
+<td align="center">$remote_user</td>
+<td align="center">已经经过Auth Basic Module验证的用户名。</td>
+</tr>
+<tr>
+<td align="center">$request_filename</td>
+<td align="center">当前请求的文件路径，由root或alias指令与URI请求生成。</td>
+</tr>
+<tr>
+<td align="center">$scheme</td>
+<td align="center">HTTP方法（如http，https）。</td>
+</tr>
+<tr>
+<td align="center">$server_protocol</td>
+<td align="center">请求使用的协议，通常是HTTP/1.0或HTTP/1.1。</td>
+</tr>
+<tr>
+<td align="center">$server_addr</td>
+<td align="center">服务器地址，在完成一次系统调用后可以确定这个值。</td>
+</tr>
+<tr>
+<td align="center">$server_name</td>
+<td align="center">服务器名称。</td>
+</tr>
+<tr>
+<td align="center">$server_port</td>
+<td align="center">请求到达服务器的端口号。</td>
+</tr>
+<tr>
+<td align="center">$request_uri</td>
+<td align="center">包含请求参数的原始URI，不包含主机名，如”/foo/bar.php?arg=baz”。</td>
+</tr>
+<tr>
+<td align="center">$uri</td>
+<td align="center">不带请求参数的当前URI，$uri不包含主机名，如”/foo/bar.html”。</td>
+</tr>
+<tr>
+<td align="center">$document_uri</td>
+<td align="center">与$uri相同。</td>
+</tr>
+</tbody></table>
+]]></content>
+      <categories>
+        <category>interview</category>
+      </categories>
+      <tags>
+        <tag>nginx面试题</tag>
+      </tags>
   </entry>
   <entry>
     <title>interview/Kafka面试题</title>
@@ -4240,6 +4522,82 @@ sudo apt-get install gcc-mingw-w64<figure class="highlight plain"><table><tr><td
       </categories>
       <tags>
         <tag>kafka面试题</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>interview/Redis面试题</title>
+    <url>/2021/05/19/interview/Redis%E9%9D%A2%E8%AF%95%E9%A2%98/</url>
+    <content><![CDATA[<h2 id="使用Redis有哪些好处"><a href="#使用Redis有哪些好处" class="headerlink" title="使用Redis有哪些好处"></a>使用Redis有哪些好处</h2><ul>
+<li>速度快，因为数据存在内存中，类似于HashMap，HashMap的优势就是查找和操作的时间复杂度都是O(1)</li>
+<li>支持丰富数据类型，支持string，list，set，sorted set，hash</li>
+<li>支持事务，操作都是原子性，所谓的原子性就是对数据的更改要么全部执行，要么全部不执行</li>
+<li>丰富的特性：可用于缓存，消息，按key设置过期时间，过期后将会自动删除<a id="more"></a>
+
+</li>
+</ul>
+<h2 id="redis相比memcached有哪些优势"><a href="#redis相比memcached有哪些优势" class="headerlink" title="redis相比memcached有哪些优势"></a>redis相比memcached有哪些优势</h2><ul>
+<li>memcached所有的值均是简单的字符串，redis作为其替代者，支持更为丰富的数据类型</li>
+<li>redis的速度比memcached快很多</li>
+<li>redis可以持久化其数据</li>
+</ul>
+<h2 id="redis常见性能问题和解决方案"><a href="#redis常见性能问题和解决方案" class="headerlink" title="redis常见性能问题和解决方案"></a>redis常见性能问题和解决方案</h2><h3 id="Master写内存快照"><a href="#Master写内存快照" class="headerlink" title="Master写内存快照"></a>Master写内存快照</h3><p>save命令调度rdbSave函数，会阻塞主线程的工作，当快照比较大时对性能影响是非常大的，会间断性暂停服务，所以Master最好不要写内存快照。 </p>
+<p>Master最好不要做任何持久化工作，包括内存快照和AOF日志文件，特别是不要启用内存快照做持久化。  </p>
+<h3 id="Master-AOF持久化"><a href="#Master-AOF持久化" class="headerlink" title="Master AOF持久化"></a>Master AOF持久化</h3><p>如果不重写AOF文件，这个持久化方式对性能的影响是最小的，但是AOF文件会不断增大，AOF文件过大会影响Master重启的恢复速度。</p>
+<p>如果数据比较关键，某个Slave开启AOF备份数据，策略为每秒同步一次。</p>
+<h3 id="Master调用BGREWRITEAOF"><a href="#Master调用BGREWRITEAOF" class="headerlink" title="Master调用BGREWRITEAOF"></a>Master调用BGREWRITEAOF</h3><p>Master调用BGREWRITEAOF重写AOF文件，AOF在重写的时候会占大量的CPU和内存资源，导致服务load过高，出现短暂服务暂停现象。</p>
+<p>将no-appendfsync-on-rewrite的配置设为yes可以缓解这个问题，设置为yes表示rewrite期间对新写操作不fsync，暂时存在内存中，等rewrite完成后再写入。最好是不开启Master的AOF备份功能。  </p>
+<h4 id="Redis主从复制的性能问题"><a href="#Redis主从复制的性能问题" class="headerlink" title="Redis主从复制的性能问题"></a>Redis主从复制的性能问题</h4><p>第一次Slave向Master同步的实现是：Slave向Master发出同步请求，Master先dump出rdb文件，然后将rdb文件全量传输给slave，然后Master把缓存的<br>命令转发给Slave，初次同步完成。第二次以及以后的同步实现是：Master将变量的快照直接实时依次发送给各个Slave。不管什么原因导致Slave和<br>Master断开重连都会重复以上过程。Redis的主从复制是建立在内存快照的持久化基础上，只要有Slave就一定会有内存快照发生。虽然Redis宣称主从<br>复制无阻塞，但由于Redis使用单线程服务，如果Master快照文件比较大，那么第一次全量传输会耗费比较长时间，且文件传输过程中Master可能无法<br>提供服务，也就是说服务会中断，对于关键服务，这个后果也是很可怕的。  </p>
+<p>尽量避免在压力较大的主库上增加从库。</p>
+<h3 id="单点故障问题"><a href="#单点故障问题" class="headerlink" title="单点故障问题"></a>单点故障问题</h3><p>由于目前Redis的主从复制还不够成熟，所以存在明显的单点故障问题，这个目前只能自己做方案解决</p>
+<p>为了Master的稳定性，主从复制不要用图状结构，用单向链表结构更稳定，即主从关系为：Master&lt;–Slave1&lt;–Slave2&lt;–Slave3…….，这样的结构也方便解<br>决单点故障问题，实现Slave对Master的替换，也即，如果Master挂了，可以立马启用Slave1做Master，其他不变。</p>
+<h2 id="MySQL里有2000w数据，redis中只存20w的数据，如何保证redis中的数据都是热点数据"><a href="#MySQL里有2000w数据，redis中只存20w的数据，如何保证redis中的数据都是热点数据" class="headerlink" title="MySQL里有2000w数据，redis中只存20w的数据，如何保证redis中的数据都是热点数据"></a>MySQL里有2000w数据，redis中只存20w的数据，如何保证redis中的数据都是热点数据</h2><h3 id="相关知识"><a href="#相关知识" class="headerlink" title="相关知识"></a>相关知识</h3><p>redis 内存数据集大小上升到一定大小的时候，就会施行数据淘汰策略。redis 提供 </p>
+<h3 id="6种数据淘汰策略"><a href="#6种数据淘汰策略" class="headerlink" title="6种数据淘汰策略"></a>6种数据淘汰策略</h3><ul>
+<li>volatile-lru 从已设置过期时间的数据集中挑选最近最少使用的数据淘汰</li>
+<li>volatile-ttl 从已设置过期时间的数据集中挑选将要过期的数据淘汰</li>
+<li>volatile-random 从已设置过期时间的数据集中任意选择数据淘汰</li>
+<li>allkeys-lru 从数据集中挑选最近最少使用的数据淘汰</li>
+<li>allkeys-random 从数据集中任意选择数据淘汰</li>
+<li>no-enviction 禁止驱逐数据<h3 id="实际操作"><a href="#实际操作" class="headerlink" title="实际操作"></a>实际操作</h3>计算一下20w数据大约占用的内存，设置Redis内存限制，设置淘汰策略，加载热数据到内存中</li>
+</ul>
+<h2 id="Memcache与Redis的区别都有哪些"><a href="#Memcache与Redis的区别都有哪些" class="headerlink" title="Memcache与Redis的区别都有哪些"></a>Memcache与Redis的区别都有哪些</h2><h3 id="存储方式"><a href="#存储方式" class="headerlink" title="存储方式"></a>存储方式</h3><ul>
+<li>Memecache把数据全部存在内存之中，断电后会挂掉，数据不能超过内存大小</li>
+<li>Redis有部份存在硬盘上，这样能保证数据的持久性。</li>
+</ul>
+<h3 id="数据支持类型"><a href="#数据支持类型" class="headerlink" title="数据支持类型"></a>数据支持类型</h3><ul>
+<li>Memcache对数据类型支持相对简单</li>
+<li>Redis有复杂的数据类型</li>
+</ul>
+<h3 id="value大小"><a href="#value大小" class="headerlink" title="value大小"></a>value大小</h3><ul>
+<li>redis最大可以达到1GB，而memcache只有1MB</li>
+</ul>
+<h2 id="redis最适合的场景"><a href="#redis最适合的场景" class="headerlink" title="redis最适合的场景"></a>redis最适合的场景</h2><h3 id="缓存"><a href="#缓存" class="headerlink" title="缓存"></a>缓存</h3><p>缓存现在几乎是所有中大型网站都在用的必杀技，合理的利用缓存不仅能够提升网站访问速度，还能大大降低数据库的压力。Redis提供了键过期功能，<br>也提供了灵活的键淘汰策略，所以，现在Redis用在缓存的场合非常多。</p>
+<h3 id="排行榜"><a href="#排行榜" class="headerlink" title="排行榜"></a>排行榜</h3><p>很多网站都有排行榜应用的，如京东的月度销量榜单、商品按时间的上新排行榜等。Redis提供的有序集合数据类构能实现各种复杂的排行榜应用。</p>
+<h3 id="计数器"><a href="#计数器" class="headerlink" title="计数器"></a>计数器</h3><p>什么是计数器，如电商网站商品的浏览量、视频网站视频的播放数等。为了保证数据实时效，每次浏览都得给+1，并发量高时如果每次都请求数据库操作无<br>疑是种挑战和压力。Redis提供的incr命令来实现计数器功能，内存操作，性能非常好，非常适用于这些计数场景。</p>
+<h3 id="分布式会话"><a href="#分布式会话" class="headerlink" title="分布式会话"></a>分布式会话</h3><p>集群模式下，在应用不多的情况下一般使用容器自带的session复制功能就能满足，当应用增多相对复杂的系统中，一般都会搭建以Redis等内存数据库为中<br>心的session服务，session不再由容器管理，而是由session服务及内存数据库管理。</p>
+<h3 id="分布式锁"><a href="#分布式锁" class="headerlink" title="分布式锁"></a>分布式锁</h3><p>在很多互联网公司中都使用了分布式技术，分布式技术带来的技术挑战是对同一个资源的并发访问，如全局ID、减库存、秒杀等场景，并发量不大的场景可<br>以使用数据库的悲观锁、乐观锁来实现，但在并发量高的场合中，利用数据库锁来控制资源的并发访问是不太理想的，大大影响了数据库的性能。<br>可以利用Redis的setnx功能来编写分布式的锁，如果设置返回1说明获取锁成功，否则获取锁失败，实际应用中要考虑的细节要更多。</p>
+<h3 id="社交网络"><a href="#社交网络" class="headerlink" title="社交网络"></a>社交网络</h3><p>点赞、踩、关注/被关注、共同好友等是社交网站的基本功能，社交网站的访问量通常来说比较大，而且传统的关系数据库类型不适合存储这种类型的数据，<br>Redis提供的哈希、集合等数据结构能很方便的的实现这些功能。</p>
+<h3 id="最新列表"><a href="#最新列表" class="headerlink" title="最新列表"></a>最新列表</h3><p>Redis列表结构，LPUSH可以在列表头部插入一个内容ID作为关键字，LTRIM可用来限制列表的数量，这样列表永远为N个ID，无需查询最新的列表，直接根据ID去到对应的内容页即可。</p>
+<h3 id="消息系统"><a href="#消息系统" class="headerlink" title="消息系统"></a>消息系统</h3><p>消息队列是大型网站必用中间件，如ActiveMQ、RabbitMQ、Kafka等流行的消息队列中间件，主要用于业务解耦、流量削峰及异步处理实时性低的业务。<br>Redis提供了发布/订阅及阻塞队列功能，能实现一个简单的消息队列系统。另外，这个不能和专业的消息中间件相比。</p>
+<h2 id="Redis的同步机制"><a href="#Redis的同步机制" class="headerlink" title="Redis的同步机制"></a>Redis的同步机制</h2><p>Redis通过主从同步机制来确保master和salve之间的数据同步</p>
+<h3 id="全量复制"><a href="#全量复制" class="headerlink" title="全量复制"></a>全量复制</h3><p>全量复制是指salve启动时进行的初始化同步。<br>全同步过程：</p>
+<ol>
+<li>在salve启动时，会向master发送一条SYNC指令。  </li>
+<li>master收到这条指令后，会启动一个备份进程将所有数据写到rdb文件中去。  </li>
+<li>更新master的状态（备份是否成功、备份时间等），然后将rdb文件内容发送给等待中的salve。  <blockquote>
+<p>master并不会立即将rdb内容发送给salve。而是为每个等待中的salve注册写事件，当salve对应的socket可以发送数据时，再讲rdb内容发送给salve。</p>
+</blockquote>
+</li>
+</ol>
+<h3 id="增量拷贝"><a href="#增量拷贝" class="headerlink" title="增量拷贝"></a>增量拷贝</h3><p>如果出现网络闪断或者命令丢失等异常情况时，当主从连接恢复后，由于从节点之前保存了自身已复制的偏移量和主节点的运行ID。因此会把它们当作psync<br>参数发送给主节点，要求进行部分复制操作<br>主节点接到psync命令后首先核对参数runId是否与自身一致，如果一致，说明之前复制的是当前主节点；之后根据参数offset在自身复制积压缓冲区查找<br>，如果偏移量之后的数据存在缓冲区中，则对从节点发送+continue响应，表示可以进行部分复制；否则进行全量复制。<br>主节点根据偏移量把复制积压缓冲区里的数据发送给从节点，保证主从复制进入正常状态。</p>
+<h2 id="是否使用过Redis集群-集群的原理是什么"><a href="#是否使用过Redis集群-集群的原理是什么" class="headerlink" title="是否使用过Redis集群,集群的原理是什么"></a>是否使用过Redis集群,集群的原理是什么</h2><h2 id="redis集群如何保证一致性"><a href="#redis集群如何保证一致性" class="headerlink" title="redis集群如何保证一致性"></a>redis集群如何保证一致性</h2><h2 id="数据库与缓存数据一致性问题"><a href="#数据库与缓存数据一致性问题" class="headerlink" title="数据库与缓存数据一致性问题"></a>数据库与缓存数据一致性问题</h2><p>Cache Aside Pattern<br>1.失效：程序先从缓存中读取数据，如果没有命中，则从数据库中读取，成功之后将数据放到缓存中<br>2.命中：程序先从缓存中读取数据，如果命中，则直接返回<br>3.更新：程序先更新数据库，在删除缓存</p>
+<p>如何解决缓存击穿问题？<br>当一个线程需要去访问这个缓存的时候，如果发现缓存为空，则需要先去竞争一个锁，如果成功则进行正常的数据库读取和写入缓存这一操作，然后再释放锁，否则就等待一段时间之后，重新尝试读取缓存，如果还没有数据就继续去竞争锁　　</p>
+<p>怎么做到强一致性？<br>上一致性协议当然是可以的，虽然成本也是非常客观的。2PC甚至是3PC本身是存在一定程度的缺陷的，所以如果要采用这个方案，那么在架构设计中要引入很多的容错，回退和兜底措施。那如果是上Paxos和Raft呢？那么你首先至少要看过这两者的相关论文，并且调研清楚目前市面上有哪些开源方案，并做好充分的验证，并且能够做到出了问题自己有能力修复…对了，我还没提到性能问题呢。</p>
+<h2 id><a href="#" class="headerlink" title></a></h2>]]></content>
+      <categories>
+        <category>interview</category>
+      </categories>
+      <tags>
+        <tag>redis面试题</tag>
       </tags>
   </entry>
   <entry>
@@ -4617,318 +4975,6 @@ sudo apt-get install gcc-mingw-w64<figure class="highlight plain"><table><tr><td
       </tags>
   </entry>
   <entry>
-    <title>interview/Nginx面试题</title>
-    <url>/2021/05/19/interview/Nginx%E9%9D%A2%E8%AF%95%E9%A2%98/</url>
-    <content><![CDATA[<h2 id="什么是Nginx？"><a href="#什么是Nginx？" class="headerlink" title="什么是Nginx？"></a>什么是Nginx？</h2><p>Nginx是一个 轻量级/高性能的反向代理Web服务器，他实现非常高效的反向代理、负载平衡，他可以处理2-3万并发连接数，官方监测能支持5万并发，现在中国使用nginx网站用户有很多，例如：新浪、网易、 腾讯等。</p>
-<a id="more"></a>
-
-<h2 id="为什么要用Nginx？"><a href="#为什么要用Nginx？" class="headerlink" title="为什么要用Nginx？"></a>为什么要用Nginx？</h2><p>跨平台、配置简单、方向代理、高并发连接：处理2-3万并发连接数，官方监测能支持5万并发，内存消耗小：开启10个nginx才占150M内存 ，nginx处理静态文件好，耗费内存少，  </p>
-<p>而且Nginx内置的健康检查功能：如果有一个服务器宕机，会做一个健康检查，再发送的请求就不会发送到宕机的服务器了。重新将请求提交到其他的节点上。  </p>
-<p>使用Nginx的话还能<br>1.节省宽带：支持GZIP压缩，可以添加浏览器本地缓存<br>2.稳定性高：宕机的概率非常小<br>3.接收用户请求是异步的  </p>
-<h2 id="为什么Nginx性能这么高？"><a href="#为什么Nginx性能这么高？" class="headerlink" title="为什么Nginx性能这么高？"></a>为什么Nginx性能这么高？</h2><p>因为他的事件处理机制：异步非阻塞事件处理机制：运用了epoll模型，提供了一个队列，排队解决</p>
-<h2 id="Nginx怎么处理请求的？"><a href="#Nginx怎么处理请求的？" class="headerlink" title="Nginx怎么处理请求的？"></a>Nginx怎么处理请求的？</h2><p>nginx接收一个请求后，首先由listen和server_name指令匹配server模块，再匹配server模块里的location，location就是实际地址  </p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">server &#123;            						# 第一个Server区块开始，表示一个独立的虚拟主机站点</span><br><span class="line">    listen       80；      					# 提供服务的端口，默认80</span><br><span class="line">    server_name  localhost；       			# 提供服务的域名主机名</span><br><span class="line">    location &#x2F; &#123;            				# 第一个location区块开始</span><br><span class="line">        root   html；       				# 站点的根目录，相当于Nginx的安装目录</span><br><span class="line">        index  index.html index.htm；      	# 默认的首页文件，多个用空格分开</span><br><span class="line">    &#125;          								# 第一个location区块结果</span><br></pre></td></tr></table></figure>
-
-<h2 id="什么是正向代理和反向代理？"><a href="#什么是正向代理和反向代理？" class="headerlink" title="什么是正向代理和反向代理？"></a>什么是正向代理和反向代理？</h2><p>正向代理就是一个人发送一个请求直接就到达了目标的服务器<br>反方代理就是请求统一被Nginx接收，nginx反向代理服务器接收到之后，按照一定的规 则分发给了后端的业务处理服务器进行处理了</p>
-<h2 id="使用“反向代理服务器的优点是什么"><a href="#使用“反向代理服务器的优点是什么" class="headerlink" title="使用“反向代理服务器的优点是什么?"></a>使用“反向代理服务器的优点是什么?</h2><p>反向代理服务器可以隐藏源服务器的存在和特征。它充当互联网云和web服务器之间的中间层。这对于安全方面来说是很好的，特别是当您使用web托管服务时。  </p>
-<h2 id="Nginx的优缺点？"><a href="#Nginx的优缺点？" class="headerlink" title="Nginx的优缺点？"></a>Nginx的优缺点？</h2><h3 id="优点"><a href="#优点" class="headerlink" title="优点"></a>优点</h3><ul>
-<li>占内存小，可实现高并发连接，处理响应快</li>
-<li>可实现http服务器、虚拟主机、方向代理、负载均衡</li>
-<li>Nginx配置简单</li>
-<li>可以不暴露正式的服务器IP地址</li>
-</ul>
-<h3 id="缺点"><a href="#缺点" class="headerlink" title="缺点"></a>缺点</h3><p>动态处理差：nginx处理静态文件好,耗费内存少，但是处理动态页面则很鸡肋，现在一般前端用nginx作为反向代理抗住压力，  </p>
-<h2 id="Nginx应用场景？"><a href="#Nginx应用场景？" class="headerlink" title="Nginx应用场景？"></a>Nginx应用场景？</h2><p>1.http服务器。Nginx是一个http服务可以独立提供http服务。可以做网页静态服务器。<br>2.虚拟主机。可以实现在一台服务器虚拟出多个网站，例如个人网站使用的虚拟机。<br>3.反向代理，负载均衡。当网站的访问量达到一定程度后，单台服务器不能满足用户的请求时，需要用多台服务器集群可以使用nginx做反向代理。并且多台服务器可以平均分担负载，不会应为某台服务器负载高宕机而某台服务器闲置的情况。<br>4.nginz 中也可以配置安全管理、比如可以使用Nginx搭建API接口网关,对每个接口服务进行拦截。 </p>
-<h2 id="Nginx目录结构有哪些？"><a href="#Nginx目录结构有哪些？" class="headerlink" title="Nginx目录结构有哪些？"></a>Nginx目录结构有哪些？</h2><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">[root@localhost ~]# tree &#x2F;usr&#x2F;local&#x2F;nginx</span><br><span class="line">&#x2F;usr&#x2F;local&#x2F;nginx</span><br><span class="line">├── client_body_temp</span><br><span class="line">├── conf                             # Nginx所有配置文件的目录</span><br><span class="line">│   ├── fastcgi.conf                 # fastcgi相关参数的配置文件</span><br><span class="line">│   ├── fastcgi.conf.default         # fastcgi.conf的原始备份文件</span><br><span class="line">│   ├── fastcgi_params               # fastcgi的参数文件</span><br><span class="line">│   ├── fastcgi_params.default       </span><br><span class="line">│   ├── koi-utf</span><br><span class="line">│   ├── koi-win</span><br><span class="line">│   ├── mime.types                   # 媒体类型</span><br><span class="line">│   ├── mime.types.default</span><br><span class="line">│   ├── nginx.conf                   # Nginx主配置文件</span><br><span class="line">│   ├── nginx.conf.default</span><br><span class="line">│   ├── scgi_params                  # scgi相关参数文件</span><br><span class="line">│   ├── scgi_params.default  </span><br><span class="line">│   ├── uwsgi_params                 # uwsgi相关参数文件</span><br><span class="line">│   ├── uwsgi_params.default</span><br><span class="line">│   └── win-utf</span><br><span class="line">├── fastcgi_temp                     # fastcgi临时数据目录</span><br><span class="line">├── html                             # Nginx默认站点目录</span><br><span class="line">│   ├── 50x.html                     # 错误页面优雅替代显示文件，例如当出现502错误时会调用此页面</span><br><span class="line">│   └── index.html                   # 默认的首页文件</span><br><span class="line">├── logs                             # Nginx日志目录</span><br><span class="line">│   ├── access.log                   # 访问日志文件</span><br><span class="line">│   ├── error.log                    # 错误日志文件</span><br><span class="line">│   └── nginx.pid                    # pid文件，Nginx进程启动后，会把所有进程的ID号写到此文件</span><br><span class="line">├── proxy_temp                       # 临时目录</span><br><span class="line">├── sbin                             # Nginx命令目录</span><br><span class="line">│   └── nginx                        # Nginx的启动命令</span><br><span class="line">├── scgi_temp                        # 临时目录</span><br><span class="line">└── uwsgi_temp                       # 临时目录</span><br></pre></td></tr></table></figure>
-
-<h2 id="Nginx配置文件nginx-conf有哪些属性模块"><a href="#Nginx配置文件nginx-conf有哪些属性模块" class="headerlink" title="Nginx配置文件nginx.conf有哪些属性模块?"></a>Nginx配置文件nginx.conf有哪些属性模块?</h2><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">worker_processes  1；                					# worker进程的数量</span><br><span class="line">events &#123;                              					# 事件区块开始</span><br><span class="line">    worker_connections  1024；            				# 每个worker进程支持的最大连接数</span><br><span class="line">&#125;                                    					# 事件区块结束</span><br><span class="line">http &#123;                               					# HTTP区块开始</span><br><span class="line">    include       mime.types；            				# Nginx支持的媒体类型库文件</span><br><span class="line">    default_type  application&#x2F;octet-stream；     		# 默认的媒体类型</span><br><span class="line">    sendfile        on；       							# 开启高效传输模式</span><br><span class="line">    keepalive_timeout  65；       						# 连接超时</span><br><span class="line">    server &#123;            								# 第一个Server区块开始，表示一个独立的虚拟主机站点</span><br><span class="line">        listen       80；      							# 提供服务的端口，默认80</span><br><span class="line">        server_name  localhost；       					# 提供服务的域名主机名</span><br><span class="line">        location &#x2F; &#123;            						# 第一个location区块开始</span><br><span class="line">            root   html；       						# 站点的根目录，相当于Nginx的安装目录</span><br><span class="line">            index  index.html index.htm；      			# 默认的首页文件，多个用空格分开</span><br><span class="line">        &#125;          										# 第一个location区块结果</span><br><span class="line">        error_page   500502503504  &#x2F;50x.html；     		# 出现对应的http状态码时，使用50x.html回应客户</span><br><span class="line">        location &#x3D; &#x2F;50x.html &#123;          				# location区块开始，访问50x.html</span><br><span class="line">            root   html；      							# 指定对应的站点目录为html</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
-
-<h2 id="Nginx静态资源"><a href="#Nginx静态资源" class="headerlink" title="Nginx静态资源?"></a>Nginx静态资源?</h2><p>静态资源访问，就是存放在nginx的html页面，我们可以自己编写</p>
-<h2 id="如何用Nginx解决前端跨域问题？"><a href="#如何用Nginx解决前端跨域问题？" class="headerlink" title="如何用Nginx解决前端跨域问题？"></a>如何用Nginx解决前端跨域问题？</h2><p>使用Nginx转发请求。把跨域的接口写成调本域的接口，然后将这些接口转发到真正的请求地址。</p>
-<h2 id="Nginx虚拟主机怎么配置"><a href="#Nginx虚拟主机怎么配置" class="headerlink" title="Nginx虚拟主机怎么配置?"></a>Nginx虚拟主机怎么配置?</h2><p>基于域名的虚拟主机，通过域名来区分虚拟主机——应用：外部网站<br>基于端口的虚拟主机，通过端口来区分虚拟主机——应用：公司内部网站，外部网站的管理后台<br>基于ip的虚拟主机。  </p>
-<h3 id="基于虚拟主机配置域名"><a href="#基于虚拟主机配置域名" class="headerlink" title="基于虚拟主机配置域名"></a>基于虚拟主机配置域名</h3><p>需要建立/data/www /data/bbs目录，windows本地hosts添加虚拟机ip地址对应的域名解析；对应域名网站目录下新增index.html文件；</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">#当客户端访问www.lijie.com,监听端口号为80,直接跳转到data&#x2F;www目录下文件</span><br><span class="line">    server &#123;</span><br><span class="line">        listen       80;</span><br><span class="line">        server_name  www.lijie.com;</span><br><span class="line">        location &#x2F; &#123;</span><br><span class="line">            root   data&#x2F;www;</span><br><span class="line">            index  index.html index.htm;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">	#当客户端访问www.lijie.com,监听端口号为80,直接跳转到data&#x2F;bbs目录下文件</span><br><span class="line">	 server &#123;</span><br><span class="line">        listen       80;</span><br><span class="line">        server_name  bbs.lijie.com;</span><br><span class="line">        location &#x2F; &#123;</span><br><span class="line">            root   data&#x2F;bbs;</span><br><span class="line">            index  index.html index.htm;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
-
-<h3 id="基于端口的虚拟主机"><a href="#基于端口的虚拟主机" class="headerlink" title="基于端口的虚拟主机"></a>基于端口的虚拟主机</h3><p>使用端口来区分，浏览器使用域名或ip地址:端口号 访问  </p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">#当客户端访问www.lijie.com,监听端口号为8080,直接跳转到data&#x2F;www目录下文件</span><br><span class="line"> server &#123;</span><br><span class="line">       listen       8080;</span><br><span class="line">       server_name  8080.lijie.com;</span><br><span class="line">       location &#x2F; &#123;</span><br><span class="line">           root   data&#x2F;www;</span><br><span class="line">           index  index.html index.htm;</span><br><span class="line">       &#125;</span><br><span class="line">   &#125;</span><br><span class="line"></span><br><span class="line">#当客户端访问www.lijie.com,监听端口号为80直接跳转到真实ip服务器地址 127.0.0.1:8080</span><br><span class="line">server &#123;</span><br><span class="line">       listen       80;</span><br><span class="line">       server_name  www.lijie.com;</span><br><span class="line">       location &#x2F; &#123;</span><br><span class="line">	 	proxy_pass http:&#x2F;&#x2F;127.0.0.1:8080;</span><br><span class="line">           index  index.html index.htm;</span><br><span class="line">       &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-
-<h2 id="location的作用是什么？"><a href="#location的作用是什么？" class="headerlink" title="location的作用是什么？"></a>location的作用是什么？</h2><p>location指令的作用是根据用户请求的URI来执行不同的应用，也就是根据用户请求的网站URL进行匹配，匹配成功即进行相关的操作。  </p>
-<table>
-<thead>
-<tr>
-<th align="center">匹配符</th>
-<th align="center">匹配规则</th>
-<th align="center">优先级</th>
-</tr>
-</thead>
-<tbody><tr>
-<td align="center">=</td>
-<td align="center">精确匹配</td>
-<td align="center">1</td>
-</tr>
-<tr>
-<td align="center">^~</td>
-<td align="center">以某个字符串开头</td>
-<td align="center">2</td>
-</tr>
-<tr>
-<td align="center">~</td>
-<td align="center">区分大小写的正则匹配</td>
-<td align="center">3</td>
-</tr>
-<tr>
-<td align="center">~*</td>
-<td align="center">不区分大小写的正则匹配</td>
-<td align="center">4</td>
-</tr>
-<tr>
-<td align="center">!~</td>
-<td align="center">区分大小写不匹配的正则</td>
-<td align="center">5</td>
-</tr>
-<tr>
-<td align="center">!~*</td>
-<td align="center">不区分大小写不匹配的正则</td>
-<td align="center">6</td>
-</tr>
-<tr>
-<td align="center">/</td>
-<td align="center">通用匹配，任何请求都会匹配到</td>
-<td align="center">7</td>
-</tr>
-</tbody></table>
-<h2 id="Location正则案例"><a href="#Location正则案例" class="headerlink" title="Location正则案例"></a>Location正则案例</h2><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">#优先级1,精确匹配，根路径</span><br><span class="line">    location &#x3D;&#x2F; &#123;</span><br><span class="line">        return 400;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    #优先级2,以某个字符串开头,以av开头的，优先匹配这里，区分大小写</span><br><span class="line">    location ^~ &#x2F;av &#123;</span><br><span class="line">       root &#x2F;data&#x2F;av&#x2F;;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    #优先级3，区分大小写的正则匹配，匹配&#x2F;media*****路径</span><br><span class="line">    location ~ &#x2F;media &#123;</span><br><span class="line">          alias &#x2F;data&#x2F;static&#x2F;;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    #优先级4 ，不区分大小写的正则匹配，所有的****.jpg|gif|png 都走这里</span><br><span class="line">    location ~* .*\.(jpg|gif|png|js|css)$ &#123;</span><br><span class="line">       root  &#x2F;data&#x2F;av&#x2F;;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    #优先7，通用匹配</span><br><span class="line">    location &#x2F; &#123;</span><br><span class="line">        return 403;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
-
-<h2 id="限流怎么做的？"><a href="#限流怎么做的？" class="headerlink" title="限流怎么做的？"></a>限流怎么做的？</h2><p>Nginx限流就是限制用户请求速度，防止服务器受不了</p>
-<p>限流有3种  </p>
-<ol>
-<li>正常限制访问频率（正常流量）  </li>
-<li>突发限制访问频率（突发流量）</li>
-<li>限制并发连接数  </li>
-</ol>
-<p>Nginx的限流都是基于漏桶流算法，底下会说道什么是桶铜流</p>
-<h3 id="正常限制访问频率（正常流量）"><a href="#正常限制访问频率（正常流量）" class="headerlink" title="正常限制访问频率（正常流量）"></a>正常限制访问频率（正常流量）</h3><p>限制一个用户发送的请求，我Nginx多久接收一个请求。<br>Nginx中使用ngx_http_limit_req_module模块来限制的访问频率，限制的原理实质是基于漏桶算法原理来实现的。在nginx.conf配置文件中可以使用limit_req_zone命令及limit_req命令限制单个IP的请求处理频率。  </p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">#定义限流维度，一个用户一分钟一个请求进来，多余的全部漏掉</span><br><span class="line">limit_req_zone $binary_remote_addr zone&#x3D;one:10m rate&#x3D;1r&#x2F;m;</span><br><span class="line"></span><br><span class="line">#绑定限流维度</span><br><span class="line">server&#123;</span><br><span class="line">	</span><br><span class="line">	location&#x2F;seckill.html&#123;</span><br><span class="line">		limit_req zone&#x3D;zone;	</span><br><span class="line">		proxy_pass http:&#x2F;&#x2F;lj_seckill;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>1r/s代表1秒一个请求，1r/m一分钟接收一个请求， 如果Nginx这时还有别人的请求没有处理完，Nginx就会拒绝处理该用户请求。  </p>
-<h3 id="突发限制访问频率（突发流量）："><a href="#突发限制访问频率（突发流量）：" class="headerlink" title="突发限制访问频率（突发流量）："></a>突发限制访问频率（突发流量）：</h3><p>上面的配置一定程度可以限制访问频率，但是也存在着一个问题：如果突发流量超出请求被拒绝处理，无法处理活动时候的突发流量，这时候应该如何进一步处理呢？Nginx提供burst参数结合nodelay参数可以解决流量突发的问题，可以设置能处理的超过设置的请求数外能额外处理的请求数。我们可以将之前的例子添加burst参数以及nodelay参数：</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">#定义限流维度，一个用户一分钟一个请求进来，多余的全部漏掉</span><br><span class="line">limit_req_zone $binary_remote_addr zone&#x3D;one:10m rate&#x3D;1r&#x2F;m;</span><br><span class="line"></span><br><span class="line">#绑定限流维度</span><br><span class="line">server&#123;</span><br><span class="line">	</span><br><span class="line">	location&#x2F;seckill.html&#123;</span><br><span class="line">		limit_req zone&#x3D;zone burst&#x3D;5 nodelay;</span><br><span class="line">		proxy_pass http:&#x2F;&#x2F;lj_seckill;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>为什么就多了一个 burst=5 nodelay; 呢，多了这个可以代表Nginx对于一个用户的请求会立即处理前五个，多余的就慢慢来落，没有其他用户的请求我就处理你的，有其他的请求的话我Nginx就漏掉不接受你的请求  </p>
-<h3 id="限制并发连接数"><a href="#限制并发连接数" class="headerlink" title="限制并发连接数"></a>限制并发连接数</h3><p>Nginx中的ngx_http_limit_conn_module模块提供了限制并发连接数的功能，可以使用limit_conn_zone指令以及limit_conn执行进行配置。接下来我们可以通过一个简单的例子来看下：  </p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">http &#123;</span><br><span class="line">    limit_conn_zone $binary_remote_addr zone&#x3D;myip:10m;</span><br><span class="line">    limit_conn_zone $server_name zone&#x3D;myServerName:10m;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">server &#123;</span><br><span class="line">    location &#x2F; &#123;</span><br><span class="line">        limit_conn myip 10;</span><br><span class="line">        limit_conn myServerName 100;</span><br><span class="line">        rewrite &#x2F; http:&#x2F;&#x2F;www.lijie.net permanent;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>上面配置了单个IP同时并发连接数最多只能10个连接，并且设置了整个虚拟服务器同时最大并发数最多只能100个链接。当然，只有当请求的header被服务器处理后，虚拟服务器的连接数才会计数。刚才有提到过Nginx是基于漏桶算法原理实现的，实际上限流一般都是基于漏桶算法和令牌桶算法实现的。</p>
-<h2 id="漏桶流算法和令牌桶算法知道？"><a href="#漏桶流算法和令牌桶算法知道？" class="headerlink" title="漏桶流算法和令牌桶算法知道？"></a>漏桶流算法和令牌桶算法知道？</h2><h3 id="漏桶算法"><a href="#漏桶算法" class="headerlink" title="漏桶算法"></a>漏桶算法</h3><p>漏桶算法是网络世界中流量整形或速率限制时经常使用的一种算法，它的主要目的是控制数据注入到网络的速率，平滑网络上的突发流量。漏桶算法提供了一种机制，通过它，突发流量可以被整形以便为网络提供一个稳定的流量。也就是我们刚才所讲的情况。漏桶算法提供的机制实际上就是刚才的案例：突发流量会进入到一个漏桶，漏桶会按照我们定义的速率依次处理请求，如果水流过大也就是突发流量过大就会直接溢出，则多余的请求会被拒绝。所以漏桶算法能控制数据的传输速率。</p>
-<h3 id="令牌桶算法"><a href="#令牌桶算法" class="headerlink" title="令牌桶算法"></a>令牌桶算法</h3><p>令牌桶算法是网络流量整形和速率限制中最常使用的一种算法。典型情况下，令牌桶算法用来控制发送到网络上的数据的数目，并允许突发数据的发送。Google开源项目Guava中的RateLimiter使用的就是令牌桶控制算法。令牌桶算法的机制如下：存在一个大小固定的令牌桶，会以恒定的速率源源不断产生令牌。如果令牌消耗速率小于生产令牌的速度，令牌就会一直产生直至装满整个令牌桶。<br><img src="/2021/05/19/interview/Nginx%E9%9D%A2%E8%AF%95%E9%A2%98/20200411193930872.png" alt></p>
-<h2 id="为什么要做动静分离？"><a href="#为什么要做动静分离？" class="headerlink" title="为什么要做动静分离？"></a>为什么要做动静分离？</h2><ul>
-<li>Nginx是当下最热的Web容器，网站优化的重要点在于静态化网站，网站静态化的关键点则是是动静分离，动静分离是让动态网站里的动态网页根据一定规则把不变的资源和经常变的资源区分开来，动静资源做好了拆分以后，我们则根据静态资源的特点将其做缓存操作。</li>
-<li>让静态的资源只走静态资源服务器，动态的走动态的服务器</li>
-<li>Nginx的静态处理能力很强，但是动态处理能力不足，因此，在企业中常用动静分离技术。</li>
-<li>对于静态资源比如图片，js，css等文件，我们则在反向代理服务器nginx中进行缓存。这样浏览器在请求一个静态资源时，代理服务器nginx就可以直接处理，无需将请求转发给后端服务器tomcat。<br>若用户请求的动态文件，比如servlet,jsp则转发给Tomcat服务器处理，从而实现动静分离。这也是反向代理服务器的一个重要的作用。</li>
-</ul>
-<h2 id="Nginx怎么做的动静分离？"><a href="#Nginx怎么做的动静分离？" class="headerlink" title="Nginx怎么做的动静分离？"></a>Nginx怎么做的动静分离？</h2><p>只需要指定路径对应的目录。location/可以使用正则表达式匹配。并指定对应的硬盘中的目录 </p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">location &#x2F;image&#x2F; &#123;</span><br><span class="line">    root   &#x2F;usr&#x2F;local&#x2F;static&#x2F;;</span><br><span class="line">    autoindex on;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h2 id="Nginx负载均衡的算法怎么实现的-策略有哪些"><a href="#Nginx负载均衡的算法怎么实现的-策略有哪些" class="headerlink" title="Nginx负载均衡的算法怎么实现的?策略有哪些?"></a>Nginx负载均衡的算法怎么实现的?策略有哪些?</h2><p>为了避免服务器崩溃，大家会通过负载均衡的方式来分担服务器压力。将对台服务器组成一个集群，当用户访问时，先访问到一个转发服务器，再由转发服务器将访问分发到压力更小的服务器。  </p>
-<p>Nginx负载均衡实现的策略有以下五种: </p>
-<h3 id="轮询-默认"><a href="#轮询-默认" class="headerlink" title="轮询(默认)"></a>轮询(默认)</h3><p>每个请求按时间顺序逐一分配到不同的后端服务器，如果后端某个服务器宕机，能自动剔除故障系统。</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">upstream backserver &#123; </span><br><span class="line"> server 192.168.0.12; </span><br><span class="line"> server 192.168.0.13; </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h3 id="权重-weight"><a href="#权重-weight" class="headerlink" title="权重 weight"></a>权重 weight</h3><ul>
-<li>weight的值越大分配</li>
-<li>到的访问概率越高，主要用于后端每台服务器性能不均衡的情况下。其次是为在主从的情况下设置不同的权值，达到合理有效的地利用主机资源。<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">upstream backserver &#123; </span><br><span class="line"> server 192.168.0.12 weight&#x3D;2; </span><br><span class="line"> server 192.168.0.13 weight&#x3D;8; </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-权重越高，在被访问的概率越大，如上例，分别是20%，80%。  </li>
-</ul>
-<h3 id="ip-hash-IP绑定"><a href="#ip-hash-IP绑定" class="headerlink" title="ip_hash( IP绑定)"></a>ip_hash( IP绑定)</h3><p>每个请求按访问IP的哈希结果分配，使来自同一个IP的访客固定访问一台后端服务器，并且可以有效解决动态网页存在的session共享问题  </p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">upstream backserver &#123; </span><br><span class="line"> ip_hash; </span><br><span class="line"> server 192.168.0.12:88; </span><br><span class="line"> server 192.168.0.13:80; </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h3 id="fair-第三方插件"><a href="#fair-第三方插件" class="headerlink" title="fair(第三方插件)"></a>fair(第三方插件)</h3><p>必须安装upstream_fair模块。<br>对比 weight、ip_hash更加智能的负载均衡算法，fair算法可以根据页面大小和加载时间长短智能地进行负载均衡，响应时间短的优先分配。  </p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">upstream backserver &#123; </span><br><span class="line"> server server1; </span><br><span class="line"> server server2; </span><br><span class="line"> fair; </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>哪个服务器的响应速度快，就将请求分配到那个服务器上。  </p>
-<h3 id="url-hash-第三方插件"><a href="#url-hash-第三方插件" class="headerlink" title="url_hash(第三方插件)"></a>url_hash(第三方插件)</h3><p>必须安装Nginx的hash软件包<br>按访问url的hash结果来分配请求，使每个url定向到同一个后端服务器，可以进一步提高后端缓存服务器的效率。  </p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">upstream backserver &#123; </span><br><span class="line"> server squid1:3128; </span><br><span class="line"> server squid2:3128; </span><br><span class="line"> hash $request_uri; </span><br><span class="line"> hash_method crc32; </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h2 id="Nginx配置高可用性怎么配置？"><a href="#Nginx配置高可用性怎么配置？" class="headerlink" title="Nginx配置高可用性怎么配置？"></a>Nginx配置高可用性怎么配置？</h2><p>当上游服务器(真实访问服务器)，一旦出现故障或者是没有及时相应的话，应该直接轮训到下一台服务器，保证服务器的高可用<br>Nginx配置代码：  </p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">server &#123;</span><br><span class="line">        listen       80;</span><br><span class="line">        server_name  www.lijie.com;</span><br><span class="line">        location &#x2F; &#123;</span><br><span class="line">		    ### 指定上游服务器负载均衡服务器</span><br><span class="line">		    proxy_pass http:&#x2F;&#x2F;backServer;</span><br><span class="line">			###nginx与上游服务器(真实访问的服务器)超时时间 后端服务器连接的超时时间_发起握手等候响应超时时间</span><br><span class="line">			proxy_connect_timeout 1s;</span><br><span class="line">			###nginx发送给上游服务器(真实访问的服务器)超时时间</span><br><span class="line">            proxy_send_timeout 1s;</span><br><span class="line">			### nginx接受上游服务器(真实访问的服务器)超时时间</span><br><span class="line">            proxy_read_timeout 1s;</span><br><span class="line">            index  index.html index.htm;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
-<h2 id="Nginx怎么判断别IP不可访问？"><a href="#Nginx怎么判断别IP不可访问？" class="headerlink" title="Nginx怎么判断别IP不可访问？"></a>Nginx怎么判断别IP不可访问？</h2><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line"># 如果访问的ip地址为192.168.9.115,则返回403</span><br><span class="line">  if  ($remote_addr &#x3D; 192.168.9.115) &#123;  </span><br><span class="line">      return 403;  </span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure>
-
-<h2 id="怎么限制浏览器访问？"><a href="#怎么限制浏览器访问？" class="headerlink" title="怎么限制浏览器访问？"></a>怎么限制浏览器访问？</h2><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">## 不允许谷歌浏览器访问 如果是谷歌浏览器返回500</span><br><span class="line">	if ($http_user_agent ~ Chrome) &#123;   </span><br><span class="line">       return 500;  </span><br><span class="line">   &#125;</span><br></pre></td></tr></table></figure>
-
-<h2 id="Rewrite全局变量是什么？"><a href="#Rewrite全局变量是什么？" class="headerlink" title="Rewrite全局变量是什么？"></a>Rewrite全局变量是什么？</h2><table>
-<thead>
-<tr>
-<th align="center">变量</th>
-<th align="center">含义</th>
-</tr>
-</thead>
-<tbody><tr>
-<td align="center">$args</td>
-<td align="center">这个变量等于请求行中的参数，同$query_string</td>
-</tr>
-<tr>
-<td align="center">$content length</td>
-<td align="center">请求头中的Content-length字段。</td>
-</tr>
-<tr>
-<td align="center">$content_type</td>
-<td align="center">请求头中的Content-Type字段。</td>
-</tr>
-<tr>
-<td align="center">$document_root</td>
-<td align="center">当前请求在root指令中指定的值。</td>
-</tr>
-<tr>
-<td align="center">$host</td>
-<td align="center">请求主机头字段，否则为服务器名称。</td>
-</tr>
-<tr>
-<td align="center">$http_user_agent</td>
-<td align="center">客户端agent信息</td>
-</tr>
-<tr>
-<td align="center">$http_cookie</td>
-<td align="center">客户端cookie信息</td>
-</tr>
-<tr>
-<td align="center">$limit_rate</td>
-<td align="center">这个变量可以限制连接速率。</td>
-</tr>
-<tr>
-<td align="center">$request_method</td>
-<td align="center">客户端请求的动作，通常为GET或POST。</td>
-</tr>
-<tr>
-<td align="center">$remote_addr</td>
-<td align="center">客户端的IP地址。</td>
-</tr>
-<tr>
-<td align="center">$remote_port</td>
-<td align="center">客户端的端口。</td>
-</tr>
-<tr>
-<td align="center">$remote_user</td>
-<td align="center">已经经过Auth Basic Module验证的用户名。</td>
-</tr>
-<tr>
-<td align="center">$request_filename</td>
-<td align="center">当前请求的文件路径，由root或alias指令与URI请求生成。</td>
-</tr>
-<tr>
-<td align="center">$scheme</td>
-<td align="center">HTTP方法（如http，https）。</td>
-</tr>
-<tr>
-<td align="center">$server_protocol</td>
-<td align="center">请求使用的协议，通常是HTTP/1.0或HTTP/1.1。</td>
-</tr>
-<tr>
-<td align="center">$server_addr</td>
-<td align="center">服务器地址，在完成一次系统调用后可以确定这个值。</td>
-</tr>
-<tr>
-<td align="center">$server_name</td>
-<td align="center">服务器名称。</td>
-</tr>
-<tr>
-<td align="center">$server_port</td>
-<td align="center">请求到达服务器的端口号。</td>
-</tr>
-<tr>
-<td align="center">$request_uri</td>
-<td align="center">包含请求参数的原始URI，不包含主机名，如”/foo/bar.php?arg=baz”。</td>
-</tr>
-<tr>
-<td align="center">$uri</td>
-<td align="center">不带请求参数的当前URI，$uri不包含主机名，如”/foo/bar.html”。</td>
-</tr>
-<tr>
-<td align="center">$document_uri</td>
-<td align="center">与$uri相同。</td>
-</tr>
-</tbody></table>
-]]></content>
-      <categories>
-        <category>interview</category>
-      </categories>
-      <tags>
-        <tag>nginx面试题</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>interview/Redis面试题</title>
-    <url>/2021/05/19/interview/Redis%E9%9D%A2%E8%AF%95%E9%A2%98/</url>
-    <content><![CDATA[<h2 id="使用Redis有哪些好处"><a href="#使用Redis有哪些好处" class="headerlink" title="使用Redis有哪些好处"></a>使用Redis有哪些好处</h2><ul>
-<li>速度快，因为数据存在内存中，类似于HashMap，HashMap的优势就是查找和操作的时间复杂度都是O(1)</li>
-<li>支持丰富数据类型，支持string，list，set，sorted set，hash</li>
-<li>支持事务，操作都是原子性，所谓的原子性就是对数据的更改要么全部执行，要么全部不执行</li>
-<li>丰富的特性：可用于缓存，消息，按key设置过期时间，过期后将会自动删除<a id="more"></a>
-
-</li>
-</ul>
-<h2 id="redis相比memcached有哪些优势"><a href="#redis相比memcached有哪些优势" class="headerlink" title="redis相比memcached有哪些优势"></a>redis相比memcached有哪些优势</h2><ul>
-<li>memcached所有的值均是简单的字符串，redis作为其替代者，支持更为丰富的数据类型</li>
-<li>redis的速度比memcached快很多</li>
-<li>redis可以持久化其数据</li>
-</ul>
-<h2 id="redis常见性能问题和解决方案"><a href="#redis常见性能问题和解决方案" class="headerlink" title="redis常见性能问题和解决方案"></a>redis常见性能问题和解决方案</h2><h3 id="Master写内存快照"><a href="#Master写内存快照" class="headerlink" title="Master写内存快照"></a>Master写内存快照</h3><p>save命令调度rdbSave函数，会阻塞主线程的工作，当快照比较大时对性能影响是非常大的，会间断性暂停服务，所以Master最好不要写内存快照。 </p>
-<p>Master最好不要做任何持久化工作，包括内存快照和AOF日志文件，特别是不要启用内存快照做持久化。  </p>
-<h3 id="Master-AOF持久化"><a href="#Master-AOF持久化" class="headerlink" title="Master AOF持久化"></a>Master AOF持久化</h3><p>如果不重写AOF文件，这个持久化方式对性能的影响是最小的，但是AOF文件会不断增大，AOF文件过大会影响Master重启的恢复速度。</p>
-<p>如果数据比较关键，某个Slave开启AOF备份数据，策略为每秒同步一次。</p>
-<h3 id="Master调用BGREWRITEAOF"><a href="#Master调用BGREWRITEAOF" class="headerlink" title="Master调用BGREWRITEAOF"></a>Master调用BGREWRITEAOF</h3><p>Master调用BGREWRITEAOF重写AOF文件，AOF在重写的时候会占大量的CPU和内存资源，导致服务load过高，出现短暂服务暂停现象。</p>
-<p>将no-appendfsync-on-rewrite的配置设为yes可以缓解这个问题，设置为yes表示rewrite期间对新写操作不fsync，暂时存在内存中，等rewrite完成后再写入。最好是不开启Master的AOF备份功能。  </p>
-<h4 id="Redis主从复制的性能问题"><a href="#Redis主从复制的性能问题" class="headerlink" title="Redis主从复制的性能问题"></a>Redis主从复制的性能问题</h4><p>第一次Slave向Master同步的实现是：Slave向Master发出同步请求，Master先dump出rdb文件，然后将rdb文件全量传输给slave，然后Master把缓存的<br>命令转发给Slave，初次同步完成。第二次以及以后的同步实现是：Master将变量的快照直接实时依次发送给各个Slave。不管什么原因导致Slave和<br>Master断开重连都会重复以上过程。Redis的主从复制是建立在内存快照的持久化基础上，只要有Slave就一定会有内存快照发生。虽然Redis宣称主从<br>复制无阻塞，但由于Redis使用单线程服务，如果Master快照文件比较大，那么第一次全量传输会耗费比较长时间，且文件传输过程中Master可能无法<br>提供服务，也就是说服务会中断，对于关键服务，这个后果也是很可怕的。  </p>
-<p>尽量避免在压力较大的主库上增加从库。</p>
-<h3 id="单点故障问题"><a href="#单点故障问题" class="headerlink" title="单点故障问题"></a>单点故障问题</h3><p>由于目前Redis的主从复制还不够成熟，所以存在明显的单点故障问题，这个目前只能自己做方案解决</p>
-<p>为了Master的稳定性，主从复制不要用图状结构，用单向链表结构更稳定，即主从关系为：Master&lt;–Slave1&lt;–Slave2&lt;–Slave3…….，这样的结构也方便解<br>决单点故障问题，实现Slave对Master的替换，也即，如果Master挂了，可以立马启用Slave1做Master，其他不变。</p>
-<h2 id="MySQL里有2000w数据，redis中只存20w的数据，如何保证redis中的数据都是热点数据"><a href="#MySQL里有2000w数据，redis中只存20w的数据，如何保证redis中的数据都是热点数据" class="headerlink" title="MySQL里有2000w数据，redis中只存20w的数据，如何保证redis中的数据都是热点数据"></a>MySQL里有2000w数据，redis中只存20w的数据，如何保证redis中的数据都是热点数据</h2><h3 id="相关知识"><a href="#相关知识" class="headerlink" title="相关知识"></a>相关知识</h3><p>redis 内存数据集大小上升到一定大小的时候，就会施行数据淘汰策略。redis 提供 </p>
-<h3 id="6种数据淘汰策略"><a href="#6种数据淘汰策略" class="headerlink" title="6种数据淘汰策略"></a>6种数据淘汰策略</h3><ul>
-<li>volatile-lru 从已设置过期时间的数据集中挑选最近最少使用的数据淘汰</li>
-<li>volatile-ttl 从已设置过期时间的数据集中挑选将要过期的数据淘汰</li>
-<li>volatile-random 从已设置过期时间的数据集中任意选择数据淘汰</li>
-<li>allkeys-lru 从数据集中挑选最近最少使用的数据淘汰</li>
-<li>allkeys-random 从数据集中任意选择数据淘汰</li>
-<li>no-enviction 禁止驱逐数据<h3 id="实际操作"><a href="#实际操作" class="headerlink" title="实际操作"></a>实际操作</h3>计算一下20w数据大约占用的内存，设置Redis内存限制，设置淘汰策略，加载热数据到内存中</li>
-</ul>
-<h2 id="Memcache与Redis的区别都有哪些"><a href="#Memcache与Redis的区别都有哪些" class="headerlink" title="Memcache与Redis的区别都有哪些"></a>Memcache与Redis的区别都有哪些</h2><h3 id="存储方式"><a href="#存储方式" class="headerlink" title="存储方式"></a>存储方式</h3><ul>
-<li>Memecache把数据全部存在内存之中，断电后会挂掉，数据不能超过内存大小</li>
-<li>Redis有部份存在硬盘上，这样能保证数据的持久性。</li>
-</ul>
-<h3 id="数据支持类型"><a href="#数据支持类型" class="headerlink" title="数据支持类型"></a>数据支持类型</h3><ul>
-<li>Memcache对数据类型支持相对简单</li>
-<li>Redis有复杂的数据类型</li>
-</ul>
-<h3 id="value大小"><a href="#value大小" class="headerlink" title="value大小"></a>value大小</h3><ul>
-<li>redis最大可以达到1GB，而memcache只有1MB</li>
-</ul>
-<h2 id="redis最适合的场景"><a href="#redis最适合的场景" class="headerlink" title="redis最适合的场景"></a>redis最适合的场景</h2><h3 id="缓存"><a href="#缓存" class="headerlink" title="缓存"></a>缓存</h3><p>缓存现在几乎是所有中大型网站都在用的必杀技，合理的利用缓存不仅能够提升网站访问速度，还能大大降低数据库的压力。Redis提供了键过期功能，<br>也提供了灵活的键淘汰策略，所以，现在Redis用在缓存的场合非常多。</p>
-<h3 id="排行榜"><a href="#排行榜" class="headerlink" title="排行榜"></a>排行榜</h3><p>很多网站都有排行榜应用的，如京东的月度销量榜单、商品按时间的上新排行榜等。Redis提供的有序集合数据类构能实现各种复杂的排行榜应用。</p>
-<h3 id="计数器"><a href="#计数器" class="headerlink" title="计数器"></a>计数器</h3><p>什么是计数器，如电商网站商品的浏览量、视频网站视频的播放数等。为了保证数据实时效，每次浏览都得给+1，并发量高时如果每次都请求数据库操作无<br>疑是种挑战和压力。Redis提供的incr命令来实现计数器功能，内存操作，性能非常好，非常适用于这些计数场景。</p>
-<h3 id="分布式会话"><a href="#分布式会话" class="headerlink" title="分布式会话"></a>分布式会话</h3><p>集群模式下，在应用不多的情况下一般使用容器自带的session复制功能就能满足，当应用增多相对复杂的系统中，一般都会搭建以Redis等内存数据库为中<br>心的session服务，session不再由容器管理，而是由session服务及内存数据库管理。</p>
-<h3 id="分布式锁"><a href="#分布式锁" class="headerlink" title="分布式锁"></a>分布式锁</h3><p>在很多互联网公司中都使用了分布式技术，分布式技术带来的技术挑战是对同一个资源的并发访问，如全局ID、减库存、秒杀等场景，并发量不大的场景可<br>以使用数据库的悲观锁、乐观锁来实现，但在并发量高的场合中，利用数据库锁来控制资源的并发访问是不太理想的，大大影响了数据库的性能。<br>可以利用Redis的setnx功能来编写分布式的锁，如果设置返回1说明获取锁成功，否则获取锁失败，实际应用中要考虑的细节要更多。</p>
-<h3 id="社交网络"><a href="#社交网络" class="headerlink" title="社交网络"></a>社交网络</h3><p>点赞、踩、关注/被关注、共同好友等是社交网站的基本功能，社交网站的访问量通常来说比较大，而且传统的关系数据库类型不适合存储这种类型的数据，<br>Redis提供的哈希、集合等数据结构能很方便的的实现这些功能。</p>
-<h3 id="最新列表"><a href="#最新列表" class="headerlink" title="最新列表"></a>最新列表</h3><p>Redis列表结构，LPUSH可以在列表头部插入一个内容ID作为关键字，LTRIM可用来限制列表的数量，这样列表永远为N个ID，无需查询最新的列表，直接根据ID去到对应的内容页即可。</p>
-<h3 id="消息系统"><a href="#消息系统" class="headerlink" title="消息系统"></a>消息系统</h3><p>消息队列是大型网站必用中间件，如ActiveMQ、RabbitMQ、Kafka等流行的消息队列中间件，主要用于业务解耦、流量削峰及异步处理实时性低的业务。<br>Redis提供了发布/订阅及阻塞队列功能，能实现一个简单的消息队列系统。另外，这个不能和专业的消息中间件相比。</p>
-<h2 id="Redis的同步机制"><a href="#Redis的同步机制" class="headerlink" title="Redis的同步机制"></a>Redis的同步机制</h2><p>Redis通过主从同步机制来确保master和salve之间的数据同步</p>
-<h3 id="全量复制"><a href="#全量复制" class="headerlink" title="全量复制"></a>全量复制</h3><p>全量复制是指salve启动时进行的初始化同步。<br>全同步过程：</p>
-<ol>
-<li>在salve启动时，会向master发送一条SYNC指令。  </li>
-<li>master收到这条指令后，会启动一个备份进程将所有数据写到rdb文件中去。  </li>
-<li>更新master的状态（备份是否成功、备份时间等），然后将rdb文件内容发送给等待中的salve。  <blockquote>
-<p>master并不会立即将rdb内容发送给salve。而是为每个等待中的salve注册写事件，当salve对应的socket可以发送数据时，再讲rdb内容发送给salve。</p>
-</blockquote>
-</li>
-</ol>
-<h3 id="增量拷贝"><a href="#增量拷贝" class="headerlink" title="增量拷贝"></a>增量拷贝</h3><p>如果出现网络闪断或者命令丢失等异常情况时，当主从连接恢复后，由于从节点之前保存了自身已复制的偏移量和主节点的运行ID。因此会把它们当作psync<br>参数发送给主节点，要求进行部分复制操作<br>主节点接到psync命令后首先核对参数runId是否与自身一致，如果一致，说明之前复制的是当前主节点；之后根据参数offset在自身复制积压缓冲区查找<br>，如果偏移量之后的数据存在缓冲区中，则对从节点发送+continue响应，表示可以进行部分复制；否则进行全量复制。<br>主节点根据偏移量把复制积压缓冲区里的数据发送给从节点，保证主从复制进入正常状态。</p>
-<h2 id="是否使用过Redis集群-集群的原理是什么"><a href="#是否使用过Redis集群-集群的原理是什么" class="headerlink" title="是否使用过Redis集群,集群的原理是什么"></a>是否使用过Redis集群,集群的原理是什么</h2><h2 id="redis集群如何保证一致性"><a href="#redis集群如何保证一致性" class="headerlink" title="redis集群如何保证一致性"></a>redis集群如何保证一致性</h2><h2 id="数据库与缓存数据一致性问题"><a href="#数据库与缓存数据一致性问题" class="headerlink" title="数据库与缓存数据一致性问题"></a>数据库与缓存数据一致性问题</h2><p>Cache Aside Pattern<br>1.失效：程序先从缓存中读取数据，如果没有命中，则从数据库中读取，成功之后将数据放到缓存中<br>2.命中：程序先从缓存中读取数据，如果命中，则直接返回<br>3.更新：程序先更新数据库，在删除缓存</p>
-<p>如何解决缓存击穿问题？<br>当一个线程需要去访问这个缓存的时候，如果发现缓存为空，则需要先去竞争一个锁，如果成功则进行正常的数据库读取和写入缓存这一操作，然后再释放锁，否则就等待一段时间之后，重新尝试读取缓存，如果还没有数据就继续去竞争锁　　</p>
-<p>怎么做到强一致性？<br>上一致性协议当然是可以的，虽然成本也是非常客观的。2PC甚至是3PC本身是存在一定程度的缺陷的，所以如果要采用这个方案，那么在架构设计中要引入很多的容错，回退和兜底措施。那如果是上Paxos和Raft呢？那么你首先至少要看过这两者的相关论文，并且调研清楚目前市面上有哪些开源方案，并做好充分的验证，并且能够做到出了问题自己有能力修复…对了，我还没提到性能问题呢。</p>
-<h2 id><a href="#" class="headerlink" title></a></h2>]]></content>
-      <categories>
-        <category>interview</category>
-      </categories>
-      <tags>
-        <tag>redis面试题</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>interview/微服务面试题</title>
     <url>/2021/05/19/interview/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E9%9D%A2%E8%AF%95%E9%A2%98/</url>
     <content><![CDATA[<h2 id="说说微服务架构的优势。"><a href="#说说微服务架构的优势。" class="headerlink" title="说说微服务架构的优势。"></a>说说微服务架构的优势。</h2><table>
@@ -5227,6 +5273,13 @@ sudo apt-get install gcc-mingw-w64<figure class="highlight plain"><table><tr><td
       </tags>
   </entry>
   <entry>
+    <title>go/设计模式(golang版本)</title>
+    <url>/2021/05/19/go/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F(golang%E7%89%88%E6%9C%AC)/</url>
+    <content><![CDATA[<h1 id="简单工厂模式"><a href="#简单工厂模式" class="headerlink" title="简单工厂模式"></a>简单工厂模式</h1><p>go 语言没有构造函数一说，所以一般会定义NewXXX函数来初始化相关类。 NewXXX 函数返回接口时就是简单工厂模式，也就是说Golang的一般推荐做法就是简单工厂。</p>
+<h1 id="工厂方法模式"><a href="#工厂方法模式" class="headerlink" title="工厂方法模式"></a>工厂方法模式</h1><p>工厂方法模式使用子类的方式延迟生成对象到子类中实现。<br>Go中不存在继承 所以使用匿名组合来实现<br>使用单独工厂接口是构造目标接口，</p>
+]]></content>
+  </entry>
+  <entry>
     <title>go/数据结构与算法</title>
     <url>/2021/05/19/go/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/</url>
     <content><![CDATA[<h1 id="摘录自"><a href="#摘录自" class="headerlink" title="摘录自"></a>摘录自</h1><p>数据结构和算法（Golang实现）<br><a href="https://www.bookstack.cn/books/hunterhug-goa.c" target="_blank" rel="noopener">https://www.bookstack.cn/books/hunterhug-goa.c</a></p>
@@ -5335,13 +5388,6 @@ sudo apt-get install gcc-mingw-w64<figure class="highlight plain"><table><tr><td
 <li>左子树所有节点的值都小于它的根节点，右子树所有节点的值都大于它的根节点。</li>
 <li>左右子树也是一棵二叉查找树。<br>二叉查找树的特点是，一直往左儿子往下找左儿子，可以找到最小的元素，一直往右儿子找右儿子，可以找到最大的元素。</li>
 </ol>
-]]></content>
-  </entry>
-  <entry>
-    <title>go/设计模式(golang版本)</title>
-    <url>/2021/05/19/go/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F(golang%E7%89%88%E6%9C%AC)/</url>
-    <content><![CDATA[<h1 id="简单工厂模式"><a href="#简单工厂模式" class="headerlink" title="简单工厂模式"></a>简单工厂模式</h1><p>go 语言没有构造函数一说，所以一般会定义NewXXX函数来初始化相关类。 NewXXX 函数返回接口时就是简单工厂模式，也就是说Golang的一般推荐做法就是简单工厂。</p>
-<h1 id="工厂方法模式"><a href="#工厂方法模式" class="headerlink" title="工厂方法模式"></a>工厂方法模式</h1><p>工厂方法模式使用子类的方式延迟生成对象到子类中实现。<br>Go中不存在继承 所以使用匿名组合来实现<br>使用单独工厂接口是构造目标接口，</p>
 ]]></content>
   </entry>
   <entry>
@@ -5731,19 +5777,6 @@ sudo apt-get install gcc-mingw-w64<figure class="highlight plain"><table><tr><td
       </tags>
   </entry>
   <entry>
-    <title>go/go学习书籍</title>
-    <url>/2021/05/19/go/go%E5%AD%A6%E4%B9%A0%E4%B9%A6%E7%B1%8D/</url>
-    <content><![CDATA[<p>#书栈网<br><a href="https://www.bookstack.cn/" target="_blank" rel="noopener">https://www.bookstack.cn/</a></p>
-<h1 id="已读"><a href="#已读" class="headerlink" title="已读"></a>已读</h1><ul>
-<li>Go入门指南(<a href="https://www.bookstack.cn/books/the-way-to-go_ZH_CN" target="_blank" rel="noopener">https://www.bookstack.cn/books/the-way-to-go_ZH_CN</a>)</li>
-<li>GO专家编程(<a href="https://www.bookstack.cn/books/GoExpertProgramming" target="_blank" rel="noopener">https://www.bookstack.cn/books/GoExpertProgramming</a>)</li>
-</ul>
-<h1 id="阅读中"><a href="#阅读中" class="headerlink" title="阅读中"></a>阅读中</h1><ul>
-<li>Go语言中文文档(<a href="https://www.bookstack.cn/books/topgoer" target="_blank" rel="noopener">https://www.bookstack.cn/books/topgoer</a>)</li>
-</ul>
-<h2 id="context"><a href="#context" class="headerlink" title="context"></a>context</h2>]]></content>
-  </entry>
-  <entry>
     <title>go/go高级编程笔记</title>
     <url>/2021/05/19/go/go%E9%AB%98%E7%BA%A7%E7%BC%96%E7%A8%8B%E7%AC%94%E8%AE%B0/</url>
     <content><![CDATA[<p><a href="https://chai2010.cn/advanced-go-programming-book/" target="_blank" rel="noopener">go语言高级编程</a></p>
@@ -5829,6 +5862,19 @@ sudo apt-get install gcc-mingw-w64<figure class="highlight plain"><table><tr><td
       <tags>
         <tag>grpc</tag>
       </tags>
+  </entry>
+  <entry>
+    <title>go/go学习书籍</title>
+    <url>/2021/05/19/go/go%E5%AD%A6%E4%B9%A0%E4%B9%A6%E7%B1%8D/</url>
+    <content><![CDATA[<p>#书栈网<br><a href="https://www.bookstack.cn/" target="_blank" rel="noopener">https://www.bookstack.cn/</a></p>
+<h1 id="已读"><a href="#已读" class="headerlink" title="已读"></a>已读</h1><ul>
+<li>Go入门指南(<a href="https://www.bookstack.cn/books/the-way-to-go_ZH_CN" target="_blank" rel="noopener">https://www.bookstack.cn/books/the-way-to-go_ZH_CN</a>)</li>
+<li>GO专家编程(<a href="https://www.bookstack.cn/books/GoExpertProgramming" target="_blank" rel="noopener">https://www.bookstack.cn/books/GoExpertProgramming</a>)</li>
+</ul>
+<h1 id="阅读中"><a href="#阅读中" class="headerlink" title="阅读中"></a>阅读中</h1><ul>
+<li>Go语言中文文档(<a href="https://www.bookstack.cn/books/topgoer" target="_blank" rel="noopener">https://www.bookstack.cn/books/topgoer</a>)</li>
+</ul>
+<h2 id="context"><a href="#context" class="headerlink" title="context"></a>context</h2>]]></content>
   </entry>
   <entry>
     <title>go/企业级微服务网关</title>
@@ -6395,6 +6441,41 @@ sudo apt-get install gcc-mingw-w64<figure class="highlight plain"><table><tr><td
 <h3 id><a href="#" class="headerlink" title></a></h3>]]></content>
   </entry>
   <entry>
+    <title>docker/consul</title>
+    <url>/2021/05/19/docker/consul/</url>
+    <content><![CDATA[<h1 id="docker-安装consul"><a href="#docker-安装consul" class="headerlink" title="docker 安装consul"></a>docker 安装consul</h1><h2 id="参数"><a href="#参数" class="headerlink" title="参数"></a>参数</h2><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">8500 http 端口，用于 http 接口和 web ui</span><br><span class="line">8300 server rpc 端口，同一数据中心 consul server 之间通过该端口通信</span><br><span class="line">8301 serf lan 端口，同一数据中心 consul client 通过该端口通信</span><br><span class="line">8302 serf wan 端口，不同数据中心 consul server 通过该端口通信</span><br><span class="line">8600 dns 端口，用于服务发现</span><br><span class="line">-bbostrap-expect 2: 集群至少两台服务器，才能选举集群leader</span><br><span class="line">-ui：运行 web 控制台</span><br><span class="line">-bind： 监听网口，0.0.0.0 表示所有网口，如果不指定默认为127.0.0.1，则无法和容器通信</span><br><span class="line">-client ： 限制某些网口可以访问</span><br></pre></td></tr></table></figure>
+
+<h2 id="单机版"><a href="#单机版" class="headerlink" title="单机版"></a>单机版</h2><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">docker run --name consul -d -p 8500:8500 -p 8300:8300 -p 8301:8301 -p 8302:8302 -p 8600:8600 consul agent -server -bootstrap-expect 1 -ui -bind&#x3D;0.0.0.0 -client&#x3D;0.0.0.0</span><br></pre></td></tr></table></figure>]]></content>
+      <categories>
+        <category>docker</category>
+      </categories>
+      <tags>
+        <tag>docker-install-ware</tag>
+        <tag>consul</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>docker/docker-machine</title>
+    <url>/2021/05/19/docker/docker-machine/</url>
+    <content><![CDATA[<h2 id="下载"><a href="#下载" class="headerlink" title="下载"></a>下载</h2><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">base&#x3D;https:&#x2F;&#x2F;github.com&#x2F;docker&#x2F;machine&#x2F;releases&#x2F;download&#x2F;v0.16.0 &amp;&amp;</span><br><span class="line">  curl -L $base&#x2F;docker-machine-$(uname -s)-$(uname -m) &gt;&#x2F;tmp&#x2F;docker-machine &amp;&amp;</span><br><span class="line">  sudo mv &#x2F;tmp&#x2F;docker-machine &#x2F;usr&#x2F;local&#x2F;bin&#x2F;docker-machine &amp;&amp;</span><br><span class="line">  chmod +x &#x2F;usr&#x2F;local&#x2F;bin&#x2F;docker-mach</span><br></pre></td></tr></table></figure>
+<h3 id="网速慢"><a href="#网速慢" class="headerlink" title="网速慢"></a>网速慢</h3><p>使用xx_net代理</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">sudo  apt install privoxy</span><br><span class="line">export https_proxy&#x3D;127.0.0.1:8087</span><br><span class="line">export http_proxy&#x3D;127.0.0.1:8087</span><br></pre></td></tr></table></figure>
+
+<h3 id="x509问题"><a href="#x509问题" class="headerlink" title="x509问题"></a>x509问题</h3><p>curl -k 参数跳过证书验证</p>
+<h2 id="使用"><a href="#使用" class="headerlink" title="使用"></a>使用</h2><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">docker-machine create -d  virtualbox manager1</span><br><span class="line"></span><br><span class="line">输出：</span><br><span class="line">Running pre-create checks...</span><br><span class="line">(manager1) No default Boot2Docker ISO found locally, downloading the latest release...</span><br><span class="line">Error with pre-create check: &quot;Get https:&#x2F;&#x2F;api.github.com&#x2F;repos&#x2F;boot2docker&#x2F;boot2docker&#x2F;releases&#x2F;latest: x509: certificate signed by unknown authority&quot;</span><br></pre></td></tr></table></figure>
+<h3 id="直接去下载默认的iso文件"><a href="#直接去下载默认的iso文件" class="headerlink" title="直接去下载默认的iso文件"></a>直接去下载默认的iso文件</h3><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">curl -Lo ~&#x2F;.docker&#x2F;machine&#x2F;cache&#x2F;boot2docker.iso https:&#x2F;&#x2F;github.com&#x2F;boot2docker&#x2F;boot2docker&#x2F;releases&#x2F;download&#x2F;v19.03.5&#x2F;boot2docker.iso</span><br><span class="line"></span><br><span class="line">输出：</span><br><span class="line">curl: (60) SSL certificate problem: unable to get local issuer certificate</span><br><span class="line">More details here: https:&#x2F;&#x2F;curl.haxx.se&#x2F;docs&#x2F;sslcerts.html</span><br></pre></td></tr></table></figure>
+
+
+<h3 id="curl-60-SSL-certificate-problem-unable-to-get-local-issuer-certificate问题"><a href="#curl-60-SSL-certificate-problem-unable-to-get-local-issuer-certificate问题" class="headerlink" title="curl: (60) SSL certificate problem: unable to get local issuer certificate问题"></a>curl: (60) SSL certificate problem: unable to get local issuer certificate问题</h3><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">curl -k --remote-name --time-cond cacert.pem https:&#x2F;&#x2F;curl.haxx.se&#x2F;ca&#x2F;cacert.pem</span><br><span class="line"># 注意执行此命令后需要重新开终端</span><br></pre></td></tr></table></figure>
+
+<p>###　终端下载实在太慢问题</p>
+<ol>
+<li><a href="https://github.com/boot2docker/boot2docker/releases/download/v19.03.5/boot2docker.iso" target="_blank" rel="noopener">浏览器下载</a></li>
+<li>将iso文件移动到　 ~/.docker/machine/cache/boot2docker.iso</li>
+</ol>
+]]></content>
+  </entry>
+  <entry>
     <title>algo/力扣-数组和字符串</title>
     <url>/2021/05/19/algo/%E5%8A%9B%E6%89%A3-%E6%95%B0%E7%BB%84%E5%92%8C%E5%AD%97%E7%AC%A6%E4%B8%B2/</url>
     <content><![CDATA[<h2 id="集合、列表、数组"><a href="#集合、列表、数组" class="headerlink" title="集合、列表、数组"></a>集合、列表、数组</h2><h3 id="集合"><a href="#集合" class="headerlink" title="集合"></a>集合</h3><p>由一个或多个确定的元素所构成的整体。<br>集合里的元素类型不一定相同<br>集合里的元素没有顺序  </p>
@@ -6460,75 +6541,6 @@ sudo apt-get install gcc-mingw-w64<figure class="highlight plain"><table><tr><td
 <figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">func generate(numRows int) [][]int &#123;</span><br><span class="line">	var res [][]int</span><br><span class="line">	for i :&#x3D; 0; i &lt; numRows; i++ &#123;</span><br><span class="line">		arr :&#x3D; make([]int, i+1)</span><br><span class="line">		for j :&#x3D; 0; j &lt;&#x3D; i; j++ &#123;</span><br><span class="line">			if j &#x3D;&#x3D; 0 || j &#x3D;&#x3D; i &#123;</span><br><span class="line">				arr[j] &#x3D; 1</span><br><span class="line">			&#125; else &#123;</span><br><span class="line">				arr[j] &#x3D; res[i-1][j-1] + res[i-1][j]</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line">		res &#x3D; append(res, arr)</span><br><span class="line">	&#125;</span><br><span class="line">	return res</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>]]></content>
   </entry>
   <entry>
-    <title>android/ubuntu安装AndroidSDK和NDK</title>
-    <url>/2021/05/19/android/ubuntu%E5%AE%89%E8%A3%85AndroidSDK%E5%92%8CNDK/</url>
-    <content><![CDATA[<h1 id="安装java"><a href="#安装java" class="headerlink" title="安装java"></a>安装java</h1><p>参考:<br><a href="https://medium.com/@barcelos.ds/install-openjdk-11-lts-in-the-ubuntu-20-04-lts-2c06f17c990" target="_blank" rel="noopener">https://medium.com/@barcelos.ds/install-openjdk-11-lts-in-the-ubuntu-20-04-lts-2c06f17c990</a></p>
-<h2 id="下载"><a href="#下载" class="headerlink" title="下载"></a>下载</h2><p><a href="https://adoptopenjdk.net" target="_blank" rel="noopener">https://adoptopenjdk.net</a></p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">sudo mkdir ~&#x2F;DevTools</span><br><span class="line">sudo mkdir ~&#x2F;DevTools&#x2F;JDK</span><br><span class="line">sudo tar -zxvf ~&#x2F;下载&#x2F;OpenJDK11U-jdk***tar.gz -C ~&#x2F;DevTools&#x2F;JDK&#x2F;</span><br></pre></td></tr></table></figure>
-
-<h2 id="设置JAVA-HOME环境变量"><a href="#设置JAVA-HOME环境变量" class="headerlink" title="设置JAVA_HOME环境变量"></a>设置JAVA_HOME环境变量</h2><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">sudo  vim ~&#x2F;.profile</span><br><span class="line"></span><br><span class="line">DEV_TOOLS&#x3D;&quot;&#x2F;home&#x2F;$USER&#x2F;DevTools&quot;</span><br><span class="line">JAVA_HOME&#x3D;&quot;$DEV_TOOLS&#x2F;JDK&#x2F;jdk-11.0.7+10&quot;</span><br><span class="line">export JAVA_HOME</span><br><span class="line">PATH&#x3D;&quot;$JAVA_HOME&#x2F;bin:$PATH&quot;</span><br><span class="line"></span><br><span class="line">source ~&#x2F;.profile</span><br></pre></td></tr></table></figure>
-<h2 id="测试"><a href="#测试" class="headerlink" title="测试"></a>测试</h2><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">#JRE</span><br><span class="line">java --version</span><br><span class="line"></span><br><span class="line">#JDK</span><br><span class="line">javac --version</span><br></pre></td></tr></table></figure>
-
-
-<h1 id="安装Android-SDK"><a href="#安装Android-SDK" class="headerlink" title="安装Android SDK"></a>安装Android SDK</h1><p>参考:<br><a href="https://medium.com/@barcelos.ds/install-android-sdk-in-the-ubuntu-20-04-lts-without-android-studio-1b629924d6c5" target="_blank" rel="noopener">https://medium.com/@barcelos.ds/install-android-sdk-in-the-ubuntu-20-04-lts-without-android-studio-1b629924d6c5</a></p>
-<h2 id="下载命令行工具"><a href="#下载命令行工具" class="headerlink" title="下载命令行工具"></a>下载命令行工具</h2><p>网址：<a href="https://developer.android.com/studio" target="_blank" rel="noopener">https://developer.android.com/studio</a><br><img src="/2021/05/19/android/ubuntu%E5%AE%89%E8%A3%85AndroidSDK%E5%92%8CNDK/command-tools.png" alt></p>
-<h2 id="目录"><a href="#目录" class="headerlink" title="目录"></a>目录</h2><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">sudo mkdir ~&#x2F;DevTools</span><br><span class="line">sudo mkdir -P ~&#x2F;DevTools&#x2F;Android&#x2F;cmdline-tools&#x2F;latest</span><br></pre></td></tr></table></figure>
-
-<h2 id="解压放至于-DevTools-Android-cmdline-tools-latest"><a href="#解压放至于-DevTools-Android-cmdline-tools-latest" class="headerlink" title="解压放至于  ~/DevTools/Android/cmdline-tools/latest"></a>解压放至于  ~/DevTools/Android/cmdline-tools/latest</h2><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<h2 id="设置ANDROID-HOME环境变量"><a href="#设置ANDROID-HOME环境变量" class="headerlink" title="设置ANDROID_HOME环境变量"></a>设置ANDROID_HOME环境变量</h2><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">sudo  vim ~&#x2F;.profile</span><br><span class="line"></span><br><span class="line">DEV_TOOLS&#x3D;&quot;&#x2F;home&#x2F;$USER&#x2F;DevTools&quot;</span><br><span class="line">JAVA_HOME&#x3D;&quot;$DEV_TOOLS&#x2F;JDK&#x2F;jdk-11.0.7+10&quot;</span><br><span class="line">ANDROID_HOME&#x3D;&quot;$DEV_TOOLS&#x2F;Android&quot;</span><br><span class="line">export JAVA_HOME</span><br><span class="line">export ANDROID_HOME</span><br><span class="line">PATH&#x3D;&quot;$JAVA_HOME&#x2F;bin:$ANDROID_HOME&#x2F;cmdline-tools&#x2F;latest&#x2F;bin:$ANDROID_HOME&#x2F;platform-tools:$PATH&quot;</span><br><span class="line"></span><br><span class="line">source ~&#x2F;.profile</span><br></pre></td></tr></table></figure>
-
-<h2 id="Install-Platform-for-Android-29"><a href="#Install-Platform-for-Android-29" class="headerlink" title="Install Platform for Android 29"></a>Install Platform for Android 29</h2><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">sdkmanager &quot;platform-tools&quot; &quot;platforms;android-29&quot;</span><br></pre></td></tr></table></figure>
-
-<h2 id="Install-Build-Tools-for-Android-29"><a href="#Install-Build-Tools-for-Android-29" class="headerlink" title="Install Build Tools for Android 29"></a>Install Build Tools for Android 29</h2><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">sdkmanager &quot;build-tools&quot; &quot;build-tools;29.0.3&quot;</span><br></pre></td></tr></table></figure>
-
-<h2 id="Accept-Android-Licenses"><a href="#Accept-Android-Licenses" class="headerlink" title="Accept Android Licenses"></a>Accept Android Licenses</h2><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">sdkmanager --licenses</span><br></pre></td></tr></table></figure>
-
-<h2 id="Update-Android-Packages-when-necessary"><a href="#Update-Android-Packages-when-necessary" class="headerlink" title="Update Android Packages when necessary:"></a>Update Android Packages when necessary:</h2><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">sdkmanager --update</span><br></pre></td></tr></table></figure>
-
-<h2 id="测试-1"><a href="#测试-1" class="headerlink" title="测试"></a>测试</h2><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">sdkmanager --version</span><br><span class="line">sdkmanager --list</span><br></pre></td></tr></table></figure>
-
-<h1 id="安装NDK"><a href="#安装NDK" class="headerlink" title="安装NDK"></a>安装NDK</h1><h2 id="官网下载"><a href="#官网下载" class="headerlink" title="官网下载"></a>官网下载</h2><p><a href="https://developer.android.com/ndk/downloads/index.html" target="_blank" rel="noopener">https://developer.android.com/ndk/downloads/index.html</a></p>
-<h2 id="解压到-DevTools-Android"><a href="#解压到-DevTools-Android" class="headerlink" title="解压到 ~/DevTools/Android"></a>解压到 ~/DevTools/Android</h2><h2 id="设置ANDROID-NDK"><a href="#设置ANDROID-NDK" class="headerlink" title="设置ANDROID_NDK"></a>设置ANDROID_NDK</h2><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">sudo  vim ~&#x2F;.profile</span><br><span class="line"></span><br><span class="line">DEV_TOOLS&#x3D;&quot;&#x2F;home&#x2F;$USER&#x2F;DevTools&quot;</span><br><span class="line">JAVA_HOME&#x3D;&quot;$DEV_TOOLS&#x2F;JDK&#x2F;jdk-11.0.9.1+1&quot;</span><br><span class="line">ANDROID_HOME&#x3D;&quot;$DEV_TOOLS&#x2F;Android&quot;</span><br><span class="line"></span><br><span class="line">export JAVA_HOME</span><br><span class="line">export ANDROID_HOME</span><br><span class="line">export ANDROID_NDK&#x3D;$ANDROID_HOME&#x2F;android-ndk-r21b</span><br><span class="line"></span><br><span class="line">export GOPATH&#x3D;&#x2F;home&#x2F;yu&#x2F;go</span><br><span class="line">export PATH&#x3D;$PATH:&#x2F;usr&#x2F;local&#x2F;go&#x2F;bin:$GOPATH&#x2F;bin:$JAVA_HOME&#x2F;bin:$ANDROID_HOME&#x2F;cmdline-tools&#x2F;latest&#x2F;bin:$ANDROID_HOME&#x2F;platform-tools:$ANDROID_NDK</span><br><span class="line">export GOROOT&#x3D;&#x2F;usr&#x2F;local&#x2F;go</span><br><span class="line">export GOPROXY&#x3D;https:&#x2F;&#x2F;goproxy.cn</span><br><span class="line"></span><br><span class="line">source ~&#x2F;.profile</span><br></pre></td></tr></table></figure>
-
-<h2 id="测试-2"><a href="#测试-2" class="headerlink" title="测试"></a>测试</h2><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">ndk-build -v</span><br></pre></td></tr></table></figure>]]></content>
-  </entry>
-  <entry>
-    <title>docker/consul</title>
-    <url>/2021/05/19/docker/consul/</url>
-    <content><![CDATA[<h1 id="docker-安装consul"><a href="#docker-安装consul" class="headerlink" title="docker 安装consul"></a>docker 安装consul</h1><h2 id="参数"><a href="#参数" class="headerlink" title="参数"></a>参数</h2><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">8500 http 端口，用于 http 接口和 web ui</span><br><span class="line">8300 server rpc 端口，同一数据中心 consul server 之间通过该端口通信</span><br><span class="line">8301 serf lan 端口，同一数据中心 consul client 通过该端口通信</span><br><span class="line">8302 serf wan 端口，不同数据中心 consul server 通过该端口通信</span><br><span class="line">8600 dns 端口，用于服务发现</span><br><span class="line">-bbostrap-expect 2: 集群至少两台服务器，才能选举集群leader</span><br><span class="line">-ui：运行 web 控制台</span><br><span class="line">-bind： 监听网口，0.0.0.0 表示所有网口，如果不指定默认为127.0.0.1，则无法和容器通信</span><br><span class="line">-client ： 限制某些网口可以访问</span><br></pre></td></tr></table></figure>
-
-<h2 id="单机版"><a href="#单机版" class="headerlink" title="单机版"></a>单机版</h2><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">docker run --name consul -d -p 8500:8500 -p 8300:8300 -p 8301:8301 -p 8302:8302 -p 8600:8600 consul agent -server -bootstrap-expect 1 -ui -bind&#x3D;0.0.0.0 -client&#x3D;0.0.0.0</span><br></pre></td></tr></table></figure>]]></content>
-      <categories>
-        <category>docker</category>
-      </categories>
-      <tags>
-        <tag>docker-install-ware</tag>
-        <tag>consul</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>docker/docker-machine</title>
-    <url>/2021/05/19/docker/docker-machine/</url>
-    <content><![CDATA[<h2 id="下载"><a href="#下载" class="headerlink" title="下载"></a>下载</h2><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">base&#x3D;https:&#x2F;&#x2F;github.com&#x2F;docker&#x2F;machine&#x2F;releases&#x2F;download&#x2F;v0.16.0 &amp;&amp;</span><br><span class="line">  curl -L $base&#x2F;docker-machine-$(uname -s)-$(uname -m) &gt;&#x2F;tmp&#x2F;docker-machine &amp;&amp;</span><br><span class="line">  sudo mv &#x2F;tmp&#x2F;docker-machine &#x2F;usr&#x2F;local&#x2F;bin&#x2F;docker-machine &amp;&amp;</span><br><span class="line">  chmod +x &#x2F;usr&#x2F;local&#x2F;bin&#x2F;docker-mach</span><br></pre></td></tr></table></figure>
-<h3 id="网速慢"><a href="#网速慢" class="headerlink" title="网速慢"></a>网速慢</h3><p>使用xx_net代理</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">sudo  apt install privoxy</span><br><span class="line">export https_proxy&#x3D;127.0.0.1:8087</span><br><span class="line">export http_proxy&#x3D;127.0.0.1:8087</span><br></pre></td></tr></table></figure>
-
-<h3 id="x509问题"><a href="#x509问题" class="headerlink" title="x509问题"></a>x509问题</h3><p>curl -k 参数跳过证书验证</p>
-<h2 id="使用"><a href="#使用" class="headerlink" title="使用"></a>使用</h2><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">docker-machine create -d  virtualbox manager1</span><br><span class="line"></span><br><span class="line">输出：</span><br><span class="line">Running pre-create checks...</span><br><span class="line">(manager1) No default Boot2Docker ISO found locally, downloading the latest release...</span><br><span class="line">Error with pre-create check: &quot;Get https:&#x2F;&#x2F;api.github.com&#x2F;repos&#x2F;boot2docker&#x2F;boot2docker&#x2F;releases&#x2F;latest: x509: certificate signed by unknown authority&quot;</span><br></pre></td></tr></table></figure>
-<h3 id="直接去下载默认的iso文件"><a href="#直接去下载默认的iso文件" class="headerlink" title="直接去下载默认的iso文件"></a>直接去下载默认的iso文件</h3><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">curl -Lo ~&#x2F;.docker&#x2F;machine&#x2F;cache&#x2F;boot2docker.iso https:&#x2F;&#x2F;github.com&#x2F;boot2docker&#x2F;boot2docker&#x2F;releases&#x2F;download&#x2F;v19.03.5&#x2F;boot2docker.iso</span><br><span class="line"></span><br><span class="line">输出：</span><br><span class="line">curl: (60) SSL certificate problem: unable to get local issuer certificate</span><br><span class="line">More details here: https:&#x2F;&#x2F;curl.haxx.se&#x2F;docs&#x2F;sslcerts.html</span><br></pre></td></tr></table></figure>
-
-
-<h3 id="curl-60-SSL-certificate-problem-unable-to-get-local-issuer-certificate问题"><a href="#curl-60-SSL-certificate-problem-unable-to-get-local-issuer-certificate问题" class="headerlink" title="curl: (60) SSL certificate problem: unable to get local issuer certificate问题"></a>curl: (60) SSL certificate problem: unable to get local issuer certificate问题</h3><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">curl -k --remote-name --time-cond cacert.pem https:&#x2F;&#x2F;curl.haxx.se&#x2F;ca&#x2F;cacert.pem</span><br><span class="line"># 注意执行此命令后需要重新开终端</span><br></pre></td></tr></table></figure>
-
-<p>###　终端下载实在太慢问题</p>
-<ol>
-<li><a href="https://github.com/boot2docker/boot2docker/releases/download/v19.03.5/boot2docker.iso" target="_blank" rel="noopener">浏览器下载</a></li>
-<li>将iso文件移动到　 ~/.docker/machine/cache/boot2docker.iso</li>
-</ol>
-]]></content>
-  </entry>
-  <entry>
     <title>docker/etcd</title>
     <url>/2021/05/19/docker/etcd/</url>
     <content><![CDATA[<h1 id="docker安装ectd"><a href="#docker安装ectd" class="headerlink" title="docker安装ectd"></a>docker安装ectd</h1><h2 id="etcd-启动参数说明"><a href="#etcd-启动参数说明" class="headerlink" title="etcd 启动参数说明"></a>etcd 启动参数说明</h2><ul>
@@ -6582,6 +6594,40 @@ sudo apt-get install gcc-mingw-w64<figure class="highlight plain"><table><tr><td
         <tag>docker-install-ware</tag>
         <tag>kafak</tag>
       </tags>
+  </entry>
+  <entry>
+    <title>android/ubuntu安装AndroidSDK和NDK</title>
+    <url>/2021/05/19/android/ubuntu%E5%AE%89%E8%A3%85AndroidSDK%E5%92%8CNDK/</url>
+    <content><![CDATA[<h1 id="安装java"><a href="#安装java" class="headerlink" title="安装java"></a>安装java</h1><p>参考:<br><a href="https://medium.com/@barcelos.ds/install-openjdk-11-lts-in-the-ubuntu-20-04-lts-2c06f17c990" target="_blank" rel="noopener">https://medium.com/@barcelos.ds/install-openjdk-11-lts-in-the-ubuntu-20-04-lts-2c06f17c990</a></p>
+<h2 id="下载"><a href="#下载" class="headerlink" title="下载"></a>下载</h2><p><a href="https://adoptopenjdk.net" target="_blank" rel="noopener">https://adoptopenjdk.net</a></p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">sudo mkdir ~&#x2F;DevTools</span><br><span class="line">sudo mkdir ~&#x2F;DevTools&#x2F;JDK</span><br><span class="line">sudo tar -zxvf ~&#x2F;下载&#x2F;OpenJDK11U-jdk***tar.gz -C ~&#x2F;DevTools&#x2F;JDK&#x2F;</span><br></pre></td></tr></table></figure>
+
+<h2 id="设置JAVA-HOME环境变量"><a href="#设置JAVA-HOME环境变量" class="headerlink" title="设置JAVA_HOME环境变量"></a>设置JAVA_HOME环境变量</h2><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">sudo  vim ~&#x2F;.profile</span><br><span class="line"></span><br><span class="line">DEV_TOOLS&#x3D;&quot;&#x2F;home&#x2F;$USER&#x2F;DevTools&quot;</span><br><span class="line">JAVA_HOME&#x3D;&quot;$DEV_TOOLS&#x2F;JDK&#x2F;jdk-11.0.7+10&quot;</span><br><span class="line">export JAVA_HOME</span><br><span class="line">PATH&#x3D;&quot;$JAVA_HOME&#x2F;bin:$PATH&quot;</span><br><span class="line"></span><br><span class="line">source ~&#x2F;.profile</span><br></pre></td></tr></table></figure>
+<h2 id="测试"><a href="#测试" class="headerlink" title="测试"></a>测试</h2><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">#JRE</span><br><span class="line">java --version</span><br><span class="line"></span><br><span class="line">#JDK</span><br><span class="line">javac --version</span><br></pre></td></tr></table></figure>
+
+
+<h1 id="安装Android-SDK"><a href="#安装Android-SDK" class="headerlink" title="安装Android SDK"></a>安装Android SDK</h1><p>参考:<br><a href="https://medium.com/@barcelos.ds/install-android-sdk-in-the-ubuntu-20-04-lts-without-android-studio-1b629924d6c5" target="_blank" rel="noopener">https://medium.com/@barcelos.ds/install-android-sdk-in-the-ubuntu-20-04-lts-without-android-studio-1b629924d6c5</a></p>
+<h2 id="下载命令行工具"><a href="#下载命令行工具" class="headerlink" title="下载命令行工具"></a>下载命令行工具</h2><p>网址：<a href="https://developer.android.com/studio" target="_blank" rel="noopener">https://developer.android.com/studio</a><br><img src="/2021/05/19/android/ubuntu%E5%AE%89%E8%A3%85AndroidSDK%E5%92%8CNDK/command-tools.png" alt></p>
+<h2 id="目录"><a href="#目录" class="headerlink" title="目录"></a>目录</h2><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">sudo mkdir ~&#x2F;DevTools</span><br><span class="line">sudo mkdir -P ~&#x2F;DevTools&#x2F;Android&#x2F;cmdline-tools&#x2F;latest</span><br></pre></td></tr></table></figure>
+
+<h2 id="解压放至于-DevTools-Android-cmdline-tools-latest"><a href="#解压放至于-DevTools-Android-cmdline-tools-latest" class="headerlink" title="解压放至于  ~/DevTools/Android/cmdline-tools/latest"></a>解压放至于  ~/DevTools/Android/cmdline-tools/latest</h2><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h2 id="设置ANDROID-HOME环境变量"><a href="#设置ANDROID-HOME环境变量" class="headerlink" title="设置ANDROID_HOME环境变量"></a>设置ANDROID_HOME环境变量</h2><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">sudo  vim ~&#x2F;.profile</span><br><span class="line"></span><br><span class="line">DEV_TOOLS&#x3D;&quot;&#x2F;home&#x2F;$USER&#x2F;DevTools&quot;</span><br><span class="line">JAVA_HOME&#x3D;&quot;$DEV_TOOLS&#x2F;JDK&#x2F;jdk-11.0.7+10&quot;</span><br><span class="line">ANDROID_HOME&#x3D;&quot;$DEV_TOOLS&#x2F;Android&quot;</span><br><span class="line">export JAVA_HOME</span><br><span class="line">export ANDROID_HOME</span><br><span class="line">PATH&#x3D;&quot;$JAVA_HOME&#x2F;bin:$ANDROID_HOME&#x2F;cmdline-tools&#x2F;latest&#x2F;bin:$ANDROID_HOME&#x2F;platform-tools:$PATH&quot;</span><br><span class="line"></span><br><span class="line">source ~&#x2F;.profile</span><br></pre></td></tr></table></figure>
+
+<h2 id="Install-Platform-for-Android-29"><a href="#Install-Platform-for-Android-29" class="headerlink" title="Install Platform for Android 29"></a>Install Platform for Android 29</h2><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">sdkmanager &quot;platform-tools&quot; &quot;platforms;android-29&quot;</span><br></pre></td></tr></table></figure>
+
+<h2 id="Install-Build-Tools-for-Android-29"><a href="#Install-Build-Tools-for-Android-29" class="headerlink" title="Install Build Tools for Android 29"></a>Install Build Tools for Android 29</h2><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">sdkmanager &quot;build-tools&quot; &quot;build-tools;29.0.3&quot;</span><br></pre></td></tr></table></figure>
+
+<h2 id="Accept-Android-Licenses"><a href="#Accept-Android-Licenses" class="headerlink" title="Accept Android Licenses"></a>Accept Android Licenses</h2><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">sdkmanager --licenses</span><br></pre></td></tr></table></figure>
+
+<h2 id="Update-Android-Packages-when-necessary"><a href="#Update-Android-Packages-when-necessary" class="headerlink" title="Update Android Packages when necessary:"></a>Update Android Packages when necessary:</h2><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">sdkmanager --update</span><br></pre></td></tr></table></figure>
+
+<h2 id="测试-1"><a href="#测试-1" class="headerlink" title="测试"></a>测试</h2><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">sdkmanager --version</span><br><span class="line">sdkmanager --list</span><br></pre></td></tr></table></figure>
+
+<h1 id="安装NDK"><a href="#安装NDK" class="headerlink" title="安装NDK"></a>安装NDK</h1><h2 id="官网下载"><a href="#官网下载" class="headerlink" title="官网下载"></a>官网下载</h2><p><a href="https://developer.android.com/ndk/downloads/index.html" target="_blank" rel="noopener">https://developer.android.com/ndk/downloads/index.html</a></p>
+<h2 id="解压到-DevTools-Android"><a href="#解压到-DevTools-Android" class="headerlink" title="解压到 ~/DevTools/Android"></a>解压到 ~/DevTools/Android</h2><h2 id="设置ANDROID-NDK"><a href="#设置ANDROID-NDK" class="headerlink" title="设置ANDROID_NDK"></a>设置ANDROID_NDK</h2><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">sudo  vim ~&#x2F;.profile</span><br><span class="line"></span><br><span class="line">DEV_TOOLS&#x3D;&quot;&#x2F;home&#x2F;$USER&#x2F;DevTools&quot;</span><br><span class="line">JAVA_HOME&#x3D;&quot;$DEV_TOOLS&#x2F;JDK&#x2F;jdk-11.0.9.1+1&quot;</span><br><span class="line">ANDROID_HOME&#x3D;&quot;$DEV_TOOLS&#x2F;Android&quot;</span><br><span class="line"></span><br><span class="line">export JAVA_HOME</span><br><span class="line">export ANDROID_HOME</span><br><span class="line">export ANDROID_NDK&#x3D;$ANDROID_HOME&#x2F;android-ndk-r21b</span><br><span class="line"></span><br><span class="line">export GOPATH&#x3D;&#x2F;home&#x2F;yu&#x2F;go</span><br><span class="line">export PATH&#x3D;$PATH:&#x2F;usr&#x2F;local&#x2F;go&#x2F;bin:$GOPATH&#x2F;bin:$JAVA_HOME&#x2F;bin:$ANDROID_HOME&#x2F;cmdline-tools&#x2F;latest&#x2F;bin:$ANDROID_HOME&#x2F;platform-tools:$ANDROID_NDK</span><br><span class="line">export GOROOT&#x3D;&#x2F;usr&#x2F;local&#x2F;go</span><br><span class="line">export GOPROXY&#x3D;https:&#x2F;&#x2F;goproxy.cn</span><br><span class="line"></span><br><span class="line">source ~&#x2F;.profile</span><br></pre></td></tr></table></figure>
+
+<h2 id="测试-2"><a href="#测试-2" class="headerlink" title="测试"></a>测试</h2><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">ndk-build -v</span><br></pre></td></tr></table></figure>]]></content>
   </entry>
   <entry>
     <title>docker/zookeeper</title>

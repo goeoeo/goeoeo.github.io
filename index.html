@@ -49,9 +49,9 @@
 
   <meta name="description" content="自律给我自由">
 <meta property="og:type" content="website">
-<meta property="og:title" content="phpdi">
+<meta property="og:title" content="goeoeo">
 <meta property="og:url" content="https://phpdi.github.io/index.html">
-<meta property="og:site_name" content="phpdi">
+<meta property="og:site_name" content="goeoeo">
 <meta property="og:description" content="自律给我自由">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:author" content="Chen Yu">
@@ -69,7 +69,7 @@
   };
 </script>
 
-  <title> phpdi</title>
+  <title> goeoeo</title>
   
 
 
@@ -113,11 +113,11 @@
     <div>
       <a href="/" class="brand" rel="start">
         <span class="logo-line-before"><i></i></span>
-        <span class="site-title">phpdi</span>
+        <span class="site-title">goeoeo</span>
         <span class="logo-line-after"><i></i></span>
       </a>
     </div>
-        <h1 class="site-subtitle" itemprop="description">飞向自由</h1>
+        <h1 class="site-subtitle" itemprop="description">会吃鱼</h1>
       
   </div>
 
@@ -210,7 +210,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://phpdi.github.io/2021/08/06/go/grpc%E5%AE%A2%E6%88%B7%E7%AB%AF%E8%B0%83%E7%94%A8%E6%9C%8D%E5%8A%A1%E7%AB%AF%E6%8A%A5%E9%94%99transport%20is%20closing/">
+    <link itemprop="mainEntityOfPage" href="https://phpdi.github.io/2021/11/22/tidb/%E5%9F%BA%E7%A1%80/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/head.jpeg">
@@ -219,12 +219,12 @@
     </span>
 
     <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="phpdi">
+      <meta itemprop="name" content="goeoeo">
     </span>
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
           
-            <a href="/2021/08/06/go/grpc%E5%AE%A2%E6%88%B7%E7%AB%AF%E8%B0%83%E7%94%A8%E6%9C%8D%E5%8A%A1%E7%AB%AF%E6%8A%A5%E9%94%99transport%20is%20closing/" class="post-title-link" itemprop="url">go/grpc客户端调用服务端报错transport is closing</a>
+            <a href="/2021/11/22/tidb/%E5%9F%BA%E7%A1%80/" class="post-title-link" itemprop="url">tidb/基础</a>
         </h2>
 
         <div class="post-meta">
@@ -234,23 +234,16 @@
               </span>
               <span class="post-meta-item-text">发表于</span>
 
-              <time title="创建时间：2021-08-06 23:08:19" itemprop="dateCreated datePublished" datetime="2021-08-06T23:08:19+08:00">2021-08-06</time>
+              <time title="创建时间：2021-11-22 09:45:07" itemprop="dateCreated datePublished" datetime="2021-11-22T09:45:07+08:00">2021-11-22</time>
             </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2021-08-07 00:28:12" itemprop="dateModified" datetime="2021-08-07T00:28:12+08:00">2021-08-07</time>
-              </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
                 <i class="fa fa-folder-o"></i>
               </span>
               <span class="post-meta-item-text">分类于</span>
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/go/" itemprop="url" rel="index">
-                    <span itemprop="name">go</span>
+                  <a href="/categories/tidb/" itemprop="url" rel="index">
+                    <span itemprop="name">tidb</span>
                   </a>
                 </span>
             </span>
@@ -266,122 +259,10 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <h1 id="grpc客户端调用服务端报错transport-is-closing"><a href="#grpc客户端调用服务端报错transport-is-closing" class="headerlink" title="grpc客户端调用服务端报错transport is closing"></a>grpc客户端调用服务端报错transport is closing</h1><p>为什么要吧这个错误单独写一篇文章，因为这个问题我debug了3天才解决。</p>
-<h2 id="首先说下现象"><a href="#首先说下现象" class="headerlink" title="首先说下现象"></a>首先说下现象</h2><p>测试环境频繁报错，transport is closing，context canceled ，最先没有引起重视，直到导致了数据不一致才决定查这个这个问题。项目中只用了一元调用</p>
-<h2 id="grpc-client-和-server-配置"><a href="#grpc-client-和-server-配置" class="headerlink" title="grpc client 和 server 配置"></a>grpc client 和 server 配置</h2><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> BackOffConfig = backoff.Config&#123;</span><br><span class="line">	BaseDelay:  <span class="number">1</span> * time.Second,</span><br><span class="line">	Multiplier: <span class="number">1</span>,</span><br><span class="line">	Jitter:     <span class="number">0.2</span>,</span><br><span class="line">	MaxDelay:   <span class="number">60</span> * time.Second,</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> KeepaliveClientConfig = keepalive.ClientParameters&#123;</span><br><span class="line">	Time:                <span class="number">10</span> * time.Second,</span><br><span class="line">	Timeout:             <span class="number">5</span> * time.Minute,</span><br><span class="line">	PermitWithoutStream: <span class="literal">true</span>,</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> KeepaliveServerConfig = keepalive.ServerParameters&#123;</span><br><span class="line">	MaxConnectionIdle:     <span class="number">15</span> * time.Second, <span class="comment">// If a client is idle for 10 seconds, send a GOAWAY</span></span><br><span class="line">	MaxConnectionAge:      <span class="number">30</span> * time.Second, <span class="comment">// If any connection is alive for more than 30 seconds, send a GOAWAY</span></span><br><span class="line">	MaxConnectionAgeGrace: <span class="number">5</span> * time.Second,  <span class="comment">// Allow 5 seconds for pending RPCs to complete before forcibly closing connections</span></span><br><span class="line">	Time:    <span class="number">5</span> * time.Second, <span class="comment">// Ping the client if it is idle for 5 seconds to ensure the connection is still active</span></span><br><span class="line">	Timeout: <span class="number">5</span> * time.Minute, <span class="comment">// Wait 1 second for the ping ack before assuming the connection is dead</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> KeepaliveEnforcementPolicy = keepalive.EnforcementPolicy&#123;</span><br><span class="line">	MinTime:             <span class="number">5</span> * time.Second,</span><br><span class="line">	PermitWithoutStream: <span class="literal">true</span>,</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>配置很平常，和grpc-go example相差不远<br>项目中多个客户端共用了grpc conn 由于配置 keepalive 所以是长连接的方式<br>握手过程:<br>grpc client (一元调用)=&gt; k8s service (由kube-proxy通过iptables/ipvs)负载均衡到 =&gt; pod </p>
-<blockquote>
-<p>这种调用方式会存在流量不均衡，后面再解决</p>
-</blockquote>
-<p><a href="https://github.com/grpc/grpc-go" target="_blank" rel="noopener">官方</a>解释的这4中情况都不是:</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">1. mis-configured transport credentials, connection failed on handshaking</span><br><span class="line">2. bytes disrupted, possibly by a proxy in between</span><br><span class="line">3. server shutdown</span><br><span class="line">4. Keepalive parameters caused connection shutdown, for example if you have configured your server to terminate connections</span><br><span class="line">regularly to trigger DNS lookups. If this is the case, you may want to increase your MaxConnectionAgeGrace, to allow longer RPC calls to finish.</span><br></pre></td></tr></table></figure>
-
-<h2 id="可能的原因"><a href="#可能的原因" class="headerlink" title="可能的原因"></a>可能的原因</h2><h3 id="并发？"><a href="#并发？" class="headerlink" title="并发？"></a>并发？</h3><p>项目中实际使用是，go 并发接受rabbitmq的消息，然后再用rpc客户端（共享的grpc conn连接）去调用rpc server ,我在本地测试的是否，测过并发的情况<br>并发量在5000的时候没有问题，想着测试环境没有这么高的并发，变没有注意。  </p>
-<h3 id="grpc-debug"><a href="#grpc-debug" class="headerlink" title="grpc debug"></a>grpc debug</h3><p>我开启了grpc 调试模式 </p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$ export GODEBUG&#x3D;http2debug&#x3D;2</span><br><span class="line">$ export GRPC_GO_LOG_VERBOSITY_LEVEL&#x3D;99</span><br><span class="line">$ export GRPC_GO_LOG_SEVERITY_LEVEL&#x3D;info</span><br></pre></td></tr></table></figure>
-<p>观察到每隔15秒，grpc server 会发送一个goaway的数据包到客户端，这是因为上面我们配置的MaxConnectionIdle 为15秒，通知客户端关闭连接。<br>假如client已经发送请求到服务端，服务端请求耗时，在ping timeout 时间以内网络抖动（断网在联网），服务端再响应给客户端是没有问题的，<br>但超过了这个时间，client就会报transport is closing,server 也会报context canceled 。这导致我一直认为是网络抖动的问题。</p>
-<h3 id="网络抖动？"><a href="#网络抖动？" class="headerlink" title="网络抖动？"></a>网络抖动？</h3><p>我将grpc client和grpc server 的ping timeout 调成了5分钟，此时还是有很多请求几秒钟就报transport is closing<br>因此排除了网络抖动这种情况。  </p>
-<h2 id="翻阅-https-github-com-grpc-grpc-go-的issues"><a href="#翻阅-https-github-com-grpc-grpc-go-的issues" class="headerlink" title="翻阅 https://github.com/grpc/grpc-go 的issues"></a>翻阅 <a href="https://github.com/grpc/grpc-go" target="_blank" rel="noopener">https://github.com/grpc/grpc-go</a> 的issues</h2><p>直到我看到了这个issues:<a href="https://github.com/grpc/grpc-go/issues/3297" target="_blank" rel="noopener">https://github.com/grpc/grpc-go/issues/3297</a><br>问题主描述了，他在单连接情况下遇到的the connection is draining和transport is closing<br>有人回答了他: </p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">This is caused by a race between the start of a stream on a connection and the graceful close of the connection.</span><br><span class="line">The server sends a GOAWAY when number of requests on the connection reaches the limit. But the client keeps sending new streams on this connection, until it receives the GOAWAY. The steams between server sending GOAWAY and client receiving GOAWAY will fail.</span><br><span class="line"></span><br><span class="line">The gRPC client does a retry for this kind of failures, but retry only happens once (for each RPC).</span><br><span class="line"></span><br><span class="line">How often do the errors happen? And which of the errors (&quot;connection is draining&quot; vs &quot;transport is closing&quot;) happen more often?</span><br><span class="line"></span><br><span class="line">One thing to try is to add grpc.WaitForReady(true) to the RPC.</span><br><span class="line">Another thing to think of is to handle these errors in the application code. This is what will happen when the connection (TCP) is down for whatever reason. The application should be able to handle them (retry, or fail).</span><br></pre></td></tr></table></figure>
-<p>意思是由连接上的流开始和连接的正常关闭之间的竞争引起的。 当连接上的请求数达到限制时，服务器发送 GOAWAY。但是客户端不断在这个连接上发送新的流，直到它收到 GOAWAY。服务器发送 GOAWAY 和客户端接收 GOAWAY 之间的流将失败。<br>也就是说如果server发出goaway的时候，此时grpc conn 正在发送流到服务端，这时候会产生一个竞争关系。  </p>
-<p>抱着这个想法，我重新实验了我的并发程序，我将并发数量改到10000，transport is closing 出现了。平常的并发并不会触发服务器关闭连接，而是当服务器发送GOAWAY包的时候，客户端还在<br>并发的发送数据,就会导致服务端和客户端的流丢失，从而触发服务端关闭连接，报transport is closing。 </p>
-<p>于是我将grpc server的配置改成了这样:  </p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">var KeepaliveServerConfig &#x3D; keepalive.ServerParameters&#123;</span><br><span class="line">	Time:    5 * time.Second, &#x2F;&#x2F; Ping the client if it is idle for 5 seconds to ensure the connection is still active</span><br><span class="line">	Timeout: 5 * time.Minute, &#x2F;&#x2F; Wait 1 second for the ping ack before assuming the connection is dead</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>本身我们使用的长连接，在项目中不会频繁创建连接。所以这里不用关闭它，其次即使是断网的情况下，在ping timeout 时间内，网络恢复后连接依然可以重用。最坏的情况就是断网连不上了<br>这个连接就交个操作系统去回收吧（本身 tcp 也有keepalive机制）改完上到测试环境，世界安静了，再没有transport is closing</p>
-<h2 id="注意"><a href="#注意" class="headerlink" title="注意"></a>注意</h2><ol>
-<li>使用k8s service的负载均衡是4层负载均衡，只在握手时起作用，一旦长连接建立，service的负载便没有了作用。解决这个问题需要用grpc 客户端负载均衡进行处理  </li>
-<li>在helm upgrade的时候依然会报，这是因为在关闭grpc server 没有调用 GracefulStop() 方法进行平滑停止.  </li>
-<li>GOAWAY 是http2协议包，并非grpc独有,http2实现了io多路复用，就是说可以并发的向同一个tcp连接中写数据，消息也不会错乱。  </li>
-<li>http2 同一个连接，发送连接数是有限制的，在服务端可以设置（官方并不建议调这个参数），超过这个显示，后面的请求会排队。  </li>
-</ol>
-<h2 id="参考文章"><a href="#参考文章" class="headerlink" title="参考文章"></a>参考文章</h2><ul>
-<li><a href="https://github.com/grpc/grpc-go/issues/3297" target="_blank" rel="noopener">https://github.com/grpc/grpc-go/issues/3297</a></li>
-<li><a href="https://www.jianshu.com/p/ae72ad58ecb6" target="_blank" rel="noopener">Golang信号处理和优雅退出守护进程</a></li>
-<li><a href="https://pandaychen.github.io/2020/09/01/GRPC-CLIENT-CONN-LASTING/" target="_blank" rel="noopener">https://pandaychen.github.io/2020/09/01/GRPC-CLIENT-CONN-LASTING/</a></li>
-<li><a href="https://cloud.tencent.com/developer/article/1816510" target="_blank" rel="noopener">gRPC的平滑关闭和在Kubernetes上的服务摘流方案总结</a></li>
-<li><a href="https://docs.microsoft.com/zh-cn/aspnet/core/grpc/performance?view=aspnetcore-5.0#reuse-grpc-channels" target="_blank" rel="noopener">GRPC 性能最佳做法</a></li>
-</ul>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-        
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://phpdi.github.io/2021/08/01/go/golang%E4%BB%A3%E7%A0%81%E9%A3%8E%E6%A0%BC/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/head.jpeg">
-      <meta itemprop="name" content="Chen Yu">
-      <meta itemprop="description" content="自律给我自由">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="phpdi">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2021/08/01/go/golang%E4%BB%A3%E7%A0%81%E9%A3%8E%E6%A0%BC/" class="post-title-link" itemprop="url">go/golang代码风格</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2021-08-01 17:24:44" itemprop="dateCreated datePublished" datetime="2021-08-01T17:24:44+08:00">2021-08-01</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2021-08-07 00:30:01" itemprop="dateModified" datetime="2021-08-07T00:30:01+08:00">2021-08-07</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/go/" itemprop="url" rel="index">
-                    <span itemprop="name">go</span>
-                  </a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h1 id="Go-Code-Review-Comments-翻译-编写优雅golang代码"><a href="#Go-Code-Review-Comments-翻译-编写优雅golang代码" class="headerlink" title="Go Code Review Comments 翻译 编写优雅golang代码"></a>Go Code Review Comments 翻译 编写优雅golang代码</h1><p>官方代码规范指南  </p>
-<h2 id="Gofmt"><a href="#Gofmt" class="headerlink" title="Gofmt"></a>Gofmt</h2><p>在 Go 代码上运行 gofmt 以自动修复大多数的机械性风格问题。几乎所有不正规的 Go 代码都在使用gofmt。本文档的剩余部分涉及非机械性风格问题。</p>
-<p>另一种方法是使用 goimports，这是gofmt的超集，gofmt可根据需要额外添加（和删除）导入行。</p>
+          <h1 id="TiDB基础入门"><a href="#TiDB基础入门" class="headerlink" title="TiDB基础入门"></a>TiDB基础入门</h1><p>TiDB 是一个分布式 NewSQL <a href="https://www.jianshu.com/p/ed55f20e736a" target="_blank" rel="noopener">SQL 、 NoSQL 和 NewSQL 的优缺点比较 </a>数据库。它支持水平弹性扩展、ACID 事务、标准 SQL、MySQL 语法和 MySQL 协议，具有数据强一致的高可用特性，是一个不仅适合 OLTP 场景还适合 OLAP 场景的混合数据库。</p>
           <!--noindex-->
             <div class="post-button">
-              <a class="btn" href="/2021/08/01/go/golang%E4%BB%A3%E7%A0%81%E9%A3%8E%E6%A0%BC/#more" rel="contents">
+              <a class="btn" href="/2021/11/22/tidb/%E5%9F%BA%E7%A1%80/#more" rel="contents">
                 阅读全文 &raquo;
               </a>
             </div>
@@ -405,7 +286,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://phpdi.github.io/2021/08/01/go/golang%E9%A1%B9%E7%9B%AE%E7%BB%93%E6%9E%84%E8%A7%84%E8%8C%83/">
+    <link itemprop="mainEntityOfPage" href="https://phpdi.github.io/2021/11/22/docker/mysql/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/head.jpeg">
@@ -414,12 +295,12 @@
     </span>
 
     <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="phpdi">
+      <meta itemprop="name" content="goeoeo">
     </span>
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
           
-            <a href="/2021/08/01/go/golang%E9%A1%B9%E7%9B%AE%E7%BB%93%E6%9E%84%E8%A7%84%E8%8C%83/" class="post-title-link" itemprop="url">go/golang项目结构规范</a>
+            <a href="/2021/11/22/docker/mysql/" class="post-title-link" itemprop="url">docker/mysql</a>
         </h2>
 
         <div class="post-meta">
@@ -429,23 +310,16 @@
               </span>
               <span class="post-meta-item-text">发表于</span>
 
-              <time title="创建时间：2021-08-01 09:53:57" itemprop="dateCreated datePublished" datetime="2021-08-01T09:53:57+08:00">2021-08-01</time>
+              <time title="创建时间：2021-11-22 09:45:07" itemprop="dateCreated datePublished" datetime="2021-11-22T09:45:07+08:00">2021-11-22</time>
             </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2021-08-07 00:30:10" itemprop="dateModified" datetime="2021-08-07T00:30:10+08:00">2021-08-07</time>
-              </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
                 <i class="fa fa-folder-o"></i>
               </span>
               <span class="post-meta-item-text">分类于</span>
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/go/" itemprop="url" rel="index">
-                    <span itemprop="name">go</span>
+                  <a href="/categories/docker/" itemprop="url" rel="index">
+                    <span itemprop="name">docker</span>
                   </a>
                 </span>
             </span>
@@ -461,10 +335,154 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <h1 id="golang项目结构规范"><a href="#golang项目结构规范" class="headerlink" title="golang项目结构规范"></a>golang项目结构规范</h1><p><a href="https://github.com/golang-standards/project-layout" target="_blank" rel="noopener">https://github.com/golang-standards/project-layout</a> 项目总结了 Go 项目的布局，这是Go应用程序项目的基本布局，并不是Go核心开发团队<br>定义的官方标准；但是，这是Go生态系统中的一种常见的项目布局模式。</p>
+          <h1 id="docker-安装mysql"><a href="#docker-安装mysql" class="headerlink" title="docker 安装mysql"></a>docker 安装mysql</h1><h2 id="单机版"><a href="#单机版" class="headerlink" title="单机版"></a>单机版</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">docker run -it -d -p 3306:3306 --name docker_mysql -e MYSQL_ROOT_PASSWORD&#x3D;123456  --restart&#x3D;always  mysql </span><br><span class="line">docker run -it -d -p 13306:3306 --name newbilling_mysql -e MYSQL_ROOT_PASSWORD&#x3D;p@ss52Dnb  --restart&#x3D;always  mysql</span><br></pre></td></tr></table></figure>
+
+<p>docker run -it -d -p 33063:3306 –name mysql5.6.47-1 -e MYSQL_ROOT_PASSWORD=123456  –restart=always  mysql:5.6.47 </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker run --name postgres -e POSTGRES_PASSWORD&#x3D;p@ss52Dnb -p 5432:5432 --restart&#x3D;always -d postgres</span><br></pre></td></tr></table></figure>
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+        
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://phpdi.github.io/2021/11/22/docker/zookeeper/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/head.jpeg">
+      <meta itemprop="name" content="Chen Yu">
+      <meta itemprop="description" content="自律给我自由">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="goeoeo">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2021/11/22/docker/zookeeper/" class="post-title-link" itemprop="url">docker/zookeeper</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2021-11-22 09:45:07" itemprop="dateCreated datePublished" datetime="2021-11-22T09:45:07+08:00">2021-11-22</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/docker/" itemprop="url" rel="index">
+                    <span itemprop="name">docker</span>
+                  </a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="docker-安装zookeeper"><a href="#docker-安装zookeeper" class="headerlink" title="docker 安装zookeeper"></a>docker 安装zookeeper</h1><h2 id="单机版"><a href="#单机版" class="headerlink" title="单机版"></a>单机版</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker run -d -p 2181:2181 --name some-zookeeper --restart&#x3D;always zookeeper</span><br></pre></td></tr></table></figure>
+
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+        
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://phpdi.github.io/2021/11/22/git/Git%E5%9B%A2%E9%98%9F%E5%8D%8F%E4%BD%9C%E6%9C%80%E4%BD%B3%E5%AE%9E%E8%B7%B5-GitFlow/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/head.jpeg">
+      <meta itemprop="name" content="Chen Yu">
+      <meta itemprop="description" content="自律给我自由">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="goeoeo">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2021/11/22/git/Git%E5%9B%A2%E9%98%9F%E5%8D%8F%E4%BD%9C%E6%9C%80%E4%BD%B3%E5%AE%9E%E8%B7%B5-GitFlow/" class="post-title-link" itemprop="url">git/Git团队协作最佳实践-GitFlow</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2021-11-22 09:45:07" itemprop="dateCreated datePublished" datetime="2021-11-22T09:45:07+08:00">2021-11-22</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/git/" itemprop="url" rel="index">
+                    <span itemprop="name">git</span>
+                  </a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h2 id="Git的优点"><a href="#Git的优点" class="headerlink" title="Git的优点"></a>Git的优点</h2><ul>
+<li>分布式，不需要远程仓库，也可以正常工作</li>
+<li>优秀的分支模型，创建和删除方便且高效，因为分支的创建和删除，只是操作HEAD指针。</li>
+<li>分支合并轻松</li></ul>
           <!--noindex-->
             <div class="post-button">
-              <a class="btn" href="/2021/08/01/go/golang%E9%A1%B9%E7%9B%AE%E7%BB%93%E6%9E%84%E8%A7%84%E8%8C%83/#more" rel="contents">
+              <a class="btn" href="/2021/11/22/git/Git%E5%9B%A2%E9%98%9F%E5%8D%8F%E4%BD%9C%E6%9C%80%E4%BD%B3%E5%AE%9E%E8%B7%B5-GitFlow/#more" rel="contents">
                 阅读全文 &raquo;
               </a>
             </div>
@@ -488,7 +506,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://phpdi.github.io/2021/07/19/k8s/k8s%E8%B8%A9%E5%9D%91%E6%97%A5%E5%BF%97/">
+    <link itemprop="mainEntityOfPage" href="https://phpdi.github.io/2021/11/22/git/gitlab_runner/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/head.jpeg">
@@ -497,12 +515,12 @@
     </span>
 
     <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="phpdi">
+      <meta itemprop="name" content="goeoeo">
     </span>
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
           
-            <a href="/2021/07/19/k8s/k8s%E8%B8%A9%E5%9D%91%E6%97%A5%E5%BF%97/" class="post-title-link" itemprop="url">k8s/k8s踩坑日志</a>
+            <a href="/2021/11/22/git/gitlab_runner/" class="post-title-link" itemprop="url">git/gitlab_runner</a>
         </h2>
 
         <div class="post-meta">
@@ -512,86 +530,7 @@
               </span>
               <span class="post-meta-item-text">发表于</span>
 
-              <time title="创建时间：2021-07-19 10:54:32" itemprop="dateCreated datePublished" datetime="2021-07-19T10:54:32+08:00">2021-07-19</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2021-07-21 16:31:43" itemprop="dateModified" datetime="2021-07-21T16:31:43+08:00">2021-07-21</time>
-              </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h1 id="pvc挂载不上pv"><a href="#pvc挂载不上pv" class="headerlink" title="pvc挂载不上pv"></a>pvc挂载不上pv</h1><ul>
-<li>annotations 不一致会影响pvc的挂载</li>
-</ul>
-<h1 id="通过coredns-访问mysql-beatflow-data-svc和mysql-beatflow-data-svc-cluster-local-，有些时候在不同命名空间下可能访问不到"><a href="#通过coredns-访问mysql-beatflow-data-svc和mysql-beatflow-data-svc-cluster-local-，有些时候在不同命名空间下可能访问不到" class="headerlink" title="通过coredns 访问mysql.beatflow-data.svc和mysql.beatflow-data.svc.cluster.local ，有些时候在不同命名空间下可能访问不到"></a>通过coredns 访问mysql.beatflow-data.svc和mysql.beatflow-data.svc.cluster.local ，有些时候在不同命名空间下可能访问不到</h1><h1 id="coredns-debug"><a href="#coredns-debug" class="headerlink" title="coredns debug"></a>coredns debug</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">kubectl run dig --rm -it --image&#x3D;docker.io&#x2F;azukiapp&#x2F;dig &#x2F;bin&#x2F;sh</span><br><span class="line">&#x2F; # nslookup kubernetes.default</span><br><span class="line">Server:		10.96.0.10</span><br><span class="line">Address:	10.96.0.10#53</span><br><span class="line"></span><br><span class="line">Name:	kubernetes.default.svc.cluster.local</span><br><span class="line">Address: 10.96.0.1</span><br></pre></td></tr></table></figure>
-
-<h1 id="在kubeSphere-管理的k8s集群上搭建使用Prometheus-Operator-helm安装prometheus-起不来"><a href="#在kubeSphere-管理的k8s集群上搭建使用Prometheus-Operator-helm安装prometheus-起不来" class="headerlink" title="在kubeSphere 管理的k8s集群上搭建使用Prometheus Operator helm安装prometheus 起不来"></a>在kubeSphere 管理的k8s集群上搭建使用Prometheus Operator helm安装prometheus 起不来</h1><ul>
-<li>kubeSphere 已经安装了prometheus ,并且每个节点已经装了node-exporter所以导致起不来</li>
-<li>目前我们只需要安装grafana就可以了</li>
-<li>Prometheus Operator 通过service monitor 添加监控节点。</li>
-</ul>
-<h1 id="k8s服务中headless-和-Cluster-IP-区别，使用headless会导致pod访问延迟"><a href="#k8s服务中headless-和-Cluster-IP-区别，使用headless会导致pod访问延迟" class="headerlink" title="k8s服务中headless 和 Cluster IP 区别，使用headless会导致pod访问延迟"></a>k8s服务中headless 和 Cluster IP 区别，使用headless会导致pod访问延迟</h1><p>headless 模式通过CoreDNS 解析到pod上面不走service的负载均衡<br>因为通过coredns ，pod起来后，并不能立即访问到会有延迟<br>clusterIp 模式，访问service 的clusterIp 再通过iptables 转发到pod上面，pod起来后可以直接访问，不会有延迟。  </p>
-<h1 id="minikube-在使用ntf-报错-does-not-support-NFS-export"><a href="#minikube-在使用ntf-报错-does-not-support-NFS-export" class="headerlink" title="minikube 在使用ntf 报错  does not support NFS export"></a>minikube 在使用ntf 报错  does not support NFS export</h1><p>挂载 /nfs 报错 does not support NFS export<br>解决: 挂载 /data/nfs<br>minikube 在driver 为docker的模式下面 只能挂载到/data目录下面去，其他目录都会报错</p>
-<h1 id="helm-安装报错"><a href="#helm-安装报错" class="headerlink" title="helm 安装报错"></a>helm 安装报错</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Error: Kubernetes cluster unreachable: Get &quot;http:&#x2F;&#x2F;localhost:8080&#x2F;version?timeout&#x3D;32s&quot;: dial tcp 127.0.0.1:8080: connect: connection refused</span><br></pre></td></tr></table></figure>
-<p>报错原因: helm v3版本不再需要Tiller，而是直接访问ApiServer来与k8s交互，通过环境变量KUBECONFIG来读取存有ApiServre的地址与token的配置文件地址，默认地址为<del>/.kube/config<br>export KUBECONFIG=</del>/.kube/config  </p>
-<h1 id="minikube-服务端口映射到主机"><a href="#minikube-服务端口映射到主机" class="headerlink" title="minikube 服务端口映射到主机"></a>minikube 服务端口映射到主机</h1><p>场景: 需要外网访问minikube集群中的服务  </p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">kubectl port-forward svc&#x2F;mysql 30001:3306 -n beatflow-data --address 0.0.0.0</span><br></pre></td></tr></table></figure>
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-        
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://phpdi.github.io/2021/07/15/go/goland%E6%BF%80%E6%B4%BB%E6%95%99%E7%A8%8B/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/head.jpeg">
-      <meta itemprop="name" content="Chen Yu">
-      <meta itemprop="description" content="自律给我自由">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="phpdi">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2021/07/15/go/goland%E6%BF%80%E6%B4%BB%E6%95%99%E7%A8%8B/" class="post-title-link" itemprop="url">go/goland激活教程</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2021-07-15 11:12:45" itemprop="dateCreated datePublished" datetime="2021-07-15T11:12:45+08:00">2021-07-15</time>
+              <time title="创建时间：2021-11-22 09:45:07" itemprop="dateCreated datePublished" datetime="2021-11-22T09:45:07+08:00">2021-11-22</time>
             </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -599,8 +538,8 @@
               </span>
               <span class="post-meta-item-text">分类于</span>
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/go/" itemprop="url" rel="index">
-                    <span itemprop="name">go</span>
+                  <a href="/categories/git/" itemprop="url" rel="index">
+                    <span itemprop="name">git</span>
                   </a>
                 </span>
             </span>
@@ -616,11 +555,10 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <p>提供三种方式进行激活</p>
-<h2 id="申请使用License（推荐）"><a href="#申请使用License（推荐）" class="headerlink" title="申请使用License（推荐）"></a>申请使用License（推荐）</h2><p>转载自<a href="https://www.toutiao.com/a6744540170936123916/" target="_blank" rel="noopener">免费获取 JetBrains 全系产品正版 License</a></p>
+          <h1 id="Gitlab-Runner"><a href="#Gitlab-Runner" class="headerlink" title="Gitlab Runner"></a>Gitlab Runner</h1><h3 id="GitLab-CI"><a href="#GitLab-CI" class="headerlink" title="GitLab-CI"></a>GitLab-CI</h3><p>GitLab-CI就是一套配合GitLab使用的持续集成系统（当然，还有其它的持续集成系统，同样可以配合GitLab使用，比如Jenkins）。而且GitLab8.0以后的版本是默认集成了GitLab-CI并且默认启用的。.gitlab-ci.yml的脚本解析就由它来负责。</p>
           <!--noindex-->
             <div class="post-button">
-              <a class="btn" href="/2021/07/15/go/goland%E6%BF%80%E6%B4%BB%E6%95%99%E7%A8%8B/#more" rel="contents">
+              <a class="btn" href="/2021/11/22/git/gitlab_runner/#more" rel="contents">
                 阅读全文 &raquo;
               </a>
             </div>
@@ -644,7 +582,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://phpdi.github.io/2021/07/15/go/%E5%B7%A5%E4%BD%9C%E4%B8%AD%E9%81%87%E5%88%B0%E7%9A%84%E9%97%AE%E9%A2%98/">
+    <link itemprop="mainEntityOfPage" href="https://phpdi.github.io/2021/11/22/git/gitlab%E9%85%8D%E7%BD%AE%E4%BB%A3%E7%A0%81%E8%A6%86%E7%9B%96%E7%8E%87/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/head.jpeg">
@@ -653,12 +591,12 @@
     </span>
 
     <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="phpdi">
+      <meta itemprop="name" content="goeoeo">
     </span>
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
           
-            <a href="/2021/07/15/go/%E5%B7%A5%E4%BD%9C%E4%B8%AD%E9%81%87%E5%88%B0%E7%9A%84%E9%97%AE%E9%A2%98/" class="post-title-link" itemprop="url">go/工作中遇到的问题</a>
+            <a href="/2021/11/22/git/gitlab%E9%85%8D%E7%BD%AE%E4%BB%A3%E7%A0%81%E8%A6%86%E7%9B%96%E7%8E%87/" class="post-title-link" itemprop="url">git/gitlab配置代码覆盖率</a>
         </h2>
 
         <div class="post-meta">
@@ -668,7 +606,240 @@
               </span>
               <span class="post-meta-item-text">发表于</span>
 
-              <time title="创建时间：2021-07-15 11:12:45" itemprop="dateCreated datePublished" datetime="2021-07-15T11:12:45+08:00">2021-07-15</time>
+              <time title="创建时间：2021-11-22 09:45:07" itemprop="dateCreated datePublished" datetime="2021-11-22T09:45:07+08:00">2021-11-22</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/git/" itemprop="url" rel="index">
+                    <span itemprop="name">git</span>
+                  </a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <p>gitlab 中配置golang单元测试已经代码覆盖率</p>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2021/11/22/git/gitlab%E9%85%8D%E7%BD%AE%E4%BB%A3%E7%A0%81%E8%A6%86%E7%9B%96%E7%8E%87/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+        
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://phpdi.github.io/2021/11/22/git/%E5%9F%BA%E4%BA%8Egit_rebase%E7%9A%84%E5%BC%80%E5%8F%91%E6%B5%81%E7%A8%8B/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/head.jpeg">
+      <meta itemprop="name" content="Chen Yu">
+      <meta itemprop="description" content="自律给我自由">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="goeoeo">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2021/11/22/git/%E5%9F%BA%E4%BA%8Egit_rebase%E7%9A%84%E5%BC%80%E5%8F%91%E6%B5%81%E7%A8%8B/" class="post-title-link" itemprop="url">git/基于git_rebase的开发流程</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2021-11-22 09:45:07" itemprop="dateCreated datePublished" datetime="2021-11-22T09:45:07+08:00">2021-11-22</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/git/" itemprop="url" rel="index">
+                    <span itemprop="name">git</span>
+                  </a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h2 id="分支"><a href="#分支" class="headerlink" title="分支"></a>分支</h2><ul>
+<li>master  #不能直接推送</li>
+<li>staging  #开发主流程分支</li>
+<li>self_branch #自己的开发分支，从staging 打出</li>
+</ul>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2021/11/22/git/%E5%9F%BA%E4%BA%8Egit_rebase%E7%9A%84%E5%BC%80%E5%8F%91%E6%B5%81%E7%A8%8B/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+        
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://phpdi.github.io/2021/11/22/git/%E5%BF%AB%E9%80%9F%E8%AE%A4%E8%AF%86Git/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/head.jpeg">
+      <meta itemprop="name" content="Chen Yu">
+      <meta itemprop="description" content="自律给我自由">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="goeoeo">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2021/11/22/git/%E5%BF%AB%E9%80%9F%E8%AE%A4%E8%AF%86Git/" class="post-title-link" itemprop="url">git/快速认识Git</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2021-11-22 09:45:07 / 修改时间：11:12:55" itemprop="dateCreated datePublished" datetime="2021-11-22T09:45:07+08:00">2021-11-22</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/git/" itemprop="url" rel="index">
+                    <span itemprop="name">git</span>
+                  </a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h2 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h2><p>分布式版本控制系统，由Linux创始人Linus使用C语言实现</p>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2021/11/22/git/%E5%BF%AB%E9%80%9F%E8%AE%A4%E8%AF%86Git/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+        
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://phpdi.github.io/2021/11/22/go/%E5%B7%A5%E4%BD%9C%E4%B8%AD%E9%81%87%E5%88%B0%E7%9A%84%E9%97%AE%E9%A2%98/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/head.jpeg">
+      <meta itemprop="name" content="Chen Yu">
+      <meta itemprop="description" content="自律给我自由">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="goeoeo">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2021/11/22/go/%E5%B7%A5%E4%BD%9C%E4%B8%AD%E9%81%87%E5%88%B0%E7%9A%84%E9%97%AE%E9%A2%98/" class="post-title-link" itemprop="url">go/工作中遇到的问题</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2021-11-22 09:45:07" itemprop="dateCreated datePublished" datetime="2021-11-22T09:45:07+08:00">2021-11-22</time>
             </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -696,7 +867,7 @@
           <h2 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h2><p>此文章记录，go开发中遇到的一些问题</p>
           <!--noindex-->
             <div class="post-button">
-              <a class="btn" href="/2021/07/15/go/%E5%B7%A5%E4%BD%9C%E4%B8%AD%E9%81%87%E5%88%B0%E7%9A%84%E9%97%AE%E9%A2%98/#more" rel="contents">
+              <a class="btn" href="/2021/11/22/go/%E5%B7%A5%E4%BD%9C%E4%B8%AD%E9%81%87%E5%88%B0%E7%9A%84%E9%97%AE%E9%A2%98/#more" rel="contents">
                 阅读全文 &raquo;
               </a>
             </div>
@@ -720,7 +891,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://phpdi.github.io/2021/07/15/k8s/minikube/">
+    <link itemprop="mainEntityOfPage" href="https://phpdi.github.io/2021/11/22/micro/%E9%A2%86%E5%9F%9F%E9%A9%B1%E5%8A%A8%E8%AE%BE%E8%AE%A1%E4%BB%A3%E7%A0%81%E5%AE%9E%E8%B7%B5/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/head.jpeg">
@@ -729,12 +900,12 @@
     </span>
 
     <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="phpdi">
+      <meta itemprop="name" content="goeoeo">
     </span>
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
           
-            <a href="/2021/07/15/k8s/minikube/" class="post-title-link" itemprop="url">k8s/minikube</a>
+            <a href="/2021/11/22/micro/%E9%A2%86%E5%9F%9F%E9%A9%B1%E5%8A%A8%E8%AE%BE%E8%AE%A1%E4%BB%A3%E7%A0%81%E5%AE%9E%E8%B7%B5/" class="post-title-link" itemprop="url">micro/领域驱动设计代码实践</a>
         </h2>
 
         <div class="post-meta">
@@ -744,23 +915,16 @@
               </span>
               <span class="post-meta-item-text">发表于</span>
 
-              <time title="创建时间：2021-07-15 11:12:45" itemprop="dateCreated datePublished" datetime="2021-07-15T11:12:45+08:00">2021-07-15</time>
+              <time title="创建时间：2021-11-22 09:45:07" itemprop="dateCreated datePublished" datetime="2021-11-22T09:45:07+08:00">2021-11-22</time>
             </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2021-07-22 16:08:03" itemprop="dateModified" datetime="2021-07-22T16:08:03+08:00">2021-07-22</time>
-              </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
                 <i class="fa fa-folder-o"></i>
               </span>
               <span class="post-meta-item-text">分类于</span>
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/k8s/" itemprop="url" rel="index">
-                    <span itemprop="name">k8s</span>
+                  <a href="/categories/micro/" itemprop="url" rel="index">
+                    <span itemprop="name">micro</span>
                   </a>
                 </span>
             </span>
@@ -776,301 +940,10 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <a id="more"></a>
-
-
-<h1 id="minikube"><a href="#minikube" class="headerlink" title="minikube"></a>minikube</h1><p>minikube 可以搭建一个在单节点运行的k8s集群  </p>
-<p>使用minikube 构建k8s本地化开发环境</p>
-<!--more-->
-
-<h2 id="Minikube安装"><a href="#Minikube安装" class="headerlink" title="Minikube安装"></a>Minikube安装</h2><p>首先我们需要下载Minikube的二进制安装包并安装:</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">curl -LO https:&#x2F;&#x2F;storage.googleapis.com&#x2F;minikube&#x2F;releases&#x2F;latest&#x2F;minikube-linux-amd64</span><br><span class="line">sudo install minikube-linux-amd64 &#x2F;usr&#x2F;local&#x2F;bin&#x2F;minikube</span><br></pre></td></tr></table></figure>
-<h2 id="Minikube启动"><a href="#Minikube启动" class="headerlink" title="Minikube启动"></a>Minikube启动</h2><p>需要使用非root 启动</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">minikube start</span><br><span class="line"></span><br><span class="line"># 信任私有仓库 注意如果已经 minikube start 过了，那么需要删除集群重新启动 minikube delete ,这个参数才会生效</span><br><span class="line">minikube start --insecure-registry&#x3D;repo.goeoeo.com:8100</span><br></pre></td></tr></table></figure>
-
-<h2 id="安装kubectl"><a href="#安装kubectl" class="headerlink" title="安装kubectl"></a>安装kubectl</h2><p>查看kubectl的版本号，第一次使用会直接安装kubectl</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">minikube kubectl version</span><br></pre></td></tr></table></figure>
-<p>想直接使用kubectl命令的话，可以将其复制到/bin目录下去：  </p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"># 查找kubectl命令的位置</span><br><span class="line">find &#x2F; -name kubectl</span><br><span class="line"># 找到之后复制到&#x2F;bin目录下</span><br><span class="line">cp &#x2F;mydata&#x2F;docker&#x2F;volumes&#x2F;minikube&#x2F;_data&#x2F;lib&#x2F;minikube&#x2F;binaries&#x2F;v1.20.0&#x2F;kubectl &#x2F;usr&#x2F;local&#x2F;bin&#x2F;</span><br><span class="line"># 直接使用kubectl命令</span><br><span class="line">kubectl version</span><br></pre></td></tr></table></figure>
-
-<h2 id="构建本地镜像"><a href="#构建本地镜像" class="headerlink" title="构建本地镜像"></a>构建本地镜像</h2><p>使用与Minikube VM相同的Docker主机构建镜像，以使镜像自动存在。为此，请确保使用Minikube Docker守护进程：  </p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">eval $(minikube docker-env)</span><br></pre></td></tr></table></figure>
-<blockquote>
-<p>注意：如果不在使用Minikube主机时，可以通过运行eval $(minikube docker-env -u)来撤消此更改。</p>
-</blockquote>
-<p>使用Minikube Docker守护进程build Docker镜像：  </p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker build -t hello-node:v1 .</span><br></pre></td></tr></table></figure>
-
-<h2 id="Deployment"><a href="#Deployment" class="headerlink" title="Deployment"></a>Deployment</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">kubectl run hello-node --image&#x3D;hello-node:v1 --port&#x3D;8080</span><br></pre></td></tr></table></figure>
-
-<p>这里有个坑 ,我打tag的时候打成的latest，一直报找不到镜像，原因是如果省略imagePullPolicy 镜像tag为 :latest 策略为always ，否则 策略为 IfNotPresent</p>
-<h2 id="minikube-端口转发至本地"><a href="#minikube-端口转发至本地" class="headerlink" title="minikube 端口转发至本地"></a>minikube 端口转发至本地</h2><p>这实际上是k8s的功能  </p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">kubectl port-forward svc&#x2F;mysql 32316:3306 -n beatflow-data --address 0.0.0.0  </span><br><span class="line"></span><br><span class="line">#端口转发要注意，helm install重新安装后，要kill掉当前的端口转发进程，再重新的进行转发一次才能生效，但是helm upgrade是无影响的</span><br></pre></td></tr></table></figure>
-<blockquote>
-<p>kubectl proxy 只能转发http请求</p>
-</blockquote>
-<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p><a href="https://www.toutiao.com/i6918983713418166788/?tt_from=weixin&amp;utm_campaign=client_share&amp;wxshare_count=1&amp;timestamp=1622183070&amp;app=news_article&amp;utm_source=weixin&amp;utm_medium=toutiao_android&amp;use_new_style=1&amp;req_id=202105281424300101350990833D07A87F&amp;share_token=c2146953-602c-452f-9329-67054429477a&amp;group_id=6918983713418166788" target="_blank" rel="noopener">https://www.toutiao.com/i6918983713418166788/?tt_from=weixin&amp;utm_campaign=client_share&amp;wxshare_count=1&amp;timestamp=1622183070&amp;app=news_article&amp;utm_source=weixin&amp;utm_medium=toutiao_android&amp;use_new_style=1&amp;req_id=202105281424300101350990833D07A87F&amp;share_token=c2146953-602c-452f-9329-67054429477a&amp;group_id=6918983713418166788</a></p>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-        
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://phpdi.github.io/2021/07/15/linux/ubuntu%20%E5%AE%89%E8%A3%85%E5%90%84%E7%A7%8D%E8%BD%AF%E4%BB%B6/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/head.jpeg">
-      <meta itemprop="name" content="Chen Yu">
-      <meta itemprop="description" content="自律给我自由">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="phpdi">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2021/07/15/linux/ubuntu%20%E5%AE%89%E8%A3%85%E5%90%84%E7%A7%8D%E8%BD%AF%E4%BB%B6/" class="post-title-link" itemprop="url">linux/ubuntu 安装各种软件</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-              
-
-              <time title="创建时间：2021-07-15 11:12:45 / 修改时间：11:16:18" itemprop="dateCreated datePublished" datetime="2021-07-15T11:12:45+08:00">2021-07-15</time>
-            </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/linux/" itemprop="url" rel="index">
-                    <span itemprop="name">linux</span>
-                  </a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h3 id="chrome"><a href="#chrome" class="headerlink" title="chrome"></a>chrome</h3><h4 id="deb包"><a href="#deb包" class="headerlink" title="deb包"></a>deb包</h4><p><a href="http://www.ubuntuchrome.com/" target="_blank" rel="noopener">http://www.ubuntuchrome.com/</a></p>
-<h4 id="脚本安装"><a href="#脚本安装" class="headerlink" title="脚本安装"></a>脚本安装</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">sudo wget http://www.linuxidc.com/files/repo/google-chrome.list -P /etc/apt/sources.list.d/</span><br><span class="line">wget -q -O - https://dl.google.com/linux/linux_signing_key.pub  | sudo apt-key add -</span><br><span class="line">sudo apt-get update</span><br><span class="line">sudo apt-get install -y google-chrome-stable</span><br></pre></td></tr></table></figure>
+          <p>领域驱动设计代码实现</p>
           <!--noindex-->
             <div class="post-button">
-              <a class="btn" href="/2021/07/15/linux/ubuntu%20%E5%AE%89%E8%A3%85%E5%90%84%E7%A7%8D%E8%BD%AF%E4%BB%B6/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-        
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://phpdi.github.io/2021/07/12/rabbitmq/rabbitmq/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/head.jpeg">
-      <meta itemprop="name" content="Chen Yu">
-      <meta itemprop="description" content="自律给我自由">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="phpdi">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2021/07/12/rabbitmq/rabbitmq/" class="post-title-link" itemprop="url">rabbitmq/rabbitmq</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-              
-
-              <time title="创建时间：2021-07-12 11:49:34 / 修改时间：14:49:33" itemprop="dateCreated datePublished" datetime="2021-07-12T11:49:34+08:00">2021-07-12</time>
-            </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/mq/" itemprop="url" rel="index">
-                    <span itemprop="name">mq</span>
-                  </a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <a id="more"></a>
-
-
-<h2 id="消息队列协议"><a href="#消息队列协议" class="headerlink" title="消息队列协议"></a>消息队列协议</h2><p>传递、存储、分发  </p>
-<h3 id="面试题：为什么消息中间件不直接使用http协议。"><a href="#面试题：为什么消息中间件不直接使用http协议。" class="headerlink" title="面试题：为什么消息中间件不直接使用http协议。"></a>面试题：为什么消息中间件不直接使用http协议。</h3><p>1.http协议请求报文头和响应报文头是比较复杂的，包含了消息传递不需要的部分。<br>2.http大部分是短连接，一个请求到响应很可能会中断，中断以后就不会持久化，消息中间件可能是一个长期的获取消息的过程，出现问题和故障要对数据或消息持久化。  </p>
-<h3 id="常见消息中间件协议"><a href="#常见消息中间件协议" class="headerlink" title="常见消息中间件协议"></a>常见消息中间件协议</h3><p>AMQP、MQTT、Kafka、OpenMessage</p>
-<h4 id="AMQP"><a href="#AMQP" class="headerlink" title="AMQP"></a>AMQP</h4><p>Erlang语言开发，默认端口5672<br>产品支持：rabbmitmq acitvemq  </p>
-<ul>
-<li>分布式事务支持</li>
-<li>消息的持久化支持</li>
-<li>高性能和高可靠的消息处理优势<h4 id="MQTT协议"><a href="#MQTT协议" class="headerlink" title="MQTT协议"></a>MQTT协议</h4>MQTT协议是IBM开放的一个即时通讯协议，物联网系统架构中重要组成部分<br>产品支持：rabbmitmq acitvemq  </li>
-</ul>
-<p>特点  </p>
-<ol>
-<li>轻量  </li>
-<li>结构简单  </li>
-<li>传输快、不支持事务  </li>
-<li>没有持久化设计。<br>应用场景：   </li>
-<li>适用于计算能力有限   </li>
-<li>低带宽 </li>
-<li>网络不稳地的场景  </li>
-</ol>
-<h4 id="OpenMessage"><a href="#OpenMessage" class="headerlink" title="OpenMessage"></a>OpenMessage</h4><p>由阿里、雅虎、滴滴等共同参与创立的分布式消息中间件（布道者保持中立态度。。。）</p>
-<ol>
-<li>结构简单  </li>
-<li>解析速度快  </li>
-<li>支持事务和持久化  </li>
-</ol>
-<p>产品支持：rocketmq  </p>
-<h4 id="kafka协议"><a href="#kafka协议" class="headerlink" title="kafka协议"></a>kafka协议</h4><p>kafka协议是基于TCP/IP的二进制协议，消息内部是通过长度分割，由一些基本的数据类型组成<br>特点是：  </p>
-<ol>
-<li>结构简单  </li>
-<li>解析速度快  </li>
-<li>无事务支持  </li>
-<li>有持久化设计  </li>
-</ol>
-<h2 id="消息持久化"><a href="#消息持久化" class="headerlink" title="消息持久化"></a>消息持久化</h2><p>将数据存入磁盘中</p>
-<h2 id="消息的分发策略"><a href="#消息的分发策略" class="headerlink" title="消息的分发策略"></a>消息的分发策略</h2><p>消息队列MQ是一种推送的过程。  </p>
-<h3 id="消息分发策略的机制和对比"><a href="#消息分发策略的机制和对比" class="headerlink" title="消息分发策略的机制和对比"></a>消息分发策略的机制和对比</h3><p>||ActiveMQ|RabbitMQ|Kafka|RocketMQ|<br>||:—:|:—:|:—:|:—:|<br>|发布订阅|支持|支持|支持|支持|<br>|轮询分发|支持|支持|支持|/|<br>|公平分发|/|支持|支持|/|<br>|重发|支持|支持|/|支持|<br>|消息拉取|/|支持|支持|支持|</p>
-<blockquote>
-<p>轮询分发，消费分发数量是均匀的。<br>公平分发会根据服务器的性能分发消息，会造成消息的倾斜。rabbitmq 使用公平分发需要使用手动确认的方式。</p>
-</blockquote>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-        
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://phpdi.github.io/2021/06/29/k8s/helm/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/head.jpeg">
-      <meta itemprop="name" content="Chen Yu">
-      <meta itemprop="description" content="自律给我自由">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="phpdi">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2021/06/29/k8s/helm/" class="post-title-link" itemprop="url">k8s/helm</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2021-06-29 13:44:09" itemprop="dateCreated datePublished" datetime="2021-06-29T13:44:09+08:00">2021-06-29</time>
-            </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/k8s/" itemprop="url" rel="index">
-                    <span itemprop="name">k8s</span>
-                  </a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h1 id="Helm"><a href="#Helm" class="headerlink" title="Helm"></a>Helm</h1><p>Helm 是 Kubernetes 的包管理器。包管理器类似于我们在 Ubuntu 中使用的apt、Centos中使用的yum 或者Python中的 pip 一样，能快速查找、下载和安装软件包<br>官网:<a href="https://helm.sh/" target="_blank" rel="noopener">https://helm.sh/</a><br>官方文档地址: <a href="https://helm.sh/zh/docs" target="_blank" rel="noopener">https://helm.sh/zh/docs</a></p>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2021/06/29/k8s/helm/#more" rel="contents">
+              <a class="btn" href="/2021/11/22/micro/%E9%A2%86%E5%9F%9F%E9%A9%B1%E5%8A%A8%E8%AE%BE%E8%AE%A1%E4%BB%A3%E7%A0%81%E5%AE%9E%E8%B7%B5/#more" rel="contents">
                 阅读全文 &raquo;
               </a>
             </div>
@@ -1094,7 +967,7 @@
 
   
   <nav class="pagination">
-    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><span class="space">&hellip;</span><a class="page-number" href="/page/7/">7</a><a class="extend next" rel="next" href="/page/2/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
+    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><span class="space">&hellip;</span><a class="page-number" href="/page/8/">8</a><a class="extend next" rel="next" href="/page/2/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
   </nav>
 
 
@@ -1162,20 +1035,20 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">64</span>
+          <span class="site-state-item-count">76</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
             <a href="/categories/">
           
-        <span class="site-state-item-count">14</span>
+        <span class="site-state-item-count">15</span>
         <span class="site-state-item-name">分类</span></a>
       </div>
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">49</span>
+        <span class="site-state-item-count">57</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>

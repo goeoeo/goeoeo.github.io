@@ -1,6 +1,63 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title>linux/进程和线程的区别</title>
+    <url>/2021/12/03/linux/%E8%BF%9B%E7%A8%8B%E5%92%8C%E7%BA%BF%E7%A8%8B%E7%9A%84%E5%8C%BA%E5%88%AB/</url>
+    <content><![CDATA[<blockquote>
+<p>百度百科:</p>
+</blockquote>
+<p><strong>进程（Process）</strong> 是计算机中的程序关于某数据集合上的一次运行活动，是系统进行资源分配和调度的基本单位，是操作系统结构的基础。 在当代面向线程设计的计算机结构中，进程是线程的容器。程序是指令、数据及其组织形式的描述，进程是程序的实体</p>
+<p><strong>线程（thread）</strong> 是操作系统能够进行运算调度的最小单位。它被包含在进程之中，是进程中的实际运作单位。一条线程指的是进程中一个单一顺序的控制流，一个进程中可以并发多个线程，每条线程并行执行不同的任务。</p>
+<a id="more"></a>
+
+
+<h1 id="深入理解"><a href="#深入理解" class="headerlink" title="深入理解"></a>深入理解</h1><p><img src="/2021/12/03/linux/%E8%BF%9B%E7%A8%8B%E5%92%8C%E7%BA%BF%E7%A8%8B%E7%9A%84%E5%8C%BA%E5%88%AB/1629488-20190622115300479-2129397443.png" alt></p>
+<h2 id="进程-线程-内存-文件-网络句柄"><a href="#进程-线程-内存-文件-网络句柄" class="headerlink" title="进程(线程+内存+文件/网络句柄)"></a>进程(线程+内存+文件/网络句柄)</h2><h3 id="内存"><a href="#内存" class="headerlink" title="内存"></a>内存</h3><p>我们通常所理解的内存是我们所见到的(2G/4G/8G/16G)物理内存,它为什么会在进程之中呢？<br>实际上，这里的内存是逻辑内存。指的是内存的寻址空间。每个进程的内存是相互独立的。  </p>
+<h3 id="文件-网络句柄"><a href="#文件-网络句柄" class="headerlink" title="文件/网络句柄"></a>文件/网络句柄</h3><p>它们是所有的进程所共有的，例如打开同一个文件，去抢同一个网络的端口这样的操作是被允许的。  </p>
+<h3 id="线程-栈-PC-TLS"><a href="#线程-栈-PC-TLS" class="headerlink" title="线程(栈+PC+TLS)"></a>线程(栈+PC+TLS)</h3><p><img src="/2021/12/03/linux/%E8%BF%9B%E7%A8%8B%E5%92%8C%E7%BA%BF%E7%A8%8B%E7%9A%84%E5%8C%BA%E5%88%AB/1629488-20190622115318812-109279192.png" alt></p>
+<h4 id="栈"><a href="#栈" class="headerlink" title="栈"></a>栈</h4><p>我们通常都是说调用堆栈，其实这里的堆是没有含义的，调用堆栈就是调用栈的意思。<br>那么我们的栈里面有什么呢？<br>我们从主线程的入口main函数，会不断的进行函数调用，<br>每次调用的时候，会把所有的参数和返回地址压入到栈中。  </p>
+<h4 id="PC-Program-Counter"><a href="#PC-Program-Counter" class="headerlink" title="PC (Program Counter)"></a>PC (Program Counter)</h4><p>程序计数器，操作系统真正运行的是一个个的线程，<br>而我们的进程只是它的一个容器。PC就是指向当前的指令，而这个指令是放在内存中。<br>每个线程都有一串自己的指针，去指向自己当前所在内存的指针。<br>计算机绝大部分是存储程序性的，说的就是我们的数据和程序是存储在同一片内存里的<br>这个内存中既有我们的数据变量又有我们的程序。所以我们的PC指针就是指向我们的内存的。  </p>
+<p>缓冲区溢出   </p>
+<p>例如：我们有个地方要输入用户名，本来是用来存数据的地方。<br>然后黑客把数据输入的特别长。这个长度超出了我们给数据存储的内存区，这时候跑到了<br>我们给程序分配的一部分内存中。黑客就可以通过这种办法将他所要运行的代码<br>写入到用户名框中，来植入进来。  </p>
+<h4 id="TLS-thread-local-storage"><a href="#TLS-thread-local-storage" class="headerlink" title="TLS(thread local storage)"></a>TLS(thread local storage)</h4><p>之前我们看到每个进程都有自己独立的内存，这时候我们想，我们的线程有没有一块独立的内存呢?答案是有的，就是TLS。<br>可以用来存储我们线程所独有的数据。<br>可以看到：线程才是我们操作系统所真正去运行的，而进程呢，则是像容器一样他把需要的一些东西放在了一起，而把不需要的东西做了一层隔离，进行隔离开来。  </p>
+<h1 id="计算机执行程序的过程"><a href="#计算机执行程序的过程" class="headerlink" title="计算机执行程序的过程"></a>计算机执行程序的过程</h1><h2 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h2><p>CPU+RAM+各种资源（比如显卡，光驱，键盘，GPS, 等等外设）构成我们的电脑，但是电脑的运行，实际就是CPU和相关寄存器以及RAM之间的事情  </p>
+<h2 id="一个最最基础的事实"><a href="#一个最最基础的事实" class="headerlink" title="一个最最基础的事实"></a>一个最最基础的事实</h2><p>CPU太快，太快，太快了，寄存器仅仅能够追的上他的脚步，RAM和别的挂在各总线上的设备则难以望其项背。那当多个任务要执行的时候怎么办呢？轮流着来?<br>或者谁优先级高谁来？不管怎么样的策略，一句话就是在CPU看来就是轮流着来。而且因为速度差异，CPU实际的执行时间和等待执行的时间是数量级的差异。<br>比如工作1秒钟，休息一个月。所以多个任务，轮流着来，让CPU不那么无聊，给流逝的时间增加再多一点点的意义。这些任务，在外在表现上就仿佛是同时在执行。</p>
+<h2 id="一个必须知道的事实"><a href="#一个必须知道的事实" class="headerlink" title="一个必须知道的事实"></a>一个必须知道的事实</h2><p>执行一段程序代码，实现一个功能的过程之前 ，当得到CPU的时候，相关的资源必须也已经就位，就是万事俱备只欠CPU这个东风。所有这些任务都处于就绪队列 ，<br>然后由操作系统的调度算法，选出某个任务，让CPU来执行。然后就是PC指针指向该任务的代码开始，由CPU开始取指令，然后执行。</p>
+<p>除了CPU以外所有的执行环境，主要是寄存器的一些内容，就构成了的进程的上下文环境。进程的上下文是进程执行的环境。当这个程序执行完了，<br>或者分配给他的CPU时间片用完了，那它就要被切换出去，等待下一次CPU的临幸。在被切换出去做的主要工作就是保存程序上下文，因为这个是下次他被CPU临幸的运行环境，必须保存。</p>
+<h2 id="串联起来的事实"><a href="#串联起来的事实" class="headerlink" title="串联起来的事实"></a>串联起来的事实</h2><p>前面讲过在CPU看来所有的任务都是一个一个的轮流执行的，具体的轮流方法就是：先加载进程A的上下文，然后开始执行A，保存进程A的上下文，<br>调入下一个要执行的进程B的进程上下文，然后开始执行B,保存进程B的上下文。。。。</p>
+<p>进程和线程就是这样的背景出来的，两个名词不过是对应的CPU时间段的描述，名词就是这样的功能。  </p>
+<ul>
+<li>进程就是上下文切换之间的程序执行的部分。是运行中的程序的描述，也是对应于该段CPU执行时间的描述。</li>
+<li>在软件编码方面，我们说的进程，其实是稍不同的，编程语言中创建的进程是一个无限loop，对应的是tcb块。这个是操作系统进行调度的单位。所以和上面的cpu执行时间段还是不同的。  </li>
+<li>进程，与之相关的东东有寻址空间，寄存器组，堆栈空间等。即不同的进程，这些东东都不同，从而能相互区别。</li>
+</ul>
+<h2 id="线程是什么呢？"><a href="#线程是什么呢？" class="headerlink" title="线程是什么呢？"></a>线程是什么呢？</h2><p>进程的颗粒度太大，每次的执行都要进行进程上下文的切换。如果我们把进程比喻为一个运行在电脑上的软件，那么一个软件的执行不可能是一条逻辑执行的，<br>必定有多个分支和多个程序段，就好比要实现程序A，实际分成 a，b，c等多个块组合而成。那么这里具体的执行就可能变成</p>
+<p>程序A得到CPU =》CPU加载上下文，开始执行程序A的a小段，然后执行A的b小段，然后再执行A的c小段，最后CPU保存A的上下文。</p>
+<p>这里a，b，c的执行是共享了A进程的上下文，CPU在执行的时候仅仅切换线程的上下文，而没有进行进程上下文切换的。进程的上下文切换的时间开销是远远大于线程上下文时间的开销。<br>这样就让CPU的有效使用率得到提高。这里的a，b，c就是线程，也就是说线程是共享了进程的上下文环境，的更为细小的CPU时间段。线程主要共享的是进程的地址空间。</p>
+<h1 id="进程和线程的类比"><a href="#进程和线程的类比" class="headerlink" title="进程和线程的类比"></a>进程和线程的类比</h1><ul>
+<li>线程在进程下行进（单纯的车厢无法运行）</li>
+<li>一个进程可以包含多个线程（一辆火车可以有多个车厢）</li>
+<li>不同进程间数据很难共享（一辆火车上的乘客很难换到另外一辆火车，比如站点换乘）</li>
+<li>同一进程下不同线程间数据很易共享（A车厢换到B车厢很容易）</li>
+<li>进程要比线程消耗更多的计算机资源（采用多列火车相比多个车厢更耗资源）</li>
+<li>进程间不会相互影响，一个线程挂掉将导致整个进程挂掉（一列火车不会影响到另外一列火车，但是如果一列火车上中间的一节车厢着火了，将影响到所有车厢）</li>
+<li>进程可以拓展到多机，进程最多适合多核（不同火车可以开在多个轨道上，同一火车的车厢不能在行进的不同的轨道上）</li>
+<li>进程使用的内存地址可以上锁，即一个线程使用某些共享内存时，其他线程必须等它结束，才能使用这一块内存。（比如火车上的洗手间）－”互斥锁”</li>
+<li>进程使用的内存地址可以限定使用量（比如火车上的餐厅，最多只允许多少人进入，如果满了需要在门口等，等有人出来了才能进去）－“信号量”</li>
+</ul>
+<h1 id="摘录自"><a href="#摘录自" class="headerlink" title="摘录自"></a>摘录自</h1><ul>
+<li><a href="https://www.cnblogs.com/coder-programming/p/10595804.html" target="_blank" rel="noopener">https://www.cnblogs.com/coder-programming/p/10595804.html</a></li>
+<li><a href="https://www.zhihu.com/question/25532384/answer/81152571" target="_blank" rel="noopener">https://www.zhihu.com/question/25532384/answer/81152571</a></li>
+</ul>
+]]></content>
+      <categories>
+        <category>linux</category>
+      </categories>
+      <tags>
+        <tag>进程和线程</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>tidb/基础</title>
     <url>/2021/11/22/tidb/%E5%9F%BA%E7%A1%80/</url>
     <content><![CDATA[<h1 id="TiDB基础入门"><a href="#TiDB基础入门" class="headerlink" title="TiDB基础入门"></a>TiDB基础入门</h1><p>TiDB 是一个分布式 NewSQL <a href="https://www.jianshu.com/p/ed55f20e736a" target="_blank" rel="noopener">SQL 、 NoSQL 和 NewSQL 的优缺点比较 </a>数据库。它支持水平弹性扩展、ACID 事务、标准 SQL、MySQL 语法和 MySQL 协议，具有数据强一致的高可用特性，是一个不仅适合 OLTP 场景还适合 OLAP 场景的混合数据库。</p>
@@ -534,6 +591,44 @@ sudo apt-get install gcc-mingw-w64<figure class="highlight plain"><table><tr><td
       </tags>
   </entry>
   <entry>
+    <title>mysql/mysql操作</title>
+    <url>/2021/11/22/mysql/mysql%E6%93%8D%E4%BD%9C/</url>
+    <content><![CDATA[<h1 id="查询所有账号信息"><a href="#查询所有账号信息" class="headerlink" title="查询所有账号信息"></a>查询所有账号信息</h1><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">SELECT DISTINCT a.&#96;User&#96;,a.&#96;Host&#96;,a.password_expired,a.password_last_changed,a.password_lifetime,a.* FROM mysql.user a;</span><br></pre></td></tr></table></figure>
+
+
+
+<h1 id="mysql8-创建帐号"><a href="#mysql8-创建帐号" class="headerlink" title="mysql8 创建帐号"></a>mysql8 创建帐号</h1><ol>
+<li><p>创建用户  </p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">create user &#39;slave&#39;@&#39;%&#39; identified by &#39;密码&#39;;</span><br><span class="line"># 刷新权限</span><br><span class="line">flush privileges;</span><br></pre></td></tr></table></figure>
+<a id="more"></a>
+</li>
+<li><p>授权</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line">grant all privileges on *.* to &#39;slave&#39;@&#39;%&#39; with grant option;</span><br><span class="line"># all privileges 可换成select,update,insert,delete,drop,create等操作 </span><br><span class="line"># 如：grant select on *.* to &#39;slave&#39;@&#39;%&#39;;</span><br><span class="line"># *.* 第一个*表示通配数据库,第二个*表示通配表</span><br><span class="line"># with gran option表示该用户可给其它用户赋予权限，但不可能超过该用户已有的权限</span><br></pre></td></tr></table></figure></li>
+<li><p>查看用户授权信息  </p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">show grants for &#39;slave&#39;@&#39;%&#39;;</span><br></pre></td></tr></table></figure></li>
+<li><p>撤销权限</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">revoke all privileges on *.* from &#39;slave&#39;@&#39;%&#39;;</span><br></pre></td></tr></table></figure></li>
+<li><p>删除用户  </p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">drop user &#39;slave&#39;@&#39;slave&#39;;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>修改用户密码</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">ALTER USER &#39;replicator&#39;@&#39;%&#39; IDENTIFIED WITH mysql_native_password BY &#39;p@ss52Dnb&#39;;</span><br></pre></td></tr></table></figure>
+<p>‘Waiting for master to send event’, ‘mysql.beatflow-data.svc’, ‘replicator’, ‘3306’, ‘30’, ‘mysql-bin.000047’, ‘1832’, ‘mysql-relay-bin.000002’, ‘1541’, ‘mysql-bin.000047’, ‘Yes’, ‘Yes’, ‘’, ‘’, ‘’, ‘’, ‘’, ‘’, ‘0’, ‘’, ‘0’, ‘1832’, ‘1750’, ‘None’, ‘’, ‘0’, ‘No’, ‘’, ‘’, ‘’, ‘’, ‘’, ‘0’, ‘No’, ‘0’, ‘’, ‘0’, ‘’, ‘’, ‘289’, ‘ba131dda-ec2a-11eb-9bd9-0242ac110008’, ‘mysql.slave_master_info’, ‘0’, NULL, ‘Slave has read all relay log; waiting for more updates’, ‘86400’, ‘’, ‘’, ‘’, ‘’, ‘’, ‘’, ‘’, ‘0’, ‘’, ‘’, ‘’, ‘’, ‘0’, ‘’</p>
+</li>
+</ol>
+<h1 id="mysql导入导出"><a href="#mysql导入导出" class="headerlink" title="mysql导入导出"></a>mysql导入导出</h1><h2 id="导出"><a href="#导出" class="headerlink" title="导出"></a>导出</h2><p>mysqldump  -uroot -pp@ss52Dnb -h192.168.49.2 -P 32316 subscription bill_0 &gt; ./subscription_bill_0.sql</p>
+<h2 id="导入"><a href="#导入" class="headerlink" title="导入"></a>导入</h2><p>mysql -uroot -pp@ss52Dnb -h192.168.49.2 -P 32316<br>use subscription;<br>source /home/yu/dumps/pricing20210930064225.sql </p>
+<p>source /home/yu/dumps/binlog_2021_930_265.sql</p>
+<p>x-special/nautilus-clipboard<br>copy<br>file:///home/yu/dumps/binlog_2021_930_265.sql</p>
+]]></content>
+      <categories>
+        <category>mysql</category>
+      </categories>
+      <tags>
+        <tag>mysql账号管理</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>micro/领域驱动设计代码实践</title>
     <url>/2021/11/22/micro/%E9%A2%86%E5%9F%9F%E9%A9%B1%E5%8A%A8%E8%AE%BE%E8%AE%A1%E4%BB%A3%E7%A0%81%E5%AE%9E%E8%B7%B5/</url>
     <content><![CDATA[<p>领域驱动设计代码实现</p>
@@ -596,44 +691,6 @@ sudo apt-get install gcc-mingw-w64<figure class="highlight plain"><table><tr><td
       </categories>
       <tags>
         <tag>DDD</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>mysql/mysql操作</title>
-    <url>/2021/11/22/mysql/mysql%E6%93%8D%E4%BD%9C/</url>
-    <content><![CDATA[<h1 id="查询所有账号信息"><a href="#查询所有账号信息" class="headerlink" title="查询所有账号信息"></a>查询所有账号信息</h1><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">SELECT DISTINCT a.&#96;User&#96;,a.&#96;Host&#96;,a.password_expired,a.password_last_changed,a.password_lifetime,a.* FROM mysql.user a;</span><br></pre></td></tr></table></figure>
-
-
-
-<h1 id="mysql8-创建帐号"><a href="#mysql8-创建帐号" class="headerlink" title="mysql8 创建帐号"></a>mysql8 创建帐号</h1><ol>
-<li><p>创建用户  </p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">create user &#39;slave&#39;@&#39;%&#39; identified by &#39;密码&#39;;</span><br><span class="line"># 刷新权限</span><br><span class="line">flush privileges;</span><br></pre></td></tr></table></figure>
-<a id="more"></a>
-</li>
-<li><p>授权</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line">grant all privileges on *.* to &#39;slave&#39;@&#39;%&#39; with grant option;</span><br><span class="line"># all privileges 可换成select,update,insert,delete,drop,create等操作 </span><br><span class="line"># 如：grant select on *.* to &#39;slave&#39;@&#39;%&#39;;</span><br><span class="line"># *.* 第一个*表示通配数据库,第二个*表示通配表</span><br><span class="line"># with gran option表示该用户可给其它用户赋予权限，但不可能超过该用户已有的权限</span><br></pre></td></tr></table></figure></li>
-<li><p>查看用户授权信息  </p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">show grants for &#39;slave&#39;@&#39;%&#39;;</span><br></pre></td></tr></table></figure></li>
-<li><p>撤销权限</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">revoke all privileges on *.* from &#39;slave&#39;@&#39;%&#39;;</span><br></pre></td></tr></table></figure></li>
-<li><p>删除用户  </p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">drop user &#39;slave&#39;@&#39;slave&#39;;</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>修改用户密码</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">ALTER USER &#39;replicator&#39;@&#39;%&#39; IDENTIFIED WITH mysql_native_password BY &#39;p@ss52Dnb&#39;;</span><br></pre></td></tr></table></figure>
-<p>‘Waiting for master to send event’, ‘mysql.beatflow-data.svc’, ‘replicator’, ‘3306’, ‘30’, ‘mysql-bin.000047’, ‘1832’, ‘mysql-relay-bin.000002’, ‘1541’, ‘mysql-bin.000047’, ‘Yes’, ‘Yes’, ‘’, ‘’, ‘’, ‘’, ‘’, ‘’, ‘0’, ‘’, ‘0’, ‘1832’, ‘1750’, ‘None’, ‘’, ‘0’, ‘No’, ‘’, ‘’, ‘’, ‘’, ‘’, ‘0’, ‘No’, ‘0’, ‘’, ‘0’, ‘’, ‘’, ‘289’, ‘ba131dda-ec2a-11eb-9bd9-0242ac110008’, ‘mysql.slave_master_info’, ‘0’, NULL, ‘Slave has read all relay log; waiting for more updates’, ‘86400’, ‘’, ‘’, ‘’, ‘’, ‘’, ‘’, ‘’, ‘0’, ‘’, ‘’, ‘’, ‘’, ‘0’, ‘’</p>
-</li>
-</ol>
-<h1 id="mysql导入导出"><a href="#mysql导入导出" class="headerlink" title="mysql导入导出"></a>mysql导入导出</h1><h2 id="导出"><a href="#导出" class="headerlink" title="导出"></a>导出</h2><p>mysqldump  -uroot -pp@ss52Dnb -h192.168.49.2 -P 32316 subscription bill_0 &gt; ./subscription_bill_0.sql</p>
-<h2 id="导入"><a href="#导入" class="headerlink" title="导入"></a>导入</h2><p>mysql -uroot -pp@ss52Dnb -h192.168.49.2 -P 32316<br>use subscription;<br>source /home/yu/dumps/pricing20210930064225.sql </p>
-<p>source /home/yu/dumps/binlog_2021_930_265.sql</p>
-<p>x-special/nautilus-clipboard<br>copy<br>file:///home/yu/dumps/binlog_2021_930_265.sql</p>
-]]></content>
-      <categories>
-        <category>mysql</category>
-      </categories>
-      <tags>
-        <tag>mysql账号管理</tag>
       </tags>
   </entry>
   <entry>
@@ -1478,14 +1535,6 @@ sudo apt-get install gcc-mingw-w64<figure class="highlight plain"><table><tr><td
       <tags>
         <tag>k8s</tag>
       </tags>
-  </entry>
-  <entry>
-    <title>linux/iptables端口转发配置</title>
-    <url>/2021/06/10/linux/iptables%E7%AB%AF%E5%8F%A3%E8%BD%AC%E5%8F%91%E9%85%8D%E7%BD%AE/</url>
-    <content><![CDATA[<h1 id="配置访问192-168-91-16端口8090转发到目标地址192-168-91-10端口80"><a href="#配置访问192-168-91-16端口8090转发到目标地址192-168-91-10端口80" class="headerlink" title="配置访问192.168.91.16端口8090转发到目标地址192.168.91.10端口80"></a>配置访问192.168.91.16端口8090转发到目标地址192.168.91.10端口80</h1><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">sudo iptables -t nat -A PREROUTING -d 192.168.91.16 -p tcp --dport 8090 -j DNAT --to-destination 192.168.91.10:80</span><br><span class="line">sudo iptables -t nat -A POSTROUTING -d 192.168.91.10 -p tcp --dport 80 -j SNAT --to-source 192.168.91.16</span><br><span class="line"></span><br><span class="line"># </span><br><span class="line">sudo iptables -t  nat --list --line-numbers</span><br></pre></td></tr></table></figure>
-
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">sudo iptables -t nat -A PREROUTING -d 172.31.164.128 -p tcp --dport 32306 -j DNAT --to-destination 192.168.49.2:32306</span><br><span class="line">sudo iptables -t nat -A POSTROUTING -p tcp -d 192.168.49.2 --dport 32306 -j SNAT --to-source 172.31.164.128</span><br></pre></td></tr></table></figure>
-]]></content>
   </entry>
   <entry>
     <title>k8s/harbor</title>
@@ -4673,6 +4722,28 @@ sudo apt-get install gcc-mingw-w64<figure class="highlight plain"><table><tr><td
       </tags>
   </entry>
   <entry>
+    <title>micro/微服务手记</title>
+    <url>/2021/05/19/micro/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E6%89%8B%E8%AE%B0/</url>
+    <content><![CDATA[<h1 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h1><p>微服务将单体应用系统拆分成多个分而治之的小应用,降低系统整体崩溃的风险性;同时也可根据这些小应用的不同需求调整实体机的性能</p>
+<p>微服务主要缺点是将系统复杂化,但对于本身就复杂的系统,微服务受益会很高  </p>
+<a id="more"></a>
+
+<h1 id="优缺点"><a href="#优缺点" class="headerlink" title="优缺点"></a>优缺点</h1><p>判定标准,使用微服务后开发和维护变得轻松了,而不是困难  </p>
+<h2 id="优点"><a href="#优点" class="headerlink" title="优点"></a>优点</h2><p>1.化繁为简,分散治理<br>2.服务间松耦合,服务内高内聚<br>3.服务可独立构建/部署/升级,局部更新<br>4.提高系统容错性,减少系统整体崩溃的概率<br>5.易于实现异构系统  </p>
+<h2 id="缺点"><a href="#缺点" class="headerlink" title="缺点"></a>缺点</h2><p>1.增加了运维部署的工作量与难度<br>2.增加了系统间调用逻辑的处理难度<br>3.日志更男收集和统计了<br>4.额外引入了一些非业务模块服务</p>
+<h1 id="go-micro"><a href="#go-micro" class="headerlink" title="go-micro"></a>go-micro</h1><ul>
+<li>服务发现: 支持服务注册与发现,底层支持etcd/consul/k8s</li>
+<li>负载均衡: rpc服务间的请求调度均衡策略</li>
+<li>同步通信: 基于RPC通信,支持单向/双向流通信模式</li>
+<li>异步通信: 提供pub/sub通信模型的接口</li>
+<li>高级接口: 比如服务发现,提供调用的接口是一致的</li>
+</ul>
+]]></content>
+      <categories>
+        <category>micro</category>
+      </categories>
+  </entry>
+  <entry>
     <title>micro/延迟队列</title>
     <url>/2021/05/19/micro/%E5%BB%B6%E8%BF%9F%E9%98%9F%E5%88%97/</url>
     <content><![CDATA[<h2 id="如何实现延迟队列？"><a href="#如何实现延迟队列？" class="headerlink" title="如何实现延迟队列？"></a>如何实现延迟队列？</h2><p>延迟队列的需求各位应该在日常开发的场景中经常碰到。比如：<br>用户登录之后5分钟给用户做分类推送；<br>用户多少天未登录给用户做召回推送；<br>定期检查用户当前退款账单是否被商家处理等等场景。<br>一般这种场景和定时任务还是有很大的区别，定时任务是你知道任务多久该跑一次或者什么时候只跑一次，这个时间是确定的。延迟队列是当某个事件发生的<br>时候需要延迟多久触发配套事件，引子事件发生的时间不是固定的。<br>业界目前也有很多实现方案，单机版的方案就不说了，现在也没有哪个公司还是单机版的服务，今天我们一一探讨各种方案的大致实现。  </p>
@@ -4741,28 +4812,6 @@ sudo apt-get install gcc-mingw-w64<figure class="highlight plain"><table><tr><td
       </tags>
   </entry>
   <entry>
-    <title>micro/微服务手记</title>
-    <url>/2021/05/19/micro/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E6%89%8B%E8%AE%B0/</url>
-    <content><![CDATA[<h1 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h1><p>微服务将单体应用系统拆分成多个分而治之的小应用,降低系统整体崩溃的风险性;同时也可根据这些小应用的不同需求调整实体机的性能</p>
-<p>微服务主要缺点是将系统复杂化,但对于本身就复杂的系统,微服务受益会很高  </p>
-<a id="more"></a>
-
-<h1 id="优缺点"><a href="#优缺点" class="headerlink" title="优缺点"></a>优缺点</h1><p>判定标准,使用微服务后开发和维护变得轻松了,而不是困难  </p>
-<h2 id="优点"><a href="#优点" class="headerlink" title="优点"></a>优点</h2><p>1.化繁为简,分散治理<br>2.服务间松耦合,服务内高内聚<br>3.服务可独立构建/部署/升级,局部更新<br>4.提高系统容错性,减少系统整体崩溃的概率<br>5.易于实现异构系统  </p>
-<h2 id="缺点"><a href="#缺点" class="headerlink" title="缺点"></a>缺点</h2><p>1.增加了运维部署的工作量与难度<br>2.增加了系统间调用逻辑的处理难度<br>3.日志更男收集和统计了<br>4.额外引入了一些非业务模块服务</p>
-<h1 id="go-micro"><a href="#go-micro" class="headerlink" title="go-micro"></a>go-micro</h1><ul>
-<li>服务发现: 支持服务注册与发现,底层支持etcd/consul/k8s</li>
-<li>负载均衡: rpc服务间的请求调度均衡策略</li>
-<li>同步通信: 基于RPC通信,支持单向/双向流通信模式</li>
-<li>异步通信: 提供pub/sub通信模型的接口</li>
-<li>高级接口: 比如服务发现,提供调用的接口是一致的</li>
-</ul>
-]]></content>
-      <categories>
-        <category>micro</category>
-      </categories>
-  </entry>
-  <entry>
     <title>mysql/MySQL在什么情况下会使用到临时表</title>
     <url>/2021/05/19/mysql/MySQL%E5%9C%A8%E4%BB%80%E4%B9%88%E6%83%85%E5%86%B5%E4%B8%8B%E4%BC%9A%E4%BD%BF%E7%94%A8%E5%88%B0%E4%B8%B4%E6%97%B6%E8%A1%A8/</url>
     <content><![CDATA[<p>MySQL在执行SQL查询时可能会用到临时表，一般情况下，用到临时表就意味着性能较低。临时表存储，MySQL临时表分为“内存临时表”和“磁盘临时表”，<br>其中内存临时表使用MySQL的MEMORY存储引擎，磁盘临时表使用MySQL的MyISAM存储引擎；</p>
@@ -4811,6 +4860,21 @@ sudo apt-get install gcc-mingw-w64<figure class="highlight plain"><table><tr><td
       </tags>
   </entry>
   <entry>
+    <title>mysql/navicat_linux破解</title>
+    <url>/2021/05/19/mysql/navicat_linux%E7%A0%B4%E8%A7%A3/</url>
+    <content><![CDATA[<h1 id="网址"><a href="#网址" class="headerlink" title="网址"></a>网址</h1><p><a href="https://rlds.tk/" target="_blank" rel="noopener">https://rlds.tk/</a></p>
+<h1 id="破解过程"><a href="#破解过程" class="headerlink" title="破解过程"></a>破解过程</h1><ol>
+<li>下载Navicat包</li>
+<li>输入序列号</li>
+<li>断网</li>
+<li>触发手动激活</li>
+<li>获取请求码</li>
+<li>恢复网络</li>
+<li>生成激活码</li>
+</ol>
+]]></content>
+  </entry>
+  <entry>
     <title>mysql/MySQL提升课程全面讲解MySQL架构设计</title>
     <url>/2021/05/19/mysql/MySQL%E6%8F%90%E5%8D%87%E8%AF%BE%E7%A8%8B%E5%85%A8%E9%9D%A2%E8%AE%B2%E8%A7%A3MySQL%E6%9E%B6%E6%9E%84%E8%AE%BE%E8%AE%A1/</url>
     <content><![CDATA[<h1 id="第一章-实例和故事"><a href="#第一章-实例和故事" class="headerlink" title="第一章 实例和故事"></a>第一章 实例和故事</h1><h2 id="什么决定了电商双11大促的成败"><a href="#什么决定了电商双11大促的成败" class="headerlink" title="什么决定了电商双11大促的成败"></a>什么决定了电商双11大促的成败</h2><h2 id="在双11大促的数据库服务器"><a href="#在双11大促的数据库服务器" class="headerlink" title="在双11大促的数据库服务器"></a>在双11大促的数据库服务器</h2><h2 id="在大促中什么影响了数据库性能"><a href="#在大促中什么影响了数据库性能" class="headerlink" title="在大促中什么影响了数据库性能"></a>在大促中什么影响了数据库性能</h2><ul>
@@ -4857,21 +4921,6 @@ sudo apt-get install gcc-mingw-w64<figure class="highlight plain"><table><tr><td
       <tags>
         <tag>mysql架构</tag>
       </tags>
-  </entry>
-  <entry>
-    <title>mysql/navicat_linux破解</title>
-    <url>/2021/05/19/mysql/navicat_linux%E7%A0%B4%E8%A7%A3/</url>
-    <content><![CDATA[<h1 id="网址"><a href="#网址" class="headerlink" title="网址"></a>网址</h1><p><a href="https://rlds.tk/" target="_blank" rel="noopener">https://rlds.tk/</a></p>
-<h1 id="破解过程"><a href="#破解过程" class="headerlink" title="破解过程"></a>破解过程</h1><ol>
-<li>下载Navicat包</li>
-<li>输入序列号</li>
-<li>断网</li>
-<li>触发手动激活</li>
-<li>获取请求码</li>
-<li>恢复网络</li>
-<li>生成激活码</li>
-</ol>
-]]></content>
   </entry>
   <entry>
     <title>photography/摄影入门</title>
@@ -4949,24 +4998,6 @@ sudo apt-get install gcc-mingw-w64<figure class="highlight plain"><table><tr><td
 </ol>
 <h2 id="拍摄瀑布"><a href="#拍摄瀑布" class="headerlink" title="拍摄瀑布"></a>拍摄瀑布</h2><h3 id="使用高速快门（推荐）"><a href="#使用高速快门（推荐）" class="headerlink" title="使用高速快门（推荐）"></a>使用高速快门（推荐）</h3><p>使用高速快门凝结住飞溅的水花和奔流的场景（推荐）</p>
 <h3 id="使用慢速快门"><a href="#使用慢速快门" class="headerlink" title="使用慢速快门"></a>使用慢速快门</h3><p>使用慢速快门拍摄雾状的水流和整体的水泻效果<br>使用慢门，需要在光线较弱的情况下使用,例如：<br>1.合适的天气<br>2.滤镜<br>3.低ISO</p>
-]]></content>
-  </entry>
-  <entry>
-    <title>photography/构图</title>
-    <url>/2021/05/19/photography/%E6%9E%84%E5%9B%BE/</url>
-    <content><![CDATA[<h1 id="点构图"><a href="#点构图" class="headerlink" title="点构图"></a>点构图</h1><h2 id="中心点构图"><a href="#中心点构图" class="headerlink" title="中心点构图"></a>中心点构图</h2><p>画面主体放在中心点<br><img src="/2021/05/19/photography/%E6%9E%84%E5%9B%BE/%E4%B8%AD%E5%BF%83%E7%82%B9%E6%9E%84%E5%9B%BE.png" alt></p>
-<h2 id="三分点构图"><a href="#三分点构图" class="headerlink" title="三分点构图"></a>三分点构图</h2><p>画面主体放在三分点<br>注意事项：有时会让画面不平衡，可以平衡画面<br><img src="/2021/05/19/photography/%E6%9E%84%E5%9B%BE/%E4%B8%89%E5%88%86%E7%82%B9%E6%9E%84%E5%9B%BE.png" alt></p>
-<h1 id="线构图"><a href="#线构图" class="headerlink" title="线构图"></a>线构图</h1><h2 id="对称线构图"><a href="#对称线构图" class="headerlink" title="对称线构图"></a>对称线构图</h2><p>沿画面的水平或垂直居中线构图<br>常用于对称的物体，水面，对称建筑等<br><img src="/2021/05/19/photography/%E6%9E%84%E5%9B%BE/%E5%AF%B9%E7%A7%B0%E6%9E%84%E5%9B%BE.png" alt></p>
-<h2 id="三分线构图"><a href="#三分线构图" class="headerlink" title="三分线构图"></a>三分线构图</h2><p>画面的水平或垂直元素，安排在三分线上<br>注意事项：水平三分线构图要留意强调的部分，垂直三分线构图拍摄人像注意人物朝向<br><img src="/2021/05/19/photography/%E6%9E%84%E5%9B%BE/%E4%B8%89%E5%88%86%E7%BA%BF%E6%9E%84%E5%9B%BE.png" alt></p>
-<h2 id="对角线构图"><a href="#对角线构图" class="headerlink" title="对角线构图"></a>对角线构图</h2><p>利用照片对角线进行构图<br>注意事项：建议把画面主体聚焦在三分点上<br><img src="/2021/05/19/photography/%E6%9E%84%E5%9B%BE/%E5%AF%B9%E8%A7%92%E7%BA%BF%E6%9E%84%E5%9B%BE.png" alt></p>
-<h2 id="曲线构图"><a href="#曲线构图" class="headerlink" title="曲线构图"></a>曲线构图</h2><p>利用自然存在的曲线或者人为制造的曲线进行构图<br><img src="/2021/05/19/photography/%E6%9E%84%E5%9B%BE/%E6%9B%B2%E7%BA%BF%E6%9E%84%E5%9B%BE.png" alt></p>
-<h2 id="引导线构图"><a href="#引导线构图" class="headerlink" title="引导线构图"></a>引导线构图</h2><p>利用画面中的线条，把观众的目光引导到画面主体上<br>注意事项：引导到的主体建议处于画面中心点或者三分点<br><img src="/2021/05/19/photography/%E6%9E%84%E5%9B%BE/%E5%BC%95%E5%AF%BC%E7%BA%BF%E6%9E%84%E5%9B%BE.png" alt></p>
-<h2 id="黄金分割构图"><a href="#黄金分割构图" class="headerlink" title="黄金分割构图"></a>黄金分割构图</h2><h1 id="面构图"><a href="#面构图" class="headerlink" title="面构图"></a>面构图</h1><h2 id="前景构图"><a href="#前景构图" class="headerlink" title="前景构图"></a>前景构图</h2><p>在画面中加入前景<br>注意事项：前景和画面主题有一定联系<br><img src="/2021/05/19/photography/%E6%9E%84%E5%9B%BE/%E5%89%8D%E6%99%AF%E6%9E%84%E5%9B%BE1.png" alt></p>
-<h2 id="框架构图"><a href="#框架构图" class="headerlink" title="框架构图"></a>框架构图</h2><p>把例如门、窗等框架作为了一种前景<br><img src="/2021/05/19/photography/%E6%9E%84%E5%9B%BE/%E6%A1%86%E6%9E%B6%E6%9E%84%E5%9B%BE.png" alt></p>
-<h2 id="填充构图"><a href="#填充构图" class="headerlink" title="填充构图"></a>填充构图</h2><p>让画面主体尽量填充满整个画面</p>
-<h2 id="留白构图"><a href="#留白构图" class="headerlink" title="留白构图"></a>留白构图</h2><p>在画面中尽可能留白，做画面减法</p>
-<h2 id="重复构图"><a href="#重复构图" class="headerlink" title="重复构图"></a>重复构图</h2><p>当画面中有比较多重复元素时，把画面中的元素进行重复排列<br>注意事项：重复构图中的元素排列最好基于某一种排列逻辑</p>
-<h2 id="对比构图"><a href="#对比构图" class="headerlink" title="对比构图"></a>对比构图</h2><p>在重复的元素中运用某一种方式（颜色、动静、光影等）突出其中的某一个元素</p>
 ]]></content>
   </entry>
   <entry>
@@ -5079,6 +5110,24 @@ sudo apt-get install gcc-mingw-w64<figure class="highlight plain"><table><tr><td
         <tag>自动负载均衡</tag>
         <tag>Nginx</tag>
       </tags>
+  </entry>
+  <entry>
+    <title>photography/构图</title>
+    <url>/2021/05/19/photography/%E6%9E%84%E5%9B%BE/</url>
+    <content><![CDATA[<h1 id="点构图"><a href="#点构图" class="headerlink" title="点构图"></a>点构图</h1><h2 id="中心点构图"><a href="#中心点构图" class="headerlink" title="中心点构图"></a>中心点构图</h2><p>画面主体放在中心点<br><img src="/2021/05/19/photography/%E6%9E%84%E5%9B%BE/%E4%B8%AD%E5%BF%83%E7%82%B9%E6%9E%84%E5%9B%BE.png" alt></p>
+<h2 id="三分点构图"><a href="#三分点构图" class="headerlink" title="三分点构图"></a>三分点构图</h2><p>画面主体放在三分点<br>注意事项：有时会让画面不平衡，可以平衡画面<br><img src="/2021/05/19/photography/%E6%9E%84%E5%9B%BE/%E4%B8%89%E5%88%86%E7%82%B9%E6%9E%84%E5%9B%BE.png" alt></p>
+<h1 id="线构图"><a href="#线构图" class="headerlink" title="线构图"></a>线构图</h1><h2 id="对称线构图"><a href="#对称线构图" class="headerlink" title="对称线构图"></a>对称线构图</h2><p>沿画面的水平或垂直居中线构图<br>常用于对称的物体，水面，对称建筑等<br><img src="/2021/05/19/photography/%E6%9E%84%E5%9B%BE/%E5%AF%B9%E7%A7%B0%E6%9E%84%E5%9B%BE.png" alt></p>
+<h2 id="三分线构图"><a href="#三分线构图" class="headerlink" title="三分线构图"></a>三分线构图</h2><p>画面的水平或垂直元素，安排在三分线上<br>注意事项：水平三分线构图要留意强调的部分，垂直三分线构图拍摄人像注意人物朝向<br><img src="/2021/05/19/photography/%E6%9E%84%E5%9B%BE/%E4%B8%89%E5%88%86%E7%BA%BF%E6%9E%84%E5%9B%BE.png" alt></p>
+<h2 id="对角线构图"><a href="#对角线构图" class="headerlink" title="对角线构图"></a>对角线构图</h2><p>利用照片对角线进行构图<br>注意事项：建议把画面主体聚焦在三分点上<br><img src="/2021/05/19/photography/%E6%9E%84%E5%9B%BE/%E5%AF%B9%E8%A7%92%E7%BA%BF%E6%9E%84%E5%9B%BE.png" alt></p>
+<h2 id="曲线构图"><a href="#曲线构图" class="headerlink" title="曲线构图"></a>曲线构图</h2><p>利用自然存在的曲线或者人为制造的曲线进行构图<br><img src="/2021/05/19/photography/%E6%9E%84%E5%9B%BE/%E6%9B%B2%E7%BA%BF%E6%9E%84%E5%9B%BE.png" alt></p>
+<h2 id="引导线构图"><a href="#引导线构图" class="headerlink" title="引导线构图"></a>引导线构图</h2><p>利用画面中的线条，把观众的目光引导到画面主体上<br>注意事项：引导到的主体建议处于画面中心点或者三分点<br><img src="/2021/05/19/photography/%E6%9E%84%E5%9B%BE/%E5%BC%95%E5%AF%BC%E7%BA%BF%E6%9E%84%E5%9B%BE.png" alt></p>
+<h2 id="黄金分割构图"><a href="#黄金分割构图" class="headerlink" title="黄金分割构图"></a>黄金分割构图</h2><h1 id="面构图"><a href="#面构图" class="headerlink" title="面构图"></a>面构图</h1><h2 id="前景构图"><a href="#前景构图" class="headerlink" title="前景构图"></a>前景构图</h2><p>在画面中加入前景<br>注意事项：前景和画面主题有一定联系<br><img src="/2021/05/19/photography/%E6%9E%84%E5%9B%BE/%E5%89%8D%E6%99%AF%E6%9E%84%E5%9B%BE1.png" alt></p>
+<h2 id="框架构图"><a href="#框架构图" class="headerlink" title="框架构图"></a>框架构图</h2><p>把例如门、窗等框架作为了一种前景<br><img src="/2021/05/19/photography/%E6%9E%84%E5%9B%BE/%E6%A1%86%E6%9E%B6%E6%9E%84%E5%9B%BE.png" alt></p>
+<h2 id="填充构图"><a href="#填充构图" class="headerlink" title="填充构图"></a>填充构图</h2><p>让画面主体尽量填充满整个画面</p>
+<h2 id="留白构图"><a href="#留白构图" class="headerlink" title="留白构图"></a>留白构图</h2><p>在画面中尽可能留白，做画面减法</p>
+<h2 id="重复构图"><a href="#重复构图" class="headerlink" title="重复构图"></a>重复构图</h2><p>当画面中有比较多重复元素时，把画面中的元素进行重复排列<br>注意事项：重复构图中的元素排列最好基于某一种排列逻辑</p>
+<h2 id="对比构图"><a href="#对比构图" class="headerlink" title="对比构图"></a>对比构图</h2><p>在重复的元素中运用某一种方式（颜色、动静、光影等）突出其中的某一个元素</p>
+]]></content>
   </entry>
   <entry>
     <title>interview/Kafka面试题</title>
@@ -6158,6 +6207,103 @@ sudo apt-get install gcc-mingw-w64<figure class="highlight plain"><table><tr><td
       </tags>
   </entry>
   <entry>
+    <title>go/设计模式(golang版本)</title>
+    <url>/2021/05/19/go/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F(golang%E7%89%88%E6%9C%AC)/</url>
+    <content><![CDATA[<h1 id="简单工厂模式"><a href="#简单工厂模式" class="headerlink" title="简单工厂模式"></a>简单工厂模式</h1><p>go 语言没有构造函数一说，所以一般会定义NewXXX函数来初始化相关类。 NewXXX 函数返回接口时就是简单工厂模式，也就是说Golang的一般推荐做法就是简单工厂。</p>
+<h1 id="工厂方法模式"><a href="#工厂方法模式" class="headerlink" title="工厂方法模式"></a>工厂方法模式</h1><p>工厂方法模式使用子类的方式延迟生成对象到子类中实现。<br>Go中不存在继承 所以使用匿名组合来实现<br>使用单独工厂接口是构造目标接口，</p>
+]]></content>
+  </entry>
+  <entry>
+    <title>http/Http权威指南</title>
+    <url>/2021/05/19/http/Http%E6%9D%83%E5%A8%81%E6%8C%87%E5%8D%97/</url>
+    <content><![CDATA[<h1 id="第1章-HTTP概述"><a href="#第1章-HTTP概述" class="headerlink" title="第1章 HTTP概述"></a>第1章 HTTP概述</h1><h2 id="资源"><a href="#资源" class="headerlink" title="资源"></a>资源</h2><h3 id="媒体类型"><a href="#媒体类型" class="headerlink" title="媒体类型"></a>媒体类型</h3><ul>
+<li>MIME(Multipurpose Internet Mail Extension,多用途英特网邮件扩展)</li>
+<li>Web服务器回味所有的HTTP对象数据附加一个MIME类型，以告知Web浏览器该如何处理该对象</li>
+<li>Content-Type:image/jpeg ,“image/jpeg”为MIME类型<a id="more"></a>
+
+</li>
+</ul>
+<h3 id="URI"><a href="#URI" class="headerlink" title="URI"></a>URI</h3><ul>
+<li>URI(Uniform Resource Identifier,统一资源标识符)</li>
+<li>URI 有两种形式，分别称为URL和URN</li>
+</ul>
+<h3 id="URL"><a href="#URL" class="headerlink" title="URL"></a>URL</h3><ul>
+<li>统一资源定位符</li>
+<li>URL包含三个部分,协议类型,服务器地址,资源地址</li>
+<li>现在,几乎所有的URI都是URL</li>
+<li>URL语法 : <scheme>://<user>:<password>@<host>:<port>/<path></path>;<params>?<query>#<frag></frag></query></params></port></host></password></user></scheme></li>
+</ul>
+<h3 id="URN"><a href="#URN" class="headerlink" title="URN"></a>URN</h3><ul>
+<li>URN 统一资源名</li>
+<li>URN是作为特定内容的唯一名称使用的,与目前资源所在地无关</li>
+<li>P2P下载中使用的磁力链接是URN的一种实现，它可以持久化的标识一个BT资源，资源分布式的存储在P2P网络中，无需中心服务器用户即可找到并下载它。</li>
+</ul>
+<h2 id="Web的结构组件"><a href="#Web的结构组件" class="headerlink" title="Web的结构组件"></a>Web的结构组件</h2><ul>
+<li>代理 位于客户端和服务端之间的HTTP中间实体</li>
+<li>缓存 HTTP的仓库,使常用的页面或资源保存在离客户端更近的地方</li>
+<li>网关 连接其他应用程序的特殊问web服务器</li>
+<li>隧道 对HTTP通信报文进行盲转发的特殊代理</li>
+<li>Agent代理 发起自动HTTP请求的半智能Web客户端</li>
+</ul>
+<h1 id="第3章-HTTP报文"><a href="#第3章-HTTP报文" class="headerlink" title="第3章 HTTP报文"></a>第3章 HTTP报文</h1><h2 id="报文结构"><a href="#报文结构" class="headerlink" title="报文结构"></a>报文结构</h2><ul>
+<li>起始行(start line)</li>
+<li>首部(header)</li>
+<li>主体(body)</li>
+</ul>
+<h1 id="第4章-连接管理"><a href="#第4章-连接管理" class="headerlink" title="第4章 连接管理"></a>第4章 连接管理</h1><h2 id="用TCP套接字编程"><a href="#用TCP套接字编程" class="headerlink" title="用TCP套接字编程"></a>用TCP套接字编程</h2><ul>
+<li>网络套接字 操作系统提供的操作TCP连接的工具</li>
+</ul>
+<h3 id="服务端套接字编程流程"><a href="#服务端套接字编程流程" class="headerlink" title="服务端套接字编程流程"></a>服务端套接字编程流程</h3><ol>
+<li>创建套接字</li>
+<li>绑定端口</li>
+<li>监听端口</li>
+<li>接收并处理消息</li>
+</ol>
+<h3 id="客户端套接字编程流程"><a href="#客户端套接字编程流程" class="headerlink" title="客户端套接字编程流程"></a>客户端套接字编程流程</h3><ol>
+<li>创建套接字</li>
+<li>连接服务端套接字</li>
+<li>发送消息</li>
+</ol>
+<h2 id="性能聚焦区域"><a href="#性能聚焦区域" class="headerlink" title="性能聚焦区域"></a>性能聚焦区域</h2><p>###　TCP相关时延</p>
+<ul>
+<li>TCP连接建立握手</li>
+<li>TCP慢启动拥塞控制</li>
+<li>数据聚集的Nagle算法</li>
+<li>用于捎带确认的TCP延迟确认算法</li>
+<li>TIME_WAIT时延和端口耗尽</li>
+</ul>
+<h2 id="提高HTTP连接性能的方法"><a href="#提高HTTP连接性能的方法" class="headerlink" title="提高HTTP连接性能的方法"></a>提高HTTP连接性能的方法</h2><p>串行事务处理时延</p>
+<ul>
+<li>并行连接 通过多条TCP连接发起并发的HTTP请求</li>
+<li>持久连接 重用TCP连接,以消除连接及关闭时延</li>
+<li>管道化连接 通过共享TCP连接发起并发的HTTP请求</li>
+<li>复用连接 交替传送请求和响应报文</li>
+</ul>
+<h3 id="并行连接"><a href="#并行连接" class="headerlink" title="并行连接"></a>并行连接</h3><p>打开大量连接会消耗很多内存资源<br>浏览器确实使用了并行连接,但他们会将并行连接的总数限制为一个较小的值(通常是4个). 服务器可以随意关闭来自特定客户端的超量连接</p>
+<h3 id="持久连接"><a href="#持久连接" class="headerlink" title="持久连接"></a>持久连接</h3><p>在HTTP事务处理结束后仍然保持在打开状态的TCP连接被称为持久连接;持久连接会在不同事务之间保持打开状态,直到客户端或服务器决定将其关闭为止</p>
+<h3 id="不能被代理转发或缓存响应使用的首部"><a href="#不能被代理转发或缓存响应使用的首部" class="headerlink" title="不能被代理转发或缓存响应使用的首部"></a>不能被代理转发或缓存响应使用的首部</h3><ul>
+<li>Connection</li>
+<li>Proxy-Authenticate</li>
+<li>Proxy-Connection</li>
+<li>Transfer-Encoding</li>
+<li>Upgrade</li>
+</ul>
+<h2 id="持久连接-1"><a href="#持久连接-1" class="headerlink" title="持久连接"></a>持久连接</h2><h3 id="HTTP-1-0"><a href="#HTTP-1-0" class="headerlink" title="HTTP/1.0"></a>HTTP/1.0</h3><p>HTTP/1.0 通过Connection:keep-alive 头部发送持久连接信号 ,服务端响应Connection:keep-alive表示支持持久连接,但是会存在一个盲中继问题<br>盲中继(哑代理)会导致,客户端保持TCP连接,服务端保持TCP连接,他们的TCP连接都是连接在代理上的,代理却什么都不知道</p>
+<blockquote>
+<p>只是将一个连接转发到另一个连接去,不对Connection首部进行特殊处理</p>
+</blockquote>
+<h3 id="HTTP-1-1"><a href="#HTTP-1-1" class="headerlink" title="HTTP/1.1"></a>HTTP/1.1</h3><p>HTTP/1.1使用persistent connection持久连接,改进了HTTP/1.0 中Connection:keep-alive的缺陷,HTTP/1.1中持久连接是默认激活的,要关闭则需要在报文首部显示添加Connection:close关闭持久连接</p>
+<h3 id="持久连接的限制"><a href="#持久连接的限制" class="headerlink" title="持久连接的限制"></a>持久连接的限制</h3><ul>
+<li>只有当连接上的所有报文都是正确的,自定义报文长度时,也就是说实体部分的长度和相应的Content-length一致,或则是用分块传输编码方式编码的,连接才能持久保持</li>
+<li>HTTP/1.1的代理必须能够分别管理与客户端和服务端的持久连接,每个连接都只适用于一跳传输</li>
+<li>一个用户客户端对任何服务器或代理最多维持两条持久连接,以防止服务器过载.</li>
+</ul>
+<h1 id="第5章-Web服务器"><a href="#第5章-Web服务器" class="headerlink" title="第5章 Web服务器"></a>第5章 Web服务器</h1>]]></content>
+      <categories>
+        <category>http</category>
+      </categories>
+  </entry>
+  <entry>
     <title>go/数据结构与算法</title>
     <url>/2021/05/19/go/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/</url>
     <content><![CDATA[<h1 id="摘录自"><a href="#摘录自" class="headerlink" title="摘录自"></a>摘录自</h1><p>数据结构和算法（Golang实现）<br><a href="https://www.bookstack.cn/books/hunterhug-goa.c" target="_blank" rel="noopener">https://www.bookstack.cn/books/hunterhug-goa.c</a></p>
@@ -6269,101 +6415,61 @@ sudo apt-get install gcc-mingw-w64<figure class="highlight plain"><table><tr><td
 ]]></content>
   </entry>
   <entry>
-    <title>go/设计模式(golang版本)</title>
-    <url>/2021/05/19/go/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F(golang%E7%89%88%E6%9C%AC)/</url>
-    <content><![CDATA[<h1 id="简单工厂模式"><a href="#简单工厂模式" class="headerlink" title="简单工厂模式"></a>简单工厂模式</h1><p>go 语言没有构造函数一说，所以一般会定义NewXXX函数来初始化相关类。 NewXXX 函数返回接口时就是简单工厂模式，也就是说Golang的一般推荐做法就是简单工厂。</p>
-<h1 id="工厂方法模式"><a href="#工厂方法模式" class="headerlink" title="工厂方法模式"></a>工厂方法模式</h1><p>工厂方法模式使用子类的方式延迟生成对象到子类中实现。<br>Go中不存在继承 所以使用匿名组合来实现<br>使用单独工厂接口是构造目标接口，</p>
+    <title>interview/Grpc面试题</title>
+    <url>/2021/05/19/interview/Grpc%E9%9D%A2%E8%AF%95%E9%A2%98/</url>
+    <content><![CDATA[<a id="more"></a>
 ]]></content>
+      <categories>
+        <category>interview</category>
+      </categories>
+      <tags>
+        <tag>grpc面试题</tag>
+      </tags>
   </entry>
   <entry>
-    <title>http/Http权威指南</title>
-    <url>/2021/05/19/http/Http%E6%9D%83%E5%A8%81%E6%8C%87%E5%8D%97/</url>
-    <content><![CDATA[<h1 id="第1章-HTTP概述"><a href="#第1章-HTTP概述" class="headerlink" title="第1章 HTTP概述"></a>第1章 HTTP概述</h1><h2 id="资源"><a href="#资源" class="headerlink" title="资源"></a>资源</h2><h3 id="媒体类型"><a href="#媒体类型" class="headerlink" title="媒体类型"></a>媒体类型</h3><ul>
-<li>MIME(Multipurpose Internet Mail Extension,多用途英特网邮件扩展)</li>
-<li>Web服务器回味所有的HTTP对象数据附加一个MIME类型，以告知Web浏览器该如何处理该对象</li>
-<li>Content-Type:image/jpeg ,“image/jpeg”为MIME类型<a id="more"></a>
+    <title>interview/Elasticsearch面试题</title>
+    <url>/2021/05/19/interview/Elasticsearch%E9%9D%A2%E8%AF%95%E9%A2%98/</url>
+    <content><![CDATA[<h2 id="为什么要使用Elasticsearch"><a href="#为什么要使用Elasticsearch" class="headerlink" title="为什么要使用Elasticsearch?"></a>为什么要使用Elasticsearch?</h2><p>因为在我们商城中的数据，将来会非常多，所以采用以往的模糊查询，模糊查询前置配置，会放弃索引，导致商品查询是全表扫面，在百万级别的数据库中，<br>效率非常低下，而我们使用ES做一个全文索引，我们将经常查询的商品的某些字段，比如说商品名，描述、价格还有id这些字段我们放入我们索引库里，可以提高查询速度。</p>
+<a id="more"></a>
 
-</li>
-</ul>
-<h3 id="URI"><a href="#URI" class="headerlink" title="URI"></a>URI</h3><ul>
-<li>URI(Uniform Resource Identifier,统一资源标识符)</li>
-<li>URI 有两种形式，分别称为URL和URN</li>
-</ul>
-<h3 id="URL"><a href="#URL" class="headerlink" title="URL"></a>URL</h3><ul>
-<li>统一资源定位符</li>
-<li>URL包含三个部分,协议类型,服务器地址,资源地址</li>
-<li>现在,几乎所有的URI都是URL</li>
-<li>URL语法 : <scheme>://<user>:<password>@<host>:<port>/<path></path>;<params>?<query>#<frag></frag></query></params></port></host></password></user></scheme></li>
-</ul>
-<h3 id="URN"><a href="#URN" class="headerlink" title="URN"></a>URN</h3><ul>
-<li>URN 统一资源名</li>
-<li>URN是作为特定内容的唯一名称使用的,与目前资源所在地无关</li>
-<li>P2P下载中使用的磁力链接是URN的一种实现，它可以持久化的标识一个BT资源，资源分布式的存储在P2P网络中，无需中心服务器用户即可找到并下载它。</li>
-</ul>
-<h2 id="Web的结构组件"><a href="#Web的结构组件" class="headerlink" title="Web的结构组件"></a>Web的结构组件</h2><ul>
-<li>代理 位于客户端和服务端之间的HTTP中间实体</li>
-<li>缓存 HTTP的仓库,使常用的页面或资源保存在离客户端更近的地方</li>
-<li>网关 连接其他应用程序的特殊问web服务器</li>
-<li>隧道 对HTTP通信报文进行盲转发的特殊代理</li>
-<li>Agent代理 发起自动HTTP请求的半智能Web客户端</li>
-</ul>
-<h1 id="第3章-HTTP报文"><a href="#第3章-HTTP报文" class="headerlink" title="第3章 HTTP报文"></a>第3章 HTTP报文</h1><h2 id="报文结构"><a href="#报文结构" class="headerlink" title="报文结构"></a>报文结构</h2><ul>
-<li>起始行(start line)</li>
-<li>首部(header)</li>
-<li>主体(body)</li>
-</ul>
-<h1 id="第4章-连接管理"><a href="#第4章-连接管理" class="headerlink" title="第4章 连接管理"></a>第4章 连接管理</h1><h2 id="用TCP套接字编程"><a href="#用TCP套接字编程" class="headerlink" title="用TCP套接字编程"></a>用TCP套接字编程</h2><ul>
-<li>网络套接字 操作系统提供的操作TCP连接的工具</li>
-</ul>
-<h3 id="服务端套接字编程流程"><a href="#服务端套接字编程流程" class="headerlink" title="服务端套接字编程流程"></a>服务端套接字编程流程</h3><ol>
-<li>创建套接字</li>
-<li>绑定端口</li>
-<li>监听端口</li>
-<li>接收并处理消息</li>
-</ol>
-<h3 id="客户端套接字编程流程"><a href="#客户端套接字编程流程" class="headerlink" title="客户端套接字编程流程"></a>客户端套接字编程流程</h3><ol>
-<li>创建套接字</li>
-<li>连接服务端套接字</li>
-<li>发送消息</li>
-</ol>
-<h2 id="性能聚焦区域"><a href="#性能聚焦区域" class="headerlink" title="性能聚焦区域"></a>性能聚焦区域</h2><p>###　TCP相关时延</p>
-<ul>
-<li>TCP连接建立握手</li>
-<li>TCP慢启动拥塞控制</li>
-<li>数据聚集的Nagle算法</li>
-<li>用于捎带确认的TCP延迟确认算法</li>
-<li>TIME_WAIT时延和端口耗尽</li>
-</ul>
-<h2 id="提高HTTP连接性能的方法"><a href="#提高HTTP连接性能的方法" class="headerlink" title="提高HTTP连接性能的方法"></a>提高HTTP连接性能的方法</h2><p>串行事务处理时延</p>
-<ul>
-<li>并行连接 通过多条TCP连接发起并发的HTTP请求</li>
-<li>持久连接 重用TCP连接,以消除连接及关闭时延</li>
-<li>管道化连接 通过共享TCP连接发起并发的HTTP请求</li>
-<li>复用连接 交替传送请求和响应报文</li>
-</ul>
-<h3 id="并行连接"><a href="#并行连接" class="headerlink" title="并行连接"></a>并行连接</h3><p>打开大量连接会消耗很多内存资源<br>浏览器确实使用了并行连接,但他们会将并行连接的总数限制为一个较小的值(通常是4个). 服务器可以随意关闭来自特定客户端的超量连接</p>
-<h3 id="持久连接"><a href="#持久连接" class="headerlink" title="持久连接"></a>持久连接</h3><p>在HTTP事务处理结束后仍然保持在打开状态的TCP连接被称为持久连接;持久连接会在不同事务之间保持打开状态,直到客户端或服务器决定将其关闭为止</p>
-<h3 id="不能被代理转发或缓存响应使用的首部"><a href="#不能被代理转发或缓存响应使用的首部" class="headerlink" title="不能被代理转发或缓存响应使用的首部"></a>不能被代理转发或缓存响应使用的首部</h3><ul>
-<li>Connection</li>
-<li>Proxy-Authenticate</li>
-<li>Proxy-Connection</li>
-<li>Transfer-Encoding</li>
-<li>Upgrade</li>
-</ul>
-<h2 id="持久连接-1"><a href="#持久连接-1" class="headerlink" title="持久连接"></a>持久连接</h2><h3 id="HTTP-1-0"><a href="#HTTP-1-0" class="headerlink" title="HTTP/1.0"></a>HTTP/1.0</h3><p>HTTP/1.0 通过Connection:keep-alive 头部发送持久连接信号 ,服务端响应Connection:keep-alive表示支持持久连接,但是会存在一个盲中继问题<br>盲中继(哑代理)会导致,客户端保持TCP连接,服务端保持TCP连接,他们的TCP连接都是连接在代理上的,代理却什么都不知道</p>
+<h2 id="Elasticsearch是如何实现Master选举的？"><a href="#Elasticsearch是如何实现Master选举的？" class="headerlink" title="Elasticsearch是如何实现Master选举的？"></a>Elasticsearch是如何实现Master选举的？</h2><p>Elasticsearch的选主是ZenDiscovery模块负责的，主要包含Ping（节点之间通过这个RPC来发现彼此）和Unicast（单播模块包含一个主机列表以控制哪些节点需要ping通）这两部分；<br>对所有可以成为master的节点（node.master: true）根据nodeId字典排序，每次选举每个节点都把自己所知道节点排一次序，然后选出第一个（第0位）节点，暂且认为它是master节点。<br>如果对某个节点的投票数达到一定的值（可以成为master节点数n/2+1）并且该节点自己也选举自己，那这个节点就是master。否则重新选举一直到满足上述条件。  </p>
 <blockquote>
-<p>只是将一个连接转发到另一个连接去,不对Connection首部进行特殊处理</p>
+<blockquote>
+<p>补充：master节点的职责主要包括集群、节点和索引的管理，不负责文档级别的管理；data节点可以关闭http功能。</p>
 </blockquote>
-<h3 id="HTTP-1-1"><a href="#HTTP-1-1" class="headerlink" title="HTTP/1.1"></a>HTTP/1.1</h3><p>HTTP/1.1使用persistent connection持久连接,改进了HTTP/1.0 中Connection:keep-alive的缺陷,HTTP/1.1中持久连接是默认激活的,要关闭则需要在报文首部显示添加Connection:close关闭持久连接</p>
-<h3 id="持久连接的限制"><a href="#持久连接的限制" class="headerlink" title="持久连接的限制"></a>持久连接的限制</h3><ul>
-<li>只有当连接上的所有报文都是正确的,自定义报文长度时,也就是说实体部分的长度和相应的Content-length一致,或则是用分块传输编码方式编码的,连接才能持久保持</li>
-<li>HTTP/1.1的代理必须能够分别管理与客户端和服务端的持久连接,每个连接都只适用于一跳传输</li>
-<li>一个用户客户端对任何服务器或代理最多维持两条持久连接,以防止服务器过载.</li>
+</blockquote>
+<h2 id="Elasticsearch中的节点（比如共20个），其中的10个选了一个master，另外10个选了另一个master，怎么办？"><a href="#Elasticsearch中的节点（比如共20个），其中的10个选了一个master，另外10个选了另一个master，怎么办？" class="headerlink" title="Elasticsearch中的节点（比如共20个），其中的10个选了一个master，另外10个选了另一个master，怎么办？"></a>Elasticsearch中的节点（比如共20个），其中的10个选了一个master，另外10个选了另一个master，怎么办？</h2><p>当集群master候选数量不小于3个时，可以通过设置最少投票通过数量（discovery.zen.minimum_master_nodes）超过所有候选节点一半以上来解决脑裂问题；<br>当候选数量为两个时，只能修改为唯一的一个master候选，其他作为data节点，避免脑裂问题。 </p>
+<h2 id="详细描述一下Elasticsearch索引文档的过程。"><a href="#详细描述一下Elasticsearch索引文档的过程。" class="headerlink" title="详细描述一下Elasticsearch索引文档的过程。"></a>详细描述一下Elasticsearch索引文档的过程。</h2><p>协调节点默认使用文档ID参与计算（也支持通过routing），以便为路由提供合适的分片。<br>shard = hash(document_id) % (num_of_primary_shards)<br>当分片所在的节点接收到来自协调节点的请求后，会将请求写入到Memory Buffer，然后定时（默认是每隔1秒）写入到Filesystem Cache，这个从Momery Buffer到Filesystem 　　Cache的过程就叫做refresh；<br>当然在某些情况下，存在Momery Buffer和Filesystem Cache的数据可能会丢失，ES是通过translog的机制来保证数据的可靠性的。其实现机制是接收到请求后，同时也会写入到translog中，当Filesystem cache中的数据写入到磁盘中时，才会清除掉，这个过程叫做flush；<br>在flush过程中，内存中的缓冲将被清除，内容被写入一个新段，段的fsync将创建一个新的提交点，并将内容刷新到磁盘，旧的translog将被删除并开始一个新的translog。<br>flush触发的时机是定时触发（默认30分钟）或者translog变得太大（默认为512M）时；  </p>
+<h2 id="详细描述一下Elasticsearch更新和删除文档的过程"><a href="#详细描述一下Elasticsearch更新和删除文档的过程" class="headerlink" title="详细描述一下Elasticsearch更新和删除文档的过程"></a>详细描述一下Elasticsearch更新和删除文档的过程</h2><p>删除和更新也都是写操作，但是Elasticsearch中的文档是不可变的，因此不能被删除或者改动以展示其变更；<br>磁盘上的每个段都有一个相应的.del文件。当删除请求发送后，文档并没有真的被删除，而是在.del文件中被标记为删除。该文档依然能匹配查询，但是会在结果中被过滤掉。当段合并时，在.del文件中被标记为删除的文档将不会被写入新段。<br>在新的文档被创建时，Elasticsearch会为该文档指定一个版本号，当执行更新时，旧版本的文档在.del文件中被标记为删除，新版本的文档被索引到一个新段。旧版本的文档依然能匹配查询，但是会在结果中被过滤掉。  </p>
+<h2 id="详细描述一下Elasticsearch搜索的过程"><a href="#详细描述一下Elasticsearch搜索的过程" class="headerlink" title="详细描述一下Elasticsearch搜索的过程"></a>详细描述一下Elasticsearch搜索的过程</h2><p>搜索被执行成一个两阶段过程，我们称之为 Query Then Fetch；<br>在初始查询阶段时，查询会广播到索引中每一个分片拷贝（主分片或者副本分片）。 每个分片在本地执行搜索并构建一个匹配文档的大小为 from + size 的优先队列。PS：在搜索的时候是会查询Filesystem Cache的，但是有部分数据还在Memory Buffer，所以搜索是近实时的。<br>每个分片返回各自优先队列中 所有文档的 ID 和排序值 给协调节点，它合并这些值到自己的优先队列中来产生一个全局排序后的结果列表。<br>接下来就是 取回阶段，协调节点辨别出哪些文档需要被取回并向相关的分片提交多个 GET 请求。每个分片加载并 丰富 文档，如果有需要的话，接着返回文档给协调节点。一旦所有的文档都被取回了，协调节点返回结果给客户端。<br>补充：Query Then Fetch的搜索类型在文档相关性打分的时候参考的是本分片的数据，这样在文档数量较少的时候可能不够准确，DFS Query Then Fetch增加了一个预查询的处理，询问Term和Document frequency，这个评分更准确，但是性能会变差。  </p>
+<h2 id="Elasticsearch对于大数据量（上亿量级）的聚合如何实现？"><a href="#Elasticsearch对于大数据量（上亿量级）的聚合如何实现？" class="headerlink" title="Elasticsearch对于大数据量（上亿量级）的聚合如何实现？"></a>Elasticsearch对于大数据量（上亿量级）的聚合如何实现？</h2><p>Elasticsearch 提供的首个近似聚合是cardinality 度量。它提供一个字段的基数，即该字段的distinct或者unique值的数目。它是基于HLL算法的。HLL 会先对我们的输入作哈希运算，然后根据哈希运算的结果中的 bits 做概率估算从而得到基数。其特点是：可配置的精度，用来控制内存的使用（更精确 ＝ 更多内存）；小的数据集精度是非常高的；我们可以通过配置参数，来设置去重需要的固定内存使用量。无论数千还是数十亿的唯一值，内存使用量只与你配置的精确度相关 .  </p>
+<h2 id="在并发情况下，Elasticsearch如果保证读写一致？"><a href="#在并发情况下，Elasticsearch如果保证读写一致？" class="headerlink" title="在并发情况下，Elasticsearch如果保证读写一致？"></a>在并发情况下，Elasticsearch如果保证读写一致？</h2><p>可以通过版本号使用乐观并发控制，以确保新版本不会被旧版本覆盖，由应用层来处理具体的冲突；<br>另外对于写操作，一致性级别支持quorum/one/all，默认为quorum，即只有当大多数分片可用时才允许写操作。但即使大多数可用，也可能存在因为网络等原因导致写入副本失败，这样该副本被认为故障，分片将会在一个不同的节点上重建。<br>对于读操作，可以设置replication为sync(默认)，这使得操作在主分片和副本分片都完成后才会返回；如果设置replication为async时，也可以通过设置搜索请求参数_preference为primary来查询主分片，确保文档是最新版本。  </p>
+<h2 id="ElasticSearch中的集群、节点、索引、文档、类型是什么？"><a href="#ElasticSearch中的集群、节点、索引、文档、类型是什么？" class="headerlink" title="ElasticSearch中的集群、节点、索引、文档、类型是什么？"></a>ElasticSearch中的集群、节点、索引、文档、类型是什么？</h2><p>群集是一个或多个节点（服务器）的集合，它们共同保存您的整个数据，并提供跨所有节点的联合索引和搜索功能。群集由唯一名称标识，默认情况下为“elasticsearch”。此名称很重要，因为如果节点设置为按名称加入群集，则该节点只能是群集的一部分。<br>节点是属于集群一部分的单个服务器。它存储数据并参与群集索引和搜索功能。<br>索引就像关系数据库中的“数据库”。它有一个定义多种类型的映射。索引是逻辑名称空间，映射到一个或多个主分片，并且可以有零个或多个副本分片。 MySQL =&gt;数据库 　　         ElasticSearch =&gt;索引<br>文档类似于关系数据库中的一行。不同之处在于索引中的每个文档可以具有不同的结构（字段），但是对于通用字段应该具有相同的数据类型。 MySQL =&gt; Databases =&gt; 　             Tables =&gt; Columns / Rows ElasticSearch =&gt; Indices =&gt; Types =&gt;具有属性的文档<br>类型是索引的逻辑类别/分区，其语义完全取决于用户。  </p>
+<h2 id="ElasticSearch中的分片是什么"><a href="#ElasticSearch中的分片是什么" class="headerlink" title="ElasticSearch中的分片是什么?"></a>ElasticSearch中的分片是什么?</h2><p>在大多数环境中，每个节点都在单独的盒子或虚拟机上运行。<br>索引 - 在Elasticsearch中，索引是文档的集合。<br>分片 -因为Elasticsearch是一个分布式搜索引擎，所以索引通常被分割成分布在多个节点上的被称为分片的元素。</p>
+<h2 id="什么是ElasticSearch？"><a href="#什么是ElasticSearch？" class="headerlink" title="什么是ElasticSearch？"></a>什么是ElasticSearch？</h2><p>Elasticsearch是一个基于Lucene的搜索引擎。它提供了具有HTTP Web界面和无架构JSON文档的分布式，多租户能力的全文搜索引擎。Elasticsearch是用Java开发的，根据Apache许可条款作为开源发布。</p>
+<h2 id="Elasticsearch中的倒排索引是什么？"><a href="#Elasticsearch中的倒排索引是什么？" class="headerlink" title="Elasticsearch中的倒排索引是什么？"></a>Elasticsearch中的倒排索引是什么？</h2><p>倒排索引是搜索引擎的核心。搜索引擎的主要目标是在查找发生搜索条件的文档时提供快速搜索。倒排索引是一种像数据结构一样的散列图，可将用户从单词导向文档或网页。它是搜索引擎的核心。其主要目标是快速搜索从数百万文件中查找数据。 </p>
+<h2 id="ElasticSearch中的集群、节点、索引、文档、类型是什么？-1"><a href="#ElasticSearch中的集群、节点、索引、文档、类型是什么？-1" class="headerlink" title="ElasticSearch中的集群、节点、索引、文档、类型是什么？"></a>ElasticSearch中的集群、节点、索引、文档、类型是什么？</h2><ul>
+<li>群集是一个或多个节点（服务器）的集合，它们共同保存您的整个数据，并提供跨所有节点的联合索引和搜索功能。群集由唯一名称标识，默认情况下为“elasticsearch”。此名称很重要，因为如果节点设置为按名称加入群集，则该节点只能是群集的一部分。</li>
+<li>节点是属于集群一部分的单个服务器。它存储数据并参与群集索引和搜索功能。</li>
+<li>索引就像关系数据库中的“数据库”。它有一个定义多种类型的映射。索引是逻辑名称空间，映射到一个或多个主分片，并且可以有零个或多个副本分片。 MySQL =&gt;数据库 ElasticSearch =&gt;索引</li>
+<li>文档类似于关系数据库中的一行。不同之处在于索引中的每个文档可以具有不同的结构（字段），但是对于通用字段应该具有相同的数据类型。 MySQL =&gt; Databases =&gt; Tables =&gt; Columns / Rows ElasticSearch =&gt; Indices =&gt; Types =&gt;具有属性的文档</li>
+<li>类型是索引的逻辑类别/分区，其语义完全取决于用户。</li>
 </ul>
-<h1 id="第5章-Web服务器"><a href="#第5章-Web服务器" class="headerlink" title="第5章 Web服务器"></a>第5章 Web服务器</h1>]]></content>
+<h2 id="ElasticSearch是否有架构？"><a href="#ElasticSearch是否有架构？" class="headerlink" title="ElasticSearch是否有架构？"></a>ElasticSearch是否有架构？</h2><p>ElasticSearch可以有一个架构。架构是描述文档类型以及如何处理文档的不同字段的一个或多个字段的描述。Elasticsearch中的架构是一种映射，它描述了JSON文档中的字段及其数据类型，以及它们应该如何在Lucene索引中进行索引。因此，在Elasticsearch术语中，我们通常将此模式称为“映射”。   </p>
+<p>Elasticsearch具有架构灵活的能力，这意味着可以在不明确提供架构的情况下索引文档。如果未指定映射，则默认情况下，Elasticsearch会在索引期间检测文档中的新字段时动态生成一个映射。  </p>
+<h2 id="ElasticSearch中的分片是什么？"><a href="#ElasticSearch中的分片是什么？" class="headerlink" title="ElasticSearch中的分片是什么？"></a>ElasticSearch中的分片是什么？</h2><p>在大多数环境中，每个节点都在单独的盒子或虚拟机上运行。<br>索引 - 在Elasticsearch中，索引是文档的集合。<br>分片 -因为Elasticsearch是一个分布式搜索引擎，所以索引通常被分割成分布在多个节点上的被称为分片的元素。  </p>
+<h2 id="ElasticSearch中的副本是什么？"><a href="#ElasticSearch中的副本是什么？" class="headerlink" title="ElasticSearch中的副本是什么？"></a>ElasticSearch中的副本是什么？</h2><p>个索引被分解成碎片以便于分发和扩展。副本是分片的副本。一个节点是一个属于一个集群的ElasticSearch的运行实例。一个集群由一个或多个共享相同集群名称的节点组成。  </p>
+<h2 id="ElasticSearch中的分析器是什么？"><a href="#ElasticSearch中的分析器是什么？" class="headerlink" title="ElasticSearch中的分析器是什么？"></a>ElasticSearch中的分析器是什么？</h2><p>在ElasticSearch中索引数据时，数据由为索引定义的Analyzer在内部进行转换。 分析器由一个Tokenizer和零个或多个TokenFilter组成。编译器可以在一个或多个CharFilter之前。分析模块允许您在逻辑名称下注册分析器，然后可以在映射定义或某些API中引用它们。  </p>
+<p>Elasticsearch附带了许多可以随时使用的预建分析器。或者，您可以组合内置的字符过滤器，编译器和过滤器器来创建自定义分析器。</p>
+<h2 id="什么是ElasticSearch中的编译器？"><a href="#什么是ElasticSearch中的编译器？" class="headerlink" title="什么是ElasticSearch中的编译器？"></a>什么是ElasticSearch中的编译器？</h2><p>编译器用于将字符串分解为术语或标记流。一个简单的编译器可能会将字符串拆分为任何遇到空格或标点的地方。Elasticsearch有许多内置标记器，可用于构建自定义分析器。  </p>
+<h2 id="启用属性，索引和存储的用途是什么？"><a href="#启用属性，索引和存储的用途是什么？" class="headerlink" title="启用属性，索引和存储的用途是什么？"></a>启用属性，索引和存储的用途是什么？</h2><p>enabled属性适用于各类ElasticSearch特定/创建领域，如index和size。用户提供的字段没有“已启用”属性。 存储意味着数据由Lucene存储，如果询问，将返回这些数据。<br>存储字段不一定是可搜索的。默认情况下，字段不存储，但源文件是完整的。因为您希望使用默认值(这是有意义的)，所以不要设置store属性 该指数属性用于搜索。<br>索引属性只能用于搜索。只有索引域可以进行搜索。差异的原因是在分析期间对索引字段进行了转换，因此如果需要的话，您不能检索原始数据。  </p>
+]]></content>
       <categories>
-        <category>http</category>
+        <category>interview</category>
       </categories>
+      <tags>
+        <tag>elasticsearch面试题</tag>
+      </tags>
   </entry>
   <entry>
     <title>interview/Docker面试题</title>
@@ -6483,63 +6589,6 @@ sudo apt-get install gcc-mingw-w64<figure class="highlight plain"><table><tr><td
       </categories>
       <tags>
         <tag>docker面试题</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>interview/Elasticsearch面试题</title>
-    <url>/2021/05/19/interview/Elasticsearch%E9%9D%A2%E8%AF%95%E9%A2%98/</url>
-    <content><![CDATA[<h2 id="为什么要使用Elasticsearch"><a href="#为什么要使用Elasticsearch" class="headerlink" title="为什么要使用Elasticsearch?"></a>为什么要使用Elasticsearch?</h2><p>因为在我们商城中的数据，将来会非常多，所以采用以往的模糊查询，模糊查询前置配置，会放弃索引，导致商品查询是全表扫面，在百万级别的数据库中，<br>效率非常低下，而我们使用ES做一个全文索引，我们将经常查询的商品的某些字段，比如说商品名，描述、价格还有id这些字段我们放入我们索引库里，可以提高查询速度。</p>
-<a id="more"></a>
-
-<h2 id="Elasticsearch是如何实现Master选举的？"><a href="#Elasticsearch是如何实现Master选举的？" class="headerlink" title="Elasticsearch是如何实现Master选举的？"></a>Elasticsearch是如何实现Master选举的？</h2><p>Elasticsearch的选主是ZenDiscovery模块负责的，主要包含Ping（节点之间通过这个RPC来发现彼此）和Unicast（单播模块包含一个主机列表以控制哪些节点需要ping通）这两部分；<br>对所有可以成为master的节点（node.master: true）根据nodeId字典排序，每次选举每个节点都把自己所知道节点排一次序，然后选出第一个（第0位）节点，暂且认为它是master节点。<br>如果对某个节点的投票数达到一定的值（可以成为master节点数n/2+1）并且该节点自己也选举自己，那这个节点就是master。否则重新选举一直到满足上述条件。  </p>
-<blockquote>
-<blockquote>
-<p>补充：master节点的职责主要包括集群、节点和索引的管理，不负责文档级别的管理；data节点可以关闭http功能。</p>
-</blockquote>
-</blockquote>
-<h2 id="Elasticsearch中的节点（比如共20个），其中的10个选了一个master，另外10个选了另一个master，怎么办？"><a href="#Elasticsearch中的节点（比如共20个），其中的10个选了一个master，另外10个选了另一个master，怎么办？" class="headerlink" title="Elasticsearch中的节点（比如共20个），其中的10个选了一个master，另外10个选了另一个master，怎么办？"></a>Elasticsearch中的节点（比如共20个），其中的10个选了一个master，另外10个选了另一个master，怎么办？</h2><p>当集群master候选数量不小于3个时，可以通过设置最少投票通过数量（discovery.zen.minimum_master_nodes）超过所有候选节点一半以上来解决脑裂问题；<br>当候选数量为两个时，只能修改为唯一的一个master候选，其他作为data节点，避免脑裂问题。 </p>
-<h2 id="详细描述一下Elasticsearch索引文档的过程。"><a href="#详细描述一下Elasticsearch索引文档的过程。" class="headerlink" title="详细描述一下Elasticsearch索引文档的过程。"></a>详细描述一下Elasticsearch索引文档的过程。</h2><p>协调节点默认使用文档ID参与计算（也支持通过routing），以便为路由提供合适的分片。<br>shard = hash(document_id) % (num_of_primary_shards)<br>当分片所在的节点接收到来自协调节点的请求后，会将请求写入到Memory Buffer，然后定时（默认是每隔1秒）写入到Filesystem Cache，这个从Momery Buffer到Filesystem 　　Cache的过程就叫做refresh；<br>当然在某些情况下，存在Momery Buffer和Filesystem Cache的数据可能会丢失，ES是通过translog的机制来保证数据的可靠性的。其实现机制是接收到请求后，同时也会写入到translog中，当Filesystem cache中的数据写入到磁盘中时，才会清除掉，这个过程叫做flush；<br>在flush过程中，内存中的缓冲将被清除，内容被写入一个新段，段的fsync将创建一个新的提交点，并将内容刷新到磁盘，旧的translog将被删除并开始一个新的translog。<br>flush触发的时机是定时触发（默认30分钟）或者translog变得太大（默认为512M）时；  </p>
-<h2 id="详细描述一下Elasticsearch更新和删除文档的过程"><a href="#详细描述一下Elasticsearch更新和删除文档的过程" class="headerlink" title="详细描述一下Elasticsearch更新和删除文档的过程"></a>详细描述一下Elasticsearch更新和删除文档的过程</h2><p>删除和更新也都是写操作，但是Elasticsearch中的文档是不可变的，因此不能被删除或者改动以展示其变更；<br>磁盘上的每个段都有一个相应的.del文件。当删除请求发送后，文档并没有真的被删除，而是在.del文件中被标记为删除。该文档依然能匹配查询，但是会在结果中被过滤掉。当段合并时，在.del文件中被标记为删除的文档将不会被写入新段。<br>在新的文档被创建时，Elasticsearch会为该文档指定一个版本号，当执行更新时，旧版本的文档在.del文件中被标记为删除，新版本的文档被索引到一个新段。旧版本的文档依然能匹配查询，但是会在结果中被过滤掉。  </p>
-<h2 id="详细描述一下Elasticsearch搜索的过程"><a href="#详细描述一下Elasticsearch搜索的过程" class="headerlink" title="详细描述一下Elasticsearch搜索的过程"></a>详细描述一下Elasticsearch搜索的过程</h2><p>搜索被执行成一个两阶段过程，我们称之为 Query Then Fetch；<br>在初始查询阶段时，查询会广播到索引中每一个分片拷贝（主分片或者副本分片）。 每个分片在本地执行搜索并构建一个匹配文档的大小为 from + size 的优先队列。PS：在搜索的时候是会查询Filesystem Cache的，但是有部分数据还在Memory Buffer，所以搜索是近实时的。<br>每个分片返回各自优先队列中 所有文档的 ID 和排序值 给协调节点，它合并这些值到自己的优先队列中来产生一个全局排序后的结果列表。<br>接下来就是 取回阶段，协调节点辨别出哪些文档需要被取回并向相关的分片提交多个 GET 请求。每个分片加载并 丰富 文档，如果有需要的话，接着返回文档给协调节点。一旦所有的文档都被取回了，协调节点返回结果给客户端。<br>补充：Query Then Fetch的搜索类型在文档相关性打分的时候参考的是本分片的数据，这样在文档数量较少的时候可能不够准确，DFS Query Then Fetch增加了一个预查询的处理，询问Term和Document frequency，这个评分更准确，但是性能会变差。  </p>
-<h2 id="Elasticsearch对于大数据量（上亿量级）的聚合如何实现？"><a href="#Elasticsearch对于大数据量（上亿量级）的聚合如何实现？" class="headerlink" title="Elasticsearch对于大数据量（上亿量级）的聚合如何实现？"></a>Elasticsearch对于大数据量（上亿量级）的聚合如何实现？</h2><p>Elasticsearch 提供的首个近似聚合是cardinality 度量。它提供一个字段的基数，即该字段的distinct或者unique值的数目。它是基于HLL算法的。HLL 会先对我们的输入作哈希运算，然后根据哈希运算的结果中的 bits 做概率估算从而得到基数。其特点是：可配置的精度，用来控制内存的使用（更精确 ＝ 更多内存）；小的数据集精度是非常高的；我们可以通过配置参数，来设置去重需要的固定内存使用量。无论数千还是数十亿的唯一值，内存使用量只与你配置的精确度相关 .  </p>
-<h2 id="在并发情况下，Elasticsearch如果保证读写一致？"><a href="#在并发情况下，Elasticsearch如果保证读写一致？" class="headerlink" title="在并发情况下，Elasticsearch如果保证读写一致？"></a>在并发情况下，Elasticsearch如果保证读写一致？</h2><p>可以通过版本号使用乐观并发控制，以确保新版本不会被旧版本覆盖，由应用层来处理具体的冲突；<br>另外对于写操作，一致性级别支持quorum/one/all，默认为quorum，即只有当大多数分片可用时才允许写操作。但即使大多数可用，也可能存在因为网络等原因导致写入副本失败，这样该副本被认为故障，分片将会在一个不同的节点上重建。<br>对于读操作，可以设置replication为sync(默认)，这使得操作在主分片和副本分片都完成后才会返回；如果设置replication为async时，也可以通过设置搜索请求参数_preference为primary来查询主分片，确保文档是最新版本。  </p>
-<h2 id="ElasticSearch中的集群、节点、索引、文档、类型是什么？"><a href="#ElasticSearch中的集群、节点、索引、文档、类型是什么？" class="headerlink" title="ElasticSearch中的集群、节点、索引、文档、类型是什么？"></a>ElasticSearch中的集群、节点、索引、文档、类型是什么？</h2><p>群集是一个或多个节点（服务器）的集合，它们共同保存您的整个数据，并提供跨所有节点的联合索引和搜索功能。群集由唯一名称标识，默认情况下为“elasticsearch”。此名称很重要，因为如果节点设置为按名称加入群集，则该节点只能是群集的一部分。<br>节点是属于集群一部分的单个服务器。它存储数据并参与群集索引和搜索功能。<br>索引就像关系数据库中的“数据库”。它有一个定义多种类型的映射。索引是逻辑名称空间，映射到一个或多个主分片，并且可以有零个或多个副本分片。 MySQL =&gt;数据库 　　         ElasticSearch =&gt;索引<br>文档类似于关系数据库中的一行。不同之处在于索引中的每个文档可以具有不同的结构（字段），但是对于通用字段应该具有相同的数据类型。 MySQL =&gt; Databases =&gt; 　             Tables =&gt; Columns / Rows ElasticSearch =&gt; Indices =&gt; Types =&gt;具有属性的文档<br>类型是索引的逻辑类别/分区，其语义完全取决于用户。  </p>
-<h2 id="ElasticSearch中的分片是什么"><a href="#ElasticSearch中的分片是什么" class="headerlink" title="ElasticSearch中的分片是什么?"></a>ElasticSearch中的分片是什么?</h2><p>在大多数环境中，每个节点都在单独的盒子或虚拟机上运行。<br>索引 - 在Elasticsearch中，索引是文档的集合。<br>分片 -因为Elasticsearch是一个分布式搜索引擎，所以索引通常被分割成分布在多个节点上的被称为分片的元素。</p>
-<h2 id="什么是ElasticSearch？"><a href="#什么是ElasticSearch？" class="headerlink" title="什么是ElasticSearch？"></a>什么是ElasticSearch？</h2><p>Elasticsearch是一个基于Lucene的搜索引擎。它提供了具有HTTP Web界面和无架构JSON文档的分布式，多租户能力的全文搜索引擎。Elasticsearch是用Java开发的，根据Apache许可条款作为开源发布。</p>
-<h2 id="Elasticsearch中的倒排索引是什么？"><a href="#Elasticsearch中的倒排索引是什么？" class="headerlink" title="Elasticsearch中的倒排索引是什么？"></a>Elasticsearch中的倒排索引是什么？</h2><p>倒排索引是搜索引擎的核心。搜索引擎的主要目标是在查找发生搜索条件的文档时提供快速搜索。倒排索引是一种像数据结构一样的散列图，可将用户从单词导向文档或网页。它是搜索引擎的核心。其主要目标是快速搜索从数百万文件中查找数据。 </p>
-<h2 id="ElasticSearch中的集群、节点、索引、文档、类型是什么？-1"><a href="#ElasticSearch中的集群、节点、索引、文档、类型是什么？-1" class="headerlink" title="ElasticSearch中的集群、节点、索引、文档、类型是什么？"></a>ElasticSearch中的集群、节点、索引、文档、类型是什么？</h2><ul>
-<li>群集是一个或多个节点（服务器）的集合，它们共同保存您的整个数据，并提供跨所有节点的联合索引和搜索功能。群集由唯一名称标识，默认情况下为“elasticsearch”。此名称很重要，因为如果节点设置为按名称加入群集，则该节点只能是群集的一部分。</li>
-<li>节点是属于集群一部分的单个服务器。它存储数据并参与群集索引和搜索功能。</li>
-<li>索引就像关系数据库中的“数据库”。它有一个定义多种类型的映射。索引是逻辑名称空间，映射到一个或多个主分片，并且可以有零个或多个副本分片。 MySQL =&gt;数据库 ElasticSearch =&gt;索引</li>
-<li>文档类似于关系数据库中的一行。不同之处在于索引中的每个文档可以具有不同的结构（字段），但是对于通用字段应该具有相同的数据类型。 MySQL =&gt; Databases =&gt; Tables =&gt; Columns / Rows ElasticSearch =&gt; Indices =&gt; Types =&gt;具有属性的文档</li>
-<li>类型是索引的逻辑类别/分区，其语义完全取决于用户。</li>
-</ul>
-<h2 id="ElasticSearch是否有架构？"><a href="#ElasticSearch是否有架构？" class="headerlink" title="ElasticSearch是否有架构？"></a>ElasticSearch是否有架构？</h2><p>ElasticSearch可以有一个架构。架构是描述文档类型以及如何处理文档的不同字段的一个或多个字段的描述。Elasticsearch中的架构是一种映射，它描述了JSON文档中的字段及其数据类型，以及它们应该如何在Lucene索引中进行索引。因此，在Elasticsearch术语中，我们通常将此模式称为“映射”。   </p>
-<p>Elasticsearch具有架构灵活的能力，这意味着可以在不明确提供架构的情况下索引文档。如果未指定映射，则默认情况下，Elasticsearch会在索引期间检测文档中的新字段时动态生成一个映射。  </p>
-<h2 id="ElasticSearch中的分片是什么？"><a href="#ElasticSearch中的分片是什么？" class="headerlink" title="ElasticSearch中的分片是什么？"></a>ElasticSearch中的分片是什么？</h2><p>在大多数环境中，每个节点都在单独的盒子或虚拟机上运行。<br>索引 - 在Elasticsearch中，索引是文档的集合。<br>分片 -因为Elasticsearch是一个分布式搜索引擎，所以索引通常被分割成分布在多个节点上的被称为分片的元素。  </p>
-<h2 id="ElasticSearch中的副本是什么？"><a href="#ElasticSearch中的副本是什么？" class="headerlink" title="ElasticSearch中的副本是什么？"></a>ElasticSearch中的副本是什么？</h2><p>个索引被分解成碎片以便于分发和扩展。副本是分片的副本。一个节点是一个属于一个集群的ElasticSearch的运行实例。一个集群由一个或多个共享相同集群名称的节点组成。  </p>
-<h2 id="ElasticSearch中的分析器是什么？"><a href="#ElasticSearch中的分析器是什么？" class="headerlink" title="ElasticSearch中的分析器是什么？"></a>ElasticSearch中的分析器是什么？</h2><p>在ElasticSearch中索引数据时，数据由为索引定义的Analyzer在内部进行转换。 分析器由一个Tokenizer和零个或多个TokenFilter组成。编译器可以在一个或多个CharFilter之前。分析模块允许您在逻辑名称下注册分析器，然后可以在映射定义或某些API中引用它们。  </p>
-<p>Elasticsearch附带了许多可以随时使用的预建分析器。或者，您可以组合内置的字符过滤器，编译器和过滤器器来创建自定义分析器。</p>
-<h2 id="什么是ElasticSearch中的编译器？"><a href="#什么是ElasticSearch中的编译器？" class="headerlink" title="什么是ElasticSearch中的编译器？"></a>什么是ElasticSearch中的编译器？</h2><p>编译器用于将字符串分解为术语或标记流。一个简单的编译器可能会将字符串拆分为任何遇到空格或标点的地方。Elasticsearch有许多内置标记器，可用于构建自定义分析器。  </p>
-<h2 id="启用属性，索引和存储的用途是什么？"><a href="#启用属性，索引和存储的用途是什么？" class="headerlink" title="启用属性，索引和存储的用途是什么？"></a>启用属性，索引和存储的用途是什么？</h2><p>enabled属性适用于各类ElasticSearch特定/创建领域，如index和size。用户提供的字段没有“已启用”属性。 存储意味着数据由Lucene存储，如果询问，将返回这些数据。<br>存储字段不一定是可搜索的。默认情况下，字段不存储，但源文件是完整的。因为您希望使用默认值(这是有意义的)，所以不要设置store属性 该指数属性用于搜索。<br>索引属性只能用于搜索。只有索引域可以进行搜索。差异的原因是在分析期间对索引字段进行了转换，因此如果需要的话，您不能检索原始数据。  </p>
-]]></content>
-      <categories>
-        <category>interview</category>
-      </categories>
-      <tags>
-        <tag>elasticsearch面试题</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>interview/Grpc面试题</title>
-    <url>/2021/05/19/interview/Grpc%E9%9D%A2%E8%AF%95%E9%A2%98/</url>
-    <content><![CDATA[<a id="more"></a>
-]]></content>
-      <categories>
-        <category>interview</category>
-      </categories>
-      <tags>
-        <tag>grpc面试题</tag>
       </tags>
   </entry>
   <entry>

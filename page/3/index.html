@@ -821,7 +821,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://phpdi.github.io/2021/07/12/rabbitmq/rabbitmq/">
+    <link itemprop="mainEntityOfPage" href="https://phpdi.github.io/2021/07/12/rabbitmq/RabbitMQ%E8%AE%A4%E8%AF%86%E4%B8%8E%E5%AE%9E%E8%B7%B5/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/head.jpeg">
@@ -835,7 +835,7 @@
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
           
-            <a href="/2021/07/12/rabbitmq/rabbitmq/" class="post-title-link" itemprop="url">rabbitmq/rabbitmq</a>
+            <a href="/2021/07/12/rabbitmq/RabbitMQ%E8%AE%A4%E8%AF%86%E4%B8%8E%E5%AE%9E%E8%B7%B5/" class="post-title-link" itemprop="url">rabbitmq/RabbitMQ认识与实践</a>
         </h2>
 
         <div class="post-meta">
@@ -844,10 +844,16 @@
                 <i class="fa fa-calendar-o"></i>
               </span>
               <span class="post-meta-item-text">发表于</span>
-              
 
-              <time title="创建时间：2021-07-12 11:49:34 / 修改时间：14:49:33" itemprop="dateCreated datePublished" datetime="2021-07-12T11:49:34+08:00">2021-07-12</time>
+              <time title="创建时间：2021-07-12 11:49:34" itemprop="dateCreated datePublished" datetime="2021-07-12T11:49:34+08:00">2021-07-12</time>
             </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2021-12-21 12:51:22" itemprop="dateModified" datetime="2021-12-21T12:51:22+08:00">2021-12-21</time>
+              </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
                 <i class="fa fa-folder-o"></i>
@@ -871,49 +877,16 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <a id="more"></a>
-
-
-<h2 id="消息队列协议"><a href="#消息队列协议" class="headerlink" title="消息队列协议"></a>消息队列协议</h2><p>传递、存储、分发  </p>
-<h3 id="面试题：为什么消息中间件不直接使用http协议。"><a href="#面试题：为什么消息中间件不直接使用http协议。" class="headerlink" title="面试题：为什么消息中间件不直接使用http协议。"></a>面试题：为什么消息中间件不直接使用http协议。</h3><p>1.http协议请求报文头和响应报文头是比较复杂的，包含了消息传递不需要的部分。<br>2.http大部分是短连接，一个请求到响应很可能会中断，中断以后就不会持久化，消息中间件可能是一个长期的获取消息的过程，出现问题和故障要对数据或消息持久化。  </p>
-<h3 id="常见消息中间件协议"><a href="#常见消息中间件协议" class="headerlink" title="常见消息中间件协议"></a>常见消息中间件协议</h3><p>AMQP、MQTT、Kafka、OpenMessage</p>
-<h4 id="AMQP"><a href="#AMQP" class="headerlink" title="AMQP"></a>AMQP</h4><p>Erlang语言开发，默认端口5672<br>产品支持：rabbmitmq acitvemq  </p>
-<ul>
-<li>分布式事务支持</li>
-<li>消息的持久化支持</li>
-<li>高性能和高可靠的消息处理优势<h4 id="MQTT协议"><a href="#MQTT协议" class="headerlink" title="MQTT协议"></a>MQTT协议</h4>MQTT协议是IBM开放的一个即时通讯协议，物联网系统架构中重要组成部分<br>产品支持：rabbmitmq acitvemq  </li>
-</ul>
-<p>特点  </p>
-<ol>
-<li>轻量  </li>
-<li>结构简单  </li>
-<li>传输快、不支持事务  </li>
-<li>没有持久化设计。<br>应用场景：   </li>
-<li>适用于计算能力有限   </li>
-<li>低带宽 </li>
-<li>网络不稳地的场景  </li>
-</ol>
-<h4 id="OpenMessage"><a href="#OpenMessage" class="headerlink" title="OpenMessage"></a>OpenMessage</h4><p>由阿里、雅虎、滴滴等共同参与创立的分布式消息中间件（布道者保持中立态度。。。）</p>
-<ol>
-<li>结构简单  </li>
-<li>解析速度快  </li>
-<li>支持事务和持久化  </li>
-</ol>
-<p>产品支持：rocketmq  </p>
-<h4 id="kafka协议"><a href="#kafka协议" class="headerlink" title="kafka协议"></a>kafka协议</h4><p>kafka协议是基于TCP/IP的二进制协议，消息内部是通过长度分割，由一些基本的数据类型组成<br>特点是：  </p>
-<ol>
-<li>结构简单  </li>
-<li>解析速度快  </li>
-<li>无事务支持  </li>
-<li>有持久化设计  </li>
-</ol>
-<h2 id="消息持久化"><a href="#消息持久化" class="headerlink" title="消息持久化"></a>消息持久化</h2><p>将数据存入磁盘中</p>
-<h2 id="消息的分发策略"><a href="#消息的分发策略" class="headerlink" title="消息的分发策略"></a>消息的分发策略</h2><p>消息队列MQ是一种推送的过程。  </p>
-<h3 id="消息分发策略的机制和对比"><a href="#消息分发策略的机制和对比" class="headerlink" title="消息分发策略的机制和对比"></a>消息分发策略的机制和对比</h3><p>||ActiveMQ|RabbitMQ|Kafka|RocketMQ|<br>||:—:|:—:|:—:|:—:|<br>|发布订阅|支持|支持|支持|支持|<br>|轮询分发|支持|支持|支持|/|<br>|公平分发|/|支持|支持|/|<br>|重发|支持|支持|/|支持|<br>|消息拉取|/|支持|支持|支持|</p>
-<blockquote>
-<p>轮询分发，消费分发数量是均匀的。<br>公平分发会根据服务器的性能分发消息，会造成消息的倾斜。rabbitmq 使用公平分发需要使用手动确认的方式。</p>
-</blockquote>
-
+          <h1 id="什么叫消息队列"><a href="#什么叫消息队列" class="headerlink" title="什么叫消息队列"></a>什么叫消息队列</h1><p>消息（Message）是指在应用间传送的数据。消息可以非常简单，比如只包含文本字符串，也可以更复杂，可能包含嵌入对象。</p>
+<p>消息队列（Message Queue）是一种应用间的通信方式，消息发送后可以立即返回，由消息系统来确保消息的可靠传递。消息发布者只管把消息发布到 MQ 中而不用管谁来取，消息使用者只管从 MQ<br>中取消息而不管是谁发布的。这样发布者和使用者都不用知道对方的存在</p>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2021/07/12/rabbitmq/RabbitMQ%E8%AE%A4%E8%AF%86%E4%B8%8E%E5%AE%9E%E8%B7%B5/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
       
     </div>
 

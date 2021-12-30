@@ -210,7 +210,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://phpdi.github.io/2021/05/19/docker/docker-machine/">
+    <link itemprop="mainEntityOfPage" href="https://phpdi.github.io/2021/05/19/android/ubuntu%E5%AE%89%E8%A3%85AndroidSDK%E5%92%8CNDK/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/head.jpeg">
@@ -224,7 +224,7 @@
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
           
-            <a href="/2021/05/19/docker/docker-machine/" class="post-title-link" itemprop="url">docker/docker-machine</a>
+            <a href="/2021/05/19/android/ubuntu%E5%AE%89%E8%A3%85AndroidSDK%E5%92%8CNDK/" class="post-title-link" itemprop="url">android/ubuntu安装AndroidSDK和NDK</a>
         </h2>
 
         <div class="post-meta">
@@ -248,23 +248,36 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <h2 id="下载"><a href="#下载" class="headerlink" title="下载"></a>下载</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">base&#x3D;https:&#x2F;&#x2F;github.com&#x2F;docker&#x2F;machine&#x2F;releases&#x2F;download&#x2F;v0.16.0 &amp;&amp;</span><br><span class="line">  curl -L $base&#x2F;docker-machine-$(uname -s)-$(uname -m) &gt;&#x2F;tmp&#x2F;docker-machine &amp;&amp;</span><br><span class="line">  sudo mv &#x2F;tmp&#x2F;docker-machine &#x2F;usr&#x2F;local&#x2F;bin&#x2F;docker-machine &amp;&amp;</span><br><span class="line">  chmod +x &#x2F;usr&#x2F;local&#x2F;bin&#x2F;docker-mach</span><br></pre></td></tr></table></figure>
-<h3 id="网速慢"><a href="#网速慢" class="headerlink" title="网速慢"></a>网速慢</h3><p>使用xx_net代理</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">sudo  apt install privoxy</span><br><span class="line">export https_proxy&#x3D;127.0.0.1:8087</span><br><span class="line">export http_proxy&#x3D;127.0.0.1:8087</span><br></pre></td></tr></table></figure>
+          <h1 id="安装java"><a href="#安装java" class="headerlink" title="安装java"></a>安装java</h1><p>参考:<br><a href="https://medium.com/@barcelos.ds/install-openjdk-11-lts-in-the-ubuntu-20-04-lts-2c06f17c990" target="_blank" rel="noopener">https://medium.com/@barcelos.ds/install-openjdk-11-lts-in-the-ubuntu-20-04-lts-2c06f17c990</a></p>
+<h2 id="下载"><a href="#下载" class="headerlink" title="下载"></a>下载</h2><p><a href="https://adoptopenjdk.net" target="_blank" rel="noopener">https://adoptopenjdk.net</a></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">sudo mkdir ~&#x2F;DevTools</span><br><span class="line">sudo mkdir ~&#x2F;DevTools&#x2F;JDK</span><br><span class="line">sudo tar -zxvf ~&#x2F;下载&#x2F;OpenJDK11U-jdk***tar.gz -C ~&#x2F;DevTools&#x2F;JDK&#x2F;</span><br></pre></td></tr></table></figure>
 
-<h3 id="x509问题"><a href="#x509问题" class="headerlink" title="x509问题"></a>x509问题</h3><p>curl -k 参数跳过证书验证</p>
-<h2 id="使用"><a href="#使用" class="headerlink" title="使用"></a>使用</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">docker-machine create -d  virtualbox manager1</span><br><span class="line"></span><br><span class="line">输出：</span><br><span class="line">Running pre-create checks...</span><br><span class="line">(manager1) No default Boot2Docker ISO found locally, downloading the latest release...</span><br><span class="line">Error with pre-create check: &quot;Get https:&#x2F;&#x2F;api.github.com&#x2F;repos&#x2F;boot2docker&#x2F;boot2docker&#x2F;releases&#x2F;latest: x509: certificate signed by unknown authority&quot;</span><br></pre></td></tr></table></figure>
-<h3 id="直接去下载默认的iso文件"><a href="#直接去下载默认的iso文件" class="headerlink" title="直接去下载默认的iso文件"></a>直接去下载默认的iso文件</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">curl -Lo ~&#x2F;.docker&#x2F;machine&#x2F;cache&#x2F;boot2docker.iso https:&#x2F;&#x2F;github.com&#x2F;boot2docker&#x2F;boot2docker&#x2F;releases&#x2F;download&#x2F;v19.03.5&#x2F;boot2docker.iso</span><br><span class="line"></span><br><span class="line">输出：</span><br><span class="line">curl: (60) SSL certificate problem: unable to get local issuer certificate</span><br><span class="line">More details here: https:&#x2F;&#x2F;curl.haxx.se&#x2F;docs&#x2F;sslcerts.html</span><br></pre></td></tr></table></figure>
+<h2 id="设置JAVA-HOME环境变量"><a href="#设置JAVA-HOME环境变量" class="headerlink" title="设置JAVA_HOME环境变量"></a>设置JAVA_HOME环境变量</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">sudo  vim ~&#x2F;.profile</span><br><span class="line"></span><br><span class="line">DEV_TOOLS&#x3D;&quot;&#x2F;home&#x2F;$USER&#x2F;DevTools&quot;</span><br><span class="line">JAVA_HOME&#x3D;&quot;$DEV_TOOLS&#x2F;JDK&#x2F;jdk-11.0.7+10&quot;</span><br><span class="line">export JAVA_HOME</span><br><span class="line">PATH&#x3D;&quot;$JAVA_HOME&#x2F;bin:$PATH&quot;</span><br><span class="line"></span><br><span class="line">source ~&#x2F;.profile</span><br></pre></td></tr></table></figure>
+<h2 id="测试"><a href="#测试" class="headerlink" title="测试"></a>测试</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">#JRE</span><br><span class="line">java --version</span><br><span class="line"></span><br><span class="line">#JDK</span><br><span class="line">javac --version</span><br></pre></td></tr></table></figure>
 
 
-<h3 id="curl-60-SSL-certificate-problem-unable-to-get-local-issuer-certificate问题"><a href="#curl-60-SSL-certificate-problem-unable-to-get-local-issuer-certificate问题" class="headerlink" title="curl: (60) SSL certificate problem: unable to get local issuer certificate问题"></a>curl: (60) SSL certificate problem: unable to get local issuer certificate问题</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">curl -k --remote-name --time-cond cacert.pem https:&#x2F;&#x2F;curl.haxx.se&#x2F;ca&#x2F;cacert.pem</span><br><span class="line"># 注意执行此命令后需要重新开终端</span><br></pre></td></tr></table></figure>
+<h1 id="安装Android-SDK"><a href="#安装Android-SDK" class="headerlink" title="安装Android SDK"></a>安装Android SDK</h1><p>参考:<br><a href="https://medium.com/@barcelos.ds/install-android-sdk-in-the-ubuntu-20-04-lts-without-android-studio-1b629924d6c5" target="_blank" rel="noopener">https://medium.com/@barcelos.ds/install-android-sdk-in-the-ubuntu-20-04-lts-without-android-studio-1b629924d6c5</a></p>
+<h2 id="下载命令行工具"><a href="#下载命令行工具" class="headerlink" title="下载命令行工具"></a>下载命令行工具</h2><p>网址：<a href="https://developer.android.com/studio" target="_blank" rel="noopener">https://developer.android.com/studio</a><br><img src="/2021/05/19/android/ubuntu%E5%AE%89%E8%A3%85AndroidSDK%E5%92%8CNDK/command-tools.png" alt></p>
+<h2 id="目录"><a href="#目录" class="headerlink" title="目录"></a>目录</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sudo mkdir ~&#x2F;DevTools</span><br><span class="line">sudo mkdir -P ~&#x2F;DevTools&#x2F;Android&#x2F;cmdline-tools&#x2F;latest</span><br></pre></td></tr></table></figure>
 
-<p>###　终端下载实在太慢问题</p>
-<ol>
-<li><a href="https://github.com/boot2docker/boot2docker/releases/download/v19.03.5/boot2docker.iso" target="_blank" rel="noopener">浏览器下载</a></li>
-<li>将iso文件移动到　 ~/.docker/machine/cache/boot2docker.iso</li>
-</ol>
+<h2 id="解压放至于-DevTools-Android-cmdline-tools-latest"><a href="#解压放至于-DevTools-Android-cmdline-tools-latest" class="headerlink" title="解压放至于  ~/DevTools/Android/cmdline-tools/latest"></a>解压放至于  ~/DevTools/Android/cmdline-tools/latest</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure>
 
+<h2 id="设置ANDROID-HOME环境变量"><a href="#设置ANDROID-HOME环境变量" class="headerlink" title="设置ANDROID_HOME环境变量"></a>设置ANDROID_HOME环境变量</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">sudo  vim ~&#x2F;.profile</span><br><span class="line"></span><br><span class="line">DEV_TOOLS&#x3D;&quot;&#x2F;home&#x2F;$USER&#x2F;DevTools&quot;</span><br><span class="line">JAVA_HOME&#x3D;&quot;$DEV_TOOLS&#x2F;JDK&#x2F;jdk-11.0.7+10&quot;</span><br><span class="line">ANDROID_HOME&#x3D;&quot;$DEV_TOOLS&#x2F;Android&quot;</span><br><span class="line">export JAVA_HOME</span><br><span class="line">export ANDROID_HOME</span><br><span class="line">PATH&#x3D;&quot;$JAVA_HOME&#x2F;bin:$ANDROID_HOME&#x2F;cmdline-tools&#x2F;latest&#x2F;bin:$ANDROID_HOME&#x2F;platform-tools:$PATH&quot;</span><br><span class="line"></span><br><span class="line">source ~&#x2F;.profile</span><br></pre></td></tr></table></figure>
+
+<h2 id="Install-Platform-for-Android-29"><a href="#Install-Platform-for-Android-29" class="headerlink" title="Install Platform for Android 29"></a>Install Platform for Android 29</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sdkmanager &quot;platform-tools&quot; &quot;platforms;android-29&quot;</span><br></pre></td></tr></table></figure>
+
+<h2 id="Install-Build-Tools-for-Android-29"><a href="#Install-Build-Tools-for-Android-29" class="headerlink" title="Install Build Tools for Android 29"></a>Install Build Tools for Android 29</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sdkmanager &quot;build-tools&quot; &quot;build-tools;29.0.3&quot;</span><br></pre></td></tr></table></figure>
+
+<h2 id="Accept-Android-Licenses"><a href="#Accept-Android-Licenses" class="headerlink" title="Accept Android Licenses"></a>Accept Android Licenses</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sdkmanager --licenses</span><br></pre></td></tr></table></figure>
+
+<h2 id="Update-Android-Packages-when-necessary"><a href="#Update-Android-Packages-when-necessary" class="headerlink" title="Update Android Packages when necessary:"></a>Update Android Packages when necessary:</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sdkmanager --update</span><br></pre></td></tr></table></figure>
+
+<h2 id="测试-1"><a href="#测试-1" class="headerlink" title="测试"></a>测试</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sdkmanager --version</span><br><span class="line">sdkmanager --list</span><br></pre></td></tr></table></figure>
+
+<h1 id="安装NDK"><a href="#安装NDK" class="headerlink" title="安装NDK"></a>安装NDK</h1><h2 id="官网下载"><a href="#官网下载" class="headerlink" title="官网下载"></a>官网下载</h2><p><a href="https://developer.android.com/ndk/downloads/index.html" target="_blank" rel="noopener">https://developer.android.com/ndk/downloads/index.html</a></p>
+<h2 id="解压到-DevTools-Android"><a href="#解压到-DevTools-Android" class="headerlink" title="解压到 ~/DevTools/Android"></a>解压到 ~/DevTools/Android</h2><h2 id="设置ANDROID-NDK"><a href="#设置ANDROID-NDK" class="headerlink" title="设置ANDROID_NDK"></a>设置ANDROID_NDK</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">sudo  vim ~&#x2F;.profile</span><br><span class="line"></span><br><span class="line">DEV_TOOLS&#x3D;&quot;&#x2F;home&#x2F;$USER&#x2F;DevTools&quot;</span><br><span class="line">JAVA_HOME&#x3D;&quot;$DEV_TOOLS&#x2F;JDK&#x2F;jdk-11.0.9.1+1&quot;</span><br><span class="line">ANDROID_HOME&#x3D;&quot;$DEV_TOOLS&#x2F;Android&quot;</span><br><span class="line"></span><br><span class="line">export JAVA_HOME</span><br><span class="line">export ANDROID_HOME</span><br><span class="line">export ANDROID_NDK&#x3D;$ANDROID_HOME&#x2F;android-ndk-r21b</span><br><span class="line"></span><br><span class="line">export GOPATH&#x3D;&#x2F;home&#x2F;yu&#x2F;go</span><br><span class="line">export PATH&#x3D;$PATH:&#x2F;usr&#x2F;local&#x2F;go&#x2F;bin:$GOPATH&#x2F;bin:$JAVA_HOME&#x2F;bin:$ANDROID_HOME&#x2F;cmdline-tools&#x2F;latest&#x2F;bin:$ANDROID_HOME&#x2F;platform-tools:$ANDROID_NDK</span><br><span class="line">export GOROOT&#x3D;&#x2F;usr&#x2F;local&#x2F;go</span><br><span class="line">export GOPROXY&#x3D;https:&#x2F;&#x2F;goproxy.cn</span><br><span class="line"></span><br><span class="line">source ~&#x2F;.profile</span><br></pre></td></tr></table></figure>
+
+<h2 id="测试-2"><a href="#测试-2" class="headerlink" title="测试"></a>测试</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ndk-build -v</span><br></pre></td></tr></table></figure>
       
     </div>
 
@@ -335,6 +348,79 @@
           <h1 id="docker-安装consul"><a href="#docker-安装consul" class="headerlink" title="docker 安装consul"></a>docker 安装consul</h1><h2 id="参数"><a href="#参数" class="headerlink" title="参数"></a>参数</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">8500 http 端口，用于 http 接口和 web ui</span><br><span class="line">8300 server rpc 端口，同一数据中心 consul server 之间通过该端口通信</span><br><span class="line">8301 serf lan 端口，同一数据中心 consul client 通过该端口通信</span><br><span class="line">8302 serf wan 端口，不同数据中心 consul server 通过该端口通信</span><br><span class="line">8600 dns 端口，用于服务发现</span><br><span class="line">-bbostrap-expect 2: 集群至少两台服务器，才能选举集群leader</span><br><span class="line">-ui：运行 web 控制台</span><br><span class="line">-bind： 监听网口，0.0.0.0 表示所有网口，如果不指定默认为127.0.0.1，则无法和容器通信</span><br><span class="line">-client ： 限制某些网口可以访问</span><br></pre></td></tr></table></figure>
 
 <h2 id="单机版"><a href="#单机版" class="headerlink" title="单机版"></a>单机版</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker run --name consul -d -p 8500:8500 -p 8300:8300 -p 8301:8301 -p 8302:8302 -p 8600:8600 consul agent -server -bootstrap-expect 1 -ui -bind&#x3D;0.0.0.0 -client&#x3D;0.0.0.0</span><br></pre></td></tr></table></figure>
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+        
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://phpdi.github.io/2021/05/19/docker/docker-machine/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/head.jpeg">
+      <meta itemprop="name" content="Chen Yu">
+      <meta itemprop="description" content="自律给我自由">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="goeoeo">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2021/05/19/docker/docker-machine/" class="post-title-link" itemprop="url">docker/docker-machine</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2021-05-19 17:22:59" itemprop="dateCreated datePublished" datetime="2021-05-19T17:22:59+08:00">2021-05-19</time>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h2 id="下载"><a href="#下载" class="headerlink" title="下载"></a>下载</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">base&#x3D;https:&#x2F;&#x2F;github.com&#x2F;docker&#x2F;machine&#x2F;releases&#x2F;download&#x2F;v0.16.0 &amp;&amp;</span><br><span class="line">  curl -L $base&#x2F;docker-machine-$(uname -s)-$(uname -m) &gt;&#x2F;tmp&#x2F;docker-machine &amp;&amp;</span><br><span class="line">  sudo mv &#x2F;tmp&#x2F;docker-machine &#x2F;usr&#x2F;local&#x2F;bin&#x2F;docker-machine &amp;&amp;</span><br><span class="line">  chmod +x &#x2F;usr&#x2F;local&#x2F;bin&#x2F;docker-mach</span><br></pre></td></tr></table></figure>
+<h3 id="网速慢"><a href="#网速慢" class="headerlink" title="网速慢"></a>网速慢</h3><p>使用xx_net代理</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">sudo  apt install privoxy</span><br><span class="line">export https_proxy&#x3D;127.0.0.1:8087</span><br><span class="line">export http_proxy&#x3D;127.0.0.1:8087</span><br></pre></td></tr></table></figure>
+
+<h3 id="x509问题"><a href="#x509问题" class="headerlink" title="x509问题"></a>x509问题</h3><p>curl -k 参数跳过证书验证</p>
+<h2 id="使用"><a href="#使用" class="headerlink" title="使用"></a>使用</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">docker-machine create -d  virtualbox manager1</span><br><span class="line"></span><br><span class="line">输出：</span><br><span class="line">Running pre-create checks...</span><br><span class="line">(manager1) No default Boot2Docker ISO found locally, downloading the latest release...</span><br><span class="line">Error with pre-create check: &quot;Get https:&#x2F;&#x2F;api.github.com&#x2F;repos&#x2F;boot2docker&#x2F;boot2docker&#x2F;releases&#x2F;latest: x509: certificate signed by unknown authority&quot;</span><br></pre></td></tr></table></figure>
+<h3 id="直接去下载默认的iso文件"><a href="#直接去下载默认的iso文件" class="headerlink" title="直接去下载默认的iso文件"></a>直接去下载默认的iso文件</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">curl -Lo ~&#x2F;.docker&#x2F;machine&#x2F;cache&#x2F;boot2docker.iso https:&#x2F;&#x2F;github.com&#x2F;boot2docker&#x2F;boot2docker&#x2F;releases&#x2F;download&#x2F;v19.03.5&#x2F;boot2docker.iso</span><br><span class="line"></span><br><span class="line">输出：</span><br><span class="line">curl: (60) SSL certificate problem: unable to get local issuer certificate</span><br><span class="line">More details here: https:&#x2F;&#x2F;curl.haxx.se&#x2F;docs&#x2F;sslcerts.html</span><br></pre></td></tr></table></figure>
+
+
+<h3 id="curl-60-SSL-certificate-problem-unable-to-get-local-issuer-certificate问题"><a href="#curl-60-SSL-certificate-problem-unable-to-get-local-issuer-certificate问题" class="headerlink" title="curl: (60) SSL certificate problem: unable to get local issuer certificate问题"></a>curl: (60) SSL certificate problem: unable to get local issuer certificate问题</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">curl -k --remote-name --time-cond cacert.pem https:&#x2F;&#x2F;curl.haxx.se&#x2F;ca&#x2F;cacert.pem</span><br><span class="line"># 注意执行此命令后需要重新开终端</span><br></pre></td></tr></table></figure>
+
+<p>###　终端下载实在太慢问题</p>
+<ol>
+<li><a href="https://github.com/boot2docker/boot2docker/releases/download/v19.03.5/boot2docker.iso" target="_blank" rel="noopener">浏览器下载</a></li>
+<li>将iso文件移动到　 ~/.docker/machine/cache/boot2docker.iso</li>
+</ol>
+
       
     </div>
 
@@ -512,71 +598,6 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://phpdi.github.io/2021/05/19/elasticsearch/docker%E5%AE%89%E8%A3%85elasticsearch7.7.0/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/head.jpeg">
-      <meta itemprop="name" content="Chen Yu">
-      <meta itemprop="description" content="自律给我自由">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="goeoeo">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2021/05/19/elasticsearch/docker%E5%AE%89%E8%A3%85elasticsearch7.7.0/" class="post-title-link" itemprop="url">elasticsearch/docker安装elasticsearch7.7.0</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2021-05-19 17:22:59" itemprop="dateCreated datePublished" datetime="2021-05-19T17:22:59+08:00">2021-05-19</time>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h1 id="docker安装elasticsearch7-7-0"><a href="#docker安装elasticsearch7-7-0" class="headerlink" title="docker安装elasticsearch7.7.0"></a>docker安装elasticsearch7.7.0</h1><h2 id="手动版安装"><a href="#手动版安装" class="headerlink" title="手动版安装"></a>手动版安装</h2><h3 id="获取镜像"><a href="#获取镜像" class="headerlink" title="获取镜像"></a>获取镜像</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker pull docker.elastic.co&#x2F;elasticsearch&#x2F;elasticsearch:7.7.0</span><br></pre></td></tr></table></figure>
-
-<h3 id="运行elasticsearch"><a href="#运行elasticsearch" class="headerlink" title="运行elasticsearch"></a>运行elasticsearch</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker run --name&#x3D;elastic770 -p 9200:9200 -p 9300:9300 -e &quot;discovery.type&#x3D;single-node&quot; --network&#x3D;network_172_19 --ip&#x3D;172.19.0.101 -v &#x2F;var&#x2F;docker&#x2F;elastic&#x2F;data:&#x2F;data docker.elastic.co&#x2F;elasticsearch&#x2F;elasticsearch:7.7.0</span><br></pre></td></tr></table></figure>
-
-<h3 id="安装ik分词插件"><a href="#安装ik分词插件" class="headerlink" title="安装ik分词插件"></a>安装ik分词插件</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">docker exec -it elastic770 &#x2F;bin&#x2F;bash</span><br><span class="line"></span><br><span class="line">.&#x2F;bin&#x2F;elasticsearch-plugin install https:&#x2F;&#x2F;github.com&#x2F;medcl&#x2F;elasticsearch-analysis-ik&#x2F;releases&#x2F;download&#x2F;v7.7.0&#x2F;elasticsearch-analysis-ik-7.7.0.zip</span><br></pre></td></tr></table></figure>
-
-<h2 id="docker-compose安装"><a href="#docker-compose安装" class="headerlink" title="docker-compose安装"></a>docker-compose安装</h2><h3 id="Dockerfile"><a href="#Dockerfile" class="headerlink" title="Dockerfile"></a>Dockerfile</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">FROM docker.elastic.co&#x2F;elasticsearch&#x2F;elasticsearch:7.7.0</span><br><span class="line">ENV VERSION&#x3D;7.7.0</span><br><span class="line"></span><br><span class="line"># https:&#x2F;&#x2F;github.com&#x2F;medcl&#x2F;elasticsearch-analysis-ik&#x2F;releases</span><br><span class="line">ADD https:&#x2F;&#x2F;github.com&#x2F;medcl&#x2F;elasticsearch-analysis-ik&#x2F;releases&#x2F;download&#x2F;v$&#123;VERSION&#125;&#x2F;elasticsearch-analysis-ik-$VERSION.zip &#x2F;tmp&#x2F;</span><br><span class="line"></span><br><span class="line">RUN &#x2F;usr&#x2F;share&#x2F;elasticsearch&#x2F;bin&#x2F;elasticsearch-plugin install -b file:&#x2F;&#x2F;&#x2F;tmp&#x2F;elasticsearch-analysis-ik-$VERSION.zip</span><br><span class="line">RUN rm -rf &#x2F;tmp&#x2F;*</span><br></pre></td></tr></table></figure>
-
-<h3 id="docker-compose-yml"><a href="#docker-compose-yml" class="headerlink" title="docker-compose.yml"></a>docker-compose.yml</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">version: &#39;3.5&#39;</span><br><span class="line"></span><br><span class="line">services:</span><br><span class="line">    elastic770:</span><br><span class="line">        build: .&#x2F;</span><br><span class="line">        container_name: elastic770</span><br><span class="line">        hostname: elastic770</span><br><span class="line">        volumes:</span><br><span class="line">        - .&#x2F;data:&#x2F;usr&#x2F;share&#x2F;elasticsearch&#x2F;data　　#这里将elasticsearch的数据文件映射本地，以保证下次如果删除了容器还有数据</span><br><span class="line">        environment:</span><br><span class="line">        - discovery.type&#x3D;single-node</span><br><span class="line">        ports:</span><br><span class="line">        - &quot;9200:9200&quot;</span><br></pre></td></tr></table></figure>
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-        
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="https://phpdi.github.io/2021/05/19/etcd/etcd%E6%A6%82%E5%BF%B5%E4%BB%A5%E5%8F%8A%E5%8E%9F%E7%90%86/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -635,6 +656,71 @@
             </div>
           <!--/noindex-->
         
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+        
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://phpdi.github.io/2021/05/19/elasticsearch/docker%E5%AE%89%E8%A3%85elasticsearch7.7.0/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/head.jpeg">
+      <meta itemprop="name" content="Chen Yu">
+      <meta itemprop="description" content="自律给我自由">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="goeoeo">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2021/05/19/elasticsearch/docker%E5%AE%89%E8%A3%85elasticsearch7.7.0/" class="post-title-link" itemprop="url">elasticsearch/docker安装elasticsearch7.7.0</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2021-05-19 17:22:59" itemprop="dateCreated datePublished" datetime="2021-05-19T17:22:59+08:00">2021-05-19</time>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="docker安装elasticsearch7-7-0"><a href="#docker安装elasticsearch7-7-0" class="headerlink" title="docker安装elasticsearch7.7.0"></a>docker安装elasticsearch7.7.0</h1><h2 id="手动版安装"><a href="#手动版安装" class="headerlink" title="手动版安装"></a>手动版安装</h2><h3 id="获取镜像"><a href="#获取镜像" class="headerlink" title="获取镜像"></a>获取镜像</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker pull docker.elastic.co&#x2F;elasticsearch&#x2F;elasticsearch:7.7.0</span><br></pre></td></tr></table></figure>
+
+<h3 id="运行elasticsearch"><a href="#运行elasticsearch" class="headerlink" title="运行elasticsearch"></a>运行elasticsearch</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker run --name&#x3D;elastic770 -p 9200:9200 -p 9300:9300 -e &quot;discovery.type&#x3D;single-node&quot; --network&#x3D;network_172_19 --ip&#x3D;172.19.0.101 -v &#x2F;var&#x2F;docker&#x2F;elastic&#x2F;data:&#x2F;data docker.elastic.co&#x2F;elasticsearch&#x2F;elasticsearch:7.7.0</span><br></pre></td></tr></table></figure>
+
+<h3 id="安装ik分词插件"><a href="#安装ik分词插件" class="headerlink" title="安装ik分词插件"></a>安装ik分词插件</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">docker exec -it elastic770 &#x2F;bin&#x2F;bash</span><br><span class="line"></span><br><span class="line">.&#x2F;bin&#x2F;elasticsearch-plugin install https:&#x2F;&#x2F;github.com&#x2F;medcl&#x2F;elasticsearch-analysis-ik&#x2F;releases&#x2F;download&#x2F;v7.7.0&#x2F;elasticsearch-analysis-ik-7.7.0.zip</span><br></pre></td></tr></table></figure>
+
+<h2 id="docker-compose安装"><a href="#docker-compose安装" class="headerlink" title="docker-compose安装"></a>docker-compose安装</h2><h3 id="Dockerfile"><a href="#Dockerfile" class="headerlink" title="Dockerfile"></a>Dockerfile</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">FROM docker.elastic.co&#x2F;elasticsearch&#x2F;elasticsearch:7.7.0</span><br><span class="line">ENV VERSION&#x3D;7.7.0</span><br><span class="line"></span><br><span class="line"># https:&#x2F;&#x2F;github.com&#x2F;medcl&#x2F;elasticsearch-analysis-ik&#x2F;releases</span><br><span class="line">ADD https:&#x2F;&#x2F;github.com&#x2F;medcl&#x2F;elasticsearch-analysis-ik&#x2F;releases&#x2F;download&#x2F;v$&#123;VERSION&#125;&#x2F;elasticsearch-analysis-ik-$VERSION.zip &#x2F;tmp&#x2F;</span><br><span class="line"></span><br><span class="line">RUN &#x2F;usr&#x2F;share&#x2F;elasticsearch&#x2F;bin&#x2F;elasticsearch-plugin install -b file:&#x2F;&#x2F;&#x2F;tmp&#x2F;elasticsearch-analysis-ik-$VERSION.zip</span><br><span class="line">RUN rm -rf &#x2F;tmp&#x2F;*</span><br></pre></td></tr></table></figure>
+
+<h3 id="docker-compose-yml"><a href="#docker-compose-yml" class="headerlink" title="docker-compose.yml"></a>docker-compose.yml</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">version: &#39;3.5&#39;</span><br><span class="line"></span><br><span class="line">services:</span><br><span class="line">    elastic770:</span><br><span class="line">        build: .&#x2F;</span><br><span class="line">        container_name: elastic770</span><br><span class="line">        hostname: elastic770</span><br><span class="line">        volumes:</span><br><span class="line">        - .&#x2F;data:&#x2F;usr&#x2F;share&#x2F;elasticsearch&#x2F;data　　#这里将elasticsearch的数据文件映射本地，以保证下次如果删除了容器还有数据</span><br><span class="line">        environment:</span><br><span class="line">        - discovery.type&#x3D;single-node</span><br><span class="line">        ports:</span><br><span class="line">        - &quot;9200:9200&quot;</span><br></pre></td></tr></table></figure>
       
     </div>
 
@@ -721,7 +807,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">76</span>
+          <span class="site-state-item-count">77</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>

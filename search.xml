@@ -1,6 +1,138 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title>go/golang编程规范</title>
+    <url>/2021/12/21/go/golang%E7%BC%96%E7%A8%8B%E8%A7%84%E8%8C%83/</url>
+    <content><![CDATA[<h1 id="go-fmt"><a href="#go-fmt" class="headerlink" title="go fmt"></a>go fmt</h1><p>大部分的格式问题可以通过 gofmt 解决，gofmt 自动格式化代码，保证所有的Go代码与官方推荐的格式保持一致，于是所有格式有关问题，都以 gofmt 的结果为准。<br>代码提交前，必须执行gofmt进行格式化。</p>
+<h1 id="go-vet"><a href="#go-vet" class="headerlink" title="go vet"></a>go vet</h1><p>vet工具可以帮我们静态分析我们的源码存在的各种问题，例如多余的代码，提前return的逻辑，struct的tag是否符合标准等。 代码提交前，必须执行go ver进行静态检查。</p>
+<a id="more"></a>
+
+<h1 id="长度约定"><a href="#长度约定" class="headerlink" title="长度约定"></a>长度约定</h1><ul>
+<li>代码块长度，比如约定超过10行就需要考虑优化。</li>
+<li>行代码长度控制，太长的需换行，提高代码可读性。</li>
+</ul>
+<h1 id="注释"><a href="#注释" class="headerlink" title="注释"></a>注释</h1><ul>
+<li>对外（Public）的结构体、函数和包必须进行注释</li>
+<li>结构体注释格式：</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&#x2F;&#x2F; ObjectMeta is metadata that all persisted resources must have, which includes all objects</span><br><span class="line">&#x2F;&#x2F; users must create.</span><br><span class="line">type ObjectMeta struct &#123;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>函数注释格式</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&#x2F;&#x2F; Compile parses a regular expression and returns, if successful,</span><br><span class="line">&#x2F;&#x2F; a Regexp that can be used to match against text.</span><br><span class="line">func Compile(str string) (*Regexp, error) &#123;</span><br><span class="line">  。。。</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>包注释格式</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&#x2F;&#x2F; Package path implements utility routines for</span><br><span class="line">&#x2F;&#x2F; manipulating slash-separated filename paths.</span><br><span class="line">path</span><br></pre></td></tr></table></figure>
+
+<h1 id="命名"><a href="#命名" class="headerlink" title="命名"></a>命名</h1><ul>
+<li><p>关键或者复杂的代码需要进行注释：</p>
+</li>
+<li><p>注释内容必须是可读的完整句子，简要并且突出重点。</p>
+</li>
+<li><p>需要注释来补充的命名就不算是好命名。</p>
+</li>
+<li><p>使用可搜索的名称：单字母名称和数字常量很难从一大堆文字中搜索出来。单字母名称仅适用于短方法中的本地变量，名称长短应与其作用域相对应。若变量或常量可能在代码中多处使用，则应赋其以便于搜索的名称。</p>
+</li>
+<li><p>做有意义的区分：Product 和 ProductInfo 和 ProductData 没有区别，NameString 和 Name 没有区别，要区分名称，就要以读者能鉴别不同之处的方式来区分 。</p>
+</li>
+<li><p>函数命名规则：驼峰式命名，名字可以长但是得把功能，必要的参数描述清楚，函数名名应当是动词或动词短语，不可导出的函数以小写开头。</p>
+</li>
+<li><p>如 postPayment、deletePage、save。并依 Javabean 标准加上 get、set、is 前缀。例如：xxx + With + 需要的参数名 + And + 需要的参数名 + …..</p>
+</li>
+<li><p>结构体命名规则：结构体名应该是名词或名词短语，如 Custome、WikiPage、Account、AddressParser</p>
+</li>
+<li><p>接口命名规则： 单个函数的接口名以”er”作为后缀，如Reader,Writer 接口的实现则去掉“er”</p>
+</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">type Reader interface &#123;</span><br><span class="line">        Read(p []byte) (n int, err error)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>两个函数的接口名综合两个函数名</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">type WriteFlusher interface &#123;</span><br><span class="line">    Write([]byte) (int, error)</span><br><span class="line">    Flush() error</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>三个以上函数的接口名，类似于结构体名</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">type Car interface &#123;</span><br><span class="line">    Start([]byte)</span><br><span class="line">    Stop() error</span><br><span class="line">    Recover()</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h1 id="包"><a href="#包" class="headerlink" title="包"></a>包</h1><ul>
+<li>包名命名规则：包名应该为小写单词，不要使用下划线或者混合大小写。</li>
+<li>文件夹命名规则：小写单词，使用横杠连接</li>
+<li>文件命名 规则：小写单词，使用下划线连接，测试文件_test.go结束</li>
+<li>一般情况下包名和文件夹命名是一致的，不过也可以不一样</li>
+</ul>
+<h1 id="常量"><a href="#常量" class="headerlink" title="常量"></a>常量</h1><p>常量均需使用全部大写字母组成，并使用下划线分词：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">const APP_VER &#x3D; &quot;1.0&quot;</span><br></pre></td></tr></table></figure>
+
+<p>如果是枚举类型的常量，需要先创建相应类型：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">type Scheme string</span><br><span class="line">const (</span><br><span class="line">    HTTP  Scheme &#x3D; &quot;http&quot;</span><br><span class="line">    HTTPS Scheme &#x3D; &quot;https&quot;</span><br><span class="line">)</span><br></pre></td></tr></table></figure>
+
+<p>如果模块的功能较为复杂、常量名称容易混淆的情况下，为了更好地区分枚举类型，可以使用完整的前缀：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">type PullRequestStatus int</span><br><span class="line">const (</span><br><span class="line">    PULL_REQUEST_STATUS_CONFLICT PullRequestStatus &#x3D; iota</span><br><span class="line">    PULL_REQUEST_STATUS_CHECKING</span><br><span class="line">    PULL_REQUEST_STATUS_MERGEABLE</span><br><span class="line">)</span><br></pre></td></tr></table></figure>
+
+<h1 id="变量"><a href="#变量" class="headerlink" title="变量"></a>变量</h1><p>变量名称一般遵循驼峰法，但遇到特有名词时，需要遵循以下规则：</p>
+<ul>
+<li>单词本身为缩写，使用全大写</li>
+<li>如果变量为私有，且特有名词为首个单词，则使用小写，如 apiClient</li>
+<li>其它情况都应当使用该名词原有的写法，如 APIClient、repoID、UserID</li>
+<li>错误示例：UrlArray，应该写成 urlArray 或者 URLArray</li>
+</ul>
+<p>若变量类型为 bool 类型，则名称应以 Has, Is, Can 或 Allow 开头</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">var isExist boolvar hasConflict bool</span><br><span class="line">var canManage bool</span><br><span class="line">var allowGitHook bool</span><br></pre></td></tr></table></figure>
+
+<h1 id="struct"><a href="#struct" class="headerlink" title="struct"></a>struct</h1><p>声明和初始化采用多行，初始化结构体使用带有标签的语法</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">type User struct&#123;</span><br><span class="line">    Username  string</span><br><span class="line">    Email     string</span><br><span class="line">&#125;</span><br><span class="line"> </span><br><span class="line">u :&#x3D; User&#123;</span><br><span class="line">    Username: &quot;yourname&quot;,</span><br><span class="line">    Email:    &quot;yourname@gmail.com&quot;,</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>修改对象属性不能直接使用赋值，要写成方法且必须加锁</p>
+<h1 id="map"><a href="#map" class="headerlink" title="map"></a>map</h1><p>非线程安全，并发读写map的情况下必须加锁，不然会产生panic<br>可使用sync.Map 替代。</p>
+<h1 id="函数"><a href="#函数" class="headerlink" title="函数"></a>函数</h1><p>函数采用命名的多值返回，传入变量和返回变量以小写字母开头</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">func nextInt(b []byte, pos int) (value, nextPos int)</span><br></pre></td></tr></table></figure>
+
+<p>函数返回值可能为空或零值时，最好加一个逻辑判断的返回值</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">func Foo(a int, b int) (string, bool)</span><br></pre></td></tr></table></figure>
+
+<h1 id="init"><a href="#init" class="headerlink" title="init"></a>init</h1><ul>
+<li>在同一个文件中，可以重复定义init方法</li>
+<li>在同一个文件中，多个init方法按照在代码中编写的顺序依次执行</li>
+<li>在同一个package中，可以多个文件中定义init方法</li>
+<li>在同一个package中，不同文件中的init方法的执行按照文件名先后执行各个文件中的init方法</li>
+</ul>
+<p>建议同一个文件中只定义一个init方法，同一个package中init尽量合并</p>
+<h1 id="错误处理"><a href="#错误处理" class="headerlink" title="错误处理"></a>错误处理</h1><ul>
+<li>error作为函数的值返回,必须对error进行处理</li>
+<li>错误描述如果是英文必须为小写，不需要标点结尾</li>
+<li>采用独立的错误流进行处理</li>
+</ul>
+<p>采用下面的写法</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">if err !&#x3D; nil &#123;</span><br><span class="line">    &#x2F;&#x2F; error handling</span><br><span class="line">    return &#x2F;&#x2F; or continue, etc.</span><br><span class="line">&#125;</span><br><span class="line">&#x2F;&#x2F; normal code</span><br></pre></td></tr></table></figure>
+
+<p>使用函数的返回值时，则采用下面的方式</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">var (</span><br><span class="line">  x string</span><br><span class="line">  err error</span><br><span class="line">)</span><br><span class="line"></span><br><span class="line">if x, err &#x3D; f();err !&#x3D; nil &#123;</span><br><span class="line">    &#x2F;&#x2F; error handling</span><br><span class="line">    return</span><br><span class="line">&#125;</span><br><span class="line">&#x2F;&#x2F; use x</span><br></pre></td></tr></table></figure>
+
+<h1 id="控制结构"><a href="#控制结构" class="headerlink" title="控制结构"></a>控制结构</h1><h1 id="panic"><a href="#panic" class="headerlink" title="panic"></a>panic</h1><p>在逻辑处理中不要使用panic，且业务逻辑中要有recover机制</p>
+<h1 id="import"><a href="#import" class="headerlink" title="import"></a>import</h1><p>对 import 的包进行分组管理，用换行符分割，而且标准库作为分组的第一组。如果你的包引入了三种类型的包，标准库包，程序内部包，第三方包，建议采用如下方式进行组织你的包。</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line"> package main</span><br><span class="line"> </span><br><span class="line">import (</span><br><span class="line">    &quot;fmt&quot;</span><br><span class="line">    &quot;os&quot;</span><br><span class="line">    </span><br><span class="line">    &quot;code.google.com&#x2F;a&quot;</span><br><span class="line">    &quot;github.com&#x2F;b&quot;</span><br><span class="line"> </span><br><span class="line">    &quot;kmg&#x2F;a&quot;</span><br><span class="line">    &quot;kmg&#x2F;b&quot;</span><br><span class="line">)</span><br></pre></td></tr></table></figure>
+
+<h1 id="参数传递"><a href="#参数传递" class="headerlink" title="参数传递"></a>参数传递</h1><ul>
+<li>对于少量数据，不要传递指针</li>
+<li>对于大量数据的 struct 可以考虑使用指针</li>
+<li>传入的参数是 map，slice，chan 不要传递指针，因为 map，slice，chan 是引用类型，不需要传递指针的指针</li>
+</ul>
+<h1 id="单元测试"><a href="#单元测试" class="headerlink" title="单元测试"></a>单元测试</h1><h1 id="日志"><a href="#日志" class="headerlink" title="日志"></a>日志</h1><ul>
+<li>为了方便日志分析，记录日志统一使用</li>
+<li>记录有意义的日志，日志里记录一些比较有意义的状态数据：程序启动，退出的时间点；程序运行消耗时间；耗时程序的执行进度；重要变量的状态变化。</li>
+<li>日志内容必须是可读的英文语句，第一个单词首字母大写，合理标点符号</li>
+</ul>
+<h1 id="依赖包"><a href="#依赖包" class="headerlink" title="依赖包"></a>依赖包</h1><p>go module</p>
+]]></content>
+      <categories>
+        <category>go</category>
+      </categories>
+      <tags>
+        <tag>golang规范</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>linux/进程和线程的区别</title>
     <url>/2021/12/03/linux/%E8%BF%9B%E7%A8%8B%E5%92%8C%E7%BA%BF%E7%A8%8B%E7%9A%84%E5%8C%BA%E5%88%AB/</url>
     <content><![CDATA[<blockquote>
@@ -745,6 +877,24 @@ sudo apt-get install gcc-mingw-w64<figure class="highlight plain"><table><tr><td
       </tags>
   </entry>
   <entry>
+    <title>tidb/tidb数据对比</title>
+    <url>/2021/11/22/tidb/tidb%E6%95%B0%E6%8D%AE%E5%AF%B9%E6%AF%94/</url>
+    <content><![CDATA[<h2 id="配置文件"><a href="#配置文件" class="headerlink" title="配置文件"></a>配置文件</h2><figure class="highlight yaml"><table><tr><td class="code"><pre><span class="line"><span class="comment"># Diff Configuration.</span></span><br><span class="line"></span><br><span class="line"><span class="comment">######################### Global config #########################</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 日志级别，可以设置为 info、debug</span></span><br><span class="line"><span class="string">log-level</span> <span class="string">=</span> <span class="string">"info"</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># sync-diff-inspector 根据主键／唯一键／索引将数据划分为多个 chunk，</span></span><br><span class="line"><span class="comment"># 对每一个 chunk 的数据进行对比。使用 chunk-size 设置 chunk 的大小</span></span><br><span class="line"><span class="string">chunk-size</span> <span class="string">=</span> <span class="number">1000</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 检查数据的线程数量</span></span><br><span class="line"><span class="string">check-thread-count</span> <span class="string">=</span> <span class="number">4</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 抽样检查的比例，如果设置为 100 则检查全部数据</span></span><br><span class="line"><span class="string">sample-percent</span> <span class="string">=</span> <span class="number">100</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 通过计算 chunk 的 checksum 来对比数据，如果不开启则逐行对比数据</span></span><br><span class="line"><span class="string">use-checksum</span> <span class="string">=</span> <span class="literal">true</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 如果设置为 true 则只会通过计算 checksum 来校验数据，如果上下游的 checksum 不一致也不会查出数据再进行校验</span></span><br><span class="line"><span class="string">only-use-checksum</span> <span class="string">=</span> <span class="literal">false</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 是否使用上次校验的 checkpoint，如果开启，则只校验上次未校验以及校验失败的 chunk</span></span><br><span class="line"><span class="string">use-checkpoint</span> <span class="string">=</span> <span class="literal">true</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 不对比数据</span></span><br><span class="line"><span class="string">ignore-data-check</span> <span class="string">=</span> <span class="literal">false</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 不对比表结构</span></span><br><span class="line"><span class="string">ignore-struct-check</span> <span class="string">=</span> <span class="literal">false</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 保存用于修复数据的 sql 的文件名称</span></span><br><span class="line"><span class="string">fix-sql-file</span> <span class="string">=</span> <span class="string">"fix.sql"</span></span><br><span class="line"></span><br><span class="line"><span class="comment">######################### Tables config #########################</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 如果需要对比大量的不同库名或者表名的表的数据，或者用于校验上游多个分表与下游总表的数据，可以通过 table-rule 来设置映射关系</span></span><br><span class="line"><span class="comment"># 可以只配置 schema 或者 table 的映射关系，也可以都配置</span></span><br><span class="line"><span class="comment">#[[table-rules]]</span></span><br><span class="line">    <span class="comment"># schema-pattern 和 table-pattern 支持通配符 *?</span></span><br><span class="line">    <span class="comment">#schema-pattern = "test_*"</span></span><br><span class="line">    <span class="comment">#table-pattern = "t_*"</span></span><br><span class="line">    <span class="comment">#target-schema = "test"</span></span><br><span class="line">    <span class="comment">#target-table = "t"</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 配置需要对比的*目标数据库*中的表</span></span><br><span class="line"><span class="string">[[check-tables]]</span></span><br><span class="line">    <span class="comment"># 目标库中数据库的名称</span></span><br><span class="line">    <span class="string">schema</span> <span class="string">=</span> <span class="string">"pricing"</span></span><br><span class="line"></span><br><span class="line">    <span class="comment"># 需要检查的表</span></span><br><span class="line">    <span class="string">tables</span> <span class="string">=</span> <span class="string">["filter"]</span></span><br><span class="line"></span><br><span class="line">    <span class="comment"># 支持使用正则表达式配置检查的表，需要以‘~’开始，</span></span><br><span class="line">    <span class="comment"># 下面的配置会检查所有表名以‘test’为前缀的表</span></span><br><span class="line">    <span class="comment"># tables = ["~^test.*"]</span></span><br><span class="line">    <span class="comment"># 下面的配置会检查配置库中所有的表</span></span><br><span class="line">    <span class="comment"># tables = ["~^"]</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 对部分表进行特殊的配置，配置的表必须包含在 check-tables 中</span></span><br><span class="line"></span><br><span class="line"><span class="comment">######################### Databases config #########################</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 源数据库实例的配置</span></span><br><span class="line"><span class="string">[[source-db]]</span></span><br><span class="line">    <span class="string">host</span> <span class="string">=</span> <span class="string">"192.168.49.2"</span></span><br><span class="line">    <span class="string">port</span> <span class="string">=</span> <span class="number">32316</span></span><br><span class="line">    <span class="string">user</span> <span class="string">=</span> <span class="string">"root"</span></span><br><span class="line">    <span class="string">password</span> <span class="string">=</span> <span class="string">"p@ss52Dnb"</span></span><br><span class="line">    <span class="comment"># 源数据库实例的 id，唯一标识一个数据库实例</span></span><br><span class="line">    <span class="string">instance-id</span> <span class="string">=</span> <span class="string">"source-1"</span></span><br><span class="line">    <span class="comment"># 使用 TiDB 的 snapshot 功能，如果开启的话会使用历史数据进行对比</span></span><br><span class="line">    <span class="comment"># snapshot = "2016-10-08 16:45:26"</span></span><br><span class="line">    <span class="comment"># 设置数据库的 sql-mode，用于解析表结构</span></span><br><span class="line">    <span class="comment"># sql-mode = ""</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 目标数据库实例的配置</span></span><br><span class="line"><span class="string">[target-db]</span></span><br><span class="line">    <span class="string">host</span> <span class="string">=</span> <span class="string">"192.168.49.2"</span></span><br><span class="line">    <span class="string">port</span> <span class="string">=</span> <span class="number">30492</span></span><br><span class="line">    <span class="string">user</span> <span class="string">=</span> <span class="string">"root"</span></span><br><span class="line">    <span class="string">password</span> <span class="string">=</span> <span class="string">""</span></span><br><span class="line">    <span class="comment"># 使用 TiDB 的 snapshot 功能，如果开启的话会使用历史数据进行对比</span></span><br><span class="line">    <span class="comment"># snapshot = "2016-10-08 16:45:26"</span></span><br><span class="line">    <span class="comment"># 设置数据库的 sql-mode，用于解析表结构</span></span><br><span class="line">    <span class="comment"># sql-mode = ""</span></span><br></pre></td></tr></table></figure>
+
+
+
+
+
+<h2 id="命令"><a href="#命令" class="headerlink" title="命令"></a>命令</h2><p>docker run –network=host    -v <code>pwd</code>:/home/tidb pingcap/tidb-enterprise-tools  ./sync_diff_inspector –config=/home/tidb/diff.yaml</p>
+]]></content>
+      <categories>
+        <category>tidb</category>
+      </categories>
+      <tags>
+        <tag>tidb</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>tidb/tidb安装</title>
     <url>/2021/11/22/tidb/tidb%E5%AE%89%E8%A3%85/</url>
     <content><![CDATA[<h1 id="TiDB-安装"><a href="#TiDB-安装" class="headerlink" title="TiDB 安装"></a>TiDB 安装</h1><p><a href="https://docs.pingcap.com/zh/tidb-in-kubernetes/stable" target="_blank" rel="noopener">k8s官网安装地址</a></p>
@@ -762,24 +912,6 @@ sudo apt-get install gcc-mingw-w64<figure class="highlight plain"><table><tr><td
 
 <h2 id="5-期望输出"><a href="#5-期望输出" class="headerlink" title="5. 期望输出"></a>5. 期望输出</h2><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">NAME                              READY   STATUS    RESTARTS   AGE</span><br><span class="line">basic-discovery-6bb656bfd-xl5pb   1&#x2F;1     Running   0          9m9s</span><br><span class="line">basic-monitor-5fc8589c89-gvgjj    3&#x2F;3     Running   0          8m58s</span><br><span class="line">basic-pd-0                        1&#x2F;1     Running   0          9m8s</span><br><span class="line">basic-tidb-0                      2&#x2F;2     Running   0          7m14s</span><br><span class="line">basic-tikv-0                      1&#x2F;1     Running   0          8m13s</span><br></pre></td></tr></table></figure>
 
-]]></content>
-      <categories>
-        <category>tidb</category>
-      </categories>
-      <tags>
-        <tag>tidb</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>tidb/tidb数据对比</title>
-    <url>/2021/11/22/tidb/tidb%E6%95%B0%E6%8D%AE%E5%AF%B9%E6%AF%94/</url>
-    <content><![CDATA[<h2 id="配置文件"><a href="#配置文件" class="headerlink" title="配置文件"></a>配置文件</h2><figure class="highlight yaml"><table><tr><td class="code"><pre><span class="line"><span class="comment"># Diff Configuration.</span></span><br><span class="line"></span><br><span class="line"><span class="comment">######################### Global config #########################</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 日志级别，可以设置为 info、debug</span></span><br><span class="line"><span class="string">log-level</span> <span class="string">=</span> <span class="string">"info"</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># sync-diff-inspector 根据主键／唯一键／索引将数据划分为多个 chunk，</span></span><br><span class="line"><span class="comment"># 对每一个 chunk 的数据进行对比。使用 chunk-size 设置 chunk 的大小</span></span><br><span class="line"><span class="string">chunk-size</span> <span class="string">=</span> <span class="number">1000</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 检查数据的线程数量</span></span><br><span class="line"><span class="string">check-thread-count</span> <span class="string">=</span> <span class="number">4</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 抽样检查的比例，如果设置为 100 则检查全部数据</span></span><br><span class="line"><span class="string">sample-percent</span> <span class="string">=</span> <span class="number">100</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 通过计算 chunk 的 checksum 来对比数据，如果不开启则逐行对比数据</span></span><br><span class="line"><span class="string">use-checksum</span> <span class="string">=</span> <span class="literal">true</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 如果设置为 true 则只会通过计算 checksum 来校验数据，如果上下游的 checksum 不一致也不会查出数据再进行校验</span></span><br><span class="line"><span class="string">only-use-checksum</span> <span class="string">=</span> <span class="literal">false</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 是否使用上次校验的 checkpoint，如果开启，则只校验上次未校验以及校验失败的 chunk</span></span><br><span class="line"><span class="string">use-checkpoint</span> <span class="string">=</span> <span class="literal">true</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 不对比数据</span></span><br><span class="line"><span class="string">ignore-data-check</span> <span class="string">=</span> <span class="literal">false</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 不对比表结构</span></span><br><span class="line"><span class="string">ignore-struct-check</span> <span class="string">=</span> <span class="literal">false</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 保存用于修复数据的 sql 的文件名称</span></span><br><span class="line"><span class="string">fix-sql-file</span> <span class="string">=</span> <span class="string">"fix.sql"</span></span><br><span class="line"></span><br><span class="line"><span class="comment">######################### Tables config #########################</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 如果需要对比大量的不同库名或者表名的表的数据，或者用于校验上游多个分表与下游总表的数据，可以通过 table-rule 来设置映射关系</span></span><br><span class="line"><span class="comment"># 可以只配置 schema 或者 table 的映射关系，也可以都配置</span></span><br><span class="line"><span class="comment">#[[table-rules]]</span></span><br><span class="line">    <span class="comment"># schema-pattern 和 table-pattern 支持通配符 *?</span></span><br><span class="line">    <span class="comment">#schema-pattern = "test_*"</span></span><br><span class="line">    <span class="comment">#table-pattern = "t_*"</span></span><br><span class="line">    <span class="comment">#target-schema = "test"</span></span><br><span class="line">    <span class="comment">#target-table = "t"</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 配置需要对比的*目标数据库*中的表</span></span><br><span class="line"><span class="string">[[check-tables]]</span></span><br><span class="line">    <span class="comment"># 目标库中数据库的名称</span></span><br><span class="line">    <span class="string">schema</span> <span class="string">=</span> <span class="string">"pricing"</span></span><br><span class="line"></span><br><span class="line">    <span class="comment"># 需要检查的表</span></span><br><span class="line">    <span class="string">tables</span> <span class="string">=</span> <span class="string">["filter"]</span></span><br><span class="line"></span><br><span class="line">    <span class="comment"># 支持使用正则表达式配置检查的表，需要以‘~’开始，</span></span><br><span class="line">    <span class="comment"># 下面的配置会检查所有表名以‘test’为前缀的表</span></span><br><span class="line">    <span class="comment"># tables = ["~^test.*"]</span></span><br><span class="line">    <span class="comment"># 下面的配置会检查配置库中所有的表</span></span><br><span class="line">    <span class="comment"># tables = ["~^"]</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 对部分表进行特殊的配置，配置的表必须包含在 check-tables 中</span></span><br><span class="line"></span><br><span class="line"><span class="comment">######################### Databases config #########################</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 源数据库实例的配置</span></span><br><span class="line"><span class="string">[[source-db]]</span></span><br><span class="line">    <span class="string">host</span> <span class="string">=</span> <span class="string">"192.168.49.2"</span></span><br><span class="line">    <span class="string">port</span> <span class="string">=</span> <span class="number">32316</span></span><br><span class="line">    <span class="string">user</span> <span class="string">=</span> <span class="string">"root"</span></span><br><span class="line">    <span class="string">password</span> <span class="string">=</span> <span class="string">"p@ss52Dnb"</span></span><br><span class="line">    <span class="comment"># 源数据库实例的 id，唯一标识一个数据库实例</span></span><br><span class="line">    <span class="string">instance-id</span> <span class="string">=</span> <span class="string">"source-1"</span></span><br><span class="line">    <span class="comment"># 使用 TiDB 的 snapshot 功能，如果开启的话会使用历史数据进行对比</span></span><br><span class="line">    <span class="comment"># snapshot = "2016-10-08 16:45:26"</span></span><br><span class="line">    <span class="comment"># 设置数据库的 sql-mode，用于解析表结构</span></span><br><span class="line">    <span class="comment"># sql-mode = ""</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 目标数据库实例的配置</span></span><br><span class="line"><span class="string">[target-db]</span></span><br><span class="line">    <span class="string">host</span> <span class="string">=</span> <span class="string">"192.168.49.2"</span></span><br><span class="line">    <span class="string">port</span> <span class="string">=</span> <span class="number">30492</span></span><br><span class="line">    <span class="string">user</span> <span class="string">=</span> <span class="string">"root"</span></span><br><span class="line">    <span class="string">password</span> <span class="string">=</span> <span class="string">""</span></span><br><span class="line">    <span class="comment"># 使用 TiDB 的 snapshot 功能，如果开启的话会使用历史数据进行对比</span></span><br><span class="line">    <span class="comment"># snapshot = "2016-10-08 16:45:26"</span></span><br><span class="line">    <span class="comment"># 设置数据库的 sql-mode，用于解析表结构</span></span><br><span class="line">    <span class="comment"># sql-mode = ""</span></span><br></pre></td></tr></table></figure>
-
-
-
-
-
-<h2 id="命令"><a href="#命令" class="headerlink" title="命令"></a>命令</h2><p>docker run –network=host    -v <code>pwd</code>:/home/tidb pingcap/tidb-enterprise-tools  ./sync_diff_inspector –config=/home/tidb/diff.yaml</p>
 ]]></content>
       <categories>
         <category>tidb</category>
@@ -1105,7 +1237,7 @@ sudo apt-get install gcc-mingw-w64<figure class="highlight plain"><table><tr><td
         <category>go</category>
       </categories>
       <tags>
-        <tag>golang项目结构规范</tag>
+        <tag>golang规范</tag>
       </tags>
   </entry>
   <entry>
@@ -1196,7 +1328,7 @@ sudo apt-get install gcc-mingw-w64<figure class="highlight plain"><table><tr><td
         <category>go</category>
       </categories>
       <tags>
-        <tag>golang项目结构规范</tag>
+        <tag>golang规范</tag>
       </tags>
   </entry>
   <entry>
@@ -4906,54 +5038,6 @@ sudo apt-get install gcc-mingw-w64<figure class="highlight plain"><table><tr><td
       </categories>
   </entry>
   <entry>
-    <title>mysql/MySQL在什么情况下会使用到临时表</title>
-    <url>/2021/05/19/mysql/MySQL%E5%9C%A8%E4%BB%80%E4%B9%88%E6%83%85%E5%86%B5%E4%B8%8B%E4%BC%9A%E4%BD%BF%E7%94%A8%E5%88%B0%E4%B8%B4%E6%97%B6%E8%A1%A8/</url>
-    <content><![CDATA[<p>MySQL在执行SQL查询时可能会用到临时表，一般情况下，用到临时表就意味着性能较低。临时表存储，MySQL临时表分为“内存临时表”和“磁盘临时表”，<br>其中内存临时表使用MySQL的MEMORY存储引擎，磁盘临时表使用MySQL的MyISAM存储引擎；</p>
-<a id="more"></a>
-
-<p> 一般情况下，MySQL会先创建内存临时表，但内存临时表超过配置指定的值后，MySQL会将内存临时表导出到磁盘临时表；<br> Linux平台上缺省是/tmp目录，/tmp目录小的系统要注意啦。  </p>
-<h3 id="使用临时表的场景"><a href="#使用临时表的场景" class="headerlink" title="使用临时表的场景"></a>使用临时表的场景</h3><ul>
-<li>ORDER BY子句和GROUP BY子句不同， 例如：ORDERY BY price GROUP BY name；   </li>
-<li>在JOIN查询中，ORDER BY或者GROUP BY使用了不是第一个表的列 例如：SELECT * from TableA, TableB ORDER BY TableA.price GROUP by TableB.name<br>（我在测试的时候发现即使是使用第一个表的列，也会使用到临时表）</li>
-<li>ORDER BY中使用了DISTINCT关键字 ORDERY BY DISTINCT(price)  </li>
-<li>SELECT语句中指定了SQL_SMALL_RESULT关键字 SQL_SMALL_RESULT的意思就是告诉MySQL，结果会很小，请直接使用内存临时表，<br>不需要使用索引排序 SQL_SMALL_RESULT必须和GROUP BY、DISTINCT或DISTINCTROW一起使用 一般情况下，我们没有必要使用这个选项，<br>让MySQL服务器选择即可。  </li>
-<li>当group by 索引的时候，当数据量较小的时候不会使用临时表，当数据量（我测试的数据量在30万左右）大的时候会使用临时表</li>
-<li>当group by 不是索引的时候会使用临时表  </li>
-</ul>
-<h3 id="直接使用磁盘临时表的场景"><a href="#直接使用磁盘临时表的场景" class="headerlink" title="直接使用磁盘临时表的场景"></a>直接使用磁盘临时表的场景</h3><ul>
-<li>表包含TEXT或者BLOB列；</li>
-<li>GROUP BY 或者 DISTINCT 子句中包含长度大于512字节的列</li>
-<li>使用UNION或者UNION ALL时，SELECT子句中包含大于512字节的列；</li>
-</ul>
-<h3 id="临时表相关配置"><a href="#临时表相关配置" class="headerlink" title="临时表相关配置"></a>临时表相关配置</h3><ul>
-<li>tmp_table_size 指定系统创建的内存临时表最大大小；</li>
-<li>max_heap_table_size 指定用户创建的内存表的最大大小；<blockquote>
-<p>注意：最终的系统创建的内存临时表大小是取上述两个配置值的最小值。</p>
-</blockquote>
-</li>
-</ul>
-<h3 id="表的设计原则"><a href="#表的设计原则" class="headerlink" title="表的设计原则"></a>表的设计原则</h3><p>使用临时表一般都意味着性能比较低，特别是使用磁盘临时表，性能更慢，因此我们在实际应用中应该尽量避免临时表的使用。<br>常见的避免临时表的方法有：</p>
-<ul>
-<li><p>创建索引：在ORDER BY或者GROUP BY的列上创建索引；</p>
-</li>
-<li><p>分拆很长的列：一般情况下，TEXT、BLOB，大于512字节的字符串，基本上都是为了显示信息，而不会用于查询条件， 因此表设计的时候，<br>应该将这些列独立到另外一张表。</p>
-</li>
-</ul>
-<h3 id="SQL优化"><a href="#SQL优化" class="headerlink" title="SQL优化"></a>SQL优化</h3><p>如果表的设计已经确定，修改比较困难，那么也可以通过优化SQL语句来减少临时表的大小，以提升SQL执行效率。常见的优化SQL语句方法如下：</p>
-<ul>
-<li>拆分SQL语句，临时表主要是用于排序和分组，很多业务都是要求排序后再取出详细的分页数据，这种情况下可以将排序和取出详细数据拆分成不同的SQL，<br>以降低排序或分组时临时表的大小，提升排序和分组的效率，我们的案例就是采用这种方法。</li>
-<li>优化业务，去掉排序分组等操作，有时候业务其实并不需要排序或分组，仅仅是为了好看或者阅读方便而进行了排序，例如数据导出、数据查询等操作，<br>这种情况下去掉排序和分组对业务也没有多大影响。</li>
-</ul>
-<h3 id="如何判断使用了临时表"><a href="#如何判断使用了临时表" class="headerlink" title="如何判断使用了临时表"></a>如何判断使用了临时表</h3><p>使用explain查看执行计划，Extra列看到Using temporary就意味着使用了临时表。</p>
-]]></content>
-      <categories>
-        <category>mysql</category>
-      </categories>
-      <tags>
-        <tag>mysql临时表</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>mysql/MySQL提升课程全面讲解MySQL架构设计</title>
     <url>/2021/05/19/mysql/MySQL%E6%8F%90%E5%8D%87%E8%AF%BE%E7%A8%8B%E5%85%A8%E9%9D%A2%E8%AE%B2%E8%A7%A3MySQL%E6%9E%B6%E6%9E%84%E8%AE%BE%E8%AE%A1/</url>
     <content><![CDATA[<h1 id="第一章-实例和故事"><a href="#第一章-实例和故事" class="headerlink" title="第一章 实例和故事"></a>第一章 实例和故事</h1><h2 id="什么决定了电商双11大促的成败"><a href="#什么决定了电商双11大促的成败" class="headerlink" title="什么决定了电商双11大促的成败"></a>什么决定了电商双11大促的成败</h2><h2 id="在双11大促的数据库服务器"><a href="#在双11大促的数据库服务器" class="headerlink" title="在双11大促的数据库服务器"></a>在双11大促的数据库服务器</h2><h2 id="在大促中什么影响了数据库性能"><a href="#在大促中什么影响了数据库性能" class="headerlink" title="在大促中什么影响了数据库性能"></a>在大促中什么影响了数据库性能</h2><ul>
@@ -5002,6 +5086,54 @@ sudo apt-get install gcc-mingw-w64<figure class="highlight plain"><table><tr><td
       </tags>
   </entry>
   <entry>
+    <title>mysql/MySQL在什么情况下会使用到临时表</title>
+    <url>/2021/05/19/mysql/MySQL%E5%9C%A8%E4%BB%80%E4%B9%88%E6%83%85%E5%86%B5%E4%B8%8B%E4%BC%9A%E4%BD%BF%E7%94%A8%E5%88%B0%E4%B8%B4%E6%97%B6%E8%A1%A8/</url>
+    <content><![CDATA[<p>MySQL在执行SQL查询时可能会用到临时表，一般情况下，用到临时表就意味着性能较低。临时表存储，MySQL临时表分为“内存临时表”和“磁盘临时表”，<br>其中内存临时表使用MySQL的MEMORY存储引擎，磁盘临时表使用MySQL的MyISAM存储引擎；</p>
+<a id="more"></a>
+
+<p> 一般情况下，MySQL会先创建内存临时表，但内存临时表超过配置指定的值后，MySQL会将内存临时表导出到磁盘临时表；<br> Linux平台上缺省是/tmp目录，/tmp目录小的系统要注意啦。  </p>
+<h3 id="使用临时表的场景"><a href="#使用临时表的场景" class="headerlink" title="使用临时表的场景"></a>使用临时表的场景</h3><ul>
+<li>ORDER BY子句和GROUP BY子句不同， 例如：ORDERY BY price GROUP BY name；   </li>
+<li>在JOIN查询中，ORDER BY或者GROUP BY使用了不是第一个表的列 例如：SELECT * from TableA, TableB ORDER BY TableA.price GROUP by TableB.name<br>（我在测试的时候发现即使是使用第一个表的列，也会使用到临时表）</li>
+<li>ORDER BY中使用了DISTINCT关键字 ORDERY BY DISTINCT(price)  </li>
+<li>SELECT语句中指定了SQL_SMALL_RESULT关键字 SQL_SMALL_RESULT的意思就是告诉MySQL，结果会很小，请直接使用内存临时表，<br>不需要使用索引排序 SQL_SMALL_RESULT必须和GROUP BY、DISTINCT或DISTINCTROW一起使用 一般情况下，我们没有必要使用这个选项，<br>让MySQL服务器选择即可。  </li>
+<li>当group by 索引的时候，当数据量较小的时候不会使用临时表，当数据量（我测试的数据量在30万左右）大的时候会使用临时表</li>
+<li>当group by 不是索引的时候会使用临时表  </li>
+</ul>
+<h3 id="直接使用磁盘临时表的场景"><a href="#直接使用磁盘临时表的场景" class="headerlink" title="直接使用磁盘临时表的场景"></a>直接使用磁盘临时表的场景</h3><ul>
+<li>表包含TEXT或者BLOB列；</li>
+<li>GROUP BY 或者 DISTINCT 子句中包含长度大于512字节的列</li>
+<li>使用UNION或者UNION ALL时，SELECT子句中包含大于512字节的列；</li>
+</ul>
+<h3 id="临时表相关配置"><a href="#临时表相关配置" class="headerlink" title="临时表相关配置"></a>临时表相关配置</h3><ul>
+<li>tmp_table_size 指定系统创建的内存临时表最大大小；</li>
+<li>max_heap_table_size 指定用户创建的内存表的最大大小；<blockquote>
+<p>注意：最终的系统创建的内存临时表大小是取上述两个配置值的最小值。</p>
+</blockquote>
+</li>
+</ul>
+<h3 id="表的设计原则"><a href="#表的设计原则" class="headerlink" title="表的设计原则"></a>表的设计原则</h3><p>使用临时表一般都意味着性能比较低，特别是使用磁盘临时表，性能更慢，因此我们在实际应用中应该尽量避免临时表的使用。<br>常见的避免临时表的方法有：</p>
+<ul>
+<li><p>创建索引：在ORDER BY或者GROUP BY的列上创建索引；</p>
+</li>
+<li><p>分拆很长的列：一般情况下，TEXT、BLOB，大于512字节的字符串，基本上都是为了显示信息，而不会用于查询条件， 因此表设计的时候，<br>应该将这些列独立到另外一张表。</p>
+</li>
+</ul>
+<h3 id="SQL优化"><a href="#SQL优化" class="headerlink" title="SQL优化"></a>SQL优化</h3><p>如果表的设计已经确定，修改比较困难，那么也可以通过优化SQL语句来减少临时表的大小，以提升SQL执行效率。常见的优化SQL语句方法如下：</p>
+<ul>
+<li>拆分SQL语句，临时表主要是用于排序和分组，很多业务都是要求排序后再取出详细的分页数据，这种情况下可以将排序和取出详细数据拆分成不同的SQL，<br>以降低排序或分组时临时表的大小，提升排序和分组的效率，我们的案例就是采用这种方法。</li>
+<li>优化业务，去掉排序分组等操作，有时候业务其实并不需要排序或分组，仅仅是为了好看或者阅读方便而进行了排序，例如数据导出、数据查询等操作，<br>这种情况下去掉排序和分组对业务也没有多大影响。</li>
+</ul>
+<h3 id="如何判断使用了临时表"><a href="#如何判断使用了临时表" class="headerlink" title="如何判断使用了临时表"></a>如何判断使用了临时表</h3><p>使用explain查看执行计划，Extra列看到Using temporary就意味着使用了临时表。</p>
+]]></content>
+      <categories>
+        <category>mysql</category>
+      </categories>
+      <tags>
+        <tag>mysql临时表</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>mysql/navicat_linux破解</title>
     <url>/2021/05/19/mysql/navicat_linux%E7%A0%B4%E8%A7%A3/</url>
     <content><![CDATA[<h1 id="网址"><a href="#网址" class="headerlink" title="网址"></a>网址</h1><p><a href="https://rlds.tk/" target="_blank" rel="noopener">https://rlds.tk/</a></p>
@@ -5014,102 +5146,6 @@ sudo apt-get install gcc-mingw-w64<figure class="highlight plain"><table><tr><td
 <li>恢复网络</li>
 <li>生成激活码</li>
 </ol>
-]]></content>
-  </entry>
-  <entry>
-    <title>photography/摄影入门</title>
-    <url>/2021/05/19/photography/%E6%91%84%E5%BD%B1%E5%85%A5%E9%97%A8/</url>
-    <content><![CDATA[<h1 id="摄影"><a href="#摄影" class="headerlink" title="摄影"></a>摄影</h1><p>摄影是光与影的艺术<br>摄影的基础是控制光</p>
-<h1 id="曝光"><a href="#曝光" class="headerlink" title="曝光"></a>曝光</h1><ul>
-<li>照片过暗，曝光不足</li>
-<li>照片过亮，曝光过度</li>
-<li>照片细节指的是影像有质感，细节，明暗合理</li>
-<li>亮有细节，暗有层次（亮处不能过曝，暗处不能漆黑一片）</li>
-</ul>
-<h2 id="曝光量受那些因素的影响"><a href="#曝光量受那些因素的影响" class="headerlink" title="曝光量受那些因素的影响"></a>曝光量受那些因素的影响</h2><ul>
-<li>光圈 （大光圈，进光量大）</li>
-<li>快门 （快门越慢，进光量大）</li>
-<li>ISO (感光原件，感知光线的能力)</li>
-</ul>
-<h2 id="光圈-f"><a href="#光圈-f" class="headerlink" title="光圈(f)"></a>光圈(f)</h2><h3 id="影响进光量"><a href="#影响进光量" class="headerlink" title="影响进光量"></a>影响进光量</h3><p>光圈是一个用来控制进光量的装置，它通常在镜头内，单位大小f值常用f3.5、f5.6、f8、f11、f16、f22等系数，f值代表的是光圈的厚度，f值越小曝光量<br>越大，f值越大曝光量越小<br>单位: f3.5  </p>
-<h3 id="影响景深的变化"><a href="#影响景深的变化" class="headerlink" title="影响景深的变化"></a>影响景深的变化</h3><p>大光圈拍摄景深浅，主体清晰背景模糊<br>小光圈拍摄景深长，主体和背景都很清晰  </p>
-<h2 id="快门"><a href="#快门" class="headerlink" title="快门"></a>快门</h2><p>快门是控制进光时间的一个装置，开的越久，进来的光线越多<br>单位: 1/125秒  </p>
-<ul>
-<li>高快门凝固瞬间  </li>
-<li>慢快门记录轨迹</li>
-</ul>
-<h3 id="曝光是如何控制的"><a href="#曝光是如何控制的" class="headerlink" title="曝光是如何控制的"></a>曝光是如何控制的</h3><p>快门越慢，时间越长，进光越多<br>慢快门需要三脚架支撑，手会抖</p>
-<h2 id="ISO"><a href="#ISO" class="headerlink" title="ISO"></a>ISO</h2><p>ISO感光度是衡量传统相机所使用胶片感光速度标准的国际统一指标，其反应了胶片感光时的能力，而对于数码相机来说，其实不使用胶片，而是通过感光器件<br>CCD或CMOS以及相关的电子线路感应入射强弱。<br>感光度越高，感光能力越强，画质越粗糙，噪点多<br>感光度越低，感光能力弱，画质越细腻。<br>ISO越高，画质越差，噪点越多<br>当光圈快门没有办法控制进光量的时候，适当提高ISO,来增加照片的亮度。</p>
-<h2 id="拍摄模式（曝光模式）"><a href="#拍摄模式（曝光模式）" class="headerlink" title="拍摄模式（曝光模式）"></a>拍摄模式（曝光模式）</h2><ul>
-<li>M档–手动曝光模式</li>
-<li>A（AV）档–光圈曝光模式，也叫光圈优先模式，指的是光圈可以人为手动控制，而快门相机会自动计算</li>
-<li>S（TV）档–快门曝光模式，也叫快门优先模式，指的是快门可以人为手动控制，而光圈相机会自动计算</li>
-<li>P档–自动曝光模式</li>
-<li>A+档–全自动曝光模式<blockquote>
-<p>除开以上几种外，一般称为傻瓜模式，由程序自动控制的模式。</p>
-</blockquote>
-</li>
-</ul>
-<p>光圈、快门、ISO共同决定一张影像相对正常的曝光，共同影响照片的曝光</p>
-<h1 id="相机镜头的概念"><a href="#相机镜头的概念" class="headerlink" title="相机镜头的概念"></a>相机镜头的概念</h1><h2 id="按成像质量可以和方便性"><a href="#按成像质量可以和方便性" class="headerlink" title="按成像质量可以和方便性"></a>按成像质量可以和方便性</h2><ul>
-<li>定焦镜头</li>
-<li>变焦镜头</li>
-</ul>
-<h2 id="焦距"><a href="#焦距" class="headerlink" title="焦距"></a>焦距</h2><p>焦距越大，视角越小，镜头越长，拍摄的范围越小，拍的越远<br>焦距越小，视角越大，镜头越短，拍摄范围越大，拍的越近</p>
-<h2 id="按焦距分镜头"><a href="#按焦距分镜头" class="headerlink" title="按焦距分镜头"></a>按焦距分镜头</h2><h3 id="广角-小于24mm"><a href="#广角-小于24mm" class="headerlink" title="广角 小于24mm"></a>广角 小于24mm</h3><p>取景范围大，多用于拍摄风光、建筑等</p>
-<h3 id="标准-50mm（45-60）左右"><a href="#标准-50mm（45-60）左右" class="headerlink" title="标准 50mm（45-60）左右"></a>标准 50mm（45-60）左右</h3><p>和人眼的感觉相同适合拍摄标准人像、静物、产品等。</p>
-<h3 id="中长焦-70-135mm"><a href="#中长焦-70-135mm" class="headerlink" title="中长焦 70-135mm"></a>中长焦 70-135mm</h3><p>适合拍摄人像</p>
-<h3 id="长焦-大于135mm"><a href="#长焦-大于135mm" class="headerlink" title="长焦 大于135mm"></a>长焦 大于135mm</h3><p>取景范围小，适合拍摄动物、体育</p>
-<h2 id="镜头的影响"><a href="#镜头的影响" class="headerlink" title="镜头的影响"></a>镜头的影响</h2><p>1.影响视角范围<br>2.影响景深  </p>
-<ul>
-<li>焦距越长；景深越浅，焦距越短，景深越深；</li>
-<li>焦距越长，背景越虚化；焦距越短，背景越清晰</li>
-</ul>
-<h2 id="对焦模式"><a href="#对焦模式" class="headerlink" title="对焦模式"></a>对焦模式</h2><p>对焦点为成像清晰点</p>
-<h3 id="AF（A）-自动对焦"><a href="#AF（A）-自动对焦" class="headerlink" title="AF（A） 自动对焦"></a>AF（A） 自动对焦</h3><p>佳能三种自动对焦模式  </p>
-<ul>
-<li><p>ONE SHOT (单次对焦模式) 半按快门释放键完成对焦后，若重新构图，对焦主体改变，将进行重新对焦。</p>
-</li>
-<li><p>AI SERVO（连续对焦模式） 半按快门释放键完成对焦后，若重新构图，对焦主体改变，将进行重新对焦。 有追焦的目的，试用于运动的物体</p>
-</li>
-<li><p>AI FOCUS (自动智能对焦模式)</p>
-<h3 id="MF-M-手动对焦"><a href="#MF-M-手动对焦" class="headerlink" title="MF (M)手动对焦"></a>MF (M)手动对焦</h3><p>可以在任何的光线下按下快门的，也可以说对任何一种情况都能拍摄</p>
-</li>
-</ul>
-<h2 id="单点对焦和区域对焦"><a href="#单点对焦和区域对焦" class="headerlink" title="单点对焦和区域对焦"></a>单点对焦和区域对焦</h2><p>在不知道选择对焦点的时候选择区域对焦</p>
-<h3 id="单点对焦"><a href="#单点对焦" class="headerlink" title="单点对焦"></a>单点对焦</h3><p>单点对于个别拍摄比较多，成功率高<br>焦点在人身上，大光圈的情况下，背景虚化，人像清晰。<br>焦点对人眼睛上，</p>
-<h2 id="白平衡"><a href="#白平衡" class="headerlink" title="白平衡"></a>白平衡</h2><h2 id="前景色和背景"><a href="#前景色和背景" class="headerlink" title="前景色和背景"></a>前景色和背景</h2><h3 id="前景"><a href="#前景" class="headerlink" title="前景"></a>前景</h3><ul>
-<li>加强气氛</li>
-<li>增加画面空间层次感</li>
-<li>均衡画面</li>
-</ul>
-<h3 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h3><ul>
-<li>突出主题</li>
-<li>丰富主题的内涵</li>
-</ul>
-<h1 id="常见摄影题材和摄影技法"><a href="#常见摄影题材和摄影技法" class="headerlink" title="常见摄影题材和摄影技法"></a>常见摄影题材和摄影技法</h1><h2 id="日出、日落"><a href="#日出、日落" class="headerlink" title="日出、日落"></a>日出、日落</h2><ol>
-<li>开阔、地势高的地方</li>
-</ol>
-<h2 id="拍摄瀑布"><a href="#拍摄瀑布" class="headerlink" title="拍摄瀑布"></a>拍摄瀑布</h2><h3 id="使用高速快门（推荐）"><a href="#使用高速快门（推荐）" class="headerlink" title="使用高速快门（推荐）"></a>使用高速快门（推荐）</h3><p>使用高速快门凝结住飞溅的水花和奔流的场景（推荐）</p>
-<h3 id="使用慢速快门"><a href="#使用慢速快门" class="headerlink" title="使用慢速快门"></a>使用慢速快门</h3><p>使用慢速快门拍摄雾状的水流和整体的水泻效果<br>使用慢门，需要在光线较弱的情况下使用,例如：<br>1.合适的天气<br>2.滤镜<br>3.低ISO</p>
-]]></content>
-  </entry>
-  <entry>
-    <title>photography/构图</title>
-    <url>/2021/05/19/photography/%E6%9E%84%E5%9B%BE/</url>
-    <content><![CDATA[<h1 id="点构图"><a href="#点构图" class="headerlink" title="点构图"></a>点构图</h1><h2 id="中心点构图"><a href="#中心点构图" class="headerlink" title="中心点构图"></a>中心点构图</h2><p>画面主体放在中心点<br><img src="/2021/05/19/photography/%E6%9E%84%E5%9B%BE/%E4%B8%AD%E5%BF%83%E7%82%B9%E6%9E%84%E5%9B%BE.png" alt></p>
-<h2 id="三分点构图"><a href="#三分点构图" class="headerlink" title="三分点构图"></a>三分点构图</h2><p>画面主体放在三分点<br>注意事项：有时会让画面不平衡，可以平衡画面<br><img src="/2021/05/19/photography/%E6%9E%84%E5%9B%BE/%E4%B8%89%E5%88%86%E7%82%B9%E6%9E%84%E5%9B%BE.png" alt></p>
-<h1 id="线构图"><a href="#线构图" class="headerlink" title="线构图"></a>线构图</h1><h2 id="对称线构图"><a href="#对称线构图" class="headerlink" title="对称线构图"></a>对称线构图</h2><p>沿画面的水平或垂直居中线构图<br>常用于对称的物体，水面，对称建筑等<br><img src="/2021/05/19/photography/%E6%9E%84%E5%9B%BE/%E5%AF%B9%E7%A7%B0%E6%9E%84%E5%9B%BE.png" alt></p>
-<h2 id="三分线构图"><a href="#三分线构图" class="headerlink" title="三分线构图"></a>三分线构图</h2><p>画面的水平或垂直元素，安排在三分线上<br>注意事项：水平三分线构图要留意强调的部分，垂直三分线构图拍摄人像注意人物朝向<br><img src="/2021/05/19/photography/%E6%9E%84%E5%9B%BE/%E4%B8%89%E5%88%86%E7%BA%BF%E6%9E%84%E5%9B%BE.png" alt></p>
-<h2 id="对角线构图"><a href="#对角线构图" class="headerlink" title="对角线构图"></a>对角线构图</h2><p>利用照片对角线进行构图<br>注意事项：建议把画面主体聚焦在三分点上<br><img src="/2021/05/19/photography/%E6%9E%84%E5%9B%BE/%E5%AF%B9%E8%A7%92%E7%BA%BF%E6%9E%84%E5%9B%BE.png" alt></p>
-<h2 id="曲线构图"><a href="#曲线构图" class="headerlink" title="曲线构图"></a>曲线构图</h2><p>利用自然存在的曲线或者人为制造的曲线进行构图<br><img src="/2021/05/19/photography/%E6%9E%84%E5%9B%BE/%E6%9B%B2%E7%BA%BF%E6%9E%84%E5%9B%BE.png" alt></p>
-<h2 id="引导线构图"><a href="#引导线构图" class="headerlink" title="引导线构图"></a>引导线构图</h2><p>利用画面中的线条，把观众的目光引导到画面主体上<br>注意事项：引导到的主体建议处于画面中心点或者三分点<br><img src="/2021/05/19/photography/%E6%9E%84%E5%9B%BE/%E5%BC%95%E5%AF%BC%E7%BA%BF%E6%9E%84%E5%9B%BE.png" alt></p>
-<h2 id="黄金分割构图"><a href="#黄金分割构图" class="headerlink" title="黄金分割构图"></a>黄金分割构图</h2><h1 id="面构图"><a href="#面构图" class="headerlink" title="面构图"></a>面构图</h1><h2 id="前景构图"><a href="#前景构图" class="headerlink" title="前景构图"></a>前景构图</h2><p>在画面中加入前景<br>注意事项：前景和画面主题有一定联系<br><img src="/2021/05/19/photography/%E6%9E%84%E5%9B%BE/%E5%89%8D%E6%99%AF%E6%9E%84%E5%9B%BE1.png" alt></p>
-<h2 id="框架构图"><a href="#框架构图" class="headerlink" title="框架构图"></a>框架构图</h2><p>把例如门、窗等框架作为了一种前景<br><img src="/2021/05/19/photography/%E6%9E%84%E5%9B%BE/%E6%A1%86%E6%9E%B6%E6%9E%84%E5%9B%BE.png" alt></p>
-<h2 id="填充构图"><a href="#填充构图" class="headerlink" title="填充构图"></a>填充构图</h2><p>让画面主体尽量填充满整个画面</p>
-<h2 id="留白构图"><a href="#留白构图" class="headerlink" title="留白构图"></a>留白构图</h2><p>在画面中尽可能留白，做画面减法</p>
-<h2 id="重复构图"><a href="#重复构图" class="headerlink" title="重复构图"></a>重复构图</h2><p>当画面中有比较多重复元素时，把画面中的元素进行重复排列<br>注意事项：重复构图中的元素排列最好基于某一种排列逻辑</p>
-<h2 id="对比构图"><a href="#对比构图" class="headerlink" title="对比构图"></a>对比构图</h2><p>在重复的元素中运用某一种方式（颜色、动静、光影等）突出其中的某一个元素</p>
 ]]></content>
   </entry>
   <entry>
@@ -5222,6 +5258,102 @@ sudo apt-get install gcc-mingw-w64<figure class="highlight plain"><table><tr><td
         <tag>自动负载均衡</tag>
         <tag>Nginx</tag>
       </tags>
+  </entry>
+  <entry>
+    <title>photography/摄影入门</title>
+    <url>/2021/05/19/photography/%E6%91%84%E5%BD%B1%E5%85%A5%E9%97%A8/</url>
+    <content><![CDATA[<h1 id="摄影"><a href="#摄影" class="headerlink" title="摄影"></a>摄影</h1><p>摄影是光与影的艺术<br>摄影的基础是控制光</p>
+<h1 id="曝光"><a href="#曝光" class="headerlink" title="曝光"></a>曝光</h1><ul>
+<li>照片过暗，曝光不足</li>
+<li>照片过亮，曝光过度</li>
+<li>照片细节指的是影像有质感，细节，明暗合理</li>
+<li>亮有细节，暗有层次（亮处不能过曝，暗处不能漆黑一片）</li>
+</ul>
+<h2 id="曝光量受那些因素的影响"><a href="#曝光量受那些因素的影响" class="headerlink" title="曝光量受那些因素的影响"></a>曝光量受那些因素的影响</h2><ul>
+<li>光圈 （大光圈，进光量大）</li>
+<li>快门 （快门越慢，进光量大）</li>
+<li>ISO (感光原件，感知光线的能力)</li>
+</ul>
+<h2 id="光圈-f"><a href="#光圈-f" class="headerlink" title="光圈(f)"></a>光圈(f)</h2><h3 id="影响进光量"><a href="#影响进光量" class="headerlink" title="影响进光量"></a>影响进光量</h3><p>光圈是一个用来控制进光量的装置，它通常在镜头内，单位大小f值常用f3.5、f5.6、f8、f11、f16、f22等系数，f值代表的是光圈的厚度，f值越小曝光量<br>越大，f值越大曝光量越小<br>单位: f3.5  </p>
+<h3 id="影响景深的变化"><a href="#影响景深的变化" class="headerlink" title="影响景深的变化"></a>影响景深的变化</h3><p>大光圈拍摄景深浅，主体清晰背景模糊<br>小光圈拍摄景深长，主体和背景都很清晰  </p>
+<h2 id="快门"><a href="#快门" class="headerlink" title="快门"></a>快门</h2><p>快门是控制进光时间的一个装置，开的越久，进来的光线越多<br>单位: 1/125秒  </p>
+<ul>
+<li>高快门凝固瞬间  </li>
+<li>慢快门记录轨迹</li>
+</ul>
+<h3 id="曝光是如何控制的"><a href="#曝光是如何控制的" class="headerlink" title="曝光是如何控制的"></a>曝光是如何控制的</h3><p>快门越慢，时间越长，进光越多<br>慢快门需要三脚架支撑，手会抖</p>
+<h2 id="ISO"><a href="#ISO" class="headerlink" title="ISO"></a>ISO</h2><p>ISO感光度是衡量传统相机所使用胶片感光速度标准的国际统一指标，其反应了胶片感光时的能力，而对于数码相机来说，其实不使用胶片，而是通过感光器件<br>CCD或CMOS以及相关的电子线路感应入射强弱。<br>感光度越高，感光能力越强，画质越粗糙，噪点多<br>感光度越低，感光能力弱，画质越细腻。<br>ISO越高，画质越差，噪点越多<br>当光圈快门没有办法控制进光量的时候，适当提高ISO,来增加照片的亮度。</p>
+<h2 id="拍摄模式（曝光模式）"><a href="#拍摄模式（曝光模式）" class="headerlink" title="拍摄模式（曝光模式）"></a>拍摄模式（曝光模式）</h2><ul>
+<li>M档–手动曝光模式</li>
+<li>A（AV）档–光圈曝光模式，也叫光圈优先模式，指的是光圈可以人为手动控制，而快门相机会自动计算</li>
+<li>S（TV）档–快门曝光模式，也叫快门优先模式，指的是快门可以人为手动控制，而光圈相机会自动计算</li>
+<li>P档–自动曝光模式</li>
+<li>A+档–全自动曝光模式<blockquote>
+<p>除开以上几种外，一般称为傻瓜模式，由程序自动控制的模式。</p>
+</blockquote>
+</li>
+</ul>
+<p>光圈、快门、ISO共同决定一张影像相对正常的曝光，共同影响照片的曝光</p>
+<h1 id="相机镜头的概念"><a href="#相机镜头的概念" class="headerlink" title="相机镜头的概念"></a>相机镜头的概念</h1><h2 id="按成像质量可以和方便性"><a href="#按成像质量可以和方便性" class="headerlink" title="按成像质量可以和方便性"></a>按成像质量可以和方便性</h2><ul>
+<li>定焦镜头</li>
+<li>变焦镜头</li>
+</ul>
+<h2 id="焦距"><a href="#焦距" class="headerlink" title="焦距"></a>焦距</h2><p>焦距越大，视角越小，镜头越长，拍摄的范围越小，拍的越远<br>焦距越小，视角越大，镜头越短，拍摄范围越大，拍的越近</p>
+<h2 id="按焦距分镜头"><a href="#按焦距分镜头" class="headerlink" title="按焦距分镜头"></a>按焦距分镜头</h2><h3 id="广角-小于24mm"><a href="#广角-小于24mm" class="headerlink" title="广角 小于24mm"></a>广角 小于24mm</h3><p>取景范围大，多用于拍摄风光、建筑等</p>
+<h3 id="标准-50mm（45-60）左右"><a href="#标准-50mm（45-60）左右" class="headerlink" title="标准 50mm（45-60）左右"></a>标准 50mm（45-60）左右</h3><p>和人眼的感觉相同适合拍摄标准人像、静物、产品等。</p>
+<h3 id="中长焦-70-135mm"><a href="#中长焦-70-135mm" class="headerlink" title="中长焦 70-135mm"></a>中长焦 70-135mm</h3><p>适合拍摄人像</p>
+<h3 id="长焦-大于135mm"><a href="#长焦-大于135mm" class="headerlink" title="长焦 大于135mm"></a>长焦 大于135mm</h3><p>取景范围小，适合拍摄动物、体育</p>
+<h2 id="镜头的影响"><a href="#镜头的影响" class="headerlink" title="镜头的影响"></a>镜头的影响</h2><p>1.影响视角范围<br>2.影响景深  </p>
+<ul>
+<li>焦距越长；景深越浅，焦距越短，景深越深；</li>
+<li>焦距越长，背景越虚化；焦距越短，背景越清晰</li>
+</ul>
+<h2 id="对焦模式"><a href="#对焦模式" class="headerlink" title="对焦模式"></a>对焦模式</h2><p>对焦点为成像清晰点</p>
+<h3 id="AF（A）-自动对焦"><a href="#AF（A）-自动对焦" class="headerlink" title="AF（A） 自动对焦"></a>AF（A） 自动对焦</h3><p>佳能三种自动对焦模式  </p>
+<ul>
+<li><p>ONE SHOT (单次对焦模式) 半按快门释放键完成对焦后，若重新构图，对焦主体改变，将进行重新对焦。</p>
+</li>
+<li><p>AI SERVO（连续对焦模式） 半按快门释放键完成对焦后，若重新构图，对焦主体改变，将进行重新对焦。 有追焦的目的，试用于运动的物体</p>
+</li>
+<li><p>AI FOCUS (自动智能对焦模式)</p>
+<h3 id="MF-M-手动对焦"><a href="#MF-M-手动对焦" class="headerlink" title="MF (M)手动对焦"></a>MF (M)手动对焦</h3><p>可以在任何的光线下按下快门的，也可以说对任何一种情况都能拍摄</p>
+</li>
+</ul>
+<h2 id="单点对焦和区域对焦"><a href="#单点对焦和区域对焦" class="headerlink" title="单点对焦和区域对焦"></a>单点对焦和区域对焦</h2><p>在不知道选择对焦点的时候选择区域对焦</p>
+<h3 id="单点对焦"><a href="#单点对焦" class="headerlink" title="单点对焦"></a>单点对焦</h3><p>单点对于个别拍摄比较多，成功率高<br>焦点在人身上，大光圈的情况下，背景虚化，人像清晰。<br>焦点对人眼睛上，</p>
+<h2 id="白平衡"><a href="#白平衡" class="headerlink" title="白平衡"></a>白平衡</h2><h2 id="前景色和背景"><a href="#前景色和背景" class="headerlink" title="前景色和背景"></a>前景色和背景</h2><h3 id="前景"><a href="#前景" class="headerlink" title="前景"></a>前景</h3><ul>
+<li>加强气氛</li>
+<li>增加画面空间层次感</li>
+<li>均衡画面</li>
+</ul>
+<h3 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h3><ul>
+<li>突出主题</li>
+<li>丰富主题的内涵</li>
+</ul>
+<h1 id="常见摄影题材和摄影技法"><a href="#常见摄影题材和摄影技法" class="headerlink" title="常见摄影题材和摄影技法"></a>常见摄影题材和摄影技法</h1><h2 id="日出、日落"><a href="#日出、日落" class="headerlink" title="日出、日落"></a>日出、日落</h2><ol>
+<li>开阔、地势高的地方</li>
+</ol>
+<h2 id="拍摄瀑布"><a href="#拍摄瀑布" class="headerlink" title="拍摄瀑布"></a>拍摄瀑布</h2><h3 id="使用高速快门（推荐）"><a href="#使用高速快门（推荐）" class="headerlink" title="使用高速快门（推荐）"></a>使用高速快门（推荐）</h3><p>使用高速快门凝结住飞溅的水花和奔流的场景（推荐）</p>
+<h3 id="使用慢速快门"><a href="#使用慢速快门" class="headerlink" title="使用慢速快门"></a>使用慢速快门</h3><p>使用慢速快门拍摄雾状的水流和整体的水泻效果<br>使用慢门，需要在光线较弱的情况下使用,例如：<br>1.合适的天气<br>2.滤镜<br>3.低ISO</p>
+]]></content>
+  </entry>
+  <entry>
+    <title>photography/构图</title>
+    <url>/2021/05/19/photography/%E6%9E%84%E5%9B%BE/</url>
+    <content><![CDATA[<h1 id="点构图"><a href="#点构图" class="headerlink" title="点构图"></a>点构图</h1><h2 id="中心点构图"><a href="#中心点构图" class="headerlink" title="中心点构图"></a>中心点构图</h2><p>画面主体放在中心点<br><img src="/2021/05/19/photography/%E6%9E%84%E5%9B%BE/%E4%B8%AD%E5%BF%83%E7%82%B9%E6%9E%84%E5%9B%BE.png" alt></p>
+<h2 id="三分点构图"><a href="#三分点构图" class="headerlink" title="三分点构图"></a>三分点构图</h2><p>画面主体放在三分点<br>注意事项：有时会让画面不平衡，可以平衡画面<br><img src="/2021/05/19/photography/%E6%9E%84%E5%9B%BE/%E4%B8%89%E5%88%86%E7%82%B9%E6%9E%84%E5%9B%BE.png" alt></p>
+<h1 id="线构图"><a href="#线构图" class="headerlink" title="线构图"></a>线构图</h1><h2 id="对称线构图"><a href="#对称线构图" class="headerlink" title="对称线构图"></a>对称线构图</h2><p>沿画面的水平或垂直居中线构图<br>常用于对称的物体，水面，对称建筑等<br><img src="/2021/05/19/photography/%E6%9E%84%E5%9B%BE/%E5%AF%B9%E7%A7%B0%E6%9E%84%E5%9B%BE.png" alt></p>
+<h2 id="三分线构图"><a href="#三分线构图" class="headerlink" title="三分线构图"></a>三分线构图</h2><p>画面的水平或垂直元素，安排在三分线上<br>注意事项：水平三分线构图要留意强调的部分，垂直三分线构图拍摄人像注意人物朝向<br><img src="/2021/05/19/photography/%E6%9E%84%E5%9B%BE/%E4%B8%89%E5%88%86%E7%BA%BF%E6%9E%84%E5%9B%BE.png" alt></p>
+<h2 id="对角线构图"><a href="#对角线构图" class="headerlink" title="对角线构图"></a>对角线构图</h2><p>利用照片对角线进行构图<br>注意事项：建议把画面主体聚焦在三分点上<br><img src="/2021/05/19/photography/%E6%9E%84%E5%9B%BE/%E5%AF%B9%E8%A7%92%E7%BA%BF%E6%9E%84%E5%9B%BE.png" alt></p>
+<h2 id="曲线构图"><a href="#曲线构图" class="headerlink" title="曲线构图"></a>曲线构图</h2><p>利用自然存在的曲线或者人为制造的曲线进行构图<br><img src="/2021/05/19/photography/%E6%9E%84%E5%9B%BE/%E6%9B%B2%E7%BA%BF%E6%9E%84%E5%9B%BE.png" alt></p>
+<h2 id="引导线构图"><a href="#引导线构图" class="headerlink" title="引导线构图"></a>引导线构图</h2><p>利用画面中的线条，把观众的目光引导到画面主体上<br>注意事项：引导到的主体建议处于画面中心点或者三分点<br><img src="/2021/05/19/photography/%E6%9E%84%E5%9B%BE/%E5%BC%95%E5%AF%BC%E7%BA%BF%E6%9E%84%E5%9B%BE.png" alt></p>
+<h2 id="黄金分割构图"><a href="#黄金分割构图" class="headerlink" title="黄金分割构图"></a>黄金分割构图</h2><h1 id="面构图"><a href="#面构图" class="headerlink" title="面构图"></a>面构图</h1><h2 id="前景构图"><a href="#前景构图" class="headerlink" title="前景构图"></a>前景构图</h2><p>在画面中加入前景<br>注意事项：前景和画面主题有一定联系<br><img src="/2021/05/19/photography/%E6%9E%84%E5%9B%BE/%E5%89%8D%E6%99%AF%E6%9E%84%E5%9B%BE1.png" alt></p>
+<h2 id="框架构图"><a href="#框架构图" class="headerlink" title="框架构图"></a>框架构图</h2><p>把例如门、窗等框架作为了一种前景<br><img src="/2021/05/19/photography/%E6%9E%84%E5%9B%BE/%E6%A1%86%E6%9E%B6%E6%9E%84%E5%9B%BE.png" alt></p>
+<h2 id="填充构图"><a href="#填充构图" class="headerlink" title="填充构图"></a>填充构图</h2><p>让画面主体尽量填充满整个画面</p>
+<h2 id="留白构图"><a href="#留白构图" class="headerlink" title="留白构图"></a>留白构图</h2><p>在画面中尽可能留白，做画面减法</p>
+<h2 id="重复构图"><a href="#重复构图" class="headerlink" title="重复构图"></a>重复构图</h2><p>当画面中有比较多重复元素时，把画面中的元素进行重复排列<br>注意事项：重复构图中的元素排列最好基于某一种排列逻辑</p>
+<h2 id="对比构图"><a href="#对比构图" class="headerlink" title="对比构图"></a>对比构图</h2><p>在重复的元素中运用某一种方式（颜色、动静、光影等）突出其中的某一个元素</p>
+]]></content>
   </entry>
   <entry>
     <title>interview/Kafka面试题</title>
@@ -6301,11 +6433,94 @@ sudo apt-get install gcc-mingw-w64<figure class="highlight plain"><table><tr><td
       </tags>
   </entry>
   <entry>
-    <title>go/设计模式(golang版本)</title>
-    <url>/2021/05/19/go/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F(golang%E7%89%88%E6%9C%AC)/</url>
-    <content><![CDATA[<h1 id="简单工厂模式"><a href="#简单工厂模式" class="headerlink" title="简单工厂模式"></a>简单工厂模式</h1><p>go 语言没有构造函数一说，所以一般会定义NewXXX函数来初始化相关类。 NewXXX 函数返回接口时就是简单工厂模式，也就是说Golang的一般推荐做法就是简单工厂。</p>
-<h1 id="工厂方法模式"><a href="#工厂方法模式" class="headerlink" title="工厂方法模式"></a>工厂方法模式</h1><p>工厂方法模式使用子类的方式延迟生成对象到子类中实现。<br>Go中不存在继承 所以使用匿名组合来实现<br>使用单独工厂接口是构造目标接口，</p>
-]]></content>
+    <title>http/Http权威指南</title>
+    <url>/2021/05/19/http/Http%E6%9D%83%E5%A8%81%E6%8C%87%E5%8D%97/</url>
+    <content><![CDATA[<h1 id="第1章-HTTP概述"><a href="#第1章-HTTP概述" class="headerlink" title="第1章 HTTP概述"></a>第1章 HTTP概述</h1><h2 id="资源"><a href="#资源" class="headerlink" title="资源"></a>资源</h2><h3 id="媒体类型"><a href="#媒体类型" class="headerlink" title="媒体类型"></a>媒体类型</h3><ul>
+<li>MIME(Multipurpose Internet Mail Extension,多用途英特网邮件扩展)</li>
+<li>Web服务器回味所有的HTTP对象数据附加一个MIME类型，以告知Web浏览器该如何处理该对象</li>
+<li>Content-Type:image/jpeg ,“image/jpeg”为MIME类型<a id="more"></a>
+
+</li>
+</ul>
+<h3 id="URI"><a href="#URI" class="headerlink" title="URI"></a>URI</h3><ul>
+<li>URI(Uniform Resource Identifier,统一资源标识符)</li>
+<li>URI 有两种形式，分别称为URL和URN</li>
+</ul>
+<h3 id="URL"><a href="#URL" class="headerlink" title="URL"></a>URL</h3><ul>
+<li>统一资源定位符</li>
+<li>URL包含三个部分,协议类型,服务器地址,资源地址</li>
+<li>现在,几乎所有的URI都是URL</li>
+<li>URL语法 : <scheme>://<user>:<password>@<host>:<port>/<path></path>;<params>?<query>#<frag></frag></query></params></port></host></password></user></scheme></li>
+</ul>
+<h3 id="URN"><a href="#URN" class="headerlink" title="URN"></a>URN</h3><ul>
+<li>URN 统一资源名</li>
+<li>URN是作为特定内容的唯一名称使用的,与目前资源所在地无关</li>
+<li>P2P下载中使用的磁力链接是URN的一种实现，它可以持久化的标识一个BT资源，资源分布式的存储在P2P网络中，无需中心服务器用户即可找到并下载它。</li>
+</ul>
+<h2 id="Web的结构组件"><a href="#Web的结构组件" class="headerlink" title="Web的结构组件"></a>Web的结构组件</h2><ul>
+<li>代理 位于客户端和服务端之间的HTTP中间实体</li>
+<li>缓存 HTTP的仓库,使常用的页面或资源保存在离客户端更近的地方</li>
+<li>网关 连接其他应用程序的特殊问web服务器</li>
+<li>隧道 对HTTP通信报文进行盲转发的特殊代理</li>
+<li>Agent代理 发起自动HTTP请求的半智能Web客户端</li>
+</ul>
+<h1 id="第3章-HTTP报文"><a href="#第3章-HTTP报文" class="headerlink" title="第3章 HTTP报文"></a>第3章 HTTP报文</h1><h2 id="报文结构"><a href="#报文结构" class="headerlink" title="报文结构"></a>报文结构</h2><ul>
+<li>起始行(start line)</li>
+<li>首部(header)</li>
+<li>主体(body)</li>
+</ul>
+<h1 id="第4章-连接管理"><a href="#第4章-连接管理" class="headerlink" title="第4章 连接管理"></a>第4章 连接管理</h1><h2 id="用TCP套接字编程"><a href="#用TCP套接字编程" class="headerlink" title="用TCP套接字编程"></a>用TCP套接字编程</h2><ul>
+<li>网络套接字 操作系统提供的操作TCP连接的工具</li>
+</ul>
+<h3 id="服务端套接字编程流程"><a href="#服务端套接字编程流程" class="headerlink" title="服务端套接字编程流程"></a>服务端套接字编程流程</h3><ol>
+<li>创建套接字</li>
+<li>绑定端口</li>
+<li>监听端口</li>
+<li>接收并处理消息</li>
+</ol>
+<h3 id="客户端套接字编程流程"><a href="#客户端套接字编程流程" class="headerlink" title="客户端套接字编程流程"></a>客户端套接字编程流程</h3><ol>
+<li>创建套接字</li>
+<li>连接服务端套接字</li>
+<li>发送消息</li>
+</ol>
+<h2 id="性能聚焦区域"><a href="#性能聚焦区域" class="headerlink" title="性能聚焦区域"></a>性能聚焦区域</h2><p>###　TCP相关时延</p>
+<ul>
+<li>TCP连接建立握手</li>
+<li>TCP慢启动拥塞控制</li>
+<li>数据聚集的Nagle算法</li>
+<li>用于捎带确认的TCP延迟确认算法</li>
+<li>TIME_WAIT时延和端口耗尽</li>
+</ul>
+<h2 id="提高HTTP连接性能的方法"><a href="#提高HTTP连接性能的方法" class="headerlink" title="提高HTTP连接性能的方法"></a>提高HTTP连接性能的方法</h2><p>串行事务处理时延</p>
+<ul>
+<li>并行连接 通过多条TCP连接发起并发的HTTP请求</li>
+<li>持久连接 重用TCP连接,以消除连接及关闭时延</li>
+<li>管道化连接 通过共享TCP连接发起并发的HTTP请求</li>
+<li>复用连接 交替传送请求和响应报文</li>
+</ul>
+<h3 id="并行连接"><a href="#并行连接" class="headerlink" title="并行连接"></a>并行连接</h3><p>打开大量连接会消耗很多内存资源<br>浏览器确实使用了并行连接,但他们会将并行连接的总数限制为一个较小的值(通常是4个). 服务器可以随意关闭来自特定客户端的超量连接</p>
+<h3 id="持久连接"><a href="#持久连接" class="headerlink" title="持久连接"></a>持久连接</h3><p>在HTTP事务处理结束后仍然保持在打开状态的TCP连接被称为持久连接;持久连接会在不同事务之间保持打开状态,直到客户端或服务器决定将其关闭为止</p>
+<h3 id="不能被代理转发或缓存响应使用的首部"><a href="#不能被代理转发或缓存响应使用的首部" class="headerlink" title="不能被代理转发或缓存响应使用的首部"></a>不能被代理转发或缓存响应使用的首部</h3><ul>
+<li>Connection</li>
+<li>Proxy-Authenticate</li>
+<li>Proxy-Connection</li>
+<li>Transfer-Encoding</li>
+<li>Upgrade</li>
+</ul>
+<h2 id="持久连接-1"><a href="#持久连接-1" class="headerlink" title="持久连接"></a>持久连接</h2><h3 id="HTTP-1-0"><a href="#HTTP-1-0" class="headerlink" title="HTTP/1.0"></a>HTTP/1.0</h3><p>HTTP/1.0 通过Connection:keep-alive 头部发送持久连接信号 ,服务端响应Connection:keep-alive表示支持持久连接,但是会存在一个盲中继问题<br>盲中继(哑代理)会导致,客户端保持TCP连接,服务端保持TCP连接,他们的TCP连接都是连接在代理上的,代理却什么都不知道</p>
+<blockquote>
+<p>只是将一个连接转发到另一个连接去,不对Connection首部进行特殊处理</p>
+</blockquote>
+<h3 id="HTTP-1-1"><a href="#HTTP-1-1" class="headerlink" title="HTTP/1.1"></a>HTTP/1.1</h3><p>HTTP/1.1使用persistent connection持久连接,改进了HTTP/1.0 中Connection:keep-alive的缺陷,HTTP/1.1中持久连接是默认激活的,要关闭则需要在报文首部显示添加Connection:close关闭持久连接</p>
+<h3 id="持久连接的限制"><a href="#持久连接的限制" class="headerlink" title="持久连接的限制"></a>持久连接的限制</h3><ul>
+<li>只有当连接上的所有报文都是正确的,自定义报文长度时,也就是说实体部分的长度和相应的Content-length一致,或则是用分块传输编码方式编码的,连接才能持久保持</li>
+<li>HTTP/1.1的代理必须能够分别管理与客户端和服务端的持久连接,每个连接都只适用于一跳传输</li>
+<li>一个用户客户端对任何服务器或代理最多维持两条持久连接,以防止服务器过载.</li>
+</ul>
+<h1 id="第5章-Web服务器"><a href="#第5章-Web服务器" class="headerlink" title="第5章 Web服务器"></a>第5章 Web服务器</h1>]]></content>
+      <categories>
+        <category>http</category>
+      </categories>
   </entry>
   <entry>
     <title>go/数据结构与算法</title>
@@ -6419,94 +6634,11 @@ sudo apt-get install gcc-mingw-w64<figure class="highlight plain"><table><tr><td
 ]]></content>
   </entry>
   <entry>
-    <title>http/Http权威指南</title>
-    <url>/2021/05/19/http/Http%E6%9D%83%E5%A8%81%E6%8C%87%E5%8D%97/</url>
-    <content><![CDATA[<h1 id="第1章-HTTP概述"><a href="#第1章-HTTP概述" class="headerlink" title="第1章 HTTP概述"></a>第1章 HTTP概述</h1><h2 id="资源"><a href="#资源" class="headerlink" title="资源"></a>资源</h2><h3 id="媒体类型"><a href="#媒体类型" class="headerlink" title="媒体类型"></a>媒体类型</h3><ul>
-<li>MIME(Multipurpose Internet Mail Extension,多用途英特网邮件扩展)</li>
-<li>Web服务器回味所有的HTTP对象数据附加一个MIME类型，以告知Web浏览器该如何处理该对象</li>
-<li>Content-Type:image/jpeg ,“image/jpeg”为MIME类型<a id="more"></a>
-
-</li>
-</ul>
-<h3 id="URI"><a href="#URI" class="headerlink" title="URI"></a>URI</h3><ul>
-<li>URI(Uniform Resource Identifier,统一资源标识符)</li>
-<li>URI 有两种形式，分别称为URL和URN</li>
-</ul>
-<h3 id="URL"><a href="#URL" class="headerlink" title="URL"></a>URL</h3><ul>
-<li>统一资源定位符</li>
-<li>URL包含三个部分,协议类型,服务器地址,资源地址</li>
-<li>现在,几乎所有的URI都是URL</li>
-<li>URL语法 : <scheme>://<user>:<password>@<host>:<port>/<path></path>;<params>?<query>#<frag></frag></query></params></port></host></password></user></scheme></li>
-</ul>
-<h3 id="URN"><a href="#URN" class="headerlink" title="URN"></a>URN</h3><ul>
-<li>URN 统一资源名</li>
-<li>URN是作为特定内容的唯一名称使用的,与目前资源所在地无关</li>
-<li>P2P下载中使用的磁力链接是URN的一种实现，它可以持久化的标识一个BT资源，资源分布式的存储在P2P网络中，无需中心服务器用户即可找到并下载它。</li>
-</ul>
-<h2 id="Web的结构组件"><a href="#Web的结构组件" class="headerlink" title="Web的结构组件"></a>Web的结构组件</h2><ul>
-<li>代理 位于客户端和服务端之间的HTTP中间实体</li>
-<li>缓存 HTTP的仓库,使常用的页面或资源保存在离客户端更近的地方</li>
-<li>网关 连接其他应用程序的特殊问web服务器</li>
-<li>隧道 对HTTP通信报文进行盲转发的特殊代理</li>
-<li>Agent代理 发起自动HTTP请求的半智能Web客户端</li>
-</ul>
-<h1 id="第3章-HTTP报文"><a href="#第3章-HTTP报文" class="headerlink" title="第3章 HTTP报文"></a>第3章 HTTP报文</h1><h2 id="报文结构"><a href="#报文结构" class="headerlink" title="报文结构"></a>报文结构</h2><ul>
-<li>起始行(start line)</li>
-<li>首部(header)</li>
-<li>主体(body)</li>
-</ul>
-<h1 id="第4章-连接管理"><a href="#第4章-连接管理" class="headerlink" title="第4章 连接管理"></a>第4章 连接管理</h1><h2 id="用TCP套接字编程"><a href="#用TCP套接字编程" class="headerlink" title="用TCP套接字编程"></a>用TCP套接字编程</h2><ul>
-<li>网络套接字 操作系统提供的操作TCP连接的工具</li>
-</ul>
-<h3 id="服务端套接字编程流程"><a href="#服务端套接字编程流程" class="headerlink" title="服务端套接字编程流程"></a>服务端套接字编程流程</h3><ol>
-<li>创建套接字</li>
-<li>绑定端口</li>
-<li>监听端口</li>
-<li>接收并处理消息</li>
-</ol>
-<h3 id="客户端套接字编程流程"><a href="#客户端套接字编程流程" class="headerlink" title="客户端套接字编程流程"></a>客户端套接字编程流程</h3><ol>
-<li>创建套接字</li>
-<li>连接服务端套接字</li>
-<li>发送消息</li>
-</ol>
-<h2 id="性能聚焦区域"><a href="#性能聚焦区域" class="headerlink" title="性能聚焦区域"></a>性能聚焦区域</h2><p>###　TCP相关时延</p>
-<ul>
-<li>TCP连接建立握手</li>
-<li>TCP慢启动拥塞控制</li>
-<li>数据聚集的Nagle算法</li>
-<li>用于捎带确认的TCP延迟确认算法</li>
-<li>TIME_WAIT时延和端口耗尽</li>
-</ul>
-<h2 id="提高HTTP连接性能的方法"><a href="#提高HTTP连接性能的方法" class="headerlink" title="提高HTTP连接性能的方法"></a>提高HTTP连接性能的方法</h2><p>串行事务处理时延</p>
-<ul>
-<li>并行连接 通过多条TCP连接发起并发的HTTP请求</li>
-<li>持久连接 重用TCP连接,以消除连接及关闭时延</li>
-<li>管道化连接 通过共享TCP连接发起并发的HTTP请求</li>
-<li>复用连接 交替传送请求和响应报文</li>
-</ul>
-<h3 id="并行连接"><a href="#并行连接" class="headerlink" title="并行连接"></a>并行连接</h3><p>打开大量连接会消耗很多内存资源<br>浏览器确实使用了并行连接,但他们会将并行连接的总数限制为一个较小的值(通常是4个). 服务器可以随意关闭来自特定客户端的超量连接</p>
-<h3 id="持久连接"><a href="#持久连接" class="headerlink" title="持久连接"></a>持久连接</h3><p>在HTTP事务处理结束后仍然保持在打开状态的TCP连接被称为持久连接;持久连接会在不同事务之间保持打开状态,直到客户端或服务器决定将其关闭为止</p>
-<h3 id="不能被代理转发或缓存响应使用的首部"><a href="#不能被代理转发或缓存响应使用的首部" class="headerlink" title="不能被代理转发或缓存响应使用的首部"></a>不能被代理转发或缓存响应使用的首部</h3><ul>
-<li>Connection</li>
-<li>Proxy-Authenticate</li>
-<li>Proxy-Connection</li>
-<li>Transfer-Encoding</li>
-<li>Upgrade</li>
-</ul>
-<h2 id="持久连接-1"><a href="#持久连接-1" class="headerlink" title="持久连接"></a>持久连接</h2><h3 id="HTTP-1-0"><a href="#HTTP-1-0" class="headerlink" title="HTTP/1.0"></a>HTTP/1.0</h3><p>HTTP/1.0 通过Connection:keep-alive 头部发送持久连接信号 ,服务端响应Connection:keep-alive表示支持持久连接,但是会存在一个盲中继问题<br>盲中继(哑代理)会导致,客户端保持TCP连接,服务端保持TCP连接,他们的TCP连接都是连接在代理上的,代理却什么都不知道</p>
-<blockquote>
-<p>只是将一个连接转发到另一个连接去,不对Connection首部进行特殊处理</p>
-</blockquote>
-<h3 id="HTTP-1-1"><a href="#HTTP-1-1" class="headerlink" title="HTTP/1.1"></a>HTTP/1.1</h3><p>HTTP/1.1使用persistent connection持久连接,改进了HTTP/1.0 中Connection:keep-alive的缺陷,HTTP/1.1中持久连接是默认激活的,要关闭则需要在报文首部显示添加Connection:close关闭持久连接</p>
-<h3 id="持久连接的限制"><a href="#持久连接的限制" class="headerlink" title="持久连接的限制"></a>持久连接的限制</h3><ul>
-<li>只有当连接上的所有报文都是正确的,自定义报文长度时,也就是说实体部分的长度和相应的Content-length一致,或则是用分块传输编码方式编码的,连接才能持久保持</li>
-<li>HTTP/1.1的代理必须能够分别管理与客户端和服务端的持久连接,每个连接都只适用于一跳传输</li>
-<li>一个用户客户端对任何服务器或代理最多维持两条持久连接,以防止服务器过载.</li>
-</ul>
-<h1 id="第5章-Web服务器"><a href="#第5章-Web服务器" class="headerlink" title="第5章 Web服务器"></a>第5章 Web服务器</h1>]]></content>
-      <categories>
-        <category>http</category>
-      </categories>
+    <title>go/设计模式(golang版本)</title>
+    <url>/2021/05/19/go/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F(golang%E7%89%88%E6%9C%AC)/</url>
+    <content><![CDATA[<h1 id="简单工厂模式"><a href="#简单工厂模式" class="headerlink" title="简单工厂模式"></a>简单工厂模式</h1><p>go 语言没有构造函数一说，所以一般会定义NewXXX函数来初始化相关类。 NewXXX 函数返回接口时就是简单工厂模式，也就是说Golang的一般推荐做法就是简单工厂。</p>
+<h1 id="工厂方法模式"><a href="#工厂方法模式" class="headerlink" title="工厂方法模式"></a>工厂方法模式</h1><p>工厂方法模式使用子类的方式延迟生成对象到子类中实现。<br>Go中不存在继承 所以使用匿名组合来实现<br>使用单独工厂接口是构造目标接口，</p>
+]]></content>
   </entry>
   <entry>
     <title>interview/Docker面试题</title>
@@ -6629,18 +6761,6 @@ sudo apt-get install gcc-mingw-w64<figure class="highlight plain"><table><tr><td
       </tags>
   </entry>
   <entry>
-    <title>interview/Grpc面试题</title>
-    <url>/2021/05/19/interview/Grpc%E9%9D%A2%E8%AF%95%E9%A2%98/</url>
-    <content><![CDATA[<a id="more"></a>
-]]></content>
-      <categories>
-        <category>interview</category>
-      </categories>
-      <tags>
-        <tag>grpc面试题</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>interview/Elasticsearch面试题</title>
     <url>/2021/05/19/interview/Elasticsearch%E9%9D%A2%E8%AF%95%E9%A2%98/</url>
     <content><![CDATA[<h2 id="为什么要使用Elasticsearch"><a href="#为什么要使用Elasticsearch" class="headerlink" title="为什么要使用Elasticsearch?"></a>为什么要使用Elasticsearch?</h2><p>因为在我们商城中的数据，将来会非常多，所以采用以往的模糊查询，模糊查询前置配置，会放弃索引，导致商品查询是全表扫面，在百万级别的数据库中，<br>效率非常低下，而我们使用ES做一个全文索引，我们将经常查询的商品的某些字段，比如说商品名，描述、价格还有id这些字段我们放入我们索引库里，可以提高查询速度。</p>
@@ -6683,6 +6803,18 @@ sudo apt-get install gcc-mingw-w64<figure class="highlight plain"><table><tr><td
       </categories>
       <tags>
         <tag>elasticsearch面试题</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>interview/Grpc面试题</title>
+    <url>/2021/05/19/interview/Grpc%E9%9D%A2%E8%AF%95%E9%A2%98/</url>
+    <content><![CDATA[<a id="more"></a>
+]]></content>
+      <categories>
+        <category>interview</category>
+      </categories>
+      <tags>
+        <tag>grpc面试题</tag>
       </tags>
   </entry>
   <entry>
@@ -6805,50 +6937,6 @@ sudo apt-get install gcc-mingw-w64<figure class="highlight plain"><table><tr><td
       </tags>
   </entry>
   <entry>
-    <title>go/go高级编程笔记</title>
-    <url>/2021/05/19/go/go%E9%AB%98%E7%BA%A7%E7%BC%96%E7%A8%8B%E7%AC%94%E8%AE%B0/</url>
-    <content><![CDATA[<p><a href="https://chai2010.cn/advanced-go-programming-book/" target="_blank" rel="noopener">go语言高级编程</a></p>
-<h1 id="语言基础"><a href="#语言基础" class="headerlink" title="语言基础"></a>语言基础</h1><h2 id="函数、方法和接口"><a href="#函数、方法和接口" class="headerlink" title="函数、方法和接口"></a>函数、方法和接口</h2><ul>
-<li>init不是普通函数，可以定义有多个，所以也不能被其它函数调用</li>
-<li>如果某个init函数内部用go关键字启动了新的goroutine的话，新的goroutine只有在进入main.main函数之后才可能被执行到。</li>
-<li>每种类型对应的方法必须和类型的定义在同一个包中<a id="more"></a>
-
-
-</li>
-</ul>
-<h2 id="面向并发的内存模型"><a href="#面向并发的内存模型" class="headerlink" title="面向并发的内存模型"></a>面向并发的内存模型</h2><ul>
-<li>go基于CSP(通信顺序进程)模型实现并发,并且Goroutine之间可共享内存</li>
-<li>Goroutine和系统线程不是等价的,一般系统线程占用一个固定大小的栈(2MB),Goroutine以一个大约2kb的栈启动,并且可以动态伸缩,最大可达1G的栈空间</li>
-<li>Goroutine采用的是半抢占式的协作调度,只有在当前Goroutine发生阻塞时才会发生调度</li>
-<li>初始化顺序 同包内(const &gt; var &gt; init),如果一个包内有多个init函数,会根据文件名顺序进行调用</li>
-<li>可通过带缓存的channel,控制Goroutine的并发数量</li>
-<li>顺序一致性内存模型 Go语言中，同一个Goroutine线程内部，顺序一致性内存模型是得到保证的。但是不同的Goroutine之间，并不满足顺序一致性内存模型<blockquote>
-<p>如果在一个Goroutine中顺序执行a = 1; b = 2;两个语句，虽然在当前的Goroutine中可以认为a = 1;语句先于b = 2;语句执行，但是在另一个Goroutine中b = 2;语句可能会先于a = 1;语句执行，甚至在另一个Goroutine中无法看到它们的变化（可能始终在寄存器中）</p>
-</blockquote>
-</li>
-</ul>
-<h2 id="常见并发模式"><a href="#常见并发模式" class="headerlink" title="常见并发模式"></a>常见并发模式</h2><p>不要通过共享内存来通信,而应通过通信来共享内存</p>
-<ul>
-<li>等待N个线程完成后再进行下一步同步操作,可以使用sync.WaitGroup来实现</li>
-<li>生产者消费者模型</li>
-<li>发布订阅模型</li>
-<li>控制并发数</li>
-<li>赢者为王 通过适当开启一些冗余的线程，尝试用不同途径去解决同样的问题，最终以赢者为王的方式提升了程序的相应性能。</li>
-<li>素数筛</li>
-<li>并发的安全退出</li>
-<li>通过Context包,实现Goroutine安全退出</li>
-</ul>
-<h1 id="第5章-Go和Web"><a href="#第5章-Go和Web" class="headerlink" title="第5章 Go和Web"></a>第5章 Go和Web</h1><h2 id="哪些事情适合在中间件中做"><a href="#哪些事情适合在中间件中做" class="headerlink" title="哪些事情适合在中间件中做"></a>哪些事情适合在中间件中做</h2><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">compress.go</span><br><span class="line">  &#x3D;&gt; 对http的响应体进行压缩处理</span><br><span class="line">heartbeat.go</span><br><span class="line">  &#x3D;&gt; 设置一个特殊的路由，例如&#x2F;ping，&#x2F;healthcheck，用来给负载均衡一类的前置服务进行探活</span><br><span class="line">logger.go</span><br><span class="line">  &#x3D;&gt; 打印请求处理处理日志，例如请求处理时间，请求路由</span><br><span class="line">profiler.go</span><br><span class="line">  &#x3D;&gt; 挂载pprof需要的路由，如&#96;&#x2F;pprof&#96;、&#96;&#x2F;pprof&#x2F;trace&#96;到系统中</span><br><span class="line">realip.go</span><br><span class="line">  &#x3D;&gt; 从请求头中读取X-Forwarded-For和X-Real-IP，将http.Request中的RemoteAddr修改为得到的RealIP</span><br><span class="line">requestid.go</span><br><span class="line">  &#x3D;&gt; 为本次请求生成单独的requestid，可一路透传，用来生成分布式调用链路，也可用于在日志中串连单次请求的所有逻辑</span><br><span class="line">timeout.go</span><br><span class="line">  &#x3D;&gt; 用context.Timeout设置超时时间，并将其通过http.Request一路透传下去</span><br><span class="line">throttler.go</span><br><span class="line">  &#x3D;&gt; 通过定长大小的channel存储token，并通过这些token对接口进行限流</span><br></pre></td></tr></table></figure>
-
-<h2 id="常见的流量限制手段"><a href="#常见的流量限制手段" class="headerlink" title="常见的流量限制手段"></a>常见的流量限制手段</h2><p>1.漏桶是指我们有一个一直装满了水的桶，每过固定的一段时间即向外漏一滴水。如果你接到了这滴水，那么你就可以继续服务请求，如果没有接到，那么就需要等待下一滴水。  </p>
-<p>2.令牌桶则是指匀速向桶中添加令牌，服务请求时需要从桶中获取令牌，令牌的数目可以按照需要消耗的资源进行相应的调整。如果没有令牌，可以选择等待，或者放弃。  </p>
-<p>实际应用中令牌桶应用较为广泛，开源界流行的限流器大多数都是基于令牌桶思想的。并且在此基础上进行了一定程度的扩充，比如github.com/juju/ratelimit  </p>
-]]></content>
-      <categories>
-        <category>go</category>
-      </categories>
-  </entry>
-  <entry>
     <title>go/go学习书籍</title>
     <url>/2021/05/19/go/go%E5%AD%A6%E4%B9%A0%E4%B9%A6%E7%B1%8D/</url>
     <content><![CDATA[<p>#书栈网<br><a href="https://www.bookstack.cn/" target="_blank" rel="noopener">https://www.bookstack.cn/</a></p>
@@ -6903,6 +6991,50 @@ sudo apt-get install gcc-mingw-w64<figure class="highlight plain"><table><tr><td
       <tags>
         <tag>grpc</tag>
       </tags>
+  </entry>
+  <entry>
+    <title>go/go高级编程笔记</title>
+    <url>/2021/05/19/go/go%E9%AB%98%E7%BA%A7%E7%BC%96%E7%A8%8B%E7%AC%94%E8%AE%B0/</url>
+    <content><![CDATA[<p><a href="https://chai2010.cn/advanced-go-programming-book/" target="_blank" rel="noopener">go语言高级编程</a></p>
+<h1 id="语言基础"><a href="#语言基础" class="headerlink" title="语言基础"></a>语言基础</h1><h2 id="函数、方法和接口"><a href="#函数、方法和接口" class="headerlink" title="函数、方法和接口"></a>函数、方法和接口</h2><ul>
+<li>init不是普通函数，可以定义有多个，所以也不能被其它函数调用</li>
+<li>如果某个init函数内部用go关键字启动了新的goroutine的话，新的goroutine只有在进入main.main函数之后才可能被执行到。</li>
+<li>每种类型对应的方法必须和类型的定义在同一个包中<a id="more"></a>
+
+
+</li>
+</ul>
+<h2 id="面向并发的内存模型"><a href="#面向并发的内存模型" class="headerlink" title="面向并发的内存模型"></a>面向并发的内存模型</h2><ul>
+<li>go基于CSP(通信顺序进程)模型实现并发,并且Goroutine之间可共享内存</li>
+<li>Goroutine和系统线程不是等价的,一般系统线程占用一个固定大小的栈(2MB),Goroutine以一个大约2kb的栈启动,并且可以动态伸缩,最大可达1G的栈空间</li>
+<li>Goroutine采用的是半抢占式的协作调度,只有在当前Goroutine发生阻塞时才会发生调度</li>
+<li>初始化顺序 同包内(const &gt; var &gt; init),如果一个包内有多个init函数,会根据文件名顺序进行调用</li>
+<li>可通过带缓存的channel,控制Goroutine的并发数量</li>
+<li>顺序一致性内存模型 Go语言中，同一个Goroutine线程内部，顺序一致性内存模型是得到保证的。但是不同的Goroutine之间，并不满足顺序一致性内存模型<blockquote>
+<p>如果在一个Goroutine中顺序执行a = 1; b = 2;两个语句，虽然在当前的Goroutine中可以认为a = 1;语句先于b = 2;语句执行，但是在另一个Goroutine中b = 2;语句可能会先于a = 1;语句执行，甚至在另一个Goroutine中无法看到它们的变化（可能始终在寄存器中）</p>
+</blockquote>
+</li>
+</ul>
+<h2 id="常见并发模式"><a href="#常见并发模式" class="headerlink" title="常见并发模式"></a>常见并发模式</h2><p>不要通过共享内存来通信,而应通过通信来共享内存</p>
+<ul>
+<li>等待N个线程完成后再进行下一步同步操作,可以使用sync.WaitGroup来实现</li>
+<li>生产者消费者模型</li>
+<li>发布订阅模型</li>
+<li>控制并发数</li>
+<li>赢者为王 通过适当开启一些冗余的线程，尝试用不同途径去解决同样的问题，最终以赢者为王的方式提升了程序的相应性能。</li>
+<li>素数筛</li>
+<li>并发的安全退出</li>
+<li>通过Context包,实现Goroutine安全退出</li>
+</ul>
+<h1 id="第5章-Go和Web"><a href="#第5章-Go和Web" class="headerlink" title="第5章 Go和Web"></a>第5章 Go和Web</h1><h2 id="哪些事情适合在中间件中做"><a href="#哪些事情适合在中间件中做" class="headerlink" title="哪些事情适合在中间件中做"></a>哪些事情适合在中间件中做</h2><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">compress.go</span><br><span class="line">  &#x3D;&gt; 对http的响应体进行压缩处理</span><br><span class="line">heartbeat.go</span><br><span class="line">  &#x3D;&gt; 设置一个特殊的路由，例如&#x2F;ping，&#x2F;healthcheck，用来给负载均衡一类的前置服务进行探活</span><br><span class="line">logger.go</span><br><span class="line">  &#x3D;&gt; 打印请求处理处理日志，例如请求处理时间，请求路由</span><br><span class="line">profiler.go</span><br><span class="line">  &#x3D;&gt; 挂载pprof需要的路由，如&#96;&#x2F;pprof&#96;、&#96;&#x2F;pprof&#x2F;trace&#96;到系统中</span><br><span class="line">realip.go</span><br><span class="line">  &#x3D;&gt; 从请求头中读取X-Forwarded-For和X-Real-IP，将http.Request中的RemoteAddr修改为得到的RealIP</span><br><span class="line">requestid.go</span><br><span class="line">  &#x3D;&gt; 为本次请求生成单独的requestid，可一路透传，用来生成分布式调用链路，也可用于在日志中串连单次请求的所有逻辑</span><br><span class="line">timeout.go</span><br><span class="line">  &#x3D;&gt; 用context.Timeout设置超时时间，并将其通过http.Request一路透传下去</span><br><span class="line">throttler.go</span><br><span class="line">  &#x3D;&gt; 通过定长大小的channel存储token，并通过这些token对接口进行限流</span><br></pre></td></tr></table></figure>
+
+<h2 id="常见的流量限制手段"><a href="#常见的流量限制手段" class="headerlink" title="常见的流量限制手段"></a>常见的流量限制手段</h2><p>1.漏桶是指我们有一个一直装满了水的桶，每过固定的一段时间即向外漏一滴水。如果你接到了这滴水，那么你就可以继续服务请求，如果没有接到，那么就需要等待下一滴水。  </p>
+<p>2.令牌桶则是指匀速向桶中添加令牌，服务请求时需要从桶中获取令牌，令牌的数目可以按照需要消耗的资源进行相应的调整。如果没有令牌，可以选择等待，或者放弃。  </p>
+<p>实际应用中令牌桶应用较为广泛，开源界流行的限流器大多数都是基于令牌桶思想的。并且在此基础上进行了一定程度的扩充，比如github.com/juju/ratelimit  </p>
+]]></content>
+      <categories>
+        <category>go</category>
+      </categories>
   </entry>
   <entry>
     <title>go/企业级微服务网关</title>
@@ -7040,82 +7172,6 @@ sudo apt-get install gcc-mingw-w64<figure class="highlight plain"><table><tr><td
       </tags>
   </entry>
   <entry>
-    <title>go/Mastering_Go</title>
-    <url>/2021/05/19/go/Mastering_Go/</url>
-    <content><![CDATA[<h1 id="第2章-Go内部机制"><a href="#第2章-Go内部机制" class="headerlink" title="第2章 Go内部机制"></a>第2章 Go内部机制</h1><h2 id="垃圾回收"><a href="#垃圾回收" class="headerlink" title="垃圾回收"></a>垃圾回收</h2><p>垃圾回收是释放掉那些不再使用的内存空间的过程.</p>
-<a id="more"></a>
-
-
-<h2 id="golang-GC算法演变过程"><a href="#golang-GC算法演变过程" class="headerlink" title="golang GC算法演变过程"></a>golang GC算法演变过程</h2><table>
-<thead>
-<tr>
-<th align="center">版本</th>
-<th align="center">GC算法</th>
-</tr>
-</thead>
-<tbody><tr>
-<td align="center">v1.1</td>
-<td align="center">STW(stop the word)</td>
-</tr>
-<tr>
-<td align="center">v1.3</td>
-<td align="center">Mark STW,Sweep(标记清除)</td>
-</tr>
-<tr>
-<td align="center">v1.5</td>
-<td align="center">三色标记</td>
-</tr>
-<tr>
-<td align="center">v1.8</td>
-<td align="center">hybrid write barrier(三色标记基础上加入写屏障)</td>
-</tr>
-</tbody></table>
-<h2 id="标记清除算法-mark-and-sweep"><a href="#标记清除算法-mark-and-sweep" class="headerlink" title="标记清除算法(mark and sweep)"></a>标记清除算法(mark and sweep)</h2><h3 id="主要包含两个步骤"><a href="#主要包含两个步骤" class="headerlink" title="主要包含两个步骤:"></a>主要包含两个步骤:</h3><p>1.找出不可达对象,然后做上标记<br>2.回收标记好的对象</p>
-<blockquote>
-<p>mark and sweep 算法在执行的时候,需要程序暂停,即stop the world</p>
-</blockquote>
-<h3 id="标记清除算法存在的问题"><a href="#标记清除算法存在的问题" class="headerlink" title="标记清除算法存在的问题"></a>标记清除算法存在的问题</h3><ul>
-<li>stop the world 程序暂停,即程序会出现卡顿</li>
-<li>标记需要扫描整个堆(heap)</li>
-<li>清楚数据会产生heap碎片</li>
-</ul>
-<h2 id="三色标记清除算法"><a href="#三色标记清除算法" class="headerlink" title="三色标记清除算法"></a>三色标记清除算法</h2><p>三色标记清除算法背后的首要原则就是它把堆中的对象根据它们的颜色分到不同集合里面，颜色是根据算法进行标记的  </p>
-<ul>
-<li>黑色集合 指针指向白色集合。</li>
-<li>白色集合中的对象允许有指针指向黑色集合,白色集合中的对象就是垃圾回收的候选对象。</li>
-<li>灰色集合可能会有指针指向白色集合里的对象。</li>
-</ul>
-<h3 id="写屏障"><a href="#写屏障" class="headerlink" title="写屏障"></a>写屏障</h3><p>每次堆中的指针被修改写屏障都会去执行。如果堆中对象的指针被修改，就意味着那个对象现在是可触达的，写屏障会把它标记为灰色并把它放到灰色集合中。<br>修改器 运行写屏障,从而保证黑色集合中没有任何元素的指针去指向白色集合中的元素。<br>写屏障直观作用有两个:<br>1.process新生成的内存对象会被直接标记成灰色<br>2.位于黑色集合中的内存对象引用了一个白色集合中的对象,写屏障会将白色集合的这个对象标记为灰色  </p>
-<h3 id="三色标记过程"><a href="#三色标记过程" class="headerlink" title="三色标记过程"></a>三色标记过程</h3><p>1.首先：程序创建的对象都标记为白色。<br><img src="/2021/05/19/go/Mastering_Go/6328562-1021941531ecffc3.png" alt><br>2.gc开始：扫描所有可到达的对象，标记为灰色<br><img src="/2021/05/19/go/Mastering_Go/6328562-9ae46a88a13613ee.png" alt><br>3.从灰色对象中找到其引用对象标记为灰色，把灰色对象本身标记为黑色<br><img src="/2021/05/19/go/Mastering_Go/6328562-21bc289a81b75236.png" alt><br>4.监视对象中的内存修改，并持续上一步的操作，直到灰色标记的对象不存在<br><img src="/2021/05/19/go/Mastering_Go/6328562-e0535bd79c7996e8.png" alt><br>5.此时，gc回收白色对象。<br><img src="/2021/05/19/go/Mastering_Go/6328562-6c9ecb92555f14e2.png" alt><br>6.最后，将所有黑色对象变为白色，并重复以上所有过程。<br><img src="/2021/05/19/go/Mastering_Go/6328562-0c915b27be3f258d.png" alt></p>
-<h3 id="gc和用户逻辑如何并行操作"><a href="#gc和用户逻辑如何并行操作" class="headerlink" title="gc和用户逻辑如何并行操作"></a>gc和用户逻辑如何并行操作</h3><p>标记-清除(mark and sweep)算法的STW(stop the world)操作，就是runtime把所有的线程全部冻结掉，所有的线程全部冻结意味着用户逻辑是暂停的。这样所有的对象都不会被修改了，这时候去扫描是绝对安全的。<br>Go如何减短这个过程呢？标记-清除(mark and sweep)算法包含两部分逻辑：标记和清除。<br>我们知道Golang三色标记法中最后只剩下的黑白两种对象，黑色对象是程序恢复后接着使用的对象，如果不碰触黑色对象，只清除白色的对象，肯定不会影响程序逻辑。所以：清除操作和用户逻辑可以并发。<br>标记操作和用户逻辑也是并发的，用户逻辑会时常生成对象或者改变对象的引用，那么标记和用户逻辑如何并发呢？<br><strong>process新生成对象的时候，GC该如何操作呢？不会乱吗？</strong><br>我们看如下图，在此状态下：process程序又新生成了一个对象，我们设想会变成这样：<br><img src="/2021/05/19/go/Mastering_Go/6328562-1306d93ef2c96426.png" alt><br>但是这样显然是不对的，因为按照三色标记法的步骤，这样新生成的对象A最后会被清除掉，这样会影响程序逻辑。<br>Golang为了解决这个问题，引入了写屏障这个机制。<br>写屏障：该屏障之前的写操作和之后的写操作相比，先被系统其它组件感知。<br>通俗的讲：就是在gc跑的过程中，可以监控对象的内存修改，并对对象进行重新标记。(实际上也是超短暂的stw，然后对对象进行标记)<br>在上述情况中，新生成的对象，一律都标位灰色！<br><img src="/2021/05/19/go/Mastering_Go/6328562-75599afe8b517f5c.png" alt><br><strong>那么，灰色或者黑色对象的引用改为白色对象的时候，Golang是该如何操作的？</strong><br>看如下图，一个黑色对象引用了曾经标记的白色对象。<br><img src="/2021/05/19/go/Mastering_Go/6328562-57b2f544aa5ff318.png" alt><br>这时候，写屏障机制被触发，向GC发送信号，GC重新扫描对象并标位灰色。<br><img src="/2021/05/19/go/Mastering_Go/6328562-714367c5511b3cf4.png" alt><br>因此，gc一旦开始，无论是创建对象还是对象的引用改变，都会先变为灰色。</p>
-<h3 id="Unsafe-Code"><a href="#Unsafe-Code" class="headerlink" title="Unsafe Code"></a>Unsafe Code</h3><p>Unsafe code是一种绕过go类型安全和内存安全检查的Go代码。</p>
-<h3 id="defer-panic-recover"><a href="#defer-panic-recover" class="headerlink" title="defer panic recover"></a>defer panic recover</h3><ul>
-<li>defer是一种栈结构,先入后出</li>
-<li>panic 会终止Go程序的当前流程开始panicking,根据入栈顺序调用defer,若某个defer中,有recover,则捕获panic,程序回到正常执行流程</li>
-<li>recover,在defer函数中直接调用recover才能捕获panic</li>
-</ul>
-<h1 id="Go基本数据类型"><a href="#Go基本数据类型" class="headerlink" title="Go基本数据类型"></a>Go基本数据类型</h1><h2 id="Go切片"><a href="#Go切片" class="headerlink" title="Go切片"></a>Go切片</h2><h3 id="切片"><a href="#切片" class="headerlink" title="切片"></a>切片</h3><p>切片的底层是数组，这意味着Go为每一个切片创建一个底层数组<br>切片作为函数的形参时是传引用操作，传递的是指向切片的内存地址，这意味着在函数中对切片的任何操作都会在函数结束后体现出来。另外，函数中传递切片要比传递同样元素数量的数组高效，因为Go只是传递指向切片的内存地址，而非拷贝整个切片。  </p>
-<h3 id="切片扩容"><a href="#切片扩容" class="headerlink" title="切片扩容"></a>切片扩容</h3><p>GoLang中的切片扩容机制，与切片的数据类型、原本切片的容量、所需要的容量都有关系，比较复杂。对于常见数据类型，在元素数量较少时，大致可以认为扩容是按照翻倍进行的。</p>
-<h3 id="大切片问题"><a href="#大切片问题" class="headerlink" title="大切片问题"></a>大切片问题</h3><p>若果存在一个很大的切片,而只需要使用很少的一部分,应当将此部分拷贝出来,否则因为这一小部分,会导致改切片不能被GC回收,典型问题将大文件的内容读到切片中，但是你只是想使用其中一小部分。  </p>
-<h3 id="字节切片"><a href="#字节切片" class="headerlink" title="字节切片"></a>字节切片</h3><p>字节切片的操作与其他类型的切片并没有什么区别，但是在输入输出中（网络，文件流等）使用的非常多  </p>
-<h3 id="copy-函数"><a href="#copy-函数" class="headerlink" title="copy()函数"></a>copy()函数</h3><p>内建函数copy(dst,src) 会以cap(dst)和cap(src)中的最小值为复制长度。<br>如果目标dst没有容量,则拷贝不到任何内容<br>最新的go版本中(go1.13),copy 已经支持了数组和切片的相互拷贝</p>
-<h3 id="多维切片"><a href="#多维切片" class="headerlink" title="多维切片"></a>多维切片</h3><p>如果你发现你的代码中出现很多多维切片，你就要考虑你的代码设计是否合理并且使用不需要多维切片的更简单的设计。</p>
-<h2 id="Go-map"><a href="#Go-map" class="headerlink" title="Go map"></a>Go map</h2><p>与切片与数组相比，map（映射）的功能要强大的多，但是具有灵活性的同时也伴随着性能损耗，实现Go map往往需要更多的处理能力。但是不用担心，Go的内置数据结构是非常高效的，所以当你需要map的时候就尽情地去用吧！</p>
-<h2 id="常量"><a href="#常量" class="headerlink" title="常量"></a>常量</h2><p>const 定义的常量,特别是数字类型,在定义的时候没有明确类型的化,那么该常量的类型在真正被使用的时候才会确定<br>严格来说,常量在编译期间就被确定了,所以定义成常量的值必须是编译器能够确定的值,在程序运行期间,不能修改的值<br>Go可以使用布尔类型、字符串、或者数字类型存储常量的值。<br>代码建议：如果你要用到许多常量，最好将它们定义到同一个包中。  </p>
-<h2 id="go指针"><a href="#go指针" class="headerlink" title="go指针"></a>go指针</h2><p>使用指针时，<em>可以获取指针的值，此操作成为指针的解引用，</em>也叫取值操作符；&amp;可以获取非指针变量的地址，叫做取地址操作符。<br>变量=变量内存地址+变量值,以下代码可以很好的体现这个关系:  </p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">func main() &#123;</span><br><span class="line"></span><br><span class="line">    var a int</span><br><span class="line">    var b *int</span><br><span class="line"></span><br><span class="line">    a&#x3D;5</span><br><span class="line">    b&#x3D;&amp;a</span><br><span class="line"></span><br><span class="line">    fmt.Println(&quot;a变量指针:&quot;,&amp;a)</span><br><span class="line">    fmt.Println(&quot;a变量值:&quot;,a)</span><br><span class="line">    fmt.Println(&quot;b变量指针:&quot;,&amp;b)</span><br><span class="line">    fmt.Println(&quot;b变量值:&quot;,b)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">输出: </span><br><span class="line">a变量指针: 0xc000088010</span><br><span class="line">a变量值: 5</span><br><span class="line">b变量指针: 0xc00008c018</span><br><span class="line">b变量值: 0xc000088010</span><br></pre></td></tr></table></figure>
-
-<h2 id="时间与日期的处理技巧"><a href="#时间与日期的处理技巧" class="headerlink" title="时间与日期的处理技巧"></a>时间与日期的处理技巧</h2><h3 id="解析时间"><a href="#解析时间" class="headerlink" title="解析时间"></a>解析时间</h3><p>time.Parse(layout string,value string)此函数用于字符串解析成golang时间类型,如果时间错误,将不能被解析 </p>
-<h1 id="组合类型的使用"><a href="#组合类型的使用" class="headerlink" title="组合类型的使用"></a>组合类型的使用</h1><h2 id="使用new关键字"><a href="#使用new关键字" class="headerlink" title="使用new关键字"></a>使用new关键字</h2><p>new和make最大的区别就是：new返回的是空的内存地址，即没有做初始化。另外，make仅可以用来创建映射，切片和通道，而且并不是返回指针。</p>
-]]></content>
-      <categories>
-        <category>go</category>
-      </categories>
-      <tags>
-        <tag>go三色标记</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>go/golang面试题</title>
     <url>/2021/05/19/go/golang%E9%9D%A2%E8%AF%95%E9%A2%98/</url>
     <content><![CDATA[<h2 id="golang-调度"><a href="#golang-调度" class="headerlink" title="golang 调度"></a>golang 调度</h2><ul>
@@ -7242,6 +7298,82 @@ sudo apt-get install gcc-mingw-w64<figure class="highlight plain"><table><tr><td
       </categories>
       <tags>
         <tag>goland面试题</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>go/Mastering_Go</title>
+    <url>/2021/05/19/go/Mastering_Go/</url>
+    <content><![CDATA[<h1 id="第2章-Go内部机制"><a href="#第2章-Go内部机制" class="headerlink" title="第2章 Go内部机制"></a>第2章 Go内部机制</h1><h2 id="垃圾回收"><a href="#垃圾回收" class="headerlink" title="垃圾回收"></a>垃圾回收</h2><p>垃圾回收是释放掉那些不再使用的内存空间的过程.</p>
+<a id="more"></a>
+
+
+<h2 id="golang-GC算法演变过程"><a href="#golang-GC算法演变过程" class="headerlink" title="golang GC算法演变过程"></a>golang GC算法演变过程</h2><table>
+<thead>
+<tr>
+<th align="center">版本</th>
+<th align="center">GC算法</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">v1.1</td>
+<td align="center">STW(stop the word)</td>
+</tr>
+<tr>
+<td align="center">v1.3</td>
+<td align="center">Mark STW,Sweep(标记清除)</td>
+</tr>
+<tr>
+<td align="center">v1.5</td>
+<td align="center">三色标记</td>
+</tr>
+<tr>
+<td align="center">v1.8</td>
+<td align="center">hybrid write barrier(三色标记基础上加入写屏障)</td>
+</tr>
+</tbody></table>
+<h2 id="标记清除算法-mark-and-sweep"><a href="#标记清除算法-mark-and-sweep" class="headerlink" title="标记清除算法(mark and sweep)"></a>标记清除算法(mark and sweep)</h2><h3 id="主要包含两个步骤"><a href="#主要包含两个步骤" class="headerlink" title="主要包含两个步骤:"></a>主要包含两个步骤:</h3><p>1.找出不可达对象,然后做上标记<br>2.回收标记好的对象</p>
+<blockquote>
+<p>mark and sweep 算法在执行的时候,需要程序暂停,即stop the world</p>
+</blockquote>
+<h3 id="标记清除算法存在的问题"><a href="#标记清除算法存在的问题" class="headerlink" title="标记清除算法存在的问题"></a>标记清除算法存在的问题</h3><ul>
+<li>stop the world 程序暂停,即程序会出现卡顿</li>
+<li>标记需要扫描整个堆(heap)</li>
+<li>清楚数据会产生heap碎片</li>
+</ul>
+<h2 id="三色标记清除算法"><a href="#三色标记清除算法" class="headerlink" title="三色标记清除算法"></a>三色标记清除算法</h2><p>三色标记清除算法背后的首要原则就是它把堆中的对象根据它们的颜色分到不同集合里面，颜色是根据算法进行标记的  </p>
+<ul>
+<li>黑色集合 指针指向白色集合。</li>
+<li>白色集合中的对象允许有指针指向黑色集合,白色集合中的对象就是垃圾回收的候选对象。</li>
+<li>灰色集合可能会有指针指向白色集合里的对象。</li>
+</ul>
+<h3 id="写屏障"><a href="#写屏障" class="headerlink" title="写屏障"></a>写屏障</h3><p>每次堆中的指针被修改写屏障都会去执行。如果堆中对象的指针被修改，就意味着那个对象现在是可触达的，写屏障会把它标记为灰色并把它放到灰色集合中。<br>修改器 运行写屏障,从而保证黑色集合中没有任何元素的指针去指向白色集合中的元素。<br>写屏障直观作用有两个:<br>1.process新生成的内存对象会被直接标记成灰色<br>2.位于黑色集合中的内存对象引用了一个白色集合中的对象,写屏障会将白色集合的这个对象标记为灰色  </p>
+<h3 id="三色标记过程"><a href="#三色标记过程" class="headerlink" title="三色标记过程"></a>三色标记过程</h3><p>1.首先：程序创建的对象都标记为白色。<br><img src="/2021/05/19/go/Mastering_Go/6328562-1021941531ecffc3.png" alt><br>2.gc开始：扫描所有可到达的对象，标记为灰色<br><img src="/2021/05/19/go/Mastering_Go/6328562-9ae46a88a13613ee.png" alt><br>3.从灰色对象中找到其引用对象标记为灰色，把灰色对象本身标记为黑色<br><img src="/2021/05/19/go/Mastering_Go/6328562-21bc289a81b75236.png" alt><br>4.监视对象中的内存修改，并持续上一步的操作，直到灰色标记的对象不存在<br><img src="/2021/05/19/go/Mastering_Go/6328562-e0535bd79c7996e8.png" alt><br>5.此时，gc回收白色对象。<br><img src="/2021/05/19/go/Mastering_Go/6328562-6c9ecb92555f14e2.png" alt><br>6.最后，将所有黑色对象变为白色，并重复以上所有过程。<br><img src="/2021/05/19/go/Mastering_Go/6328562-0c915b27be3f258d.png" alt></p>
+<h3 id="gc和用户逻辑如何并行操作"><a href="#gc和用户逻辑如何并行操作" class="headerlink" title="gc和用户逻辑如何并行操作"></a>gc和用户逻辑如何并行操作</h3><p>标记-清除(mark and sweep)算法的STW(stop the world)操作，就是runtime把所有的线程全部冻结掉，所有的线程全部冻结意味着用户逻辑是暂停的。这样所有的对象都不会被修改了，这时候去扫描是绝对安全的。<br>Go如何减短这个过程呢？标记-清除(mark and sweep)算法包含两部分逻辑：标记和清除。<br>我们知道Golang三色标记法中最后只剩下的黑白两种对象，黑色对象是程序恢复后接着使用的对象，如果不碰触黑色对象，只清除白色的对象，肯定不会影响程序逻辑。所以：清除操作和用户逻辑可以并发。<br>标记操作和用户逻辑也是并发的，用户逻辑会时常生成对象或者改变对象的引用，那么标记和用户逻辑如何并发呢？<br><strong>process新生成对象的时候，GC该如何操作呢？不会乱吗？</strong><br>我们看如下图，在此状态下：process程序又新生成了一个对象，我们设想会变成这样：<br><img src="/2021/05/19/go/Mastering_Go/6328562-1306d93ef2c96426.png" alt><br>但是这样显然是不对的，因为按照三色标记法的步骤，这样新生成的对象A最后会被清除掉，这样会影响程序逻辑。<br>Golang为了解决这个问题，引入了写屏障这个机制。<br>写屏障：该屏障之前的写操作和之后的写操作相比，先被系统其它组件感知。<br>通俗的讲：就是在gc跑的过程中，可以监控对象的内存修改，并对对象进行重新标记。(实际上也是超短暂的stw，然后对对象进行标记)<br>在上述情况中，新生成的对象，一律都标位灰色！<br><img src="/2021/05/19/go/Mastering_Go/6328562-75599afe8b517f5c.png" alt><br><strong>那么，灰色或者黑色对象的引用改为白色对象的时候，Golang是该如何操作的？</strong><br>看如下图，一个黑色对象引用了曾经标记的白色对象。<br><img src="/2021/05/19/go/Mastering_Go/6328562-57b2f544aa5ff318.png" alt><br>这时候，写屏障机制被触发，向GC发送信号，GC重新扫描对象并标位灰色。<br><img src="/2021/05/19/go/Mastering_Go/6328562-714367c5511b3cf4.png" alt><br>因此，gc一旦开始，无论是创建对象还是对象的引用改变，都会先变为灰色。</p>
+<h3 id="Unsafe-Code"><a href="#Unsafe-Code" class="headerlink" title="Unsafe Code"></a>Unsafe Code</h3><p>Unsafe code是一种绕过go类型安全和内存安全检查的Go代码。</p>
+<h3 id="defer-panic-recover"><a href="#defer-panic-recover" class="headerlink" title="defer panic recover"></a>defer panic recover</h3><ul>
+<li>defer是一种栈结构,先入后出</li>
+<li>panic 会终止Go程序的当前流程开始panicking,根据入栈顺序调用defer,若某个defer中,有recover,则捕获panic,程序回到正常执行流程</li>
+<li>recover,在defer函数中直接调用recover才能捕获panic</li>
+</ul>
+<h1 id="Go基本数据类型"><a href="#Go基本数据类型" class="headerlink" title="Go基本数据类型"></a>Go基本数据类型</h1><h2 id="Go切片"><a href="#Go切片" class="headerlink" title="Go切片"></a>Go切片</h2><h3 id="切片"><a href="#切片" class="headerlink" title="切片"></a>切片</h3><p>切片的底层是数组，这意味着Go为每一个切片创建一个底层数组<br>切片作为函数的形参时是传引用操作，传递的是指向切片的内存地址，这意味着在函数中对切片的任何操作都会在函数结束后体现出来。另外，函数中传递切片要比传递同样元素数量的数组高效，因为Go只是传递指向切片的内存地址，而非拷贝整个切片。  </p>
+<h3 id="切片扩容"><a href="#切片扩容" class="headerlink" title="切片扩容"></a>切片扩容</h3><p>GoLang中的切片扩容机制，与切片的数据类型、原本切片的容量、所需要的容量都有关系，比较复杂。对于常见数据类型，在元素数量较少时，大致可以认为扩容是按照翻倍进行的。</p>
+<h3 id="大切片问题"><a href="#大切片问题" class="headerlink" title="大切片问题"></a>大切片问题</h3><p>若果存在一个很大的切片,而只需要使用很少的一部分,应当将此部分拷贝出来,否则因为这一小部分,会导致改切片不能被GC回收,典型问题将大文件的内容读到切片中，但是你只是想使用其中一小部分。  </p>
+<h3 id="字节切片"><a href="#字节切片" class="headerlink" title="字节切片"></a>字节切片</h3><p>字节切片的操作与其他类型的切片并没有什么区别，但是在输入输出中（网络，文件流等）使用的非常多  </p>
+<h3 id="copy-函数"><a href="#copy-函数" class="headerlink" title="copy()函数"></a>copy()函数</h3><p>内建函数copy(dst,src) 会以cap(dst)和cap(src)中的最小值为复制长度。<br>如果目标dst没有容量,则拷贝不到任何内容<br>最新的go版本中(go1.13),copy 已经支持了数组和切片的相互拷贝</p>
+<h3 id="多维切片"><a href="#多维切片" class="headerlink" title="多维切片"></a>多维切片</h3><p>如果你发现你的代码中出现很多多维切片，你就要考虑你的代码设计是否合理并且使用不需要多维切片的更简单的设计。</p>
+<h2 id="Go-map"><a href="#Go-map" class="headerlink" title="Go map"></a>Go map</h2><p>与切片与数组相比，map（映射）的功能要强大的多，但是具有灵活性的同时也伴随着性能损耗，实现Go map往往需要更多的处理能力。但是不用担心，Go的内置数据结构是非常高效的，所以当你需要map的时候就尽情地去用吧！</p>
+<h2 id="常量"><a href="#常量" class="headerlink" title="常量"></a>常量</h2><p>const 定义的常量,特别是数字类型,在定义的时候没有明确类型的化,那么该常量的类型在真正被使用的时候才会确定<br>严格来说,常量在编译期间就被确定了,所以定义成常量的值必须是编译器能够确定的值,在程序运行期间,不能修改的值<br>Go可以使用布尔类型、字符串、或者数字类型存储常量的值。<br>代码建议：如果你要用到许多常量，最好将它们定义到同一个包中。  </p>
+<h2 id="go指针"><a href="#go指针" class="headerlink" title="go指针"></a>go指针</h2><p>使用指针时，<em>可以获取指针的值，此操作成为指针的解引用，</em>也叫取值操作符；&amp;可以获取非指针变量的地址，叫做取地址操作符。<br>变量=变量内存地址+变量值,以下代码可以很好的体现这个关系:  </p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">func main() &#123;</span><br><span class="line"></span><br><span class="line">    var a int</span><br><span class="line">    var b *int</span><br><span class="line"></span><br><span class="line">    a&#x3D;5</span><br><span class="line">    b&#x3D;&amp;a</span><br><span class="line"></span><br><span class="line">    fmt.Println(&quot;a变量指针:&quot;,&amp;a)</span><br><span class="line">    fmt.Println(&quot;a变量值:&quot;,a)</span><br><span class="line">    fmt.Println(&quot;b变量指针:&quot;,&amp;b)</span><br><span class="line">    fmt.Println(&quot;b变量值:&quot;,b)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">输出: </span><br><span class="line">a变量指针: 0xc000088010</span><br><span class="line">a变量值: 5</span><br><span class="line">b变量指针: 0xc00008c018</span><br><span class="line">b变量值: 0xc000088010</span><br></pre></td></tr></table></figure>
+
+<h2 id="时间与日期的处理技巧"><a href="#时间与日期的处理技巧" class="headerlink" title="时间与日期的处理技巧"></a>时间与日期的处理技巧</h2><h3 id="解析时间"><a href="#解析时间" class="headerlink" title="解析时间"></a>解析时间</h3><p>time.Parse(layout string,value string)此函数用于字符串解析成golang时间类型,如果时间错误,将不能被解析 </p>
+<h1 id="组合类型的使用"><a href="#组合类型的使用" class="headerlink" title="组合类型的使用"></a>组合类型的使用</h1><h2 id="使用new关键字"><a href="#使用new关键字" class="headerlink" title="使用new关键字"></a>使用new关键字</h2><p>new和make最大的区别就是：new返回的是空的内存地址，即没有做初始化。另外，make仅可以用来创建映射，切片和通道，而且并不是返回指针。</p>
+]]></content>
+      <categories>
+        <category>go</category>
+      </categories>
+      <tags>
+        <tag>go三色标记</tag>
       </tags>
   </entry>
   <entry>
@@ -7432,6 +7564,20 @@ sudo apt-get install gcc-mingw-w64<figure class="highlight plain"><table><tr><td
 <h2 id="测试-2"><a href="#测试-2" class="headerlink" title="测试"></a>测试</h2><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">ndk-build -v</span><br></pre></td></tr></table></figure>]]></content>
   </entry>
   <entry>
+    <title>docker/consul</title>
+    <url>/2021/05/19/docker/consul/</url>
+    <content><![CDATA[<h1 id="docker-安装consul"><a href="#docker-安装consul" class="headerlink" title="docker 安装consul"></a>docker 安装consul</h1><h2 id="参数"><a href="#参数" class="headerlink" title="参数"></a>参数</h2><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">8500 http 端口，用于 http 接口和 web ui</span><br><span class="line">8300 server rpc 端口，同一数据中心 consul server 之间通过该端口通信</span><br><span class="line">8301 serf lan 端口，同一数据中心 consul client 通过该端口通信</span><br><span class="line">8302 serf wan 端口，不同数据中心 consul server 通过该端口通信</span><br><span class="line">8600 dns 端口，用于服务发现</span><br><span class="line">-bbostrap-expect 2: 集群至少两台服务器，才能选举集群leader</span><br><span class="line">-ui：运行 web 控制台</span><br><span class="line">-bind： 监听网口，0.0.0.0 表示所有网口，如果不指定默认为127.0.0.1，则无法和容器通信</span><br><span class="line">-client ： 限制某些网口可以访问</span><br></pre></td></tr></table></figure>
+
+<h2 id="单机版"><a href="#单机版" class="headerlink" title="单机版"></a>单机版</h2><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">docker run --name consul -d -p 8500:8500 -p 8300:8300 -p 8301:8301 -p 8302:8302 -p 8600:8600 consul agent -server -bootstrap-expect 1 -ui -bind&#x3D;0.0.0.0 -client&#x3D;0.0.0.0</span><br></pre></td></tr></table></figure>]]></content>
+      <categories>
+        <category>docker</category>
+      </categories>
+      <tags>
+        <tag>docker-install-ware</tag>
+        <tag>consul</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>docker/docker-machine</title>
     <url>/2021/05/19/docker/docker-machine/</url>
     <content><![CDATA[<h2 id="下载"><a href="#下载" class="headerlink" title="下载"></a>下载</h2><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">base&#x3D;https:&#x2F;&#x2F;github.com&#x2F;docker&#x2F;machine&#x2F;releases&#x2F;download&#x2F;v0.16.0 &amp;&amp;</span><br><span class="line">  curl -L $base&#x2F;docker-machine-$(uname -s)-$(uname -m) &gt;&#x2F;tmp&#x2F;docker-machine &amp;&amp;</span><br><span class="line">  sudo mv &#x2F;tmp&#x2F;docker-machine &#x2F;usr&#x2F;local&#x2F;bin&#x2F;docker-machine &amp;&amp;</span><br><span class="line">  chmod +x &#x2F;usr&#x2F;local&#x2F;bin&#x2F;docker-mach</span><br></pre></td></tr></table></figure>
@@ -7451,20 +7597,6 @@ sudo apt-get install gcc-mingw-w64<figure class="highlight plain"><table><tr><td
 <li>将iso文件移动到　 ~/.docker/machine/cache/boot2docker.iso</li>
 </ol>
 ]]></content>
-  </entry>
-  <entry>
-    <title>docker/consul</title>
-    <url>/2021/05/19/docker/consul/</url>
-    <content><![CDATA[<h1 id="docker-安装consul"><a href="#docker-安装consul" class="headerlink" title="docker 安装consul"></a>docker 安装consul</h1><h2 id="参数"><a href="#参数" class="headerlink" title="参数"></a>参数</h2><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">8500 http 端口，用于 http 接口和 web ui</span><br><span class="line">8300 server rpc 端口，同一数据中心 consul server 之间通过该端口通信</span><br><span class="line">8301 serf lan 端口，同一数据中心 consul client 通过该端口通信</span><br><span class="line">8302 serf wan 端口，不同数据中心 consul server 通过该端口通信</span><br><span class="line">8600 dns 端口，用于服务发现</span><br><span class="line">-bbostrap-expect 2: 集群至少两台服务器，才能选举集群leader</span><br><span class="line">-ui：运行 web 控制台</span><br><span class="line">-bind： 监听网口，0.0.0.0 表示所有网口，如果不指定默认为127.0.0.1，则无法和容器通信</span><br><span class="line">-client ： 限制某些网口可以访问</span><br></pre></td></tr></table></figure>
-
-<h2 id="单机版"><a href="#单机版" class="headerlink" title="单机版"></a>单机版</h2><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">docker run --name consul -d -p 8500:8500 -p 8300:8300 -p 8301:8301 -p 8302:8302 -p 8600:8600 consul agent -server -bootstrap-expect 1 -ui -bind&#x3D;0.0.0.0 -client&#x3D;0.0.0.0</span><br></pre></td></tr></table></figure>]]></content>
-      <categories>
-        <category>docker</category>
-      </categories>
-      <tags>
-        <tag>docker-install-ware</tag>
-        <tag>consul</tag>
-      </tags>
   </entry>
   <entry>
     <title>docker/etcd</title>
@@ -7520,19 +7652,6 @@ sudo apt-get install gcc-mingw-w64<figure class="highlight plain"><table><tr><td
         <tag>docker-install-ware</tag>
         <tag>kafak</tag>
       </tags>
-  </entry>
-  <entry>
-    <title>elasticsearch/docker安装elasticsearch7.7.0</title>
-    <url>/2021/05/19/elasticsearch/docker%E5%AE%89%E8%A3%85elasticsearch7.7.0/</url>
-    <content><![CDATA[<h1 id="docker安装elasticsearch7-7-0"><a href="#docker安装elasticsearch7-7-0" class="headerlink" title="docker安装elasticsearch7.7.0"></a>docker安装elasticsearch7.7.0</h1><h2 id="手动版安装"><a href="#手动版安装" class="headerlink" title="手动版安装"></a>手动版安装</h2><h3 id="获取镜像"><a href="#获取镜像" class="headerlink" title="获取镜像"></a>获取镜像</h3><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">docker pull docker.elastic.co&#x2F;elasticsearch&#x2F;elasticsearch:7.7.0</span><br></pre></td></tr></table></figure>
-
-<h3 id="运行elasticsearch"><a href="#运行elasticsearch" class="headerlink" title="运行elasticsearch"></a>运行elasticsearch</h3><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">docker run --name&#x3D;elastic770 -p 9200:9200 -p 9300:9300 -e &quot;discovery.type&#x3D;single-node&quot; --network&#x3D;network_172_19 --ip&#x3D;172.19.0.101 -v &#x2F;var&#x2F;docker&#x2F;elastic&#x2F;data:&#x2F;data docker.elastic.co&#x2F;elasticsearch&#x2F;elasticsearch:7.7.0</span><br></pre></td></tr></table></figure>
-
-<h3 id="安装ik分词插件"><a href="#安装ik分词插件" class="headerlink" title="安装ik分词插件"></a>安装ik分词插件</h3><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">docker exec -it elastic770 &#x2F;bin&#x2F;bash</span><br><span class="line"></span><br><span class="line">.&#x2F;bin&#x2F;elasticsearch-plugin install https:&#x2F;&#x2F;github.com&#x2F;medcl&#x2F;elasticsearch-analysis-ik&#x2F;releases&#x2F;download&#x2F;v7.7.0&#x2F;elasticsearch-analysis-ik-7.7.0.zip</span><br></pre></td></tr></table></figure>
-
-<h2 id="docker-compose安装"><a href="#docker-compose安装" class="headerlink" title="docker-compose安装"></a>docker-compose安装</h2><h3 id="Dockerfile"><a href="#Dockerfile" class="headerlink" title="Dockerfile"></a>Dockerfile</h3><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">FROM docker.elastic.co&#x2F;elasticsearch&#x2F;elasticsearch:7.7.0</span><br><span class="line">ENV VERSION&#x3D;7.7.0</span><br><span class="line"></span><br><span class="line"># https:&#x2F;&#x2F;github.com&#x2F;medcl&#x2F;elasticsearch-analysis-ik&#x2F;releases</span><br><span class="line">ADD https:&#x2F;&#x2F;github.com&#x2F;medcl&#x2F;elasticsearch-analysis-ik&#x2F;releases&#x2F;download&#x2F;v$&#123;VERSION&#125;&#x2F;elasticsearch-analysis-ik-$VERSION.zip &#x2F;tmp&#x2F;</span><br><span class="line"></span><br><span class="line">RUN &#x2F;usr&#x2F;share&#x2F;elasticsearch&#x2F;bin&#x2F;elasticsearch-plugin install -b file:&#x2F;&#x2F;&#x2F;tmp&#x2F;elasticsearch-analysis-ik-$VERSION.zip</span><br><span class="line">RUN rm -rf &#x2F;tmp&#x2F;*</span><br></pre></td></tr></table></figure>
-
-<h3 id="docker-compose-yml"><a href="#docker-compose-yml" class="headerlink" title="docker-compose.yml"></a>docker-compose.yml</h3><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">version: &#39;3.5&#39;</span><br><span class="line"></span><br><span class="line">services:</span><br><span class="line">    elastic770:</span><br><span class="line">        build: .&#x2F;</span><br><span class="line">        container_name: elastic770</span><br><span class="line">        hostname: elastic770</span><br><span class="line">        volumes:</span><br><span class="line">        - .&#x2F;data:&#x2F;usr&#x2F;share&#x2F;elasticsearch&#x2F;data　　#这里将elasticsearch的数据文件映射本地，以保证下次如果删除了容器还有数据</span><br><span class="line">        environment:</span><br><span class="line">        - discovery.type&#x3D;single-node</span><br><span class="line">        ports:</span><br><span class="line">        - &quot;9200:9200&quot;</span><br></pre></td></tr></table></figure>]]></content>
   </entry>
   <entry>
     <title>etcd/etcd概念以及原理</title>
@@ -7610,5 +7729,18 @@ sudo apt-get install gcc-mingw-w64<figure class="highlight plain"><table><tr><td
       <tags>
         <tag>etcd</tag>
       </tags>
+  </entry>
+  <entry>
+    <title>elasticsearch/docker安装elasticsearch7.7.0</title>
+    <url>/2021/05/19/elasticsearch/docker%E5%AE%89%E8%A3%85elasticsearch7.7.0/</url>
+    <content><![CDATA[<h1 id="docker安装elasticsearch7-7-0"><a href="#docker安装elasticsearch7-7-0" class="headerlink" title="docker安装elasticsearch7.7.0"></a>docker安装elasticsearch7.7.0</h1><h2 id="手动版安装"><a href="#手动版安装" class="headerlink" title="手动版安装"></a>手动版安装</h2><h3 id="获取镜像"><a href="#获取镜像" class="headerlink" title="获取镜像"></a>获取镜像</h3><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">docker pull docker.elastic.co&#x2F;elasticsearch&#x2F;elasticsearch:7.7.0</span><br></pre></td></tr></table></figure>
+
+<h3 id="运行elasticsearch"><a href="#运行elasticsearch" class="headerlink" title="运行elasticsearch"></a>运行elasticsearch</h3><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">docker run --name&#x3D;elastic770 -p 9200:9200 -p 9300:9300 -e &quot;discovery.type&#x3D;single-node&quot; --network&#x3D;network_172_19 --ip&#x3D;172.19.0.101 -v &#x2F;var&#x2F;docker&#x2F;elastic&#x2F;data:&#x2F;data docker.elastic.co&#x2F;elasticsearch&#x2F;elasticsearch:7.7.0</span><br></pre></td></tr></table></figure>
+
+<h3 id="安装ik分词插件"><a href="#安装ik分词插件" class="headerlink" title="安装ik分词插件"></a>安装ik分词插件</h3><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">docker exec -it elastic770 &#x2F;bin&#x2F;bash</span><br><span class="line"></span><br><span class="line">.&#x2F;bin&#x2F;elasticsearch-plugin install https:&#x2F;&#x2F;github.com&#x2F;medcl&#x2F;elasticsearch-analysis-ik&#x2F;releases&#x2F;download&#x2F;v7.7.0&#x2F;elasticsearch-analysis-ik-7.7.0.zip</span><br></pre></td></tr></table></figure>
+
+<h2 id="docker-compose安装"><a href="#docker-compose安装" class="headerlink" title="docker-compose安装"></a>docker-compose安装</h2><h3 id="Dockerfile"><a href="#Dockerfile" class="headerlink" title="Dockerfile"></a>Dockerfile</h3><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">FROM docker.elastic.co&#x2F;elasticsearch&#x2F;elasticsearch:7.7.0</span><br><span class="line">ENV VERSION&#x3D;7.7.0</span><br><span class="line"></span><br><span class="line"># https:&#x2F;&#x2F;github.com&#x2F;medcl&#x2F;elasticsearch-analysis-ik&#x2F;releases</span><br><span class="line">ADD https:&#x2F;&#x2F;github.com&#x2F;medcl&#x2F;elasticsearch-analysis-ik&#x2F;releases&#x2F;download&#x2F;v$&#123;VERSION&#125;&#x2F;elasticsearch-analysis-ik-$VERSION.zip &#x2F;tmp&#x2F;</span><br><span class="line"></span><br><span class="line">RUN &#x2F;usr&#x2F;share&#x2F;elasticsearch&#x2F;bin&#x2F;elasticsearch-plugin install -b file:&#x2F;&#x2F;&#x2F;tmp&#x2F;elasticsearch-analysis-ik-$VERSION.zip</span><br><span class="line">RUN rm -rf &#x2F;tmp&#x2F;*</span><br></pre></td></tr></table></figure>
+
+<h3 id="docker-compose-yml"><a href="#docker-compose-yml" class="headerlink" title="docker-compose.yml"></a>docker-compose.yml</h3><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">version: &#39;3.5&#39;</span><br><span class="line"></span><br><span class="line">services:</span><br><span class="line">    elastic770:</span><br><span class="line">        build: .&#x2F;</span><br><span class="line">        container_name: elastic770</span><br><span class="line">        hostname: elastic770</span><br><span class="line">        volumes:</span><br><span class="line">        - .&#x2F;data:&#x2F;usr&#x2F;share&#x2F;elasticsearch&#x2F;data　　#这里将elasticsearch的数据文件映射本地，以保证下次如果删除了容器还有数据</span><br><span class="line">        environment:</span><br><span class="line">        - discovery.type&#x3D;single-node</span><br><span class="line">        ports:</span><br><span class="line">        - &quot;9200:9200&quot;</span><br></pre></td></tr></table></figure>]]></content>
   </entry>
 </search>

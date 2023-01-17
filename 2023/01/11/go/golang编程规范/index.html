@@ -1,0 +1,602 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 4.2.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+  <meta name="baidu-site-verification" content="D033aiBRFi">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+
+
+<script id="hexo-configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    hostname: new URL('https://phpdi.github.io').hostname,
+    root: '/',
+    scheme: 'Gemini',
+    version: '7.7.0',
+    exturl: false,
+    sidebar: {"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},
+    copycode: {"enable":false,"show_result":false,"style":null},
+    back2top: {"enable":true,"sidebar":false,"scrollpercent":false},
+    bookmark: {"enable":false,"color":"#222","save":"auto"},
+    fancybox: false,
+    mediumzoom: false,
+    lazyload: false,
+    pangu: false,
+    comments: {"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},
+    algolia: {
+      appID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    },
+    localsearch: {"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},
+    path: 'search.xml',
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}
+  };
+</script>
+
+  <meta name="description" content="go fmt大部分的格式问题可以通过 gofmt 解决，gofmt 自动格式化代码，保证所有的Go代码与官方推荐的格式保持一致，于是所有格式有关问题，都以 gofmt 的结果为准。代码提交前，必须执行gofmt进行格式化。 go vetvet工具可以帮我们静态分析我们的源码存在的各种问题，例如多余的代码，提前return的逻辑，struct的tag是否符合标准等。 代码提交前，必须执行go ver">
+<meta property="og:type" content="article">
+<meta property="og:title" content="go&#x2F;golang编程规范">
+<meta property="og:url" content="https://phpdi.github.io/2023/01/11/go/golang%E7%BC%96%E7%A8%8B%E8%A7%84%E8%8C%83/index.html">
+<meta property="og:site_name" content="goeoeo">
+<meta property="og:description" content="go fmt大部分的格式问题可以通过 gofmt 解决，gofmt 自动格式化代码，保证所有的Go代码与官方推荐的格式保持一致，于是所有格式有关问题，都以 gofmt 的结果为准。代码提交前，必须执行gofmt进行格式化。 go vetvet工具可以帮我们静态分析我们的源码存在的各种问题，例如多余的代码，提前return的逻辑，struct的tag是否符合标准等。 代码提交前，必须执行go ver">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2023-01-11T14:59:23.572Z">
+<meta property="article:modified_time" content="2023-01-11T14:59:23.572Z">
+<meta property="article:author" content="Chen Yu">
+<meta property="article:tag" content="golang规范">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="https://phpdi.github.io/2023/01/11/go/golang%E7%BC%96%E7%A8%8B%E8%A7%84%E8%8C%83/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome: false,
+    isPost: true
+  };
+</script>
+
+  <title>go/golang编程规范 | goeoeo</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-meta">
+
+    <div>
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">goeoeo</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+        <h1 class="site-subtitle" itemprop="description">会吃鱼</h1>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+</div>
+
+
+<nav class="site-nav">
+  
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>归档</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-fw fa-th"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-fw fa-user"></i>关于</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+
+</nav>
+  <div class="site-search">
+    <div class="popup search-popup">
+    <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocorrect="off" autocapitalize="none"
+           placeholder="搜索..." spellcheck="false"
+           type="text" id="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result"></div>
+
+</div>
+<div class="search-pop-overlay"></div>
+
+  </div>
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content">
+            
+
+  <div class="posts-expand">
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://phpdi.github.io/2023/01/11/go/golang%E7%BC%96%E7%A8%8B%E8%A7%84%E8%8C%83/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/head.jpeg">
+      <meta itemprop="name" content="Chen Yu">
+      <meta itemprop="description" content="自律给我自由">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="goeoeo">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          go/golang编程规范
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2023-01-11 22:59:23" itemprop="dateCreated datePublished" datetime="2023-01-11T22:59:23+08:00">2023-01-11</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/go/" itemprop="url" rel="index">
+                    <span itemprop="name">go</span>
+                  </a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="go-fmt"><a href="#go-fmt" class="headerlink" title="go fmt"></a>go fmt</h1><p>大部分的格式问题可以通过 gofmt 解决，gofmt 自动格式化代码，保证所有的Go代码与官方推荐的格式保持一致，于是所有格式有关问题，都以 gofmt 的结果为准。<br>代码提交前，必须执行gofmt进行格式化。</p>
+<h1 id="go-vet"><a href="#go-vet" class="headerlink" title="go vet"></a>go vet</h1><p>vet工具可以帮我们静态分析我们的源码存在的各种问题，例如多余的代码，提前return的逻辑，struct的tag是否符合标准等。 代码提交前，必须执行go ver进行静态检查。</p>
+<a id="more"></a>
+
+<h1 id="长度约定"><a href="#长度约定" class="headerlink" title="长度约定"></a>长度约定</h1><ul>
+<li>代码块长度，比如约定超过10行就需要考虑优化。</li>
+<li>行代码长度控制，太长的需换行，提高代码可读性。</li>
+</ul>
+<h1 id="注释"><a href="#注释" class="headerlink" title="注释"></a>注释</h1><ul>
+<li>对外（Public）的结构体、函数和包必须进行注释</li>
+<li>结构体注释格式：</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&#x2F;&#x2F; ObjectMeta is metadata that all persisted resources must have, which includes all objects</span><br><span class="line">&#x2F;&#x2F; users must create.</span><br><span class="line">type ObjectMeta struct &#123;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>函数注释格式</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&#x2F;&#x2F; Compile parses a regular expression and returns, if successful,</span><br><span class="line">&#x2F;&#x2F; a Regexp that can be used to match against text.</span><br><span class="line">func Compile(str string) (*Regexp, error) &#123;</span><br><span class="line">  。。。</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>包注释格式</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&#x2F;&#x2F; Package path implements utility routines for</span><br><span class="line">&#x2F;&#x2F; manipulating slash-separated filename paths.</span><br><span class="line">path</span><br></pre></td></tr></table></figure>
+
+<h1 id="命名"><a href="#命名" class="headerlink" title="命名"></a>命名</h1><ul>
+<li><p>关键或者复杂的代码需要进行注释：</p>
+</li>
+<li><p>注释内容必须是可读的完整句子，简要并且突出重点。</p>
+</li>
+<li><p>需要注释来补充的命名就不算是好命名。</p>
+</li>
+<li><p>使用可搜索的名称：单字母名称和数字常量很难从一大堆文字中搜索出来。单字母名称仅适用于短方法中的本地变量，名称长短应与其作用域相对应。若变量或常量可能在代码中多处使用，则应赋其以便于搜索的名称。</p>
+</li>
+<li><p>做有意义的区分：Product 和 ProductInfo 和 ProductData 没有区别，NameString 和 Name 没有区别，要区分名称，就要以读者能鉴别不同之处的方式来区分 。</p>
+</li>
+<li><p>函数命名规则：驼峰式命名，名字可以长但是得把功能，必要的参数描述清楚，函数名名应当是动词或动词短语，不可导出的函数以小写开头。</p>
+</li>
+<li><p>如 postPayment、deletePage、save。并依 Javabean 标准加上 get、set、is 前缀。例如：xxx + With + 需要的参数名 + And + 需要的参数名 + …..</p>
+</li>
+<li><p>结构体命名规则：结构体名应该是名词或名词短语，如 Custome、WikiPage、Account、AddressParser</p>
+</li>
+<li><p>接口命名规则： 单个函数的接口名以”er”作为后缀，如Reader,Writer 接口的实现则去掉“er”</p>
+</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">type Reader interface &#123;</span><br><span class="line">        Read(p []byte) (n int, err error)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>两个函数的接口名综合两个函数名</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">type WriteFlusher interface &#123;</span><br><span class="line">    Write([]byte) (int, error)</span><br><span class="line">    Flush() error</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>三个以上函数的接口名，类似于结构体名</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">type Car interface &#123;</span><br><span class="line">    Start([]byte)</span><br><span class="line">    Stop() error</span><br><span class="line">    Recover()</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h1 id="包"><a href="#包" class="headerlink" title="包"></a>包</h1><ul>
+<li>包名命名规则：包名应该为小写单词，不要使用下划线或者混合大小写。</li>
+<li>文件夹命名规则：小写单词，使用横杠连接</li>
+<li>文件命名 规则：小写单词，使用下划线连接，测试文件_test.go结束</li>
+<li>一般情况下包名和文件夹命名是一致的，不过也可以不一样</li>
+</ul>
+<h1 id="常量"><a href="#常量" class="headerlink" title="常量"></a>常量</h1><p>常量均需使用全部大写字母组成，并使用下划线分词：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">const APP_VER &#x3D; &quot;1.0&quot;</span><br></pre></td></tr></table></figure>
+
+<p>如果是枚举类型的常量，需要先创建相应类型：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">type Scheme string</span><br><span class="line">const (</span><br><span class="line">    HTTP  Scheme &#x3D; &quot;http&quot;</span><br><span class="line">    HTTPS Scheme &#x3D; &quot;https&quot;</span><br><span class="line">)</span><br></pre></td></tr></table></figure>
+
+<p>如果模块的功能较为复杂、常量名称容易混淆的情况下，为了更好地区分枚举类型，可以使用完整的前缀：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">type PullRequestStatus int</span><br><span class="line">const (</span><br><span class="line">    PULL_REQUEST_STATUS_CONFLICT PullRequestStatus &#x3D; iota</span><br><span class="line">    PULL_REQUEST_STATUS_CHECKING</span><br><span class="line">    PULL_REQUEST_STATUS_MERGEABLE</span><br><span class="line">)</span><br></pre></td></tr></table></figure>
+
+<h1 id="变量"><a href="#变量" class="headerlink" title="变量"></a>变量</h1><p>变量名称一般遵循驼峰法，但遇到特有名词时，需要遵循以下规则：</p>
+<ul>
+<li>单词本身为缩写，使用全大写</li>
+<li>如果变量为私有，且特有名词为首个单词，则使用小写，如 apiClient</li>
+<li>其它情况都应当使用该名词原有的写法，如 APIClient、repoID、UserID</li>
+<li>错误示例：UrlArray，应该写成 urlArray 或者 URLArray</li>
+</ul>
+<p>若变量类型为 bool 类型，则名称应以 Has, Is, Can 或 Allow 开头</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">var isExist boolvar hasConflict bool</span><br><span class="line">var canManage bool</span><br><span class="line">var allowGitHook bool</span><br></pre></td></tr></table></figure>
+
+<h1 id="struct"><a href="#struct" class="headerlink" title="struct"></a>struct</h1><p>声明和初始化采用多行，初始化结构体使用带有标签的语法</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">type User struct&#123;</span><br><span class="line">    Username  string</span><br><span class="line">    Email     string</span><br><span class="line">&#125;</span><br><span class="line"> </span><br><span class="line">u :&#x3D; User&#123;</span><br><span class="line">    Username: &quot;yourname&quot;,</span><br><span class="line">    Email:    &quot;yourname@gmail.com&quot;,</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>修改对象属性不能直接使用赋值，要写成方法且必须加锁</p>
+<h1 id="map"><a href="#map" class="headerlink" title="map"></a>map</h1><p>非线程安全，并发读写map的情况下必须加锁，不然会产生panic<br>可使用sync.Map 替代。</p>
+<h1 id="函数"><a href="#函数" class="headerlink" title="函数"></a>函数</h1><p>函数采用命名的多值返回，传入变量和返回变量以小写字母开头</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">func nextInt(b []byte, pos int) (value, nextPos int)</span><br></pre></td></tr></table></figure>
+
+<p>函数返回值可能为空或零值时，最好加一个逻辑判断的返回值</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">func Foo(a int, b int) (string, bool)</span><br></pre></td></tr></table></figure>
+
+<h1 id="init"><a href="#init" class="headerlink" title="init"></a>init</h1><ul>
+<li>在同一个文件中，可以重复定义init方法</li>
+<li>在同一个文件中，多个init方法按照在代码中编写的顺序依次执行</li>
+<li>在同一个package中，可以多个文件中定义init方法</li>
+<li>在同一个package中，不同文件中的init方法的执行按照文件名先后执行各个文件中的init方法</li>
+</ul>
+<p>建议同一个文件中只定义一个init方法，同一个package中init尽量合并</p>
+<h1 id="错误处理"><a href="#错误处理" class="headerlink" title="错误处理"></a>错误处理</h1><ul>
+<li>error作为函数的值返回,必须对error进行处理</li>
+<li>错误描述如果是英文必须为小写，不需要标点结尾</li>
+<li>采用独立的错误流进行处理</li>
+</ul>
+<p>采用下面的写法</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">if err !&#x3D; nil &#123;</span><br><span class="line">    &#x2F;&#x2F; error handling</span><br><span class="line">    return &#x2F;&#x2F; or continue, etc.</span><br><span class="line">&#125;</span><br><span class="line">&#x2F;&#x2F; normal code</span><br></pre></td></tr></table></figure>
+
+<p>使用函数的返回值时，则采用下面的方式</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">var (</span><br><span class="line">  x string</span><br><span class="line">  err error</span><br><span class="line">)</span><br><span class="line"></span><br><span class="line">if x, err &#x3D; f();err !&#x3D; nil &#123;</span><br><span class="line">    &#x2F;&#x2F; error handling</span><br><span class="line">    return</span><br><span class="line">&#125;</span><br><span class="line">&#x2F;&#x2F; use x</span><br></pre></td></tr></table></figure>
+
+<h1 id="控制结构"><a href="#控制结构" class="headerlink" title="控制结构"></a>控制结构</h1><h1 id="panic"><a href="#panic" class="headerlink" title="panic"></a>panic</h1><p>在逻辑处理中不要使用panic，且业务逻辑中要有recover机制</p>
+<h1 id="import"><a href="#import" class="headerlink" title="import"></a>import</h1><p>对 import 的包进行分组管理，用换行符分割，而且标准库作为分组的第一组。如果你的包引入了三种类型的包，标准库包，程序内部包，第三方包，建议采用如下方式进行组织你的包。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"> package main</span><br><span class="line"> </span><br><span class="line">import (</span><br><span class="line">    &quot;fmt&quot;</span><br><span class="line">    &quot;os&quot;</span><br><span class="line">    </span><br><span class="line">    &quot;code.google.com&#x2F;a&quot;</span><br><span class="line">    &quot;github.com&#x2F;b&quot;</span><br><span class="line"> </span><br><span class="line">    &quot;kmg&#x2F;a&quot;</span><br><span class="line">    &quot;kmg&#x2F;b&quot;</span><br><span class="line">)</span><br></pre></td></tr></table></figure>
+
+<h1 id="参数传递"><a href="#参数传递" class="headerlink" title="参数传递"></a>参数传递</h1><ul>
+<li>对于少量数据，不要传递指针</li>
+<li>对于大量数据的 struct 可以考虑使用指针</li>
+<li>传入的参数是 map，slice，chan 不要传递指针，因为 map，slice，chan 是引用类型，不需要传递指针的指针</li>
+</ul>
+<h1 id="单元测试"><a href="#单元测试" class="headerlink" title="单元测试"></a>单元测试</h1><h1 id="日志"><a href="#日志" class="headerlink" title="日志"></a>日志</h1><ul>
+<li>为了方便日志分析，记录日志统一使用</li>
+<li>记录有意义的日志，日志里记录一些比较有意义的状态数据：程序启动，退出的时间点；程序运行消耗时间；耗时程序的执行进度；重要变量的状态变化。</li>
+<li>日志内容必须是可读的英文语句，第一个单词首字母大写，合理标点符号</li>
+</ul>
+<h1 id="依赖包"><a href="#依赖包" class="headerlink" title="依赖包"></a>依赖包</h1><p>go module</p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/golang%E8%A7%84%E8%8C%83/" rel="tag"># golang规范</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2023/01/11/go/golang%E9%9D%A2%E8%AF%95%E9%A2%98/" rel="prev" title="go/golang面试题">
+      <i class="fa fa-chevron-left"></i> go/golang面试题
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2023/01/11/go/golang%E4%BB%A3%E7%A0%81%E9%A3%8E%E6%A0%BC/" rel="next" title="go/golang代码风格">
+      go/golang代码风格 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+  </div>
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let activeClass = CONFIG.comments.activeClass;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#go-fmt"><span class="nav-number">1.</span> <span class="nav-text">go fmt</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#go-vet"><span class="nav-number">2.</span> <span class="nav-text">go vet</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#长度约定"><span class="nav-number">3.</span> <span class="nav-text">长度约定</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#注释"><span class="nav-number">4.</span> <span class="nav-text">注释</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#命名"><span class="nav-number">5.</span> <span class="nav-text">命名</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#包"><span class="nav-number">6.</span> <span class="nav-text">包</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#常量"><span class="nav-number">7.</span> <span class="nav-text">常量</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#变量"><span class="nav-number">8.</span> <span class="nav-text">变量</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#struct"><span class="nav-number">9.</span> <span class="nav-text">struct</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#map"><span class="nav-number">10.</span> <span class="nav-text">map</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#函数"><span class="nav-number">11.</span> <span class="nav-text">函数</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#init"><span class="nav-number">12.</span> <span class="nav-text">init</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#错误处理"><span class="nav-number">13.</span> <span class="nav-text">错误处理</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#控制结构"><span class="nav-number">14.</span> <span class="nav-text">控制结构</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#panic"><span class="nav-number">15.</span> <span class="nav-text">panic</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#import"><span class="nav-number">16.</span> <span class="nav-text">import</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#参数传递"><span class="nav-number">17.</span> <span class="nav-text">参数传递</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#单元测试"><span class="nav-number">18.</span> <span class="nav-text">单元测试</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#日志"><span class="nav-number">19.</span> <span class="nav-text">日志</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#依赖包"><span class="nav-number">20.</span> <span class="nav-text">依赖包</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Chen Yu"
+      src="/images/head.jpeg">
+  <p class="site-author-name" itemprop="name">Chen Yu</p>
+  <div class="site-description" itemprop="description">自律给我自由</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">96</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">17</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">68</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2023</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Chen Yu</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v4.2.0
+  </div>
+  <span class="post-meta-divider">|</span>
+  <div class="theme-info">主题 – <a href="https://theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a> v7.7.0
+  </div>
+
+<div>
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<span id="busuanzi_container_site_pv" style='display:none'>
+    本站总访问量 <span id="busuanzi_value_site_pv"></span> 次
+    <span class="post-meta-divider">|</span>
+</span>
+<span id="busuanzi_container_site_uv" style='display:none'>
+    有<span id="busuanzi_value_site_uv"></span>人看过我的博客啦
+</span>
+</div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>

@@ -1,0 +1,529 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 4.2.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+  <meta name="baidu-site-verification" content="D033aiBRFi">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+
+
+<script id="hexo-configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    hostname: new URL('https://phpdi.github.io').hostname,
+    root: '/',
+    scheme: 'Gemini',
+    version: '7.7.0',
+    exturl: false,
+    sidebar: {"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},
+    copycode: {"enable":false,"show_result":false,"style":null},
+    back2top: {"enable":true,"sidebar":false,"scrollpercent":false},
+    bookmark: {"enable":false,"color":"#222","save":"auto"},
+    fancybox: false,
+    mediumzoom: false,
+    lazyload: false,
+    pangu: false,
+    comments: {"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},
+    algolia: {
+      appID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    },
+    localsearch: {"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},
+    path: 'search.xml',
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}
+  };
+</script>
+
+  <meta name="description" content="静态代码检查静态代码检查是一个老生常态的问题，它能很大程度上保证代码质量。Go 语言自带套件为我们提供了静态代码分析工具 vet，它能用于检查 go 项目中可以通过编译但仍可能存在错误的代码。静态代码检查是一个老生常态的问题，它能很大程度上保证代码质量。Go 语言自带套件为我们提供了静态代码分析工具 vet，它能用于检查 go 项目中可以通过编译但仍可能存在错误的代码。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="go&#x2F;golangci-lint">
+<meta property="og:url" content="https://phpdi.github.io/2023/01/11/go/golangci-lint/index.html">
+<meta property="og:site_name" content="goeoeo">
+<meta property="og:description" content="静态代码检查静态代码检查是一个老生常态的问题，它能很大程度上保证代码质量。Go 语言自带套件为我们提供了静态代码分析工具 vet，它能用于检查 go 项目中可以通过编译但仍可能存在错误的代码。静态代码检查是一个老生常态的问题，它能很大程度上保证代码质量。Go 语言自带套件为我们提供了静态代码分析工具 vet，它能用于检查 go 项目中可以通过编译但仍可能存在错误的代码。">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2023-01-11T14:59:23.572Z">
+<meta property="article:modified_time" content="2023-01-11T14:59:23.572Z">
+<meta property="article:author" content="Chen Yu">
+<meta property="article:tag" content="goland激活">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="https://phpdi.github.io/2023/01/11/go/golangci-lint/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome: false,
+    isPost: true
+  };
+</script>
+
+  <title>go/golangci-lint | goeoeo</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-meta">
+
+    <div>
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">goeoeo</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+        <h1 class="site-subtitle" itemprop="description">会吃鱼</h1>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+</div>
+
+
+<nav class="site-nav">
+  
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>归档</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-fw fa-th"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-fw fa-user"></i>关于</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+
+</nav>
+  <div class="site-search">
+    <div class="popup search-popup">
+    <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocorrect="off" autocapitalize="none"
+           placeholder="搜索..." spellcheck="false"
+           type="text" id="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result"></div>
+
+</div>
+<div class="search-pop-overlay"></div>
+
+  </div>
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content">
+            
+
+  <div class="posts-expand">
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://phpdi.github.io/2023/01/11/go/golangci-lint/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/head.jpeg">
+      <meta itemprop="name" content="Chen Yu">
+      <meta itemprop="description" content="自律给我自由">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="goeoeo">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          go/golangci-lint
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2023-01-11 22:59:23" itemprop="dateCreated datePublished" datetime="2023-01-11T22:59:23+08:00">2023-01-11</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/go/" itemprop="url" rel="index">
+                    <span itemprop="name">go</span>
+                  </a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="静态代码检查"><a href="#静态代码检查" class="headerlink" title="静态代码检查"></a>静态代码检查</h1><p>静态代码检查是一个老生常态的问题，它能很大程度上保证代码质量。Go 语言自带套件为我们提供了静态代码分析工具 vet，它能用于检查 go 项目中<br>可以通过编译但仍可能存在错误的代码。静态代码检查是一个老生常态的问题，它能很大程度上保证代码质量。Go 语言自带套件为我们提供了静态代码分<br>析工具 vet，它能用于检查 go 项目中可以通过编译但仍可能存在错误的代码。</p>
+<a id="more"></a>
+
+
+<p>以上谈到的工具，我们可以称之为 linter。在维基百科是如下定义 lint 的：</p>
+<blockquote>
+<p>在计算机科学中，lint 是一种工具程序的名称，它用来标记源代码中，某些可疑的、不具结构性（可能造成 bug）的段落。它是一种静态程序分析工具，<br>最早适用于 C 语言，在 UNIX 平台上开发出来。后来它成为通用术语，可用于描述在任何一种计算机程序语言中，用来标记源代码中有疑义段落的工具。</p>
+</blockquote>
+<p>而在 Go 语言领域， golangci-lint 是一个集大成者的 linter 框架。它集成了非常多的 linter，包括了上文提到的几个，合理使用它可以帮助我们<br>更全面地分析与检查 Go 代码。golangci-lint 所支持的 linter 项可以查看页面 <a href="https://golangci-lint.run/usage/linters/#golint" target="_blank" rel="noopener">https://golangci-lint.run/usage/linters/#golint</a></p>
+<h1 id="使用-golangci-lint"><a href="#使用-golangci-lint" class="headerlink" title="使用 golangci-lint"></a>使用 golangci-lint</h1><h2 id="下载"><a href="#下载" class="headerlink" title="下载"></a>下载</h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">go install github.com/golangci/golangci-lint/cmd/golangci-lint@latest</span><br><span class="line"></span><br><span class="line">golangci-lint version</span><br></pre></td></tr></table></figure>
+<p>可以看出，golangci-lint 框架支持的 linter 非常全面，它包括了 bugs、error、format、unused、module 等常见类别的分析 linter。</p>
+<h2 id="使用"><a href="#使用" class="headerlink" title="使用"></a>使用</h2><p>golangci-lint run 它等效于 golangci-lint run ./…  </p>
+<p>golangci-lint 可以通过 -E/–enable 去开启指定 linter，或者 -D/–disable 禁止指定 linter。  </p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 除了 errcheck 的 linter，禁止其他所有的 linter 生效。</span></span><br><span class="line">golangci-lint run --disable-all -E errcheck</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> golangci-lint 还可以通过 -p/--preset 指定一系列 linter 开启。</span></span><br><span class="line">golangci-lint run -p bugs -p error</span><br></pre></td></tr></table></figure>
+
+<h2 id="配置文件"><a href="#配置文件" class="headerlink" title="配置文件"></a>配置文件</h2><p>当然，如果我们要为项目配置 golangci-lint，最好的方式还是配置文件。golangci-lint 在当前工作目录按如下顺序搜索配置文件。  </p>
+<ul>
+<li>.golangci.yml</li>
+<li>.golangci.yaml</li>
+<li>.golangci.toml</li>
+<li>.golangci.json</li>
+</ul>
+<p>在 golangci-lint 官方文档 <a href="https://golangci-lint.run/usage/configuration/#config-file" target="_blank" rel="noopener">https://golangci-lint.run/usage/configuration/#config-file</a> 中，提供了一个示例配置文件，非常地详细，<br>在这其中包含了所有支持的选项、描述和默认值。</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">linters-settings:</span></span><br><span class="line">    <span class="attr">errcheck:</span></span><br><span class="line">        <span class="attr">check-type-assertions:</span> <span class="literal">true</span></span><br><span class="line"></span><br><span class="line"><span class="attr">goconst:</span></span><br><span class="line">    <span class="attr">5    min-len:</span> <span class="number">2</span></span><br><span class="line">    <span class="attr">6    min-occurrences:</span> <span class="number">3</span></span><br><span class="line"></span><br><span class="line">    <span class="attr">gocritic:</span></span><br><span class="line">        <span class="attr">enabled-tags:</span></span><br><span class="line">          <span class="bullet">-</span> <span class="string">diagnostic</span></span><br><span class="line">          <span class="bullet">-</span> <span class="string">experimental</span></span><br><span class="line">          <span class="bullet">-</span> <span class="string">opinionated</span></span><br><span class="line">          <span class="bullet">-</span> <span class="string">performance</span></span><br><span class="line">          <span class="bullet">-</span> <span class="string">style</span></span><br><span class="line">    <span class="attr">gove:</span></span><br><span class="line">        <span class="attr">check-shadowing:</span> <span class="literal">true</span></span><br><span class="line">    <span class="attr">nolintlint:</span></span><br><span class="line">        <span class="attr">require-explanation:</span> <span class="literal">true</span></span><br><span class="line">        <span class="attr">require-specific:</span> <span class="literal">true</span></span><br><span class="line"></span><br><span class="line"><span class="attr">linters:</span></span><br><span class="line"></span><br><span class="line">  <span class="attr">disable-all:</span> <span class="literal">true</span></span><br><span class="line">  <span class="attr">enable:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">bodyclose</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">deadcode</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">depguard</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">dogsled</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">dupl</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">errcheck</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">exportloopref</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">exhaustive</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">goconst</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">gocritic</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">gofmt</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">goimports</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">gomnd</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">gocyclo</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">gosec</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">gosimple</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">govet</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">ineffassign</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">misspell</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">nolintlint</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">nakedret</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">prealloc</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">predeclared</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">revive</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">staticcheck</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">structcheck</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">stylecheck</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">thelper</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">tparallel</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">typecheck</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">unconvert</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">unparam</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">varcheck</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">whitespace</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">wsl</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="attr">run:</span></span><br><span class="line">  <span class="attr">issues-exit-code:</span> <span class="number">1</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="goland中配置golangci-lint"><a href="#goland中配置golangci-lint" class="headerlink" title="goland中配置golangci-lint"></a>goland中配置golangci-lint</h2><ol>
+<li>go install github.com/golangci/golangci-lint/cmd/golangci-lint@latest  （本地已下载则跳过）</li>
+<li>Plugins 中安装 Go Linter</li>
+<li>Tools 中点击Go Linter 设置执行路径</li>
+</ol>
+<h1 id="使用-pre-commit-hook"><a href="#使用-pre-commit-hook" class="headerlink" title="使用 pre-commit hook"></a>使用 pre-commit hook</h1><p>在项目开发中，我们都会使用到 git，因此我们可以将代码静态检查放在一个 git 触发点上，而不用每次写完代码手动去执行 golangci-lint run 命令。<br>这里，我们就需要用到 git hooks。</p>
+<h2 id="git-hooks"><a href="#git-hooks" class="headerlink" title="git hooks"></a>git hooks</h2><p>git hooks 是 git 的一种钩子机制，可以让用户在 git 操作的各个阶段执行自定义的逻辑。git hooks 在项目根目录的 .git/hooks 下面配置，<br>配置文件的名称是固定的，实质上就是一个个 shell 脚本。根据 git 执行体，钩子被分为客户端钩子和服务端钩子两类。</p>
+<p>客户端钩子包括：pre-commit、prepare-commit-msg、commit-msg、post-commit 等，主要用于控制客户端 git 的提交工作流。<br>服务端钩子：pre-receive、post-receive、update，主要在服务端接收提交对象时、推送到服务器之前调用。</p>
+<blockquote>
+<p>注意，以 .sample 结尾的文件名是官方示例，这些示例脚本是不会执行的，只有重命名后才会生效（去除 .sample 后缀）。</p>
+</blockquote>
+<p>而 pre-commit 正如其名一样，它在 git add 提交之后，运行 git commit 时执行，脚本执行没报错就继续提交，反之就驳回提交的操作。</p>
+<h2 id="pre-commit"><a href="#pre-commit" class="headerlink" title="pre-commit"></a>pre-commit</h2><p>试想，如果我们同时开发多个项目，也许项目的所采用的的编程语言并不一样，那么它们所需要的 git hooks 将不一致，此时我们是否要手动给每个项目<br>都配置一个单独的 pre-commit 脚本呢，或者我们是否要去手动下载每一个钩子脚本呢。</p>
+<p>实际上，并不需要这么麻烦。这里就引出了 pre-commit 框架，它是一个与语言无关的用于管理 git hooks 钩子脚本的工具</p>
+<h3 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">pip install pre-commit</span><br><span class="line"><span class="meta">#</span><span class="bash">或者</span></span><br><span class="line">curl https://pre-commit.com/install-local.py | python -</span><br><span class="line"><span class="meta">#</span><span class="bash">或者</span></span><br><span class="line">brew install pre-commit</span><br></pre></td></tr></table></figure>
+<p>测试安装结果  </p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">pre-commit --version</span><br><span class="line">pre-commit 2.20.0</span><br></pre></td></tr></table></figure>
+
+<h3 id="编写配置文件"><a href="#编写配置文件" class="headerlink" title="编写配置文件"></a>编写配置文件</h3><p>首先我们在项目根目录下新建一个 .pre-commit-config.yaml 文件，这个文件我们可以通过 pre-commit sample-config 得到最基本的配置模板，<br>通过 pre-commit 支持的 hooks 列表 <a href="https://pre-commit.com/hooks.html" target="_blank" rel="noopener">https://pre-commit.com/hooks.html</a> 中，我们找到了 golangci-lint。  </p>
+<p>因此，使用 golangci-lint 的 .pre-commit-config.yaml 配置内容如下  </p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">repos:</span></span><br><span class="line">  <span class="bullet">-</span> <span class="attr">repo:</span> <span class="string">https://ghproxy.com/https://github.com/golangci/golangci-lint</span></span><br><span class="line">    <span class="attr">rev:</span> <span class="string">v1.50.1</span> <span class="comment"># the current latest version</span></span><br><span class="line">    <span class="attr">hooks:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="attr">id:</span> <span class="string">golangci-lint</span></span><br></pre></td></tr></table></figure>
+
+<p>初始化工具   </p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pre-commit run -a</span><br></pre></td></tr></table></figure>
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/goland%E6%BF%80%E6%B4%BB/" rel="tag"># goland激活</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2023/01/11/go/golang%E4%BB%A3%E7%A0%81%E9%A3%8E%E6%A0%BC/" rel="prev" title="go/golang代码风格">
+      <i class="fa fa-chevron-left"></i> go/golang代码风格
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2023/01/11/go/go%E5%AD%A6%E4%B9%A0%E4%B9%A6%E7%B1%8D/" rel="next" title="go/go学习书籍">
+      go/go学习书籍 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+  </div>
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let activeClass = CONFIG.comments.activeClass;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#静态代码检查"><span class="nav-number">1.</span> <span class="nav-text">静态代码检查</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#使用-golangci-lint"><span class="nav-number">2.</span> <span class="nav-text">使用 golangci-lint</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#下载"><span class="nav-number">2.1.</span> <span class="nav-text">下载</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#使用"><span class="nav-number">2.2.</span> <span class="nav-text">使用</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#配置文件"><span class="nav-number">2.3.</span> <span class="nav-text">配置文件</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#goland中配置golangci-lint"><span class="nav-number">2.4.</span> <span class="nav-text">goland中配置golangci-lint</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#使用-pre-commit-hook"><span class="nav-number">3.</span> <span class="nav-text">使用 pre-commit hook</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#git-hooks"><span class="nav-number">3.1.</span> <span class="nav-text">git hooks</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#pre-commit"><span class="nav-number">3.2.</span> <span class="nav-text">pre-commit</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#安装"><span class="nav-number">3.2.1.</span> <span class="nav-text">安装</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#编写配置文件"><span class="nav-number">3.2.2.</span> <span class="nav-text">编写配置文件</span></a></li></ol></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Chen Yu"
+      src="/images/head.jpeg">
+  <p class="site-author-name" itemprop="name">Chen Yu</p>
+  <div class="site-description" itemprop="description">自律给我自由</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">96</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">17</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">68</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2023</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Chen Yu</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v4.2.0
+  </div>
+  <span class="post-meta-divider">|</span>
+  <div class="theme-info">主题 – <a href="https://theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a> v7.7.0
+  </div>
+
+<div>
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<span id="busuanzi_container_site_pv" style='display:none'>
+    本站总访问量 <span id="busuanzi_value_site_pv"></span> 次
+    <span class="post-meta-divider">|</span>
+</span>
+<span id="busuanzi_container_site_uv" style='display:none'>
+    有<span id="busuanzi_value_site_uv"></span>人看过我的博客啦
+</span>
+</div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>

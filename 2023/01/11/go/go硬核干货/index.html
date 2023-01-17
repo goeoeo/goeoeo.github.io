@@ -1,0 +1,683 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 4.2.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+  <meta name="baidu-site-verification" content="D033aiBRFi">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+
+
+<script id="hexo-configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    hostname: new URL('https://phpdi.github.io').hostname,
+    root: '/',
+    scheme: 'Gemini',
+    version: '7.7.0',
+    exturl: false,
+    sidebar: {"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},
+    copycode: {"enable":false,"show_result":false,"style":null},
+    back2top: {"enable":true,"sidebar":false,"scrollpercent":false},
+    bookmark: {"enable":false,"color":"#222","save":"auto"},
+    fancybox: false,
+    mediumzoom: false,
+    lazyload: false,
+    pangu: false,
+    comments: {"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},
+    algolia: {
+      appID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    },
+    localsearch: {"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},
+    path: 'search.xml',
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}
+  };
+</script>
+
+  <meta name="description" content="字符串字符串结构: 指向数据地址的指针(8字节)+字符串长度变量(8字节) 1.string 不可修改,因为在字符串会被分配到只读内存段。2.将字符串转换为slice([]byte) ,是重新分配了内存，不会修改原有字符串。3.使用unsafe包 将slice 指向原字符串的内存，也不能修改，强制修改会包 panic">
+<meta property="og:type" content="article">
+<meta property="og:title" content="go&#x2F;go硬核干货">
+<meta property="og:url" content="https://phpdi.github.io/2023/01/11/go/go%E7%A1%AC%E6%A0%B8%E5%B9%B2%E8%B4%A7/index.html">
+<meta property="og:site_name" content="goeoeo">
+<meta property="og:description" content="字符串字符串结构: 指向数据地址的指针(8字节)+字符串长度变量(8字节) 1.string 不可修改,因为在字符串会被分配到只读内存段。2.将字符串转换为slice([]byte) ,是重新分配了内存，不会修改原有字符串。3.使用unsafe包 将slice 指向原字符串的内存，也不能修改，强制修改会包 panic">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://phpdi.github.io/2023/01/11/go/go%E7%A1%AC%E6%A0%B8%E5%B9%B2%E8%B4%A7/bmap.png">
+<meta property="og:image" content="https://phpdi.github.io/2023/01/11/go/go%E7%A1%AC%E6%A0%B8%E5%B9%B2%E8%B4%A7/img.png">
+<meta property="og:image" content="https://phpdi.github.io/2023/01/11/go/go%E7%A1%AC%E6%A0%B8%E5%B9%B2%E8%B4%A7/img_1.png">
+<meta property="og:image" content="https://phpdi.github.io/2023/01/11/go/go%E7%A1%AC%E6%A0%B8%E5%B9%B2%E8%B4%A7/img_2.png">
+<meta property="og:image" content="https://phpdi.github.io/2023/01/11/go/go%E7%A1%AC%E6%A0%B8%E5%B9%B2%E8%B4%A7/img_3.png">
+<meta property="og:image" content="https://phpdi.github.io/2023/01/11/go/go%E7%A1%AC%E6%A0%B8%E5%B9%B2%E8%B4%A7/img_4.png">
+<meta property="og:image" content="https://phpdi.github.io/2023/01/11/go/go%E7%A1%AC%E6%A0%B8%E5%B9%B2%E8%B4%A7/img_5.png">
+<meta property="og:image" content="https://phpdi.github.io/2023/01/11/go/go%E7%A1%AC%E6%A0%B8%E5%B9%B2%E8%B4%A7/img_6.png">
+<meta property="og:image" content="https://phpdi.github.io/2023/01/11/go/go%E7%A1%AC%E6%A0%B8%E5%B9%B2%E8%B4%A7/img_7.png">
+<meta property="og:image" content="https://phpdi.github.io/2023/01/11/go/go%E7%A1%AC%E6%A0%B8%E5%B9%B2%E8%B4%A7/img_8.png">
+<meta property="og:image" content="https://phpdi.github.io/2023/01/11/go/go%E7%A1%AC%E6%A0%B8%E5%B9%B2%E8%B4%A7/img_9.png">
+<meta property="og:image" content="https://phpdi.github.io/2023/01/11/go/go%E7%A1%AC%E6%A0%B8%E5%B9%B2%E8%B4%A7/img_10.png">
+<meta property="article:published_time" content="2023-01-11T14:59:23.574Z">
+<meta property="article:modified_time" content="2023-01-11T14:59:23.574Z">
+<meta property="article:author" content="Chen Yu">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://phpdi.github.io/2023/01/11/go/go%E7%A1%AC%E6%A0%B8%E5%B9%B2%E8%B4%A7/bmap.png">
+
+<link rel="canonical" href="https://phpdi.github.io/2023/01/11/go/go%E7%A1%AC%E6%A0%B8%E5%B9%B2%E8%B4%A7/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome: false,
+    isPost: true
+  };
+</script>
+
+  <title>go/go硬核干货 | goeoeo</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-meta">
+
+    <div>
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">goeoeo</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+        <h1 class="site-subtitle" itemprop="description">会吃鱼</h1>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+</div>
+
+
+<nav class="site-nav">
+  
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>归档</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-fw fa-th"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-fw fa-user"></i>关于</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+
+</nav>
+  <div class="site-search">
+    <div class="popup search-popup">
+    <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocorrect="off" autocapitalize="none"
+           placeholder="搜索..." spellcheck="false"
+           type="text" id="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result"></div>
+
+</div>
+<div class="search-pop-overlay"></div>
+
+  </div>
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content">
+            
+
+  <div class="posts-expand">
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://phpdi.github.io/2023/01/11/go/go%E7%A1%AC%E6%A0%B8%E5%B9%B2%E8%B4%A7/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/head.jpeg">
+      <meta itemprop="name" content="Chen Yu">
+      <meta itemprop="description" content="自律给我自由">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="goeoeo">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          go/go硬核干货
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2023-01-11 22:59:23" itemprop="dateCreated datePublished" datetime="2023-01-11T22:59:23+08:00">2023-01-11</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/go/" itemprop="url" rel="index">
+                    <span itemprop="name">go</span>
+                  </a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="字符串"><a href="#字符串" class="headerlink" title="字符串"></a>字符串</h1><p>字符串结构: 指向数据地址的指针(8字节)+字符串长度变量(8字节)</p>
+<p>1.string 不可修改,因为在字符串会被分配到只读内存段。<br>2.将字符串转换为slice([]byte) ,是重新分配了内存，不会修改原有字符串。<br>3.使用unsafe包 将slice 指向原字符串的内存，也不能修改，强制修改会包 panic</p>
+<a id="more"></a>
+
+<h1 id="slice"><a href="#slice" class="headerlink" title="slice"></a>slice</h1><p>slice结构: 指向数据地址的指针(8字节)+len当前slice长度(8字节)+cap 底层数组的长度(8字节)</p>
+<h2 id="slice-扩容规则"><a href="#slice-扩容规则" class="headerlink" title="slice 扩容规则"></a>slice 扩容规则</h2><p>step1: 预估扩容后的容量</p>
+<ol>
+<li>预估容量*2 &lt; cap -&gt;newCap=cap</li>
+<li>如果oldLen &lt; 1024 -&gt; newCap=oldCap<em>2 ,否则 newCap=oldCap</em>1.25</li>
+</ol>
+<blockquote>
+<p>golang1.16.5 后 是oldCap &lt; 1024 -&gt; newCap=oldCap<em>2 ,否则 newCap=oldCap*1.25 step2: newCap个元素需要多大的内存<br>内存= 预估容量</em> 元素类型大小</p>
+</blockquote>
+<p>step3: 匹配到合适的内存规格</p>
+<h1 id="内存对齐"><a href="#内存对齐" class="headerlink" title="内存对齐"></a>内存对齐</h1><h2 id="为什么要内存对齐？"><a href="#为什么要内存对齐？" class="headerlink" title="为什么要内存对齐？"></a>为什么要内存对齐？</h2><p>cpu为了快速读取内容，</p>
+<h2 id="什么是内存对齐-？"><a href="#什么是内存对齐-？" class="headerlink" title="什么是内存对齐 ？"></a>什么是内存对齐 ？</h2><p>为保证程序顺利高效的运行，编译器会把各种类型的数据安排到合适的地址，并占用合适的长度，这就是内存对齐 。 每种类型的对齐值，就是他的对齐边界</p>
+<p>内存对齐要求数据存储地址，以及占用的字节数都要是他对齐边界的倍数</p>
+<h2 id="平台对应的最大对齐边界"><a href="#平台对应的最大对齐边界" class="headerlink" title="平台对应的最大对齐边界"></a>平台对应的最大对齐边界</h2><p>寄存器宽度、机器字长<br>数据类型的对齐边界为与平台最大对齐边界取较小的那个。</p>
+<h2 id="结构体占用字节数"><a href="#结构体占用字节数" class="headerlink" title="结构体占用字节数?"></a>结构体占用字节数?</h2><p>结构体字节数需要是对齐边界的倍数，因为要考虑数组。只有每个结构体的大小是对齐值的整数倍，才能保证数组里面每个类型都是内存对齐的。</p>
+<h1 id="Map"><a href="#Map" class="headerlink" title="Map"></a>Map</h1><p>键值对的存储一般都会使用hash表<br>哈希表通常会有一堆桶（buckets）来存储键值对，通过哈希函数将键值对的键处理成键hash值，利用hash值来选择桶</p>
+<h2 id="选桶算法-m为桶的数量-："><a href="#选桶算法-m为桶的数量-：" class="headerlink" title="选桶算法(m为桶的数量)："></a>选桶算法(m为桶的数量)：</h2><ol>
+<li>取模法 hash%m</li>
+<li>与运算 hash&amp;(m-1)</li>
+</ol>
+<blockquote>
+<p>golang 使用的与运算法。</p>
+</blockquote>
+<h2 id="hash冲突"><a href="#hash冲突" class="headerlink" title="hash冲突"></a>hash冲突</h2><p>两个key通过hash函数算出的hash值相同<br>解决hash冲突的办法</p>
+<ol>
+<li>开放地址法，将冲突的hash放到下一个的桶中寻找，当桶找不到则到下一个桶中寻找，直到遇到空桶</li>
+<li>拉链法，编号为2的桶被占用了，在2后面链一个新桶，当前桶找不到，去链接的桶里面寻找。<br>hash的发送会影响哈希表的读写效率，选择散列均匀的hash函数可以减少hash冲突的发生，适时的对哈希表进行扩容也是保证读写效率的有效手段</li>
+</ol>
+<h2 id="hash扩容"><a href="#hash扩容" class="headerlink" title="hash扩容"></a>hash扩容</h2><p>通常会吧存储键值对的数据与桶数目的比值作为是否需要扩容的判断依据，这个比值叫<strong>负载因子(LoadFactor)</strong><br>数据迁移，把旧桶里存储的键值对都迁移到新桶里。如果哈希表存储的键值对较多，一次性迁移所有桶花费的时间比较显著，所以通常会在哈希表扩容时，先分配足够多的新桶 然后用一个字段记录旧桶的位置，再增加一个字段记录旧桶迁移的进度(<br>如记录下一个需要迁移的旧桶编号)，如果hash表每次在进行读写操作时，如果检测到当前处于扩容阶段<br>就完成一部分键值对迁移任务，直到所有的旧桶迁移完成，旧桶不在使用，才算真正完成一次哈希表的扩容，像这样把键值对迁移的时间分摊到多次哈希表操作的方式，叫做渐进式扩容。<br>渐进式扩容，可以避免一次性扩容的瞬时抖动。</p>
+<h2 id="go语言中Map类型的底层实现就是哈希表"><a href="#go语言中Map类型的底层实现就是哈希表" class="headerlink" title="go语言中Map类型的底层实现就是哈希表"></a>go语言中Map类型的底层实现就是哈希表</h2><p>Map 类型的变量本质上是一个指针, 指向hmap<br>一个桶里可以放8个键值对，但是为了让内存更加紧凑，8个key放一起，8个value放一起，在8个key前面是8个tophash<br>每个tophash都是对应hash值的高8位 ,overflow 存的是溢出桶<br>实际上如果哈希表要分配桶的数据大于2^4次方，就会认为使用溢出桶的几率比较大，就会预分配2^(B-4)个溢出桶备用<br><img src="/2023/01/11/go/go%E7%A1%AC%E6%A0%B8%E5%B9%B2%E8%B4%A7/bmap.png" alt></p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> Map</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> <span class="string">"unsafe"</span></span><br><span class="line"></span><br><span class="line"><span class="comment">//Map 底层结构体</span></span><br><span class="line"><span class="keyword">type</span> hmap <span class="keyword">struct</span> &#123;</span><br><span class="line">	count      <span class="keyword">int</span> <span class="comment">//键值对数目</span></span><br><span class="line">	flags      <span class="keyword">uint8</span></span><br><span class="line">	B          <span class="keyword">uint8</span>  <span class="comment">//B 记录桶的数目的幂，桶数=2^B，因为选择桶用的是与运算的方法</span></span><br><span class="line">	noverflow  <span class="keyword">uint16</span> <span class="comment">//使用溢出桶的数量</span></span><br><span class="line">	hash0      <span class="keyword">uint32</span></span><br><span class="line">	buckets    unsafe.Pointer <span class="comment">//当前桶</span></span><br><span class="line">	oldbuckets unsafe.Pointer <span class="comment">//旧桶</span></span><br><span class="line">	nevacuate  <span class="keyword">uintptr</span>        <span class="comment">//渐进式扩容阶段，即将迁移的旧桶编号</span></span><br><span class="line">	extra      *mapextra</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//记录溢出桶的相关信息</span></span><br><span class="line"><span class="keyword">type</span> mapextra <span class="keyword">struct</span> &#123;</span><br><span class="line">	overflow     unsafe.Pointer <span class="comment">//已经使用的溢出桶</span></span><br><span class="line">	oldoverflow  unsafe.Pointer <span class="comment">//用于在扩容阶段存储旧通用到的那些溢出桶的地址</span></span><br><span class="line">	nextoverflow unsafe.Pointer <span class="comment">//下一个空闲溢出桶</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//桶</span></span><br><span class="line"><span class="keyword">type</span> bmap <span class="keyword">struct</span> &#123;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="go-Map的扩容规则"><a href="#go-Map的扩容规则" class="headerlink" title="go Map的扩容规则"></a>go Map的扩容规则</h2><ul>
+<li>count/(2^5) &gt; 6.5 =&gt; 翻倍扩容</li>
+<li>LoadFactor没有超标并且noverflow 较多 =&gt; 等量扩容</li>
+</ul>
+<blockquote>
+<p>noverflow较多的情况:<br>1.B&lt;=15,noverflow&gt;2^B<br>2.B&gt;15,noverflow&gt;2^15</p>
+</blockquote>
+<h3 id="等量扩容"><a href="#等量扩容" class="headerlink" title="等量扩容"></a>等量扩容</h3><p>创建与原来相同数量的桶<br>为什么要进行等量扩容？<br>在溢出桶使用较多，负载因子较低的时候，说明删除了大量的键。通过等量扩容，减少溢出桶的使用。</p>
+<h1 id="函数调用栈"><a href="#函数调用栈" class="headerlink" title="函数调用栈"></a>函数调用栈</h1><p>我们按照编程语言的语法定义的函数，会被编译器编译成一堆堆的机器指令，写入可执行文件。<br>执行时，可以执行文件被加载到内存中，这些机器指令，对应虚拟地址空间中位于代码段。如果在一个函数中调用另外一个函数，编译器就会生成一条call指令。<br>程序执行到这条指令时，就会跳转到被调用函数入口处开始执行，而每个函数的最后都有一条ret指令，负责在函数结束后，调回到调用处，继续执行。<br>函数执行时，需要有足够的内存空间，供它存放局部变量、参数等数据，这段空间对应到虚拟地址空间的栈，栈只有一个口可以出，先入后出规则<br>运行时，栈上面是高地址，向下增长，分配给函数的栈空间称为函数栈帧（stack frame），函数栈帧由栈底（bp 栈基）到栈顶（sp 栈指针）</p>
+<p><strong>go 语言中函数栈帧布局</strong><br>调用者栈基地址<br>局部变量<br>调用函数的返回值<br>参数</p>
+<p>call 指令 只做两件事，第一将下一条指令的地址入栈，这就是返回地址，被调用函数执行结束后会跳回到这里，继续执行。第二跳转到被调用函数的入口<br>处执行，所有的函数栈帧布局都遵循统一的约定，所以被调用者是通过栈指针加上偏移来定位到每一个参数好返回值的<br>程序执行时cpu 用特定的寄存器，来存储运行时 栈基和栈指针，用指令指针寄存器用于存储下一条要执行的指令地址<br>go语言中函数栈帧不是逐步扩张的，而是在分配栈帧时，直接将栈指针移动到所需最大栈空间的位置，然后通过栈指针加偏移值，这种相对寻址方式使用函数 栈帧。之所以一次行分配，主要是为了避免发送栈访问越界。</p>
+<p>ret 指令 1.弹出返回地址，2.跳转到返回地址。<br>每个函数开始时会分配栈帧，结束前又会释放自己的栈帧</p>
+<h2 id="go语言中返回值赋值早于defer函数"><a href="#go语言中返回值赋值早于defer函数" class="headerlink" title="go语言中返回值赋值早于defer函数"></a>go语言中返回值赋值早于defer函数</h2><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> main</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> <span class="string">"fmt"</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">incr</span><span class="params">(a <span class="keyword">int</span>)</span> <span class="title">int</span></span> &#123;</span><br><span class="line">   <span class="keyword">var</span> b <span class="keyword">int</span></span><br><span class="line">   <span class="keyword">defer</span> <span class="function"><span class="keyword">func</span><span class="params">()</span></span> &#123;</span><br><span class="line">      a++</span><br><span class="line">      b++</span><br><span class="line">   &#125;()</span><br><span class="line">   a++</span><br><span class="line">   b = a</span><br><span class="line">   <span class="keyword">return</span> a</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span> &#123;</span><br><span class="line">   <span class="keyword">var</span> a, b <span class="keyword">int</span></span><br><span class="line">   b = incr(a)</span><br><span class="line">   fmt.Println(a,b)<span class="comment">//0,1</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> main</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> <span class="string">"fmt"</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">incr</span><span class="params">(a <span class="keyword">int</span>)</span> <span class="params">(b <span class="keyword">int</span>)</span></span> &#123;</span><br><span class="line">   <span class="keyword">defer</span> <span class="function"><span class="keyword">func</span><span class="params">()</span></span> &#123;</span><br><span class="line">      a++</span><br><span class="line">      b++</span><br><span class="line">   &#125;()</span><br><span class="line">   a++</span><br><span class="line">   <span class="keyword">return</span> a</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span> &#123;</span><br><span class="line">   <span class="keyword">var</span> a, b <span class="keyword">int</span></span><br><span class="line">   b = incr(a)</span><br><span class="line">   fmt.Println(a,b)<span class="comment">//0,2</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="一个函数中调用了多个函数，且参数和返回值各不相同"><a href="#一个函数中调用了多个函数，且参数和返回值各不相同" class="headerlink" title="一个函数中调用了多个函数，且参数和返回值各不相同"></a>一个函数中调用了多个函数，且参数和返回值各不相同</h2><p>如果一个函数A调用了两个函数B、C ,但是这两个函数的参数和返回值占用的空间并不相同，go语言的函数栈帧是一次性分配的，要<br>以最大的参数加返回值空间为标准来分配，才能满足所有被调用函数的需求。被调用者通过栈指针相对寻址来定位自己的参数和返回值</p>
+<h1 id="闭包"><a href="#闭包" class="headerlink" title="闭包"></a>闭包</h1><p>go 语言中函数是头等对象，可以作为参数传递，可以作为函数返回值，也可以绑定到变量，Go语言称这样的参数、返回值、或变量为function value，<br>函数指令在编译起见生成，而function value 本质上是一个指针，但是并不直接指向函数指令入口，而是指向一个runtime.funcval的结构体,这个结<br>构体里只有一个地址fn，这个地址就是函数指令的入口地址。</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> runtime</span><br><span class="line"><span class="keyword">type</span> funcval <span class="keyword">struct</span> &#123;</span><br><span class="line">	fn <span class="keyword">uintptr</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="为什么需要通过funcval结构体来包装执行函数的地址-然后使用一个二级指针来调用呢？"><a href="#为什么需要通过funcval结构体来包装执行函数的地址-然后使用一个二级指针来调用呢？" class="headerlink" title="为什么需要通过funcval结构体来包装执行函数的地址,然后使用一个二级指针来调用呢？"></a>为什么需要通过funcval结构体来包装执行函数的地址,然后使用一个二级指针来调用呢？</h2><p>这里主要是为了处理闭包的情况。  </p>
+<blockquote>
+<p>闭包：要包括自由变量（在函数外部定义但在函数内部引用）；脱离了形成闭包的上下文，闭包也能正常使用这些自由变量</p>
+</blockquote>
+<p><img src="/2023/01/11/go/go%E7%A1%AC%E6%A0%B8%E5%B9%B2%E8%B4%A7/img.png" alt><br>函数create 的返回值是一个函数，但这个函数内部使用了外部定义的变量c，即使create执行结束，通过f1，f2也能正常执行这个闭包函数，并使用定义<br>在create函数内部的局部变量c，所以这里符合闭包的定义，通常称这个变量c为捕获变量。<br>闭包函数的指令自然也在编译阶段生成，但因为每个闭包对象都要保存自己的捕获变量，所以要到执行阶段才创建对应的闭包对象。<br>到执行阶段，main函数栈帧有两个局部变量，然后是返回值空间，到create函数栈帧这里，有一个局部变量c等于2，create函数会在堆上分配一个fucval<br>结构体，fn指向闭包函数入口，除此之外还有一个捕获列表，这里只捕获了一个变量c，然后这个结构体的起始地址就作为返回值，写入返回值空间。<br>通过f1、f2，对应的闭包函数就会找到各自对应的funcval结构体，拿到同一个函数入口，但是会使用不同的捕获列表，这就是称闭包为有状态函数的原因</p>
+<h2 id="闭包函数是如何找到对应的捕获列表呢？"><a href="#闭包函数是如何找到对应的捕获列表呢？" class="headerlink" title="闭包函数是如何找到对应的捕获列表呢？"></a>闭包函数是如何找到对应的捕获列表呢？</h2><p>go语言中通过一个funcval 调用函数时，会把对应的funcval结构体地址存入特定寄存器，例如amd64平台使用的是dx寄存器，这样在闭包函数中就可以通<br>过寄存器取出funcval结构体的地址，然后加上响应的偏移来找到每一个被捕获的变量。<br>所以go语言中，闭包就是有捕获列表的funcval，而没有捕获列表的funcval，直接忽略这个寄存器的值就好了。  </p>
+<h2 id="捕获列表"><a href="#捕获列表" class="headerlink" title="捕获列表"></a>捕获列表</h2><p>捕获列表 不单单只是拷贝变量值。需要分情况。被闭包捕获的变量，在外层函数与闭包函数中表现一致，好像他们在使用同一个变量，为此go语言的编译器<br>针对不同情况做了不同的处理</p>
+<h3 id="情况1"><a href="#情况1" class="headerlink" title="情况1"></a>情况1</h3><p>被捕获的变量除了初始化复制外，在其它任何地方都没有修改过<br>直接拷贝值到捕获列表中</p>
+<h3 id="情况2"><a href="#情况2" class="headerlink" title="情况2"></a>情况2</h3><p>局部变量除了初始化赋值外还被修改过。<br>变量会改为堆分配，捕获列表中存的是变量的地址</p>
+<blockquote>
+<p>局部变量堆分配，是变量逃逸的一种场景。</p>
+</blockquote>
+<h3 id="情况3"><a href="#情况3" class="headerlink" title="情况3"></a>情况3</h3><p>如果修改并被捕获的是参数，涉及到函数原型，就不能像局部变量那样处理了<br>参数依然通过调用者栈帧传入，但是编译器会把栈上这个参数拷贝到堆上一份，然后外层函数和闭包函数都使用堆上分配的这一个，</p>
+<h3 id="情况4"><a href="#情况4" class="headerlink" title="情况4"></a>情况4</h3><p>如果被捕获的是返回值<br>调用者栈帧上依然会分配返回值空间，不过闭包的外层函数会在堆上也分配一个，外层函数和闭包函数都使用堆上分配的这一个，在外层函数返回前，需要<br>把堆上的返回值拷贝到栈上的返回值空间</p>
+<p>处理方式虽然多样，但目的只有一个，就是保持捕获变量在外层函数与闭包函数的一致性。  </p>
+<h1 id="方法"><a href="#方法" class="headerlink" title="方法"></a>方法</h1><p>如果我们定义一个类型A,并给它定义一个方法Name,然后就可以使用 a.Name 或者 A.Name(a) 来调用Name方法，实际上a.Name是调用语法糖<br><img src="/2023/01/11/go/go%E7%A1%AC%E6%A0%B8%E5%B9%B2%E8%B4%A7/img_1.png" alt><br>go语言中 函数只和参数类型与返回值相关，方法就是普通的函数，方法的接受者是隐含的第一个参数</p>
+<h2 id="方法表达式与方法变量"><a href="#方法表达式与方法变量" class="headerlink" title="方法表达式与方法变量"></a>方法表达式与方法变量</h2><p><img src="/2023/01/11/go/go%E7%A1%AC%E6%A0%B8%E5%B9%B2%E8%B4%A7/img_2.png" alt><br>方法表达和方法变量 本质上都是一个funcval，方法变量会捕获方法接受者a形成闭包,但这里的f2仅作为局部变量，它与a的生命周期是一致的，所以编译器<br>会做出优化，把它转换为类型A的方法调用并传入a作为参数 A.Name(a),</p>
+<h1 id="defer"><a href="#defer" class="headerlink" title="defer"></a>defer</h1><p>关于defer 我们知道它会在函数返回之前倒叙执行。<br>先通过deferproc函数注册defer函数，然后在return之前调用。<br>defer信息会注册到一个链表，而当前执行的goroutine持有这个链表的头指针，每个goroutine在执行时都有一个对应的结构体g，其中有一个字段_defer指向<br>defer链表的头，_defer 链表链起来的是一个一个defer结构体，新注册的defer会添加到链表的头部。执行时也是从头开始，所以defer才会表现为倒叙执行。  </p>
+<p>defer 结构体<br><img src="/2023/01/11/go/go%E7%A1%AC%E6%A0%B8%E5%B9%B2%E8%B4%A7/img_3.png" alt></p>
+<h2 id="go1-12defer-的问题"><a href="#go1-12defer-的问题" class="headerlink" title="go1.12defer 的问题"></a>go1.12defer 的问题</h2><ol>
+<li>_defer在堆上分配 ，即使有预分配的deferpool,也需要去堆上获取与释放，而且参数还要在堆栈间来回拷贝  </li>
+<li>使用链表注册defer信息，而链表本身操作比较慢</li>
+</ol>
+<h2 id="go1-13和go1-14对defer的改进"><a href="#go1-13和go1-14对defer的改进" class="headerlink" title="go1.13和go1.14对defer的改进"></a>go1.13和go1.14对defer的改进</h2><p>go1.14的defer，通过在编译阶段插入代码, 把defer函数的执行逻辑展开在所属函数内，open code defer，和1.13一样不适用于循环中的defer，循环中<br>defer，由于在编译阶段无法确定数量，所以只能在堆分配。<br>go1.14defer 性能提升了一个数量级，open codeed defer 未注册到defer连表中，所以在发生panic和runtime.Goexit的时候，需要额外进行栈扫描来<br>执行未注册到链表中的defer。所以panic变慢了。  </p>
+<h1 id="panic和recover"><a href="#panic和recover" class="headerlink" title="panic和recover"></a>panic和recover</h1><p>当前执行的goroutine 中有一个defer链表的头指针，同时也有个以panic链表的头指针，panic连起来的是一个个panic结构体，当发生新的panic的时候，<br>也是在链表的头上插入新的panic结构体。<br>panic 结构体<br><img src="/2023/01/11/go/go%E7%A1%AC%E6%A0%B8%E5%B9%B2%E8%B4%A7/img_4.png" alt="go硬核干货"><br>panic触发defer执行，最后从连表尾部打印异常信息。  </p>
+<h2 id="panic-两点重要信息"><a href="#panic-两点重要信息" class="headerlink" title="panic 两点重要信息"></a>panic 两点重要信息</h2><ul>
+<li>panic执行defer函数的方式为先标记后释放，目的是为了终止之前发生的panic  </li>
+<li>所有还在panic链表上的项都会被输出，顺序与panic发生的顺序一致</li>
+</ul>
+<h1 id="类型系统"><a href="#类型系统" class="headerlink" title="类型系统"></a>类型系统</h1><p>方法本质上就是函数，只不过在调用时，接受者会作为第一个参数传入<br>在定义方法的时候不能为内置类型和接口定义方法。<br>内置类型和自定义类型，都有其对应的描述信息，称为他的“类型元数据”，每种类型元数据都是全局唯一的,这些类型元数据共同构成了go语言的“类型系统”</p>
+<h1 id="接口"><a href="#接口" class="headerlink" title="接口"></a>接口</h1><h2 id="空接口-interface"><a href="#空接口-interface" class="headerlink" title="空接口 interface{}"></a>空接口 interface{}</h2><p><img src="/2023/01/11/go/go%E7%A1%AC%E6%A0%B8%E5%B9%B2%E8%B4%A7/img_5.png" alt="img.png">  </p>
+<p>未被赋值前，_type=nil,data=nil 赋值后，_type指向类型元数据 ，data指向数据</p>
+<h2 id="非空接口"><a href="#非空接口" class="headerlink" title="非空接口"></a>非空接口</h2><p>一个变量想要赋值给一个非空接口类型，必须要实现这个非空接口类型的所有方法。<br><img src="/2023/01/11/go/go%E7%A1%AC%E6%A0%B8%E5%B9%B2%E8%B4%A7/img_6.png" alt="img.png">    </p>
+<p><img src="/2023/01/11/go/go%E7%A1%AC%E6%A0%B8%E5%B9%B2%E8%B4%A7/img_7.png" alt="img.png"><br>如果我们声明一个io.ReadWriter类型的变量rw,它被赋值以前data=nil,tab=nil,吧一个<em>os.File的类型变量f 赋值给rw,此时rw的动态值就是f,而tab<br>会指向一个itab结构体，他的接口类型为io.ReadWriter,动态类型为</em>os.File ,同时注意itab这里的fun，它会从动态类型元数据中拷贝接口要求的那些<br>方法的地址，以便通过rw快速定位到方法而无需再去类型元数据那里查找。  </p>
+<p>关于itab 还要额外关注一点，一旦接口类型确定了，动态类型确定了，那么itab的内容就不会改变了。那这个itab结构体也就确定了。所以这个itab结构体是可以复用的<br>实际上go语言会吧itab结构体缓存起来，并且以接口类型和动态类型的组合为key，以itab结构体指针为value,构造一个hash表，用于存储和查询itab缓存信息，<br>这里的hash表和map底层的hash表不同，是一种更为简便的设计，需要一个itab结构体是，会首先去这里查找，用接口类型的hash值和动态类型的hash值，进行异或运算得到<br>key的hash值，如果已经有对应的itab指针就直接拿来使用，如果没有就创建一个itab结构体，然后添加到这个hash表中。</p>
+<h1 id="类型断言"><a href="#类型断言" class="headerlink" title="类型断言"></a>类型断言</h1><p>抽象类型： 空接口、非空接口<br>具体类型：int、string、slice、map、struct。。。<br>类型断言作用在接口值之上，可以是空接口，也可以是非空接口，断言的目标类型可以是非空接口类型、也可以是具体类型。</p>
+<ul>
+<li>空接口.(具体类型)</li>
+<li>非空接口.(具体类型)</li>
+<li>空接口.(非空接口)</li>
+<li>非空接口.(非空接口)</li>
+</ul>
+<h1 id="反射-reflect"><a href="#反射-reflect" class="headerlink" title="反射 reflect"></a>反射 reflect</h1><p>runtime包中的空接口和非空接口的类型元数据都是未导出的，所以reflect包中又定义了一套和runtime包中保持一致。<br>reflect包提供TypeOf 函数，用于获取变量的类型信息，接受一个空接口类型的参数，并返回一个reflect.Type类型的返回值。<br>所有参数为空接口类型的情况，通过传递拷贝后的变量的地址，来实现传值的语义   </p>
+<p>通过reflect.ValueOf 来获取值，如果需要修改原变量的值，需要传指针。</p>
+<h1 id="GMP"><a href="#GMP" class="headerlink" title="GMP"></a>GMP</h1><h2 id="golang调度器的由来"><a href="#golang调度器的由来" class="headerlink" title="golang调度器的由来"></a>golang调度器的由来</h2><h3 id="单进程时代的两个问题"><a href="#单进程时代的两个问题" class="headerlink" title="单进程时代的两个问题"></a>单进程时代的两个问题</h3><ol>
+<li>单一执行流程，计算机一个任务一个任务处理</li>
+<li>进程阻塞锁带来的CPU浪费时间  </li>
+</ol>
+<h3 id="多进程、多线程的问题"><a href="#多进程、多线程的问题" class="headerlink" title="多进程、多线程的问题"></a>多进程、多线程的问题</h3><ol>
+<li>设计变得复杂</li>
+</ol>
+<ul>
+<li>进程、线程数量越多，切换成本就越大，也就越浪费</li>
+<li>多线程 随着同步竞争（如锁、竞争资源冲突等）</li>
+</ul>
+<ol start="2">
+<li>多进程、多线程的壁垒</li>
+</ol>
+<ul>
+<li>进程占用内存 虚拟内存4GB(32bit OS),线程占用内存 4MB</li>
+<li>高CPU调度消耗</li>
+</ul>
+<h3 id="携程"><a href="#携程" class="headerlink" title="携程"></a>携程</h3><ol>
+<li>N:1 无法利用多个CPU,出现阻塞的瓶颈</li>
+<li>1:1 跟多线程、多进程模型无异 ；切换携程成本代价昂贵</li>
+<li>M:N 能够利用多核，过于依赖协程调度器的优化和算法  </li>
+</ol>
+<h3 id="golang-调度器的优化"><a href="#golang-调度器的优化" class="headerlink" title="golang 调度器的优化"></a>golang 调度器的优化</h3><ul>
+<li>占用空间小，4kb,可大量开辟</li>
+<li>灵活调度 切换成本底</li>
+</ul>
+<h2 id="GMP模型设计思想"><a href="#GMP模型设计思想" class="headerlink" title="GMP模型设计思想"></a>GMP模型设计思想</h2><p><img src="/2023/01/11/go/go%E7%A1%AC%E6%A0%B8%E5%B9%B2%E8%B4%A7/img_8.png" alt="img.png"></p>
+<h3 id="GMP模型简介"><a href="#GMP模型简介" class="headerlink" title="GMP模型简介"></a>GMP模型简介</h3><h4 id="GMP含义"><a href="#GMP含义" class="headerlink" title="GMP含义"></a>GMP含义</h4><ul>
+<li>G 携程</li>
+<li>P 处理器 通过GOMAXPROCS 设置<blockquote>
+<p>为什么p的个数要和cpu个数一致，因为并行执行的最大数量为cpu核数</p>
+</blockquote>
+</li>
+<li>M 内核线程<h4 id="全局队列"><a href="#全局队列" class="headerlink" title="全局队列"></a>全局队列</h4>存放等待运行的G<br>包含全局队列锁<h4 id="P的本地队列"><a href="#P的本地队列" class="headerlink" title="P的本地队列"></a>P的本地队列</h4></li>
+<li>存放等待运行的G</li>
+<li>数量限制，不超过256G</li>
+<li>优先将新创建的G放在P的本地队列中，如果满了会放在全局队列中<h4 id="P列表"><a href="#P列表" class="headerlink" title="P列表"></a>P列表</h4></li>
+<li>程序启动时候创建</li>
+<li>最多有GOMAXPROCS个</li>
+</ul>
+<h4 id="M列表"><a href="#M列表" class="headerlink" title="M列表"></a>M列表</h4><p>当前操作系统分配到当前Go程序的内核线程数</p>
+<h4 id="P和M的数量"><a href="#P和M的数量" class="headerlink" title="P和M的数量"></a>P和M的数量</h4><p>P的数量问题   </p>
+<ol>
+<li>环境变量$GOMAXPROCS  </li>
+<li>在程序中使用runtime.GOMAXPROCS()方法来设置</li>
+</ol>
+<p>M的数量问题</p>
+<ol>
+<li>GO语言本身限定的M最大量是10000 </li>
+<li>runtime/debug 包中的SetMaxThreads函数来设置</li>
+<li>如果有一个M阻塞，会创建新的M,如果M空闲，那么会回收或者随眠，M的数量是一个动态的值</li>
+</ol>
+<h3 id="调度器的设计策略"><a href="#调度器的设计策略" class="headerlink" title="调度器的设计策略"></a>调度器的设计策略</h3><h4 id="复用线程"><a href="#复用线程" class="headerlink" title="复用线程"></a>复用线程</h4><p>避免频繁的创建、销毁线程、而是对线程的复用  </p>
+<ul>
+<li>work stealing机制<blockquote>
+<p>当本线程无可运行的G时，尝试从其它线程绑定的P偷取G,而不是销毁线程 </p>
+</blockquote>
+</li>
+<li>handle off 机制  <blockquote>
+<p>当本线程因为G进行系统调用阻塞时，线程释放绑定的P,把P转移给其它空闲的线程执行</p>
+</blockquote>
+<h4 id="利用并行"><a href="#利用并行" class="headerlink" title="利用并行"></a>利用并行</h4>GOMAXPROCS 设置P的数量，最多有GOMAXPROCS个线程分布在多个CPU上同时运行  </li>
+</ul>
+<h4 id="抢占"><a href="#抢占" class="headerlink" title="抢占"></a>抢占</h4><p>在coroutine中要等待一个协程主动让出CPU才执行下一个协程，在GO中，一个goroutine最多占用CPU 10 ms,防止其他goroutine被饿死<br><img src="/2023/01/11/go/go%E7%A1%AC%E6%A0%B8%E5%B9%B2%E8%B4%A7/img_9.png" alt="img.png"></p>
+<h4 id="全局G队列"><a href="#全局G队列" class="headerlink" title="全局G队列"></a>全局G队列</h4><p>当M执行work stealing从其它P偷不到G时，它可以从全局队列获取G</p>
+<h3 id="go-fun-经历了什么过程"><a href="#go-fun-经历了什么过程" class="headerlink" title="go fun() 经历了什么过程"></a>go fun() 经历了什么过程</h3><p>我们通过go func 来创建一个goroutine;  </p>
+<p>有多个存储G的队列，一个是局部调度器P的本地队列，一个是全局G队列。新创建的G会先保存在P的本地队列中，如果P的本地队列已经满了<br>就会保存在全局的队列中  </p>
+<p>G只能运行在M中，一个M必须持有一个P,M与P是1:1的关系，M会从P的本地队列弹出一个可执行状态的G来执行，如果P的本地队列为空，就会<br>想其它的MP组合偷取一个可执行的G来执行  </p>
+<p>一个M调度G执行的过程是一个循环机制</p>
+<p>当M执行某一个G时候如果发生了syscall或则其余的阻塞操作，M会阻塞，如果当前有一些G在执行，runtime会把这个线程M从P中摘除（detach），<br>然后再创建一个新的操作系统的线程（如果有空闲的线程可用就复用空闲线程）来服务于这个P</p>
+<p><img src="/2023/01/11/go/go%E7%A1%AC%E6%A0%B8%E5%B9%B2%E8%B4%A7/img_10.png" alt="img.png"></p>
+<h3 id="调度器的生命周期"><a href="#调度器的生命周期" class="headerlink" title="调度器的生命周期"></a>调度器的生命周期</h3><h4 id="M0"><a href="#M0" class="headerlink" title="M0"></a>M0</h4><p>M0 是启动程序后的编号为0的主线程，这个M对应的实例会在全局变量runtime.m0中，不需要在heap上分配，M0负责执行初始化操作和启动<br>第一个G，在之后M0就和其他的M一样了。  </p>
+<h4 id="G0"><a href="#G0" class="headerlink" title="G0"></a>G0</h4><p>G0是每次启动一个M都会第一个创建的goroutine,GO仅用于负责调度G,G0不指向任何可执行的函数，每个M都会有一个自己的G0。在调度或者系统<br>调用时会使用G0的栈空间，全局变量的G0是M0的G0</p>
+<h3 id="可视化的GMP编程"><a href="#可视化的GMP编程" class="headerlink" title="可视化的GMP编程"></a>可视化的GMP编程</h3><h4 id="trance编程"><a href="#trance编程" class="headerlink" title="trance编程"></a>trance编程</h4><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> main</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> (</span><br><span class="line">   <span class="string">"fmt"</span></span><br><span class="line">   <span class="string">"os"</span></span><br><span class="line">   <span class="string">"runtime/trace"</span></span><br><span class="line">)</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span> &#123;</span><br><span class="line">   f, err := os.Create(<span class="string">"trace.out"</span>)</span><br><span class="line">   <span class="keyword">if</span> err != <span class="literal">nil</span> &#123;</span><br><span class="line">      <span class="built_in">panic</span>(err)</span><br><span class="line">   &#125;</span><br><span class="line">   <span class="keyword">defer</span> f.Close()</span><br><span class="line">   trace.Start(f)</span><br><span class="line"></span><br><span class="line">   fmt.Println(<span class="string">"hello world"</span>)</span><br><span class="line">   </span><br><span class="line">   trace.Stop()</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>go tool trace trace.out  浏览器访问</p>
+</blockquote>
+<h4 id="通过Debug-trance查看GMP信息"><a href="#通过Debug-trance查看GMP信息" class="headerlink" title="通过Debug trance查看GMP信息"></a>通过Debug trance查看GMP信息</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">GODEBUG=schedtrace=1000 程序</span><br><span class="line"><span class="meta">&gt;</span><span class="bash"> 1000指的是1000ms时间间隔</span></span><br><span class="line"></span><br><span class="line">SCHED 3014ms: gomaxprocs=8 idleprocs=8 threads=19 spinningthreads=0 idlethreads=14 runqueue=0 [0 0 0 0 0 0 0 0]</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>SCHED 调试信息</li>
+<li>3014ms 从程序启动到输出经历的时间</li>
+<li>gomaxprocs P的数量 默认是和CPU核心数是一致的</li>
+<li>idleprocs 处理idel状态的p的数量，gomaxprocs-idleprocs=目前正在执行的P的数量</li>
+<li>threads 线程数量(包括M0,包括GODEBUG调试的信息)</li>
+<li>spinningthreads 处于自旋状态的线程数量</li>
+<li>idlethreads idle状态的tread</li>
+<li>runqueue 全局队列中G的数量</li>
+<li>[0 0 0 0 0 0 0 0] 每个P的local queue本地队列中，目前存在G的数量</li>
+</ul>
+<h2 id="GO调度器GMP场景过程全分析"><a href="#GO调度器GMP场景过程全分析" class="headerlink" title="GO调度器GMP场景过程全分析"></a>GO调度器GMP场景过程全分析</h2><h3 id="G1创建G3"><a href="#G1创建G3" class="headerlink" title="G1创建G3"></a>G1创建G3</h3><p>局部性: G3优先加入G1所在的本地队列  </p>
+<p>P拥有G1,M1获取P后开始运行G1,G1使用go func() 创建G2,为了局部性G2优先加入到P1的本地队列</p>
+<h3 id="G1执行完毕"><a href="#G1执行完毕" class="headerlink" title="G1执行完毕"></a>G1执行完毕</h3><p>G1运行完成后（函数：goexit）,M上运行的goroutine切换为G0,G0负责调度时协程的切换（函数:schedule）。<br>从P的本地队列获取G2,从G0切换到G2,并开始执行G2(函数:execute)。实现了线程M1的复用</p>
+<h3 id="G2开辟过多的G"><a href="#G2开辟过多的G" class="headerlink" title="G2开辟过多的G"></a>G2开辟过多的G</h3>
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2023/01/11/go/go%E6%80%A7%E8%83%BD%E5%88%86%E6%9E%90/" rel="prev" title="go/go性能分析">
+      <i class="fa fa-chevron-left"></i> go/go性能分析
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2023/01/11/go/%E4%BC%81%E4%B8%9A%E7%BA%A7%E5%BE%AE%E6%9C%8D%E5%8A%A1%E7%BD%91%E5%85%B3/" rel="next" title="go/企业级微服务网关">
+      go/企业级微服务网关 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+  </div>
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let activeClass = CONFIG.comments.activeClass;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#字符串"><span class="nav-number">1.</span> <span class="nav-text">字符串</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#slice"><span class="nav-number">2.</span> <span class="nav-text">slice</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#slice-扩容规则"><span class="nav-number">2.1.</span> <span class="nav-text">slice 扩容规则</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#内存对齐"><span class="nav-number">3.</span> <span class="nav-text">内存对齐</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#为什么要内存对齐？"><span class="nav-number">3.1.</span> <span class="nav-text">为什么要内存对齐？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#什么是内存对齐-？"><span class="nav-number">3.2.</span> <span class="nav-text">什么是内存对齐 ？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#平台对应的最大对齐边界"><span class="nav-number">3.3.</span> <span class="nav-text">平台对应的最大对齐边界</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#结构体占用字节数"><span class="nav-number">3.4.</span> <span class="nav-text">结构体占用字节数?</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Map"><span class="nav-number">4.</span> <span class="nav-text">Map</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#选桶算法-m为桶的数量-："><span class="nav-number">4.1.</span> <span class="nav-text">选桶算法(m为桶的数量)：</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#hash冲突"><span class="nav-number">4.2.</span> <span class="nav-text">hash冲突</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#hash扩容"><span class="nav-number">4.3.</span> <span class="nav-text">hash扩容</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#go语言中Map类型的底层实现就是哈希表"><span class="nav-number">4.4.</span> <span class="nav-text">go语言中Map类型的底层实现就是哈希表</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#go-Map的扩容规则"><span class="nav-number">4.5.</span> <span class="nav-text">go Map的扩容规则</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#等量扩容"><span class="nav-number">4.5.1.</span> <span class="nav-text">等量扩容</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#函数调用栈"><span class="nav-number">5.</span> <span class="nav-text">函数调用栈</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#go语言中返回值赋值早于defer函数"><span class="nav-number">5.1.</span> <span class="nav-text">go语言中返回值赋值早于defer函数</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#一个函数中调用了多个函数，且参数和返回值各不相同"><span class="nav-number">5.2.</span> <span class="nav-text">一个函数中调用了多个函数，且参数和返回值各不相同</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#闭包"><span class="nav-number">6.</span> <span class="nav-text">闭包</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#为什么需要通过funcval结构体来包装执行函数的地址-然后使用一个二级指针来调用呢？"><span class="nav-number">6.1.</span> <span class="nav-text">为什么需要通过funcval结构体来包装执行函数的地址,然后使用一个二级指针来调用呢？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#闭包函数是如何找到对应的捕获列表呢？"><span class="nav-number">6.2.</span> <span class="nav-text">闭包函数是如何找到对应的捕获列表呢？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#捕获列表"><span class="nav-number">6.3.</span> <span class="nav-text">捕获列表</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#情况1"><span class="nav-number">6.3.1.</span> <span class="nav-text">情况1</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#情况2"><span class="nav-number">6.3.2.</span> <span class="nav-text">情况2</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#情况3"><span class="nav-number">6.3.3.</span> <span class="nav-text">情况3</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#情况4"><span class="nav-number">6.3.4.</span> <span class="nav-text">情况4</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#方法"><span class="nav-number">7.</span> <span class="nav-text">方法</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#方法表达式与方法变量"><span class="nav-number">7.1.</span> <span class="nav-text">方法表达式与方法变量</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#defer"><span class="nav-number">8.</span> <span class="nav-text">defer</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#go1-12defer-的问题"><span class="nav-number">8.1.</span> <span class="nav-text">go1.12defer 的问题</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#go1-13和go1-14对defer的改进"><span class="nav-number">8.2.</span> <span class="nav-text">go1.13和go1.14对defer的改进</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#panic和recover"><span class="nav-number">9.</span> <span class="nav-text">panic和recover</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#panic-两点重要信息"><span class="nav-number">9.1.</span> <span class="nav-text">panic 两点重要信息</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#类型系统"><span class="nav-number">10.</span> <span class="nav-text">类型系统</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#接口"><span class="nav-number">11.</span> <span class="nav-text">接口</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#空接口-interface"><span class="nav-number">11.1.</span> <span class="nav-text">空接口 interface{}</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#非空接口"><span class="nav-number">11.2.</span> <span class="nav-text">非空接口</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#类型断言"><span class="nav-number">12.</span> <span class="nav-text">类型断言</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#反射-reflect"><span class="nav-number">13.</span> <span class="nav-text">反射 reflect</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#GMP"><span class="nav-number">14.</span> <span class="nav-text">GMP</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#golang调度器的由来"><span class="nav-number">14.1.</span> <span class="nav-text">golang调度器的由来</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#单进程时代的两个问题"><span class="nav-number">14.1.1.</span> <span class="nav-text">单进程时代的两个问题</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#多进程、多线程的问题"><span class="nav-number">14.1.2.</span> <span class="nav-text">多进程、多线程的问题</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#携程"><span class="nav-number">14.1.3.</span> <span class="nav-text">携程</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#golang-调度器的优化"><span class="nav-number">14.1.4.</span> <span class="nav-text">golang 调度器的优化</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#GMP模型设计思想"><span class="nav-number">14.2.</span> <span class="nav-text">GMP模型设计思想</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#GMP模型简介"><span class="nav-number">14.2.1.</span> <span class="nav-text">GMP模型简介</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#GMP含义"><span class="nav-number">14.2.1.1.</span> <span class="nav-text">GMP含义</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#全局队列"><span class="nav-number">14.2.1.2.</span> <span class="nav-text">全局队列</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#P的本地队列"><span class="nav-number">14.2.1.3.</span> <span class="nav-text">P的本地队列</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#P列表"><span class="nav-number">14.2.1.4.</span> <span class="nav-text">P列表</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#M列表"><span class="nav-number">14.2.1.5.</span> <span class="nav-text">M列表</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#P和M的数量"><span class="nav-number">14.2.1.6.</span> <span class="nav-text">P和M的数量</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#调度器的设计策略"><span class="nav-number">14.2.2.</span> <span class="nav-text">调度器的设计策略</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#复用线程"><span class="nav-number">14.2.2.1.</span> <span class="nav-text">复用线程</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#利用并行"><span class="nav-number">14.2.2.2.</span> <span class="nav-text">利用并行</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#抢占"><span class="nav-number">14.2.2.3.</span> <span class="nav-text">抢占</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#全局G队列"><span class="nav-number">14.2.2.4.</span> <span class="nav-text">全局G队列</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#go-fun-经历了什么过程"><span class="nav-number">14.2.3.</span> <span class="nav-text">go fun() 经历了什么过程</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#调度器的生命周期"><span class="nav-number">14.2.4.</span> <span class="nav-text">调度器的生命周期</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#M0"><span class="nav-number">14.2.4.1.</span> <span class="nav-text">M0</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#G0"><span class="nav-number">14.2.4.2.</span> <span class="nav-text">G0</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#可视化的GMP编程"><span class="nav-number">14.2.5.</span> <span class="nav-text">可视化的GMP编程</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#trance编程"><span class="nav-number">14.2.5.1.</span> <span class="nav-text">trance编程</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#通过Debug-trance查看GMP信息"><span class="nav-number">14.2.5.2.</span> <span class="nav-text">通过Debug trance查看GMP信息</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#GO调度器GMP场景过程全分析"><span class="nav-number">14.3.</span> <span class="nav-text">GO调度器GMP场景过程全分析</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#G1创建G3"><span class="nav-number">14.3.1.</span> <span class="nav-text">G1创建G3</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#G1执行完毕"><span class="nav-number">14.3.2.</span> <span class="nav-text">G1执行完毕</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#G2开辟过多的G"><span class="nav-number">14.3.3.</span> <span class="nav-text">G2开辟过多的G</span></a></li></ol></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Chen Yu"
+      src="/images/head.jpeg">
+  <p class="site-author-name" itemprop="name">Chen Yu</p>
+  <div class="site-description" itemprop="description">自律给我自由</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">96</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">17</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">68</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2023</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Chen Yu</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v4.2.0
+  </div>
+  <span class="post-meta-divider">|</span>
+  <div class="theme-info">主题 – <a href="https://theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a> v7.7.0
+  </div>
+
+<div>
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<span id="busuanzi_container_site_pv" style='display:none'>
+    本站总访问量 <span id="busuanzi_value_site_pv"></span> 次
+    <span class="post-meta-divider">|</span>
+</span>
+<span id="busuanzi_container_site_uv" style='display:none'>
+    有<span id="busuanzi_value_site_uv"></span>人看过我的博客啦
+</span>
+</div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>

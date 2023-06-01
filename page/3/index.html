@@ -847,7 +847,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://phpdi.github.io/2023/01/11/k8s/minikube/">
+    <link itemprop="mainEntityOfPage" href="https://phpdi.github.io/2023/01/11/k8s/k8s/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/head.jpeg">
@@ -861,7 +861,7 @@
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
           
-            <a href="/2023/01/11/k8s/minikube/" class="post-title-link" itemprop="url">k8s/minikube</a>
+            <a href="/2023/01/11/k8s/k8s/" class="post-title-link" itemprop="url">k8s/k8s</a>
         </h2>
 
         <div class="post-meta">
@@ -896,41 +896,15 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <a id="more"></a>
-
-
-<h1 id="minikube"><a href="#minikube" class="headerlink" title="minikube"></a>minikube</h1><p>minikube 可以搭建一个在单节点运行的k8s集群  </p>
-<p>使用minikube 构建k8s本地化开发环境</p>
-<!--more-->
-
-<h2 id="Minikube安装"><a href="#Minikube安装" class="headerlink" title="Minikube安装"></a>Minikube安装</h2><p>首先我们需要下载Minikube的二进制安装包并安装:</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">curl -LO https:&#x2F;&#x2F;storage.googleapis.com&#x2F;minikube&#x2F;releases&#x2F;latest&#x2F;minikube-linux-amd64</span><br><span class="line">sudo install minikube-linux-amd64 &#x2F;usr&#x2F;local&#x2F;bin&#x2F;minikube</span><br></pre></td></tr></table></figure>
-<h2 id="Minikube启动"><a href="#Minikube启动" class="headerlink" title="Minikube启动"></a>Minikube启动</h2><p>需要使用非root 启动</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">minikube start</span><br><span class="line"></span><br><span class="line"># 信任私有仓库 注意如果已经 minikube start 过了，那么需要删除集群重新启动 minikube delete ,这个参数才会生效</span><br><span class="line">minikube start --insecure-registry&#x3D;repo.goeoeo.com:8100</span><br></pre></td></tr></table></figure>
-
-<h2 id="安装kubectl"><a href="#安装kubectl" class="headerlink" title="安装kubectl"></a>安装kubectl</h2><p>查看kubectl的版本号，第一次使用会直接安装kubectl</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">minikube kubectl version</span><br></pre></td></tr></table></figure>
-<p>想直接使用kubectl命令的话，可以将其复制到/bin目录下去：  </p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"># 查找kubectl命令的位置</span><br><span class="line">find &#x2F; -name kubectl</span><br><span class="line"># 找到之后复制到&#x2F;bin目录下</span><br><span class="line">cp &#x2F;mydata&#x2F;docker&#x2F;volumes&#x2F;minikube&#x2F;_data&#x2F;lib&#x2F;minikube&#x2F;binaries&#x2F;v1.20.0&#x2F;kubectl &#x2F;usr&#x2F;local&#x2F;bin&#x2F;</span><br><span class="line"># 直接使用kubectl命令</span><br><span class="line">kubectl version</span><br></pre></td></tr></table></figure>
-
-<h2 id="构建本地镜像"><a href="#构建本地镜像" class="headerlink" title="构建本地镜像"></a>构建本地镜像</h2><p>使用与Minikube VM相同的Docker主机构建镜像，以使镜像自动存在。为此，请确保使用Minikube Docker守护进程：  </p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">eval $(minikube docker-env)</span><br></pre></td></tr></table></figure>
-<blockquote>
-<p>注意：如果不在使用Minikube主机时，可以通过运行eval $(minikube docker-env -u)来撤消此更改。</p>
-</blockquote>
-<p>使用Minikube Docker守护进程build Docker镜像：  </p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker build -t hello-node:v1 .</span><br></pre></td></tr></table></figure>
-
-<h2 id="Deployment"><a href="#Deployment" class="headerlink" title="Deployment"></a>Deployment</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">kubectl run hello-node --image&#x3D;hello-node:v1 --port&#x3D;8080</span><br></pre></td></tr></table></figure>
-
-<p>这里有个坑 ,我打tag的时候打成的latest，一直报找不到镜像，原因是如果省略imagePullPolicy 镜像tag为 :latest 策略为always ，否则 策略为 IfNotPresent</p>
-<h2 id="minikube-端口转发至本地"><a href="#minikube-端口转发至本地" class="headerlink" title="minikube 端口转发至本地"></a>minikube 端口转发至本地</h2><p>这实际上是k8s的功能  </p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">kubectl port-forward svc&#x2F;mysql 32316:3306 -n beatflow-data --address 0.0.0.0  </span><br><span class="line"></span><br><span class="line">#端口转发要注意，helm install重新安装后，要kill掉当前的端口转发进程，再重新的进行转发一次才能生效，但是helm upgrade是无影响的</span><br></pre></td></tr></table></figure>
-<blockquote>
-<p>kubectl proxy 只能转发http请求</p>
-</blockquote>
-<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p><a href="https://www.toutiao.com/i6918983713418166788/?tt_from=weixin&amp;utm_campaign=client_share&amp;wxshare_count=1&amp;timestamp=1622183070&amp;app=news_article&amp;utm_source=weixin&amp;utm_medium=toutiao_android&amp;use_new_style=1&amp;req_id=202105281424300101350990833D07A87F&amp;share_token=c2146953-602c-452f-9329-67054429477a&amp;group_id=6918983713418166788" target="_blank" rel="noopener">https://www.toutiao.com/i6918983713418166788/?tt_from=weixin&amp;utm_campaign=client_share&amp;wxshare_count=1&amp;timestamp=1622183070&amp;app=news_article&amp;utm_source=weixin&amp;utm_medium=toutiao_android&amp;use_new_style=1&amp;req_id=202105281424300101350990833D07A87F&amp;share_token=c2146953-602c-452f-9329-67054429477a&amp;group_id=6918983713418166788</a></p>
-
+          <h1 id="k8s-备忘录"><a href="#k8s-备忘录" class="headerlink" title="k8s 备忘录"></a>k8s 备忘录</h1>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2023/01/11/k8s/k8s/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
       
     </div>
 
@@ -1021,7 +995,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://phpdi.github.io/2023/01/11/k8s/k8s/">
+    <link itemprop="mainEntityOfPage" href="https://phpdi.github.io/2023/01/11/k8s/minikube/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/head.jpeg">
@@ -1035,7 +1009,7 @@
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
           
-            <a href="/2023/01/11/k8s/k8s/" class="post-title-link" itemprop="url">k8s/k8s</a>
+            <a href="/2023/01/11/k8s/minikube/" class="post-title-link" itemprop="url">k8s/minikube</a>
         </h2>
 
         <div class="post-meta">
@@ -1070,15 +1044,41 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <h1 id="k8s-备忘录"><a href="#k8s-备忘录" class="headerlink" title="k8s 备忘录"></a>k8s 备忘录</h1>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2023/01/11/k8s/k8s/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
+          <a id="more"></a>
+
+
+<h1 id="minikube"><a href="#minikube" class="headerlink" title="minikube"></a>minikube</h1><p>minikube 可以搭建一个在单节点运行的k8s集群  </p>
+<p>使用minikube 构建k8s本地化开发环境</p>
+<!--more-->
+
+<h2 id="Minikube安装"><a href="#Minikube安装" class="headerlink" title="Minikube安装"></a>Minikube安装</h2><p>首先我们需要下载Minikube的二进制安装包并安装:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">curl -LO https:&#x2F;&#x2F;storage.googleapis.com&#x2F;minikube&#x2F;releases&#x2F;latest&#x2F;minikube-linux-amd64</span><br><span class="line">sudo install minikube-linux-amd64 &#x2F;usr&#x2F;local&#x2F;bin&#x2F;minikube</span><br></pre></td></tr></table></figure>
+<h2 id="Minikube启动"><a href="#Minikube启动" class="headerlink" title="Minikube启动"></a>Minikube启动</h2><p>需要使用非root 启动</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">minikube start</span><br><span class="line"></span><br><span class="line"># 信任私有仓库 注意如果已经 minikube start 过了，那么需要删除集群重新启动 minikube delete ,这个参数才会生效</span><br><span class="line">minikube start --insecure-registry&#x3D;repo.goeoeo.com:8100</span><br></pre></td></tr></table></figure>
+
+<h2 id="安装kubectl"><a href="#安装kubectl" class="headerlink" title="安装kubectl"></a>安装kubectl</h2><p>查看kubectl的版本号，第一次使用会直接安装kubectl</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">minikube kubectl version</span><br></pre></td></tr></table></figure>
+<p>想直接使用kubectl命令的话，可以将其复制到/bin目录下去：  </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"># 查找kubectl命令的位置</span><br><span class="line">find &#x2F; -name kubectl</span><br><span class="line"># 找到之后复制到&#x2F;bin目录下</span><br><span class="line">cp &#x2F;mydata&#x2F;docker&#x2F;volumes&#x2F;minikube&#x2F;_data&#x2F;lib&#x2F;minikube&#x2F;binaries&#x2F;v1.20.0&#x2F;kubectl &#x2F;usr&#x2F;local&#x2F;bin&#x2F;</span><br><span class="line"># 直接使用kubectl命令</span><br><span class="line">kubectl version</span><br></pre></td></tr></table></figure>
+
+<h2 id="构建本地镜像"><a href="#构建本地镜像" class="headerlink" title="构建本地镜像"></a>构建本地镜像</h2><p>使用与Minikube VM相同的Docker主机构建镜像，以使镜像自动存在。为此，请确保使用Minikube Docker守护进程：  </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">eval $(minikube docker-env)</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>注意：如果不在使用Minikube主机时，可以通过运行eval $(minikube docker-env -u)来撤消此更改。</p>
+</blockquote>
+<p>使用Minikube Docker守护进程build Docker镜像：  </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker build -t hello-node:v1 .</span><br></pre></td></tr></table></figure>
+
+<h2 id="Deployment"><a href="#Deployment" class="headerlink" title="Deployment"></a>Deployment</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">kubectl run hello-node --image&#x3D;hello-node:v1 --port&#x3D;8080</span><br></pre></td></tr></table></figure>
+
+<p>这里有个坑 ,我打tag的时候打成的latest，一直报找不到镜像，原因是如果省略imagePullPolicy 镜像tag为 :latest 策略为always ，否则 策略为 IfNotPresent</p>
+<h2 id="minikube-端口转发至本地"><a href="#minikube-端口转发至本地" class="headerlink" title="minikube 端口转发至本地"></a>minikube 端口转发至本地</h2><p>这实际上是k8s的功能  </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">kubectl port-forward svc&#x2F;mysql 32316:3306 -n beatflow-data --address 0.0.0.0  </span><br><span class="line"></span><br><span class="line">#端口转发要注意，helm install重新安装后，要kill掉当前的端口转发进程，再重新的进行转发一次才能生效，但是helm upgrade是无影响的</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>kubectl proxy 只能转发http请求</p>
+</blockquote>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p><a href="https://www.toutiao.com/i6918983713418166788/?tt_from=weixin&amp;utm_campaign=client_share&amp;wxshare_count=1&amp;timestamp=1622183070&amp;app=news_article&amp;utm_source=weixin&amp;utm_medium=toutiao_android&amp;use_new_style=1&amp;req_id=202105281424300101350990833D07A87F&amp;share_token=c2146953-602c-452f-9329-67054429477a&amp;group_id=6918983713418166788" target="_blank" rel="noopener">https://www.toutiao.com/i6918983713418166788/?tt_from=weixin&amp;utm_campaign=client_share&amp;wxshare_count=1&amp;timestamp=1622183070&amp;app=news_article&amp;utm_source=weixin&amp;utm_medium=toutiao_android&amp;use_new_style=1&amp;req_id=202105281424300101350990833D07A87F&amp;share_token=c2146953-602c-452f-9329-67054429477a&amp;group_id=6918983713418166788</a></p>
+
       
     </div>
 
@@ -1810,13 +1810,13 @@
       <div class="site-state-item site-state-categories">
             <a href="/categories/">
           
-        <span class="site-state-item-count">17</span>
+        <span class="site-state-item-count">18</span>
         <span class="site-state-item-name">分类</span></a>
       </div>
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">68</span>
+        <span class="site-state-item-count">70</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>

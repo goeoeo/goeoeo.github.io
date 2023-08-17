@@ -631,28 +631,6 @@
       </tags>
   </entry>
   <entry>
-    <title>micro/微服务手记</title>
-    <url>/2023/01/11/micro/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E6%89%8B%E8%AE%B0/</url>
-    <content><![CDATA[<h1 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h1><p>微服务将单体应用系统拆分成多个分而治之的小应用,降低系统整体崩溃的风险性;同时也可根据这些小应用的不同需求调整实体机的性能</p>
-<p>微服务主要缺点是将系统复杂化,但对于本身就复杂的系统,微服务受益会很高  </p>
-<a id="more"></a>
-
-<h1 id="优缺点"><a href="#优缺点" class="headerlink" title="优缺点"></a>优缺点</h1><p>判定标准,使用微服务后开发和维护变得轻松了,而不是困难  </p>
-<h2 id="优点"><a href="#优点" class="headerlink" title="优点"></a>优点</h2><p>1.化繁为简,分散治理<br>2.服务间松耦合,服务内高内聚<br>3.服务可独立构建/部署/升级,局部更新<br>4.提高系统容错性,减少系统整体崩溃的概率<br>5.易于实现异构系统  </p>
-<h2 id="缺点"><a href="#缺点" class="headerlink" title="缺点"></a>缺点</h2><p>1.增加了运维部署的工作量与难度<br>2.增加了系统间调用逻辑的处理难度<br>3.日志更男收集和统计了<br>4.额外引入了一些非业务模块服务</p>
-<h1 id="go-micro"><a href="#go-micro" class="headerlink" title="go-micro"></a>go-micro</h1><ul>
-<li>服务发现: 支持服务注册与发现,底层支持etcd/consul/k8s</li>
-<li>负载均衡: rpc服务间的请求调度均衡策略</li>
-<li>同步通信: 基于RPC通信,支持单向/双向流通信模式</li>
-<li>异步通信: 提供pub/sub通信模型的接口</li>
-<li>高级接口: 比如服务发现,提供调用的接口是一致的</li>
-</ul>
-]]></content>
-      <categories>
-        <category>micro</category>
-      </categories>
-  </entry>
-  <entry>
     <title>micro/延迟队列</title>
     <url>/2023/01/11/micro/%E5%BB%B6%E8%BF%9F%E9%98%9F%E5%88%97/</url>
     <content><![CDATA[<h2 id="如何实现延迟队列？"><a href="#如何实现延迟队列？" class="headerlink" title="如何实现延迟队列？"></a>如何实现延迟队列？</h2><p>延迟队列的需求各位应该在日常开发的场景中经常碰到。比如：<br>用户登录之后5分钟给用户做分类推送；<br>用户多少天未登录给用户做召回推送；<br>定期检查用户当前退款账单是否被商家处理等等场景。<br>一般这种场景和定时任务还是有很大的区别，定时任务是你知道任务多久该跑一次或者什么时候只跑一次，这个时间是确定的。延迟队列是当某个事件发生的<br>时候需要延迟多久触发配套事件，引子事件发生的时间不是固定的。<br>业界目前也有很多实现方案，单机版的方案就不说了，现在也没有哪个公司还是单机版的服务，今天我们一一探讨各种方案的大致实现。  </p>
@@ -719,6 +697,28 @@
       <tags>
         <tag>消息队列</tag>
       </tags>
+  </entry>
+  <entry>
+    <title>micro/微服务手记</title>
+    <url>/2023/01/11/micro/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E6%89%8B%E8%AE%B0/</url>
+    <content><![CDATA[<h1 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h1><p>微服务将单体应用系统拆分成多个分而治之的小应用,降低系统整体崩溃的风险性;同时也可根据这些小应用的不同需求调整实体机的性能</p>
+<p>微服务主要缺点是将系统复杂化,但对于本身就复杂的系统,微服务受益会很高  </p>
+<a id="more"></a>
+
+<h1 id="优缺点"><a href="#优缺点" class="headerlink" title="优缺点"></a>优缺点</h1><p>判定标准,使用微服务后开发和维护变得轻松了,而不是困难  </p>
+<h2 id="优点"><a href="#优点" class="headerlink" title="优点"></a>优点</h2><p>1.化繁为简,分散治理<br>2.服务间松耦合,服务内高内聚<br>3.服务可独立构建/部署/升级,局部更新<br>4.提高系统容错性,减少系统整体崩溃的概率<br>5.易于实现异构系统  </p>
+<h2 id="缺点"><a href="#缺点" class="headerlink" title="缺点"></a>缺点</h2><p>1.增加了运维部署的工作量与难度<br>2.增加了系统间调用逻辑的处理难度<br>3.日志更男收集和统计了<br>4.额外引入了一些非业务模块服务</p>
+<h1 id="go-micro"><a href="#go-micro" class="headerlink" title="go-micro"></a>go-micro</h1><ul>
+<li>服务发现: 支持服务注册与发现,底层支持etcd/consul/k8s</li>
+<li>负载均衡: rpc服务间的请求调度均衡策略</li>
+<li>同步通信: 基于RPC通信,支持单向/双向流通信模式</li>
+<li>异步通信: 提供pub/sub通信模型的接口</li>
+<li>高级接口: 比如服务发现,提供调用的接口是一致的</li>
+</ul>
+]]></content>
+      <categories>
+        <category>micro</category>
+      </categories>
   </entry>
   <entry>
     <title>micro/领域驱动设计代码实践</title>
@@ -3164,48 +3164,6 @@
       </tags>
   </entry>
   <entry>
-    <title>linux/丝滑的开发环境</title>
-    <url>/2023/01/11/linux/%E4%B8%9D%E6%BB%91%E7%9A%84%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83/</url>
-    <content><![CDATA[<p>在我刚开始接触编程的时候（大三），用的便是ubuntu，习惯了在linux下开发，还有就是linux搭各种环境实在太方便，开发出来的代码没有环境问题。但由于linux的生态问题，一些<br>工作中常用的软件，没有比如腾讯系的软件。<br>当然有些软件linux 可以通过wine 进行安装，但使用的时候总是不够丝滑。</p>
-<a id="more"></a>
-
-<h1 id="基于此我探索了几种方式来在这之间寻找一些平衡"><a href="#基于此我探索了几种方式来在这之间寻找一些平衡" class="headerlink" title="基于此我探索了几种方式来在这之间寻找一些平衡"></a>基于此我探索了几种方式来在这之间寻找一些平衡</h1><h2 id="只使用windows"><a href="#只使用windows" class="headerlink" title="只使用windows"></a>只使用windows</h2><p>windows+WSL<br>WSL 是 Windows Subsystem for Linux 的缩写，意思是 linux 版的 window 子系统。  </p>
-<h2 id="只使用linux"><a href="#只使用linux" class="headerlink" title="只使用linux"></a>只使用linux</h2><p>这里主要指的是ubuntu ,deepin我也用过，但由于踩坑的时候，不好解决， 最后还是换回了ubuntu<br>使用wine 安装windows 软件 这有各种各样的问题。</p>
-<h2 id="装虚拟机"><a href="#装虚拟机" class="headerlink" title="装虚拟机"></a>装虚拟机</h2><p>这种方式，占用内存太多，我的电脑和公司提供的电脑都难以支持。</p>
-<h2 id="mac"><a href="#mac" class="headerlink" title="mac"></a>mac</h2><p>这或许是个一劳永逸的方式，但是我不想换电脑，也不想脱离linux开发。</p>
-<h2 id="ubuntu-windows"><a href="#ubuntu-windows" class="headerlink" title="ubuntu+windows"></a>ubuntu+windows</h2><p>用ubuntu远程windows<br>这个方式不一定通用，但对于我来说，是目前最让我舒服的工作方式  </p>
-<ul>
-<li>ubuntu windows 同时连入公司局域网 ，ubuntu中使用remmina 通过rdp协议直接远程win10。这样虽然可以用，但是由于远程的原因，用windows的<br>的时候有一点点顿感 </li>
-<li>用windows 连接公司的局域网，用网线将windows 和linux连接起来，将windows wlan 共享，实现ubuntu 上网 ，这样延迟在2ms以内，没有顿挫<br>这是我目前工作的方式</li>
-</ul>
-<h1 id="ubuntu-windows-搭建过程"><a href="#ubuntu-windows-搭建过程" class="headerlink" title="ubuntu+windows 搭建过程"></a>ubuntu+windows 搭建过程</h1><p>两台电脑<br>ubuntu 这台电脑作为我的主开发机<br>windows 是我用了10年的老笔记本</p>
-<h2 id="准备工作"><a href="#准备工作" class="headerlink" title="准备工作"></a>准备工作</h2><ul>
-<li>ubuntu22.04</li>
-<li>windows10 专业版 (登录方式为用户名和密码)</li>
-<li>网线一根</li>
-</ul>
-<h3 id="配置windows"><a href="#配置windows" class="headerlink" title="配置windows"></a>配置windows</h3><ol>
-<li>将win 远程桌面设置开启</li>
-<li>将windows wlan 共享打开，将网络共享给以太网（插网线的网口）</li>
-<li>ubuntu 打开remmina，配置连接 192.168.137.1<br>windows 配置如下:<br><img src="/2023/01/11/linux/%E4%B8%9D%E6%BB%91%E7%9A%84%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83/img1.png" alt></li>
-</ol>
-<p>ubuntu 配置如下:<br><img src="/2023/01/11/linux/%E4%B8%9D%E6%BB%91%E7%9A%84%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83/img.png" alt></p>
-<h3 id="解决ubuntu中听不到windows声音的问题"><a href="#解决ubuntu中听不到windows声音的问题" class="headerlink" title="解决ubuntu中听不到windows声音的问题"></a>解决ubuntu中听不到windows声音的问题</h3><ol>
-<li>win+R gpedit.msc  本地计算机策略 &gt; 计算机配置 &gt; 管理模板 &gt; Windows 组件 &gt; 远程桌面服务 &gt; 远程桌面会话主机 &gt; 设备和资源重定向 启用“允许音频和视频播放重定向”和“允许音频录制重定向”</li>
-<li>remmina 连接设置中 高级 &gt; 音频输出模式 改为本地</li>
-</ol>
-<h3 id="解决ubuntu重启后有线网络连接不上的问题"><a href="#解决ubuntu重启后有线网络连接不上的问题" class="headerlink" title="解决ubuntu重启后有线网络连接不上的问题"></a>解决ubuntu重启后有线网络连接不上的问题</h3><ol>
-<li>将windows wlan 中共享关闭再打开，重置一下</li>
-</ol>
-]]></content>
-      <categories>
-        <category>linux</category>
-      </categories>
-      <tags>
-        <tag>开发环境</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>linux/常用命令和问题</title>
     <url>/2023/01/11/linux/%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4%E5%92%8C%E9%97%AE%E9%A2%98/</url>
     <content><![CDATA[<h1 id="cat"><a href="#cat" class="headerlink" title="cat"></a>cat</h1><ul>
@@ -3259,6 +3217,48 @@
       </categories>
       <tags>
         <tag>linux问题</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>linux/丝滑的开发环境</title>
+    <url>/2023/01/11/linux/%E4%B8%9D%E6%BB%91%E7%9A%84%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83/</url>
+    <content><![CDATA[<p>在我刚开始接触编程的时候（大三），用的便是ubuntu，习惯了在linux下开发，还有就是linux搭各种环境实在太方便，开发出来的代码没有环境问题。但由于linux的生态问题，一些<br>工作中常用的软件，没有比如腾讯系的软件。<br>当然有些软件linux 可以通过wine 进行安装，但使用的时候总是不够丝滑。</p>
+<a id="more"></a>
+
+<h1 id="基于此我探索了几种方式来在这之间寻找一些平衡"><a href="#基于此我探索了几种方式来在这之间寻找一些平衡" class="headerlink" title="基于此我探索了几种方式来在这之间寻找一些平衡"></a>基于此我探索了几种方式来在这之间寻找一些平衡</h1><h2 id="只使用windows"><a href="#只使用windows" class="headerlink" title="只使用windows"></a>只使用windows</h2><p>windows+WSL<br>WSL 是 Windows Subsystem for Linux 的缩写，意思是 linux 版的 window 子系统。  </p>
+<h2 id="只使用linux"><a href="#只使用linux" class="headerlink" title="只使用linux"></a>只使用linux</h2><p>这里主要指的是ubuntu ,deepin我也用过，但由于踩坑的时候，不好解决， 最后还是换回了ubuntu<br>使用wine 安装windows 软件 这有各种各样的问题。</p>
+<h2 id="装虚拟机"><a href="#装虚拟机" class="headerlink" title="装虚拟机"></a>装虚拟机</h2><p>这种方式，占用内存太多，我的电脑和公司提供的电脑都难以支持。</p>
+<h2 id="mac"><a href="#mac" class="headerlink" title="mac"></a>mac</h2><p>这或许是个一劳永逸的方式，但是我不想换电脑，也不想脱离linux开发。</p>
+<h2 id="ubuntu-windows"><a href="#ubuntu-windows" class="headerlink" title="ubuntu+windows"></a>ubuntu+windows</h2><p>用ubuntu远程windows<br>这个方式不一定通用，但对于我来说，是目前最让我舒服的工作方式  </p>
+<ul>
+<li>ubuntu windows 同时连入公司局域网 ，ubuntu中使用remmina 通过rdp协议直接远程win10。这样虽然可以用，但是由于远程的原因，用windows的<br>的时候有一点点顿感 </li>
+<li>用windows 连接公司的局域网，用网线将windows 和linux连接起来，将windows wlan 共享，实现ubuntu 上网 ，这样延迟在2ms以内，没有顿挫<br>这是我目前工作的方式</li>
+</ul>
+<h1 id="ubuntu-windows-搭建过程"><a href="#ubuntu-windows-搭建过程" class="headerlink" title="ubuntu+windows 搭建过程"></a>ubuntu+windows 搭建过程</h1><p>两台电脑<br>ubuntu 这台电脑作为我的主开发机<br>windows 是我用了10年的老笔记本</p>
+<h2 id="准备工作"><a href="#准备工作" class="headerlink" title="准备工作"></a>准备工作</h2><ul>
+<li>ubuntu22.04</li>
+<li>windows10 专业版 (登录方式为用户名和密码)</li>
+<li>网线一根</li>
+</ul>
+<h3 id="配置windows"><a href="#配置windows" class="headerlink" title="配置windows"></a>配置windows</h3><ol>
+<li>将win 远程桌面设置开启</li>
+<li>将windows wlan 共享打开，将网络共享给以太网（插网线的网口）</li>
+<li>ubuntu 打开remmina，配置连接 192.168.137.1<br>windows 配置如下:<br><img src="/2023/01/11/linux/%E4%B8%9D%E6%BB%91%E7%9A%84%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83/img1.png" alt></li>
+</ol>
+<p>ubuntu 配置如下:<br><img src="/2023/01/11/linux/%E4%B8%9D%E6%BB%91%E7%9A%84%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83/img.png" alt></p>
+<h3 id="解决ubuntu中听不到windows声音的问题"><a href="#解决ubuntu中听不到windows声音的问题" class="headerlink" title="解决ubuntu中听不到windows声音的问题"></a>解决ubuntu中听不到windows声音的问题</h3><ol>
+<li>win+R gpedit.msc  本地计算机策略 &gt; 计算机配置 &gt; 管理模板 &gt; Windows 组件 &gt; 远程桌面服务 &gt; 远程桌面会话主机 &gt; 设备和资源重定向 启用“允许音频和视频播放重定向”和“允许音频录制重定向”</li>
+<li>remmina 连接设置中 高级 &gt; 音频输出模式 改为本地</li>
+</ol>
+<h3 id="解决ubuntu重启后有线网络连接不上的问题"><a href="#解决ubuntu重启后有线网络连接不上的问题" class="headerlink" title="解决ubuntu重启后有线网络连接不上的问题"></a>解决ubuntu重启后有线网络连接不上的问题</h3><ol>
+<li>将windows wlan 中共享关闭再打开，重置一下</li>
+</ol>
+]]></content>
+      <categories>
+        <category>linux</category>
+      </categories>
+      <tags>
+        <tag>开发环境</tag>
       </tags>
   </entry>
   <entry>
@@ -3590,60 +3590,6 @@
       </tags>
   </entry>
   <entry>
-    <title>k8s/helm</title>
-    <url>/2023/01/11/k8s/helm/</url>
-    <content><![CDATA[<h1 id="Helm"><a href="#Helm" class="headerlink" title="Helm"></a>Helm</h1><p>Helm 是 Kubernetes 的包管理器。包管理器类似于我们在 Ubuntu 中使用的apt、Centos中使用的yum 或者Python中的 pip 一样，能快速查找、下载和安装软件包<br>官网:<a href="https://helm.sh/" target="_blank" rel="noopener">https://helm.sh/</a><br>官方文档地址: <a href="https://helm.sh/zh/docs" target="_blank" rel="noopener">https://helm.sh/zh/docs</a></p>
-<a id="more"></a>
-
-<h2 id="Helm介绍"><a href="#Helm介绍" class="headerlink" title="Helm介绍"></a>Helm介绍</h2><h3 id="基本方式部署应用流程"><a href="#基本方式部署应用流程" class="headerlink" title="基本方式部署应用流程"></a>基本方式部署应用流程</h3><ol>
-<li>编写或者导出资源编排文件yaml  </li>
-<li>deployment部署pod  </li>
-<li>service暴露服务  </li>
-<li>Ingress服务实现域名到Service的路由  </li>
-</ol>
-<p>以上的方式存在的缺点:<br>如果我们部署的是微服务项目，可能是10多20个或者更多的服务，那么每套服务都需要一套yaml文件<br>这样下来，我们需要维护的yaml文件就是一大堆,而且如果我们升个级，那就非常不方便了  </p>
-<h3 id="Helm作用"><a href="#Helm作用" class="headerlink" title="Helm作用"></a>Helm作用</h3><ul>
-<li>可以使用Helm把上面我们说到的微服务部署yaml作为一个整体管理</li>
-<li>还可以实现yaml的高效复用</li>
-<li>使用Helm应用级别的版本管理，对于版本升级和回滚操作相当简单了起来</li>
-</ul>
-<h3 id="Helm的三个重要概念"><a href="#Helm的三个重要概念" class="headerlink" title="Helm的三个重要概念"></a>Helm的三个重要概念</h3><ul>
-<li>helm helm命令行管理工具，类似于kubectl</li>
-<li>Chart 打包的yaml集合</li>
-<li>Release 基于 Chart 的部署实体 ，一个 chart 被 helm 运行后将会生成对应的一个Release，相当于就是针对Chart的版本管理</li>
-</ul>
-<h2 id="Helm安装"><a href="#Helm安装" class="headerlink" title="Helm安装"></a>Helm安装</h2><h3 id="helm安装"><a href="#helm安装" class="headerlink" title="helm安装"></a>helm安装</h3><p><a href="https://helm.sh/zh/docs/intro/install/" target="_blank" rel="noopener">https://helm.sh/zh/docs/intro/install/</a>  </p>
-]]></content>
-      <categories>
-        <category>k8s</category>
-      </categories>
-      <tags>
-        <tag>k8s</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>k8s/k8s</title>
-    <url>/2023/01/11/k8s/k8s/</url>
-    <content><![CDATA[<h1 id="k8s-备忘录"><a href="#k8s-备忘录" class="headerlink" title="k8s 备忘录"></a>k8s 备忘录</h1><a id="more"></a>
-
-<h2 id="k8s-中Service-Account"><a href="#k8s-中Service-Account" class="headerlink" title="k8s 中Service Account"></a>k8s 中Service Account</h2><p>k8s创建两套独立的账号系统，原因如下：  </p>
-<ol>
-<li>User账号给用户用，Service Account是给Pod里的进程使用的，面向的对象不同  </li>
-<li>User账号是全局性的，Service Account则属于某个具体的Namespace  </li>
-<li>User账号是与后端的用户数据库同步的，创建一个新用户通常要走一套复杂的业务流程才能实现，Service Account的创建则需要极轻量级的实现方式，<br>集群管理员可以很容易地为某些特定任务创建一个Service Account  </li>
-<li>对于一个复杂的系统来说，多个组件通常拥有各种账号的配置信息，Service Account是Namespace隔离的，可以针对组件进行一对一的定义，同时具备很好的“便携性”</li>
-</ol>
-<p>Controller Manager创建了ServiceAccount Controller和Token Controller这两个安全相关的控制器。其中ServiceAccount Controller一直<br>监听Service Account和Namespace的事件，如果在一个Namespace中没有default Service Account，那么Service Account会给Namespace创建一个默认（default）的Service Account</p>
-<p>默认的service account 仅能获取当前Pod自身的相关属性，无法观察到其他名称空间Pod的相关属性信息，如果想要扩展pod,假设有一个Pod 需要用于管理<br>其他Pod或者其他资源对象，是无法通过吱声的名称空间的serviceAccount 进行其他Pod相关属性信息的获取的，此时就需要进行手动创建一个serviceAccount，并在创建Pod时进行定义。实际上serviceAccount也属于k8s个资源</p>
-]]></content>
-      <categories>
-        <category>k8s</category>
-      </categories>
-      <tags>
-        <tag>harbor</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>k8s/k8s踩坑日志</title>
     <url>/2023/01/11/k8s/k8s%E8%B8%A9%E5%9D%91%E6%97%A5%E5%BF%97/</url>
     <content><![CDATA[<h1 id="pvc挂载不上pv"><a href="#pvc挂载不上pv" class="headerlink" title="pvc挂载不上pv"></a>pvc挂载不上pv</h1><ul>
@@ -3706,6 +3652,38 @@
       </categories>
       <tags>
         <tag>minikube</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>k8s/helm</title>
+    <url>/2023/01/11/k8s/helm/</url>
+    <content><![CDATA[<h1 id="Helm"><a href="#Helm" class="headerlink" title="Helm"></a>Helm</h1><p>Helm 是 Kubernetes 的包管理器。包管理器类似于我们在 Ubuntu 中使用的apt、Centos中使用的yum 或者Python中的 pip 一样，能快速查找、下载和安装软件包<br>官网:<a href="https://helm.sh/" target="_blank" rel="noopener">https://helm.sh/</a><br>官方文档地址: <a href="https://helm.sh/zh/docs" target="_blank" rel="noopener">https://helm.sh/zh/docs</a></p>
+<a id="more"></a>
+
+<h2 id="Helm介绍"><a href="#Helm介绍" class="headerlink" title="Helm介绍"></a>Helm介绍</h2><h3 id="基本方式部署应用流程"><a href="#基本方式部署应用流程" class="headerlink" title="基本方式部署应用流程"></a>基本方式部署应用流程</h3><ol>
+<li>编写或者导出资源编排文件yaml  </li>
+<li>deployment部署pod  </li>
+<li>service暴露服务  </li>
+<li>Ingress服务实现域名到Service的路由  </li>
+</ol>
+<p>以上的方式存在的缺点:<br>如果我们部署的是微服务项目，可能是10多20个或者更多的服务，那么每套服务都需要一套yaml文件<br>这样下来，我们需要维护的yaml文件就是一大堆,而且如果我们升个级，那就非常不方便了  </p>
+<h3 id="Helm作用"><a href="#Helm作用" class="headerlink" title="Helm作用"></a>Helm作用</h3><ul>
+<li>可以使用Helm把上面我们说到的微服务部署yaml作为一个整体管理</li>
+<li>还可以实现yaml的高效复用</li>
+<li>使用Helm应用级别的版本管理，对于版本升级和回滚操作相当简单了起来</li>
+</ul>
+<h3 id="Helm的三个重要概念"><a href="#Helm的三个重要概念" class="headerlink" title="Helm的三个重要概念"></a>Helm的三个重要概念</h3><ul>
+<li>helm helm命令行管理工具，类似于kubectl</li>
+<li>Chart 打包的yaml集合</li>
+<li>Release 基于 Chart 的部署实体 ，一个 chart 被 helm 运行后将会生成对应的一个Release，相当于就是针对Chart的版本管理</li>
+</ul>
+<h2 id="Helm安装"><a href="#Helm安装" class="headerlink" title="Helm安装"></a>Helm安装</h2><h3 id="helm安装"><a href="#helm安装" class="headerlink" title="helm安装"></a>helm安装</h3><p><a href="https://helm.sh/zh/docs/intro/install/" target="_blank" rel="noopener">https://helm.sh/zh/docs/intro/install/</a>  </p>
+]]></content>
+      <categories>
+        <category>k8s</category>
+      </categories>
+      <tags>
+        <tag>k8s</tag>
       </tags>
   </entry>
   <entry>
@@ -4076,6 +4054,28 @@
       </categories>
       <tags>
         <tag>kubesphere</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>k8s/k8s</title>
+    <url>/2023/01/11/k8s/k8s/</url>
+    <content><![CDATA[<h1 id="k8s-备忘录"><a href="#k8s-备忘录" class="headerlink" title="k8s 备忘录"></a>k8s 备忘录</h1><a id="more"></a>
+
+<h2 id="k8s-中Service-Account"><a href="#k8s-中Service-Account" class="headerlink" title="k8s 中Service Account"></a>k8s 中Service Account</h2><p>k8s创建两套独立的账号系统，原因如下：  </p>
+<ol>
+<li>User账号给用户用，Service Account是给Pod里的进程使用的，面向的对象不同  </li>
+<li>User账号是全局性的，Service Account则属于某个具体的Namespace  </li>
+<li>User账号是与后端的用户数据库同步的，创建一个新用户通常要走一套复杂的业务流程才能实现，Service Account的创建则需要极轻量级的实现方式，<br>集群管理员可以很容易地为某些特定任务创建一个Service Account  </li>
+<li>对于一个复杂的系统来说，多个组件通常拥有各种账号的配置信息，Service Account是Namespace隔离的，可以针对组件进行一对一的定义，同时具备很好的“便携性”</li>
+</ol>
+<p>Controller Manager创建了ServiceAccount Controller和Token Controller这两个安全相关的控制器。其中ServiceAccount Controller一直<br>监听Service Account和Namespace的事件，如果在一个Namespace中没有default Service Account，那么Service Account会给Namespace创建一个默认（default）的Service Account</p>
+<p>默认的service account 仅能获取当前Pod自身的相关属性，无法观察到其他名称空间Pod的相关属性信息，如果想要扩展pod,假设有一个Pod 需要用于管理<br>其他Pod或者其他资源对象，是无法通过吱声的名称空间的serviceAccount 进行其他Pod相关属性信息的获取的，此时就需要进行手动创建一个serviceAccount，并在创建Pod时进行定义。实际上serviceAccount也属于k8s个资源</p>
+]]></content>
+      <categories>
+        <category>k8s</category>
+      </categories>
+      <tags>
+        <tag>harbor</tag>
       </tags>
   </entry>
   <entry>
@@ -4466,82 +4466,6 @@
       </tags>
   </entry>
   <entry>
-    <title>interview/Redis面试题</title>
-    <url>/2023/01/11/interview/Redis%E9%9D%A2%E8%AF%95%E9%A2%98/</url>
-    <content><![CDATA[<h2 id="使用Redis有哪些好处"><a href="#使用Redis有哪些好处" class="headerlink" title="使用Redis有哪些好处"></a>使用Redis有哪些好处</h2><ul>
-<li>速度快，因为数据存在内存中，类似于HashMap，HashMap的优势就是查找和操作的时间复杂度都是O(1)</li>
-<li>支持丰富数据类型，支持string，list，set，sorted set，hash</li>
-<li>支持事务，操作都是原子性，所谓的原子性就是对数据的更改要么全部执行，要么全部不执行</li>
-<li>丰富的特性：可用于缓存，消息，按key设置过期时间，过期后将会自动删除<a id="more"></a>
-
-</li>
-</ul>
-<h2 id="redis相比memcached有哪些优势"><a href="#redis相比memcached有哪些优势" class="headerlink" title="redis相比memcached有哪些优势"></a>redis相比memcached有哪些优势</h2><ul>
-<li>memcached所有的值均是简单的字符串，redis作为其替代者，支持更为丰富的数据类型</li>
-<li>redis的速度比memcached快很多</li>
-<li>redis可以持久化其数据</li>
-</ul>
-<h2 id="redis常见性能问题和解决方案"><a href="#redis常见性能问题和解决方案" class="headerlink" title="redis常见性能问题和解决方案"></a>redis常见性能问题和解决方案</h2><h3 id="Master写内存快照"><a href="#Master写内存快照" class="headerlink" title="Master写内存快照"></a>Master写内存快照</h3><p>save命令调度rdbSave函数，会阻塞主线程的工作，当快照比较大时对性能影响是非常大的，会间断性暂停服务，所以Master最好不要写内存快照。 </p>
-<p>Master最好不要做任何持久化工作，包括内存快照和AOF日志文件，特别是不要启用内存快照做持久化。  </p>
-<h3 id="Master-AOF持久化"><a href="#Master-AOF持久化" class="headerlink" title="Master AOF持久化"></a>Master AOF持久化</h3><p>如果不重写AOF文件，这个持久化方式对性能的影响是最小的，但是AOF文件会不断增大，AOF文件过大会影响Master重启的恢复速度。</p>
-<p>如果数据比较关键，某个Slave开启AOF备份数据，策略为每秒同步一次。</p>
-<h3 id="Master调用BGREWRITEAOF"><a href="#Master调用BGREWRITEAOF" class="headerlink" title="Master调用BGREWRITEAOF"></a>Master调用BGREWRITEAOF</h3><p>Master调用BGREWRITEAOF重写AOF文件，AOF在重写的时候会占大量的CPU和内存资源，导致服务load过高，出现短暂服务暂停现象。</p>
-<p>将no-appendfsync-on-rewrite的配置设为yes可以缓解这个问题，设置为yes表示rewrite期间对新写操作不fsync，暂时存在内存中，等rewrite完成后再写入。最好是不开启Master的AOF备份功能。  </p>
-<h4 id="Redis主从复制的性能问题"><a href="#Redis主从复制的性能问题" class="headerlink" title="Redis主从复制的性能问题"></a>Redis主从复制的性能问题</h4><p>第一次Slave向Master同步的实现是：Slave向Master发出同步请求，Master先dump出rdb文件，然后将rdb文件全量传输给slave，然后Master把缓存的<br>命令转发给Slave，初次同步完成。第二次以及以后的同步实现是：Master将变量的快照直接实时依次发送给各个Slave。不管什么原因导致Slave和<br>Master断开重连都会重复以上过程。Redis的主从复制是建立在内存快照的持久化基础上，只要有Slave就一定会有内存快照发生。虽然Redis宣称主从<br>复制无阻塞，但由于Redis使用单线程服务，如果Master快照文件比较大，那么第一次全量传输会耗费比较长时间，且文件传输过程中Master可能无法<br>提供服务，也就是说服务会中断，对于关键服务，这个后果也是很可怕的。  </p>
-<p>尽量避免在压力较大的主库上增加从库。</p>
-<h3 id="单点故障问题"><a href="#单点故障问题" class="headerlink" title="单点故障问题"></a>单点故障问题</h3><p>由于目前Redis的主从复制还不够成熟，所以存在明显的单点故障问题，这个目前只能自己做方案解决</p>
-<p>为了Master的稳定性，主从复制不要用图状结构，用单向链表结构更稳定，即主从关系为：Master&lt;–Slave1&lt;–Slave2&lt;–Slave3…….，这样的结构也方便解<br>决单点故障问题，实现Slave对Master的替换，也即，如果Master挂了，可以立马启用Slave1做Master，其他不变。</p>
-<h2 id="MySQL里有2000w数据，redis中只存20w的数据，如何保证redis中的数据都是热点数据"><a href="#MySQL里有2000w数据，redis中只存20w的数据，如何保证redis中的数据都是热点数据" class="headerlink" title="MySQL里有2000w数据，redis中只存20w的数据，如何保证redis中的数据都是热点数据"></a>MySQL里有2000w数据，redis中只存20w的数据，如何保证redis中的数据都是热点数据</h2><h3 id="相关知识"><a href="#相关知识" class="headerlink" title="相关知识"></a>相关知识</h3><p>redis 内存数据集大小上升到一定大小的时候，就会施行数据淘汰策略。redis 提供 </p>
-<h3 id="6种数据淘汰策略"><a href="#6种数据淘汰策略" class="headerlink" title="6种数据淘汰策略"></a>6种数据淘汰策略</h3><ul>
-<li>volatile-lru 从已设置过期时间的数据集中挑选最近最少使用的数据淘汰</li>
-<li>volatile-ttl 从已设置过期时间的数据集中挑选将要过期的数据淘汰</li>
-<li>volatile-random 从已设置过期时间的数据集中任意选择数据淘汰</li>
-<li>allkeys-lru 从数据集中挑选最近最少使用的数据淘汰</li>
-<li>allkeys-random 从数据集中任意选择数据淘汰</li>
-<li>no-enviction 禁止驱逐数据<h3 id="实际操作"><a href="#实际操作" class="headerlink" title="实际操作"></a>实际操作</h3>计算一下20w数据大约占用的内存，设置Redis内存限制，设置淘汰策略，加载热数据到内存中</li>
-</ul>
-<h2 id="Memcache与Redis的区别都有哪些"><a href="#Memcache与Redis的区别都有哪些" class="headerlink" title="Memcache与Redis的区别都有哪些"></a>Memcache与Redis的区别都有哪些</h2><h3 id="存储方式"><a href="#存储方式" class="headerlink" title="存储方式"></a>存储方式</h3><ul>
-<li>Memecache把数据全部存在内存之中，断电后会挂掉，数据不能超过内存大小</li>
-<li>Redis有部份存在硬盘上，这样能保证数据的持久性。</li>
-</ul>
-<h3 id="数据支持类型"><a href="#数据支持类型" class="headerlink" title="数据支持类型"></a>数据支持类型</h3><ul>
-<li>Memcache对数据类型支持相对简单</li>
-<li>Redis有复杂的数据类型</li>
-</ul>
-<h3 id="value大小"><a href="#value大小" class="headerlink" title="value大小"></a>value大小</h3><ul>
-<li>redis最大可以达到1GB，而memcache只有1MB</li>
-</ul>
-<h2 id="redis最适合的场景"><a href="#redis最适合的场景" class="headerlink" title="redis最适合的场景"></a>redis最适合的场景</h2><h3 id="缓存"><a href="#缓存" class="headerlink" title="缓存"></a>缓存</h3><p>缓存现在几乎是所有中大型网站都在用的必杀技，合理的利用缓存不仅能够提升网站访问速度，还能大大降低数据库的压力。Redis提供了键过期功能，<br>也提供了灵活的键淘汰策略，所以，现在Redis用在缓存的场合非常多。</p>
-<h3 id="排行榜"><a href="#排行榜" class="headerlink" title="排行榜"></a>排行榜</h3><p>很多网站都有排行榜应用的，如京东的月度销量榜单、商品按时间的上新排行榜等。Redis提供的有序集合数据类构能实现各种复杂的排行榜应用。</p>
-<h3 id="计数器"><a href="#计数器" class="headerlink" title="计数器"></a>计数器</h3><p>什么是计数器，如电商网站商品的浏览量、视频网站视频的播放数等。为了保证数据实时效，每次浏览都得给+1，并发量高时如果每次都请求数据库操作无<br>疑是种挑战和压力。Redis提供的incr命令来实现计数器功能，内存操作，性能非常好，非常适用于这些计数场景。</p>
-<h3 id="分布式会话"><a href="#分布式会话" class="headerlink" title="分布式会话"></a>分布式会话</h3><p>集群模式下，在应用不多的情况下一般使用容器自带的session复制功能就能满足，当应用增多相对复杂的系统中，一般都会搭建以Redis等内存数据库为中<br>心的session服务，session不再由容器管理，而是由session服务及内存数据库管理。</p>
-<h3 id="分布式锁"><a href="#分布式锁" class="headerlink" title="分布式锁"></a>分布式锁</h3><p>在很多互联网公司中都使用了分布式技术，分布式技术带来的技术挑战是对同一个资源的并发访问，如全局ID、减库存、秒杀等场景，并发量不大的场景可<br>以使用数据库的悲观锁、乐观锁来实现，但在并发量高的场合中，利用数据库锁来控制资源的并发访问是不太理想的，大大影响了数据库的性能。<br>可以利用Redis的setnx功能来编写分布式的锁，如果设置返回1说明获取锁成功，否则获取锁失败，实际应用中要考虑的细节要更多。</p>
-<h3 id="社交网络"><a href="#社交网络" class="headerlink" title="社交网络"></a>社交网络</h3><p>点赞、踩、关注/被关注、共同好友等是社交网站的基本功能，社交网站的访问量通常来说比较大，而且传统的关系数据库类型不适合存储这种类型的数据，<br>Redis提供的哈希、集合等数据结构能很方便的的实现这些功能。</p>
-<h3 id="最新列表"><a href="#最新列表" class="headerlink" title="最新列表"></a>最新列表</h3><p>Redis列表结构，LPUSH可以在列表头部插入一个内容ID作为关键字，LTRIM可用来限制列表的数量，这样列表永远为N个ID，无需查询最新的列表，直接根据ID去到对应的内容页即可。</p>
-<h3 id="消息系统"><a href="#消息系统" class="headerlink" title="消息系统"></a>消息系统</h3><p>消息队列是大型网站必用中间件，如ActiveMQ、RabbitMQ、Kafka等流行的消息队列中间件，主要用于业务解耦、流量削峰及异步处理实时性低的业务。<br>Redis提供了发布/订阅及阻塞队列功能，能实现一个简单的消息队列系统。另外，这个不能和专业的消息中间件相比。</p>
-<h2 id="Redis的同步机制"><a href="#Redis的同步机制" class="headerlink" title="Redis的同步机制"></a>Redis的同步机制</h2><p>Redis通过主从同步机制来确保master和salve之间的数据同步</p>
-<h3 id="全量复制"><a href="#全量复制" class="headerlink" title="全量复制"></a>全量复制</h3><p>全量复制是指salve启动时进行的初始化同步。<br>全同步过程：</p>
-<ol>
-<li>在salve启动时，会向master发送一条SYNC指令。  </li>
-<li>master收到这条指令后，会启动一个备份进程将所有数据写到rdb文件中去。  </li>
-<li>更新master的状态（备份是否成功、备份时间等），然后将rdb文件内容发送给等待中的salve。  <blockquote>
-<p>master并不会立即将rdb内容发送给salve。而是为每个等待中的salve注册写事件，当salve对应的socket可以发送数据时，再讲rdb内容发送给salve。</p>
-</blockquote>
-</li>
-</ol>
-<h3 id="增量拷贝"><a href="#增量拷贝" class="headerlink" title="增量拷贝"></a>增量拷贝</h3><p>如果出现网络闪断或者命令丢失等异常情况时，当主从连接恢复后，由于从节点之前保存了自身已复制的偏移量和主节点的运行ID。因此会把它们当作psync<br>参数发送给主节点，要求进行部分复制操作<br>主节点接到psync命令后首先核对参数runId是否与自身一致，如果一致，说明之前复制的是当前主节点；之后根据参数offset在自身复制积压缓冲区查找<br>，如果偏移量之后的数据存在缓冲区中，则对从节点发送+continue响应，表示可以进行部分复制；否则进行全量复制。<br>主节点根据偏移量把复制积压缓冲区里的数据发送给从节点，保证主从复制进入正常状态。</p>
-<h2 id="是否使用过Redis集群-集群的原理是什么"><a href="#是否使用过Redis集群-集群的原理是什么" class="headerlink" title="是否使用过Redis集群,集群的原理是什么"></a>是否使用过Redis集群,集群的原理是什么</h2><h2 id="redis集群如何保证一致性"><a href="#redis集群如何保证一致性" class="headerlink" title="redis集群如何保证一致性"></a>redis集群如何保证一致性</h2><h2 id="数据库与缓存数据一致性问题"><a href="#数据库与缓存数据一致性问题" class="headerlink" title="数据库与缓存数据一致性问题"></a>数据库与缓存数据一致性问题</h2><p>Cache Aside Pattern<br>1.失效：程序先从缓存中读取数据，如果没有命中，则从数据库中读取，成功之后将数据放到缓存中<br>2.命中：程序先从缓存中读取数据，如果命中，则直接返回<br>3.更新：程序先更新数据库，在删除缓存</p>
-<p>如何解决缓存击穿问题？<br>当一个线程需要去访问这个缓存的时候，如果发现缓存为空，则需要先去竞争一个锁，如果成功则进行正常的数据库读取和写入缓存这一操作，然后再释放锁，否则就等待一段时间之后，重新尝试读取缓存，如果还没有数据就继续去竞争锁　　</p>
-<p>怎么做到强一致性？<br>上一致性协议当然是可以的，虽然成本也是非常客观的。2PC甚至是3PC本身是存在一定程度的缺陷的，所以如果要采用这个方案，那么在架构设计中要引入很多的容错，回退和兜底措施。那如果是上Paxos和Raft呢？那么你首先至少要看过这两者的相关论文，并且调研清楚目前市面上有哪些开源方案，并做好充分的验证，并且能够做到出了问题自己有能力修复…对了，我还没提到性能问题呢。</p>
-<h2 id><a href="#" class="headerlink" title></a></h2>]]></content>
-      <categories>
-        <category>interview</category>
-      </categories>
-      <tags>
-        <tag>redis面试题</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>interview/微服务面试题</title>
     <url>/2023/01/11/interview/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E9%9D%A2%E8%AF%95%E9%A2%98/</url>
     <content><![CDATA[<h2 id="说说微服务架构的优势。"><a href="#说说微服务架构的优势。" class="headerlink" title="说说微服务架构的优势。"></a>说说微服务架构的优势。</h2><table>
@@ -4778,6 +4702,82 @@
       </categories>
       <tags>
         <tag>微服务面试题</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>interview/Redis面试题</title>
+    <url>/2023/01/11/interview/Redis%E9%9D%A2%E8%AF%95%E9%A2%98/</url>
+    <content><![CDATA[<h2 id="使用Redis有哪些好处"><a href="#使用Redis有哪些好处" class="headerlink" title="使用Redis有哪些好处"></a>使用Redis有哪些好处</h2><ul>
+<li>速度快，因为数据存在内存中，类似于HashMap，HashMap的优势就是查找和操作的时间复杂度都是O(1)</li>
+<li>支持丰富数据类型，支持string，list，set，sorted set，hash</li>
+<li>支持事务，操作都是原子性，所谓的原子性就是对数据的更改要么全部执行，要么全部不执行</li>
+<li>丰富的特性：可用于缓存，消息，按key设置过期时间，过期后将会自动删除<a id="more"></a>
+
+</li>
+</ul>
+<h2 id="redis相比memcached有哪些优势"><a href="#redis相比memcached有哪些优势" class="headerlink" title="redis相比memcached有哪些优势"></a>redis相比memcached有哪些优势</h2><ul>
+<li>memcached所有的值均是简单的字符串，redis作为其替代者，支持更为丰富的数据类型</li>
+<li>redis的速度比memcached快很多</li>
+<li>redis可以持久化其数据</li>
+</ul>
+<h2 id="redis常见性能问题和解决方案"><a href="#redis常见性能问题和解决方案" class="headerlink" title="redis常见性能问题和解决方案"></a>redis常见性能问题和解决方案</h2><h3 id="Master写内存快照"><a href="#Master写内存快照" class="headerlink" title="Master写内存快照"></a>Master写内存快照</h3><p>save命令调度rdbSave函数，会阻塞主线程的工作，当快照比较大时对性能影响是非常大的，会间断性暂停服务，所以Master最好不要写内存快照。 </p>
+<p>Master最好不要做任何持久化工作，包括内存快照和AOF日志文件，特别是不要启用内存快照做持久化。  </p>
+<h3 id="Master-AOF持久化"><a href="#Master-AOF持久化" class="headerlink" title="Master AOF持久化"></a>Master AOF持久化</h3><p>如果不重写AOF文件，这个持久化方式对性能的影响是最小的，但是AOF文件会不断增大，AOF文件过大会影响Master重启的恢复速度。</p>
+<p>如果数据比较关键，某个Slave开启AOF备份数据，策略为每秒同步一次。</p>
+<h3 id="Master调用BGREWRITEAOF"><a href="#Master调用BGREWRITEAOF" class="headerlink" title="Master调用BGREWRITEAOF"></a>Master调用BGREWRITEAOF</h3><p>Master调用BGREWRITEAOF重写AOF文件，AOF在重写的时候会占大量的CPU和内存资源，导致服务load过高，出现短暂服务暂停现象。</p>
+<p>将no-appendfsync-on-rewrite的配置设为yes可以缓解这个问题，设置为yes表示rewrite期间对新写操作不fsync，暂时存在内存中，等rewrite完成后再写入。最好是不开启Master的AOF备份功能。  </p>
+<h4 id="Redis主从复制的性能问题"><a href="#Redis主从复制的性能问题" class="headerlink" title="Redis主从复制的性能问题"></a>Redis主从复制的性能问题</h4><p>第一次Slave向Master同步的实现是：Slave向Master发出同步请求，Master先dump出rdb文件，然后将rdb文件全量传输给slave，然后Master把缓存的<br>命令转发给Slave，初次同步完成。第二次以及以后的同步实现是：Master将变量的快照直接实时依次发送给各个Slave。不管什么原因导致Slave和<br>Master断开重连都会重复以上过程。Redis的主从复制是建立在内存快照的持久化基础上，只要有Slave就一定会有内存快照发生。虽然Redis宣称主从<br>复制无阻塞，但由于Redis使用单线程服务，如果Master快照文件比较大，那么第一次全量传输会耗费比较长时间，且文件传输过程中Master可能无法<br>提供服务，也就是说服务会中断，对于关键服务，这个后果也是很可怕的。  </p>
+<p>尽量避免在压力较大的主库上增加从库。</p>
+<h3 id="单点故障问题"><a href="#单点故障问题" class="headerlink" title="单点故障问题"></a>单点故障问题</h3><p>由于目前Redis的主从复制还不够成熟，所以存在明显的单点故障问题，这个目前只能自己做方案解决</p>
+<p>为了Master的稳定性，主从复制不要用图状结构，用单向链表结构更稳定，即主从关系为：Master&lt;–Slave1&lt;–Slave2&lt;–Slave3…….，这样的结构也方便解<br>决单点故障问题，实现Slave对Master的替换，也即，如果Master挂了，可以立马启用Slave1做Master，其他不变。</p>
+<h2 id="MySQL里有2000w数据，redis中只存20w的数据，如何保证redis中的数据都是热点数据"><a href="#MySQL里有2000w数据，redis中只存20w的数据，如何保证redis中的数据都是热点数据" class="headerlink" title="MySQL里有2000w数据，redis中只存20w的数据，如何保证redis中的数据都是热点数据"></a>MySQL里有2000w数据，redis中只存20w的数据，如何保证redis中的数据都是热点数据</h2><h3 id="相关知识"><a href="#相关知识" class="headerlink" title="相关知识"></a>相关知识</h3><p>redis 内存数据集大小上升到一定大小的时候，就会施行数据淘汰策略。redis 提供 </p>
+<h3 id="6种数据淘汰策略"><a href="#6种数据淘汰策略" class="headerlink" title="6种数据淘汰策略"></a>6种数据淘汰策略</h3><ul>
+<li>volatile-lru 从已设置过期时间的数据集中挑选最近最少使用的数据淘汰</li>
+<li>volatile-ttl 从已设置过期时间的数据集中挑选将要过期的数据淘汰</li>
+<li>volatile-random 从已设置过期时间的数据集中任意选择数据淘汰</li>
+<li>allkeys-lru 从数据集中挑选最近最少使用的数据淘汰</li>
+<li>allkeys-random 从数据集中任意选择数据淘汰</li>
+<li>no-enviction 禁止驱逐数据<h3 id="实际操作"><a href="#实际操作" class="headerlink" title="实际操作"></a>实际操作</h3>计算一下20w数据大约占用的内存，设置Redis内存限制，设置淘汰策略，加载热数据到内存中</li>
+</ul>
+<h2 id="Memcache与Redis的区别都有哪些"><a href="#Memcache与Redis的区别都有哪些" class="headerlink" title="Memcache与Redis的区别都有哪些"></a>Memcache与Redis的区别都有哪些</h2><h3 id="存储方式"><a href="#存储方式" class="headerlink" title="存储方式"></a>存储方式</h3><ul>
+<li>Memecache把数据全部存在内存之中，断电后会挂掉，数据不能超过内存大小</li>
+<li>Redis有部份存在硬盘上，这样能保证数据的持久性。</li>
+</ul>
+<h3 id="数据支持类型"><a href="#数据支持类型" class="headerlink" title="数据支持类型"></a>数据支持类型</h3><ul>
+<li>Memcache对数据类型支持相对简单</li>
+<li>Redis有复杂的数据类型</li>
+</ul>
+<h3 id="value大小"><a href="#value大小" class="headerlink" title="value大小"></a>value大小</h3><ul>
+<li>redis最大可以达到1GB，而memcache只有1MB</li>
+</ul>
+<h2 id="redis最适合的场景"><a href="#redis最适合的场景" class="headerlink" title="redis最适合的场景"></a>redis最适合的场景</h2><h3 id="缓存"><a href="#缓存" class="headerlink" title="缓存"></a>缓存</h3><p>缓存现在几乎是所有中大型网站都在用的必杀技，合理的利用缓存不仅能够提升网站访问速度，还能大大降低数据库的压力。Redis提供了键过期功能，<br>也提供了灵活的键淘汰策略，所以，现在Redis用在缓存的场合非常多。</p>
+<h3 id="排行榜"><a href="#排行榜" class="headerlink" title="排行榜"></a>排行榜</h3><p>很多网站都有排行榜应用的，如京东的月度销量榜单、商品按时间的上新排行榜等。Redis提供的有序集合数据类构能实现各种复杂的排行榜应用。</p>
+<h3 id="计数器"><a href="#计数器" class="headerlink" title="计数器"></a>计数器</h3><p>什么是计数器，如电商网站商品的浏览量、视频网站视频的播放数等。为了保证数据实时效，每次浏览都得给+1，并发量高时如果每次都请求数据库操作无<br>疑是种挑战和压力。Redis提供的incr命令来实现计数器功能，内存操作，性能非常好，非常适用于这些计数场景。</p>
+<h3 id="分布式会话"><a href="#分布式会话" class="headerlink" title="分布式会话"></a>分布式会话</h3><p>集群模式下，在应用不多的情况下一般使用容器自带的session复制功能就能满足，当应用增多相对复杂的系统中，一般都会搭建以Redis等内存数据库为中<br>心的session服务，session不再由容器管理，而是由session服务及内存数据库管理。</p>
+<h3 id="分布式锁"><a href="#分布式锁" class="headerlink" title="分布式锁"></a>分布式锁</h3><p>在很多互联网公司中都使用了分布式技术，分布式技术带来的技术挑战是对同一个资源的并发访问，如全局ID、减库存、秒杀等场景，并发量不大的场景可<br>以使用数据库的悲观锁、乐观锁来实现，但在并发量高的场合中，利用数据库锁来控制资源的并发访问是不太理想的，大大影响了数据库的性能。<br>可以利用Redis的setnx功能来编写分布式的锁，如果设置返回1说明获取锁成功，否则获取锁失败，实际应用中要考虑的细节要更多。</p>
+<h3 id="社交网络"><a href="#社交网络" class="headerlink" title="社交网络"></a>社交网络</h3><p>点赞、踩、关注/被关注、共同好友等是社交网站的基本功能，社交网站的访问量通常来说比较大，而且传统的关系数据库类型不适合存储这种类型的数据，<br>Redis提供的哈希、集合等数据结构能很方便的的实现这些功能。</p>
+<h3 id="最新列表"><a href="#最新列表" class="headerlink" title="最新列表"></a>最新列表</h3><p>Redis列表结构，LPUSH可以在列表头部插入一个内容ID作为关键字，LTRIM可用来限制列表的数量，这样列表永远为N个ID，无需查询最新的列表，直接根据ID去到对应的内容页即可。</p>
+<h3 id="消息系统"><a href="#消息系统" class="headerlink" title="消息系统"></a>消息系统</h3><p>消息队列是大型网站必用中间件，如ActiveMQ、RabbitMQ、Kafka等流行的消息队列中间件，主要用于业务解耦、流量削峰及异步处理实时性低的业务。<br>Redis提供了发布/订阅及阻塞队列功能，能实现一个简单的消息队列系统。另外，这个不能和专业的消息中间件相比。</p>
+<h2 id="Redis的同步机制"><a href="#Redis的同步机制" class="headerlink" title="Redis的同步机制"></a>Redis的同步机制</h2><p>Redis通过主从同步机制来确保master和salve之间的数据同步</p>
+<h3 id="全量复制"><a href="#全量复制" class="headerlink" title="全量复制"></a>全量复制</h3><p>全量复制是指salve启动时进行的初始化同步。<br>全同步过程：</p>
+<ol>
+<li>在salve启动时，会向master发送一条SYNC指令。  </li>
+<li>master收到这条指令后，会启动一个备份进程将所有数据写到rdb文件中去。  </li>
+<li>更新master的状态（备份是否成功、备份时间等），然后将rdb文件内容发送给等待中的salve。  <blockquote>
+<p>master并不会立即将rdb内容发送给salve。而是为每个等待中的salve注册写事件，当salve对应的socket可以发送数据时，再讲rdb内容发送给salve。</p>
+</blockquote>
+</li>
+</ol>
+<h3 id="增量拷贝"><a href="#增量拷贝" class="headerlink" title="增量拷贝"></a>增量拷贝</h3><p>如果出现网络闪断或者命令丢失等异常情况时，当主从连接恢复后，由于从节点之前保存了自身已复制的偏移量和主节点的运行ID。因此会把它们当作psync<br>参数发送给主节点，要求进行部分复制操作<br>主节点接到psync命令后首先核对参数runId是否与自身一致，如果一致，说明之前复制的是当前主节点；之后根据参数offset在自身复制积压缓冲区查找<br>，如果偏移量之后的数据存在缓冲区中，则对从节点发送+continue响应，表示可以进行部分复制；否则进行全量复制。<br>主节点根据偏移量把复制积压缓冲区里的数据发送给从节点，保证主从复制进入正常状态。</p>
+<h2 id="是否使用过Redis集群-集群的原理是什么"><a href="#是否使用过Redis集群-集群的原理是什么" class="headerlink" title="是否使用过Redis集群,集群的原理是什么"></a>是否使用过Redis集群,集群的原理是什么</h2><h2 id="redis集群如何保证一致性"><a href="#redis集群如何保证一致性" class="headerlink" title="redis集群如何保证一致性"></a>redis集群如何保证一致性</h2><h2 id="数据库与缓存数据一致性问题"><a href="#数据库与缓存数据一致性问题" class="headerlink" title="数据库与缓存数据一致性问题"></a>数据库与缓存数据一致性问题</h2><p>Cache Aside Pattern<br>1.失效：程序先从缓存中读取数据，如果没有命中，则从数据库中读取，成功之后将数据放到缓存中<br>2.命中：程序先从缓存中读取数据，如果命中，则直接返回<br>3.更新：程序先更新数据库，在删除缓存</p>
+<p>如何解决缓存击穿问题？<br>当一个线程需要去访问这个缓存的时候，如果发现缓存为空，则需要先去竞争一个锁，如果成功则进行正常的数据库读取和写入缓存这一操作，然后再释放锁，否则就等待一段时间之后，重新尝试读取缓存，如果还没有数据就继续去竞争锁　　</p>
+<p>怎么做到强一致性？<br>上一致性协议当然是可以的，虽然成本也是非常客观的。2PC甚至是3PC本身是存在一定程度的缺陷的，所以如果要采用这个方案，那么在架构设计中要引入很多的容错，回退和兜底措施。那如果是上Paxos和Raft呢？那么你首先至少要看过这两者的相关论文，并且调研清楚目前市面上有哪些开源方案，并做好充分的验证，并且能够做到出了问题自己有能力修复…对了，我还没提到性能问题呢。</p>
+<h2 id><a href="#" class="headerlink" title></a></h2>]]></content>
+      <categories>
+        <category>interview</category>
+      </categories>
+      <tags>
+        <tag>redis面试题</tag>
       </tags>
   </entry>
   <entry>
@@ -5248,6 +5248,18 @@
       </tags>
   </entry>
   <entry>
+    <title>interview/Grpc面试题</title>
+    <url>/2023/01/11/interview/Grpc%E9%9D%A2%E8%AF%95%E9%A2%98/</url>
+    <content><![CDATA[<a id="more"></a>
+]]></content>
+      <categories>
+        <category>interview</category>
+      </categories>
+      <tags>
+        <tag>grpc面试题</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>interview/Elasticsearch面试题</title>
     <url>/2023/01/11/interview/Elasticsearch%E9%9D%A2%E8%AF%95%E9%A2%98/</url>
     <content><![CDATA[<h2 id="为什么要使用Elasticsearch"><a href="#为什么要使用Elasticsearch" class="headerlink" title="为什么要使用Elasticsearch?"></a>为什么要使用Elasticsearch?</h2><p>因为在我们商城中的数据，将来会非常多，所以采用以往的模糊查询，模糊查询前置配置，会放弃索引，导致商品查询是全表扫面，在百万级别的数据库中，<br>效率非常低下，而我们使用ES做一个全文索引，我们将经常查询的商品的某些字段，比如说商品名，描述、价格还有id这些字段我们放入我们索引库里，可以提高查询速度。</p>
@@ -5290,18 +5302,6 @@
       </categories>
       <tags>
         <tag>elasticsearch面试题</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>interview/Grpc面试题</title>
-    <url>/2023/01/11/interview/Grpc%E9%9D%A2%E8%AF%95%E9%A2%98/</url>
-    <content><![CDATA[<a id="more"></a>
-]]></content>
-      <categories>
-        <category>interview</category>
-      </categories>
-      <tags>
-        <tag>grpc面试题</tag>
       </tags>
   </entry>
   <entry>
@@ -6081,9 +6081,13 @@ sudo apt-get install gcc-mingw-w64<figure class="highlight plain"><table><tr><td
 #带黑窗口<br>CGO_ENABLED=1 GOOS=windows GOARCH=amd64 CC=x86_64-w64-mingw32-gcc go build</li>
 </ul>
 <p>#不带黑窗口<br>CGO_ENABLED=1 GOOS=windows GOARCH=amd64 CC=x86_64-w64-mingw32-gcc go build -ldflags=”-H windowsgui” </p>
-<p>```</p>
-<h2 id="事务中并发读产生的-driver-bad-connection-问题"><a href="#事务中并发读产生的-driver-bad-connection-问题" class="headerlink" title="事务中并发读产生的 driver: bad connection 问题"></a>事务中并发读产生的 driver: bad connection 问题</h2><p>由于Query操作会将连接转移到rows对象上，而函数退出的时候rows对象才会释放连接，并发情况如果有Query需要对sql进行串行化处理</p>
-]]></content>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"></span><br><span class="line">## 事务中并发读产生的 driver: bad connection 问题 </span><br><span class="line">由于Query操作会将连接转移到rows对象上，而函数退出的时候rows对象才会释放连接，并发情况如果有Query需要对sql进行串行化处理</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">## 多版本golang </span><br><span class="line">### 通过官方的方式安装</span><br></pre></td></tr></table></figure>
+<p>go install golang.org/dl/go1.19.5@latest</p>
+<p>go1.19.5 download</p>
+<pre><code>
+### 多版本管理工具gvm
+https://github.com/moovweb/gvm  
+</code></pre>]]></content>
       <categories>
         <category>go</category>
       </categories>
@@ -6666,7 +6670,11 @@ sudo apt-get install gcc-mingw-w64<figure class="highlight plain"><table><tr><td
 <h2 id="GO调度器GMP场景过程全分析"><a href="#GO调度器GMP场景过程全分析" class="headerlink" title="GO调度器GMP场景过程全分析"></a>GO调度器GMP场景过程全分析</h2><h3 id="G1创建G3"><a href="#G1创建G3" class="headerlink" title="G1创建G3"></a>G1创建G3</h3><p>局部性: G3优先加入G1所在的本地队列  </p>
 <p>P拥有G1,M1获取P后开始运行G1,G1使用go func() 创建G2,为了局部性G2优先加入到P1的本地队列</p>
 <h3 id="G1执行完毕"><a href="#G1执行完毕" class="headerlink" title="G1执行完毕"></a>G1执行完毕</h3><p>G1运行完成后（函数：goexit）,M上运行的goroutine切换为G0,G0负责调度时协程的切换（函数:schedule）。<br>从P的本地队列获取G2,从G0切换到G2,并开始执行G2(函数:execute)。实现了线程M1的复用</p>
-<h3 id="G2开辟过多的G"><a href="#G2开辟过多的G" class="headerlink" title="G2开辟过多的G"></a>G2开辟过多的G</h3><h1 id="GC"><a href="#GC" class="headerlink" title="GC"></a>GC</h1><p>垃圾回收指的是回收在堆上，不再使用的数据。栈上的内存会随着栈的释放而被销毁<br>有效数据指的是从栈（stack 正在执行的函数）能追踪到，数据段（全局变量，静态数据），从这些根节点追踪不到的数据则认为是垃圾可以清除<br>主流的垃圾算法都是使用可达性，近似等价于存活性的算法  </p>
+<h3 id="更多场景见"><a href="#更多场景见" class="headerlink" title="更多场景见"></a>更多场景见</h3><p><a href="https://www.yuque.com/aceld/golang/srxd6d#5c3da99e" target="_blank" rel="noopener">https://www.yuque.com/aceld/golang/srxd6d#5c3da99e</a></p>
+<blockquote>
+<p>Go调度本质是把大量的goroutine分配到少量线程上去执行，并利用多核并行，实现更强大的并发</p>
+</blockquote>
+<h1 id="GC"><a href="#GC" class="headerlink" title="GC"></a>GC</h1><p>垃圾回收指的是回收在堆上，不再使用的数据。栈上的内存会随着栈的释放而被销毁<br>有效数据指的是从栈（stack 正在执行的函数）能追踪到，数据段（全局变量，静态数据），从这些根节点追踪不到的数据则认为是垃圾可以清除<br>主流的垃圾算法都是使用可达性，近似等价于存活性的算法  </p>
 <h2 id="标记清扫算法"><a href="#标记清扫算法" class="headerlink" title="标记清扫算法"></a>标记清扫算法</h2><p>追踪式垃圾回收<br>从 栈，数据段 上的对象作为root对象，基于它们进一步追踪，把能追踪到的数据进行标记，追踪不到的数据，则视为垃圾，进行清理  </p>
 <h3 id="三色标记"><a href="#三色标记" class="headerlink" title="三色标记"></a>三色标记</h3><p>三色追踪可以清晰的展现追踪式回收过程中对象状态的变化过程<br>标记过程：  </p>
 <ol>
@@ -6706,6 +6714,107 @@ sudo apt-get install gcc-mingw-w64<figure class="highlight plain"><table><tr><td
 <li>sysmon 系统监控，达到一定的时间间隔，强制执行gc</li>
 <li>分配对象大小超过默认大小：Golang 的垃圾回收器将小对象与大对象分开处理。如果程序分配的对象大小超过了垃圾回收器的默认大小，就会触发垃圾回收</li>
 </ul>
+<h1 id="Mutex"><a href="#Mutex" class="headerlink" title="Mutex"></a>Mutex</h1><figure class="highlight go"><table><tr><td class="code"><pre><span class="line"><span class="keyword">package</span> main</span><br><span class="line"></span><br><span class="line"><span class="keyword">type</span> Mutex <span class="keyword">struct</span> &#123;</span><br><span class="line">	state <span class="keyword">int32</span> <span class="comment">//存储互斥锁的状态 ，加锁和解锁通过 atomic包提供的函数原子性操作该字段</span></span><br><span class="line">	sema <span class="keyword">uint32</span> <span class="comment">//信号量，用于等待队列</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>互斥锁，结构简单，此结构体的零值为一个有效的互斥锁<br>互斥锁有两种模式，正常模式和饥饿模式</p>
+<h2 id="正常模式"><a href="#正常模式" class="headerlink" title="正常模式"></a>正常模式</h2><p>一个尝试加锁的goroutine 会先自选几次，尝试通过原子操作获得锁，若几次操作后仍不能获得锁，则通过信号量排队，所有等待者会先按照先入先出（FIFO）的顺序排队。  </p>
+<p>当锁被释放，第一个排队等待的goroutine需要和那些后来的处于自旋状态的goroutine竞争 ，这种情况下后来者更有优势，原因有两个：1.自旋状态的goroutine<br>正在cpu上运行，2.自旋状态的goroutine 有可能有多个，而被唤醒的goroutine只有一个。  </p>
+<p>如果被唤醒的goroutine没有获得锁，将会重新插入导队列的头部</p>
+<blockquote>
+<p>正常模式下自旋和排队是同时存在的，这种排队之前先让大家来抢的模式可以提高吞吐量，因为频繁的挂起和唤醒goroutine会带来较多的开销</p>
+</blockquote>
+<h2 id="饥饿模式"><a href="#饥饿模式" class="headerlink" title="饥饿模式"></a>饥饿模式</h2><p>如果一个goroutine的等待时间超过1m后，它会吧当前mutex从正常模式切换到饥饿模式，饥饿模式下，其它尝试获得锁的goroutine不会进行自旋,会直接插入到队<br>列尾部，锁释放后， 会直接给等待队列头部goroutine  </p>
+<p>何时从饥饿模式切换为正常模式？<br>当一个goroutine获得锁后 ，以下两种情况会切换回正常模式  </p>
+<ol>
+<li>它的等待时间小于1ms  </li>
+<li>它是最后一个等待者  </li>
+</ol>
+<blockquote>
+<p>饥饿模式下不在自旋，所有goroutine都要排队，用于解决尾端延迟问题</p>
+</blockquote>
+<h2 id="什么情况下不会自旋"><a href="#什么情况下不会自旋" class="headerlink" title="什么情况下不会自旋"></a>什么情况下不会自旋</h2><ol>
+<li>GOMAXPROCS==1   </li>
+<li>如果当前runq的等待队列不为空，相比于自旋，切换到本地gorouine更有效率，为保障吞吐也不会自旋  </li>
+</ol>
+<p>也就是需要满足以下4个条件，才会自旋：  </p>
+<ol>
+<li>多核，</li>
+<li>GOMAXPROCS&gt;1 </li>
+<li>当前P的本地队列为空，</li>
+<li>有一个P正在执行</li>
+</ol>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><ol>
+<li>自旋</li>
+<li>排队</li>
+<li>饥饿模式开启，禁止自旋</li>
+<li>恢复到正常模式</li>
+</ol>
+<h2 id="信号量"><a href="#信号量" class="headerlink" title="信号量"></a>信号量</h2><p>为保证临界区操作的互斥性，一般用锁来实现<br>锁的实现有两种：</p>
+<ol>
+<li>自旋锁，获得锁如果失败了就不断尝试，直到成功获得锁或者时间片耗完</li>
+<li>调度器对象，让出cpu，听从操作系统安排，进入到等待队列中，等待唤醒。调度器对象 也称为线程之间的同步原语，以一种系统调用的形式存在   </li>
+</ol>
+<p>调度器对象和自旋锁的不同之处主要在于等待队列，同步原语是由内核提供的，之间与系统调度器交互，能够挂起和唤醒线程，这点是自旋锁做不到的，正由于其在内核<br>中实现，所以应用程序中需要以系统调用的方式来实现它，系统调用就会有一定开销，且获取锁失败也会发生线程切换，使得开销加大 </p>
+<p>调度器对象和自旋锁各有各的应用场景   </p>
+<ol>
+<li>如果是多核情况，且持有锁的时间占比较小，往往自旋几次就能拿到锁 </li>
+<li>若是单核环境或者持有锁的时间占比较大的情况，一味自旋，就算把时间片耗完，也拿不到锁，空耗cpu得不偿失，</li>
+</ol>
+<p>在实际业务场景中加锁的时间是不确定的，如果加锁时先经过自旋，但限制最大自旋次数，若在有限次数内，不能加锁成功，再通过调度器对象将线程挂起 也是如今主流的<br>锁实现思路   </p>
+<h3 id="runtime-mutex"><a href="#runtime-mutex" class="headerlink" title="runtime.mutex"></a>runtime.mutex</h3><p>go语言中runtime.mutex 就是这个思路，结合自旋锁和调度器对象优化过后的锁，针对线程设计</p>
+<h3 id="sync-Mutex"><a href="#sync-Mutex" class="headerlink" title="sync.Mutex"></a>sync.Mutex</h3><p>协程如果要等待一个锁时，要如何休眠等待和唤醒呢？<br>需要通过 runtime.semaphone来实现， semaphone 是供协程使用的信号量，runtime内部通过一个 大小为251的semaTable,来管理所有的semaphone<br>semaTable 存储的是251棵平衡数的根，平衡树中每个节点都是一个sudog的对象，要使用一个信号量时需要提供一个记录信号量数值的变量，根据变量地址进行计算<br>映射到semaTable中的一棵平衡树上，找到对应的节点就找到了改信号量的等待队列。<br><img src="/2023/01/11/go/go%E7%A1%AC%E6%A0%B8%E5%B9%B2%E8%B4%A7/img_12.png" alt="img.png"><br>如果有协程要等待mutex,就会根据sync.Muxtex.sema 的地址映射到semaTable中的某棵平衡树上，找到对应的sudog类型的节点，也就找到了这个Mutex的等待队列<br>所以sync.Mutex是通过信号量来实现排队的，<br>而channel需要有读等待队列和写等待队列，还要支持缓冲区功能，所以并没有直接使用信号量来排队，而是自己实现一套排队逻辑   </p>
+<p>不管是 sync.Mutex还是channel 底层实现都离不开 runtime.mutex,他们对需要保证在面临多线程并发时，不会出现同步问题。<br><img src="/2023/01/11/go/go%E7%A1%AC%E6%A0%B8%E5%B9%B2%E8%B4%A7/img_13.png" alt="img.png"></p>
+<h1 id="方法集"><a href="#方法集" class="headerlink" title="方法集"></a>方法集</h1><p>T 和 <em>T 是两种类型分别有自己的类型元数据<br>自定义类型的类型元数据可以找到该类型关联的方法列表，T和</em>T各有各的方法集</p>
+<h2 id="为什么要限制T和-T不能定义同名方法-？"><a href="#为什么要限制T和-T不能定义同名方法-？" class="headerlink" title="为什么要限制T和*T不能定义同名方法 ？"></a>为什么要限制T和*T不能定义同名方法 ？</h2><p>T类型的方法集里包含的是全部有明确定义的方法<br>*T的方法集里面，除了有明确定义的方法，还会有编译器生成的包装方法， 包装方法是对接受者为T类型的同名方法的包装  </p>
+<p>为什么编译器会为接受者为T的方法包装一个*T的同名方法呢？</p>
+<blockquote>
+<p>通过<em>T类型的变量，直接调用T类型接受的方法，只是一种语法糖，这种调用方式，编译器会在调用端进行指针解引用，并不会用到接受者为</em>T的包装方法  </p>
+</blockquote>
+<p>编译器生成包装方法只要是为了支持接口 接口的数据结构：</p>
+<figure class="highlight go"><table><tr><td class="code"><pre><span class="line"><span class="keyword">package</span> main</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> <span class="string">"unsafe"</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">type</span> I <span class="keyword">interface</span> &#123;</span><br><span class="line">   A()</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">type</span> iface <span class="keyword">struct</span> &#123;</span><br><span class="line">   tab  *itab <span class="comment">//类型元数据</span></span><br><span class="line">   data unsafe.Pointer  <span class="comment">//接口装载的数据</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>接口包含两个指针，一个是和类型元数据相关，一个存储接口装载的数据，虽然有数据指针，但却不能向使用语法糖那样，通过指针解引用来调用值接受者的方法<br>因为方法的接受者是方法调用时隐含的第一个参数，go语言中函数参数是通过栈来传递的，如果参数是指针类型那就很好实现，平台确定了，指针大小就确定了，如果要<br>解引用为值类型，就要有明确的类型信息，编译器才能确定这个参数，要在栈上占用多大的空间，而对于接口，编译阶段并不能确定它会装载那一类数据，所以编译器<br>也不能生成对应的指令来揭引用 ，一句话： 接口不能使用接受者为值类型的方法</p>
+<h2 id="如何解决-接口不能使用接受者为值类型的方法这个问题-？"><a href="#如何解决-接口不能使用接受者为值类型的方法这个问题-？" class="headerlink" title="如何解决 接口不能使用接受者为值类型的方法这个问题 ？"></a>如何解决 接口不能使用接受者为值类型的方法这个问题 ？</h2><p>编译器为值接受者的方法生成接受者为指针类型的同名包装方法，正因如此，如果给T和<em>T 定义了同名包装方法，就会和编译器生成的包装方法冲突。  所以go语言<br>不允许为T和</em>T定义同名方法</p>
+<h2 id="T的方法集包含T的方法的说法"><a href="#T的方法集包含T的方法的说法" class="headerlink" title="*T的方法集包含T的方法的说法"></a>*T的方法集包含T的方法的说法</h2><p>虽然编译器会为接受者为T的方法生成 接受者为*T的包装方法，但是链接器会把程序中确定不用的方法都裁剪掉，如果去分析可执行文件的话，不止是包装方法就连<br>明确定义的方法，也不一定会存在于可执行文件中</p>
+<h2 id="总结-1"><a href="#总结-1" class="headerlink" title="总结"></a>总结</h2><ol>
+<li>结构体 T和*T的方法都可以调用</li>
+<li>如果是接口类型的变量，只有*T的方法能够调用T的方法，如果用T，不能赋值给接口，编译不通过，</li>
+<li>如果是接口类型的变量，即使是<em>T能够调用T的方法，传入函数的是</em>T对应值的拷贝，不能更改结构体的值</li>
+<li>不管调用者是谁，决定是否能改变结构体值的唯一因素只有接受者是否为指针类型，为指针就能改变对象的值，否则不能</li>
+</ol>
+<h1 id="抢占式调度"><a href="#抢占式调度" class="headerlink" title="抢占式调度"></a>抢占式调度</h1><p>在go1.2之前，go的调度器不支持抢占式调度，程序只能依靠Goroutine主动让出资源才能触发调度，这会引发一些问题，比如：  </p>
+<ul>
+<li>某些Goroutine可以长时间占用线程，造成其它的Goroutine饥饿  </li>
+<li>垃圾回收是需要stop the world的如果垃圾回收想要运行，那么它必须通知其它goroutine停下来，这会造成较长的等待时间  </li>
+</ul>
+<p>为解决这个问题 </p>
+<ul>
+<li>Go1.2实现了基于协作的抢占式调度</li>
+<li>Go1.14实现了基于信号的抢占式调度  </li>
+</ul>
+<h2 id="基于协作的抢占式调度"><a href="#基于协作的抢占式调度" class="headerlink" title="基于协作的抢占式调度"></a>基于协作的抢占式调度</h2><p>协作式：大家都按事先定义好的规则来，比如：一个goroutine执行完后，退出，让出p，然后下一个goroutine 被调度到p上运行，这样做的的缺点就在于，是否<br>让出p的决定权在goroutine自身，一旦某个g不主动让出或者执行的时间比较长，那后面的goroutine只能等着，没有方法让前者让出p，导致延迟甚至饿死。  </p>
+<p>非协作式：由runtime来决定一个goroutine运行多长时间，如果你不主动让出，就踢出去，让后面的goroutine进来运行  </p>
+<p>基于协作的抢占式调度流程：</p>
+<ol>
+<li>编译器会在调用函数前插入runtime.morestack 让运行时有机会在这段代码中检查是否需要执行抢占调度</li>
+<li>Go语言运行时会在垃圾回收暂停程序,系统监控发现goroutine运行超过10ms，那么会在这个协程所在的p设置一个抢占标记</li>
+<li>当发生函数调用时，可能会执行编译器插入的runtime.morestack，它调用的runtime.newstack会检查抢占标识,如果有抢占标记就会触发抢占，让出p</li>
+</ol>
+<p>这个方案只能说局部解决了 “饿死”问题，只在函数调用的地方才能插入抢占代码 （埋点），对于没有函数调用而是纯算法循环计算的G,go调度器依然无法抢占</p>
+<p>案例1 </p>
+<figure class="highlight go"><table><tr><td class="code"><pre><span class="line"><span class="keyword">package</span> main</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> (</span><br><span class="line">    <span class="string">"fmt"</span></span><br><span class="line">	<span class="string">"runtime"</span></span><br><span class="line">	<span class="string">"time"</span></span><br><span class="line">)</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span> &#123;</span><br><span class="line">    runtime.GOMAXPROCS(<span class="number">1</span>)</span><br><span class="line">	<span class="keyword">go</span> <span class="function"><span class="keyword">func</span><span class="params">()</span></span> &#123;</span><br><span class="line">		<span class="keyword">for</span>&#123;&#125;</span><br><span class="line">    &#125;()</span><br><span class="line">	time.Sleep(time.Second)</span><br><span class="line">	fmt.Println(<span class="string">"I got scheduled"</span>)</span><br><span class="line">	</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>上述代码在1.13之前会卡住，因为就算是goroutine 所在的p被标记了抢占，但是没有调度，没有新的函数执行，p会一直被goroutine 占有  </p>
+<p>案例2</p>
+<figure class="highlight go"><table><tr><td class="code"><pre><span class="line"><span class="keyword">package</span> main</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> <span class="string">"fmt"</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span>&#123;</span><br><span class="line">	<span class="keyword">go</span> <span class="function"><span class="keyword">func</span><span class="params">(n <span class="keyword">int</span>)</span></span> &#123;</span><br><span class="line">		<span class="keyword">for</span> &#123;</span><br><span class="line">			n++</span><br><span class="line">			fmt.Println(n)</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;(<span class="number">0</span>)</span><br><span class="line">	</span><br><span class="line">	<span class="keyword">for</span>&#123;&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>上述代码在1.13之前，会输出一段时间的n后停止，因为当gc执行stw的时候，会抢占gorouine,而 main函数的 for{}一直不退出，导致main函数所在的p，一直不被抢占<br>gc 停了所有的p 在等待 main函数占有的p， fmt.Println 涉及io,会陷入系统调用，从而让出p，当p不可获得的时候就卡住了。</p>
+<p>为解决协作式抢占调度带来的问题，Go在1.14版本中增加了对非协作式抢占式调度的支持，这种抢占式调度是基于系统信号的，也就是通过向线程发送信号的方式来抢占<br>正在运行的goroutine</p>
+<h2 id="基于信号的抢占式调度"><a href="#基于信号的抢占式调度" class="headerlink" title="基于信号的抢占式调度"></a>基于信号的抢占式调度</h2><p>真正的抢占式调度是基于信号完成的，所以也称为“异步抢占”。不管协程有没有意愿主动让出cpu运行权，只要某协程执行的时间过长就会发送信号强行抢夺cpu的运行权  </p>
+<ol>
+<li>M注册一个SIGURG信号的处理函数，sighandler</li>
+<li>sysmon启动后会间隔性的进行监控，最长间隔10ms，最短间隔20us，如果发现某协程独占p超过10ms，会给M发送抢占信号</li>
+<li>M收到信号后，内核执行sighandler函数把当前协程状态从 _Gruning正在执行改成 _Grunable可执行，把抢占的协程放到全局队列里，M继续寻找其它的goroutine来执行</li>
+<li>被抢占的G再次调度过来执行时，会继续执行原来的执行流程</li>
+</ol>
+<p>抢占分为_Pruning 和_Psyscall ,_Psyscall抢占通常时由于阻塞性系统调用引起的，比如磁盘io，cgo。<br>_Pruning 抢占通常是由于一些类似死循环的计算逻辑引起的  </p>
 ]]></content>
       <categories>
         <category>go</category>
@@ -7026,6 +7135,226 @@ sudo apt-get install gcc-mingw-w64<figure class="highlight plain"><table><tr><td
       </tags>
   </entry>
   <entry>
+    <title>go/golang项目结构规范</title>
+    <url>/2023/01/11/go/golang%E9%A1%B9%E7%9B%AE%E7%BB%93%E6%9E%84%E8%A7%84%E8%8C%83/</url>
+    <content><![CDATA[<h1 id="golang项目结构规范"><a href="#golang项目结构规范" class="headerlink" title="golang项目结构规范"></a>golang项目结构规范</h1><p><a href="https://github.com/golang-standards/project-layout" target="_blank" rel="noopener">https://github.com/golang-standards/project-layout</a> 项目总结了 Go 项目的布局，这是Go应用程序项目的基本布局，并不是Go核心开发团队<br>定义的官方标准；但是，这是Go生态系统中的一种常见的项目布局模式。</p>
+<a id="more"></a>
+
+
+
+
+<p>这是 Go 应用程序项目的基本布局。它不是核心 Go 开发团队定义的官方标准；然而，它是 Go 生态系统中一组常见的老项目和新项目的布局模式。其中一些模式比其他模式更受欢迎。它还具有许多小的增强，以及对任何足够大的实际应用程序通用的几个支持目录。</p>
+<p>如果你尝试学习 Go，或者你正在为自己建立一个 PoC 或一个玩具项目，这个项目布局是没啥必要的。从一些非常简单的事情开始(一个 <code>main.go</code> 文件绰绰有余)。随着项目的增长，请记住保持代码结构良好非常重要，否则你最终会得到一个凌乱的代码，这其中就包含大量隐藏的依赖项和全局状态。当有更多的人参与这个项目时，你将需要更多的结构。这时候，介绍一种管理包/库的通用方法是很重要的。当你有一个开源项目时，或者当你知道其他项目从你的项目存储库中导入代码时，这时候拥有私有(又名 <code>internal</code>)包和代码就很重要。克隆存储库，保留你需要的内容，删除其他所有的内容!仅仅因为它在那里并不意味着你必须全部使用它。这些模式都没有在每个项目中使用。甚至 <code>vendor</code> 模式也不是通用的。</p>
+<p>Go 1.14 <a href="https://github.com/golang/go/wiki/Modules" target="_blank" rel="noopener"><code>Go Modules</code></a> 终于可以投入生产了。除非你有特定的理由不使用它们，否则使用 <a href="https://blog.golang.org/using-go-modules" target="_blank" rel="noopener"><code>Go Modules</code></a> 。如果你使用，就无需担心 $GOPATH 以及项目放置的位置。存储库中的 <code>go.mod</code> 文件基本假定你的项目托管在 Github 上，但这不是要求。模块路径可以是任何地方，尽管第一个模块路径组件的名称中应该有一个点（当前版本的 Go 不再强制使用该模块，但如果使用稍旧的版本，如果没有 <code>mod</code> 文件构建失败的话 ，不要惊讶）。如果你想知道更多信息，请参阅 Issues <a href="https://github.com/golang/go/issues/37554" target="_blank" rel="noopener"><code>37554</code></a> 和 <a href="https://github.com/golang/go/issues/32819" target="_blank" rel="noopener"><code>32819</code></a> 。</p>
+<p>此项目布局是通用的，并且不会尝试强加一个特定的 Go 包结构。</p>
+<p>这是社区的努力。 如果看到新的模式，或者认为一个现有的模式需要更新，请提一个 issue。</p>
+<p>如果需要命名、格式和样式方面的帮助，请运行 <a href="https://golang.org/cmd/gofmt/" target="_blank" rel="noopener"><code>gofmt</code></a> 和 <a href="https://github.com/golang/lint" target="_blank" rel="noopener"><code>golint</code></a> 。还要确保阅读这些 Go 代码风格的指导方针和建议:</p>
+<ul>
+<li><a href="https://talks.golang.org/2014/names.slide" target="_blank" rel="noopener">https://talks.golang.org/2014/names.slide</a></li>
+<li><a href="https://golang.org/doc/effective_go.html#names" target="_blank" rel="noopener">https://golang.org/doc/effective_go.html#names</a></li>
+<li><a href="https://blog.golang.org/package-names" target="_blank" rel="noopener">https://blog.golang.org/package-names</a></li>
+<li><a href="https://github.com/golang/go/wiki/CodeReviewComments" target="_blank" rel="noopener">https://github.com/golang/go/wiki/CodeReviewComments</a></li>
+<li><a href="https://rakyll.org/style-packages" target="_blank" rel="noopener">Style guideline for Go packages</a> (rakyll/JBD)</li>
+</ul>
+<p>参见 <a href="https://medium.com/golang-learn/go-project-layout-e5213cdcfaa2" target="_blank" rel="noopener"><code>Go Project Layout</code></a> 了解更多的背景信息。</p>
+<p>更多关于包的命名和组织以及其他代码结构的建议:</p>
+<ul>
+<li><a href="https://www.youtube.com/watch?v=PTE4VJIdHPg" target="_blank" rel="noopener">GopherCon EU 2018: Peter Bourgon - Best Practices for Industrial Programming</a></li>
+<li><a href="https://www.youtube.com/watch?v=MzTcsI6tn-0" target="_blank" rel="noopener">GopherCon Russia 2018: Ashley McNamara + Brian Ketelsen - Go best practices.</a></li>
+<li><a href="https://www.youtube.com/watch?v=ltqV6pDKZD8" target="_blank" rel="noopener">GopherCon 2017: Edward Muller - Go Anti-Patterns</a></li>
+<li><a href="https://www.youtube.com/watch?v=oL6JBUk6tj0" target="_blank" rel="noopener">GopherCon 2018: Kat Zien - How Do You Structure Your Go Apps</a></li>
+</ul>
+<h2 id="Go-目录"><a href="#Go-目录" class="headerlink" title="Go 目录"></a>Go 目录</h2><h3 id="cmd"><a href="#cmd" class="headerlink" title="/cmd"></a><code>/cmd</code></h3><p>本项目的主干。</p>
+<p>每个应用程序的目录名应该与你想要的可执行文件的名称相匹配(例如，<code>/cmd/myapp</code>)。</p>
+<p>不要在这个目录中放置太多代码。如果你认为代码可以导入并在其他项目中使用，那么它应该位于 <code>/pkg</code> 目录中。如果代码不是可重用的，或者你不希望其他人重用它，请将该代码放到 <code>/internal</code> 目录中。你会惊讶于别人会怎么做，所以要明确你的意图!</p>
+<p>通常有一个小的 <code>main</code> 函数，从 <code>/internal</code> 和 <code>/pkg</code> 目录导入和调用代码，除此之外没有别的东西。</p>
+<p>有关示例，请参阅 <a href="cmd/README.md"><code>/cmd</code></a> 目录。</p>
+<h3 id="internal"><a href="#internal" class="headerlink" title="/internal"></a><code>/internal</code></h3><p>私有应用程序和库代码。这是你不希望其他人在其应用程序或库中导入代码。请注意，这个布局模式是由 Go 编译器本身执行的。有关更多细节，请参阅Go 1.4 <a href="https://golang.org/doc/go1.4#internalpackages" target="_blank" rel="noopener"><code>release notes</code></a> 。注意，你并不局限于顶级 <code>internal</code> 目录。在项目树的任何级别上都可以有多个内部目录。</p>
+<p>你可以选择向 internal 包中添加一些额外的结构，以分隔共享和非共享的内部代码。这不是必需的(特别是对于较小的项目)，但是最好有有可视化的线索来显示预期的包的用途。你的实际应用程序代码可以放在 <code>/internal/app</code> 目录下(例如 <code>/internal/app/myapp</code>)，这些应用程序共享的代码可以放在 <code>/internal/pkg</code> 目录下(例如 <code>/internal/pkg/myprivlib</code>)。</p>
+<h3 id="pkg"><a href="#pkg" class="headerlink" title="/pkg"></a><code>/pkg</code></h3><p>外部应用程序可以使用的库代码(例如 <code>/pkg/mypubliclib</code>)。其他项目会导入这些库，希望它们能正常工作，所以在这里放东西之前要三思:-)注意，<code>internal</code> 目录是确保私有包不可导入的更好方法，因为它是由 Go 强制执行的。<code>/pkg</code> 目录仍然是一种很好的方式，可以显式地表示该目录中的代码对于其他人来说是安全使用的好方法。由 Travis Jeffery  撰写的 <a href="https://travisjeffery.com/b/2019/11/i-ll-take-pkg-over-internal/" target="_blank" rel="noopener"><code>I&#39;ll take pkg over internal</code></a> 博客文章提供了 <code>pkg</code> 和 <code>internal</code> 目录的一个很好的概述，以及什么时候使用它们是有意义的。</p>
+<p>当根目录包含大量非 Go 组件和目录时，这也是一种将 Go 代码分组到一个位置的方法，这使得运行各种 Go 工具变得更加容易（正如在这些演讲中提到的那样: 来自 GopherCon EU 2018 的 <a href="https://www.youtube.com/watch?v=PTE4VJIdHPg" target="_blank" rel="noopener"><code>Best Practices for Industrial Programming</code></a> , <a href="https://www.youtube.com/watch?v=oL6JBUk6tj0" target="_blank" rel="noopener">GopherCon 2018: Kat Zien - How Do You Structure Your Go Apps</a> 和 <a href="https://www.youtube.com/watch?v=3gQa1LWwuzk" target="_blank" rel="noopener">GoLab 2018 - Massimiliano Pippi - Project layout patterns in Go</a> ）。</p>
+<p>如果你想查看哪个流行的 Go 存储库使用此项目布局模式，请查看 <a href="pkg/README.md"><code>/pkg</code></a> 目录。这是一种常见的布局模式，但并不是所有人都接受它，一些 Go 社区的人也不推荐它。</p>
+<p>如果你的应用程序项目真的很小，并且额外的嵌套并不能增加多少价值(除非你真的想要:-)，那就不要使用它。当它变得足够大时，你的根目录会变得非常繁琐时(尤其是当你有很多非 Go 应用组件时)，请考虑一下。</p>
+<h3 id="vendor"><a href="#vendor" class="headerlink" title="/vendor"></a><code>/vendor</code></h3><p>应用程序依赖项(手动管理或使用你喜欢的依赖项管理工具，如新的内置 <a href="https://github.com/golang/go/wiki/Modules" target="_blank" rel="noopener"><code>Go Modules</code></a> 功能)。<code>go mod vendor</code> 命令将为你创建 <code>/vendor</code> 目录。请注意，如果未使用默认情况下处于启用状态的 Go 1.14，则可能需要在 <code>go build</code> 命令中添加 <code>-mod=vendor</code> 标志。</p>
+<p>如果你正在构建一个库，那么不要提交你的应用程序依赖项。</p>
+<p>注意，自从 <a href="https://golang.org/doc/go1.13#modules" target="_blank" rel="noopener"><code>1.13</code></a> 以后，Go 还启用了模块代理功能(默认使用 <a href="https://proxy.golang.org" target="_blank" rel="noopener"><code>https://proxy.golang.org</code></a> 作为他们的模块代理服务器)。在<a href="https://blog.golang.org/module-mirror-launch" target="_blank" rel="noopener"><code>here</code></a> 阅读更多关于它的信息，看看它是否符合你的所有需求和约束。如果需要，那么你根本不需要 <code>vendor</code> 目录。</p>
+<p>国内模块代理功能默认是被墙的，七牛云有维护专门的的<a href="https://github.com/goproxy/goproxy.cn/blob/master/README.zh-CN.md" target="_blank" rel="noopener"><code>模块代理</code></a> 。</p>
+<h2 id="服务应用程序目录"><a href="#服务应用程序目录" class="headerlink" title="服务应用程序目录"></a>服务应用程序目录</h2><h3 id="api"><a href="#api" class="headerlink" title="/api"></a><code>/api</code></h3><p>OpenAPI/Swagger 规范，JSON 模式文件，协议定义文件。</p>
+<p>有关示例，请参见 <a href="api/README.md"><code>/api</code></a> 目录。</p>
+<h2 id="Web-应用程序目录"><a href="#Web-应用程序目录" class="headerlink" title="Web 应用程序目录"></a>Web 应用程序目录</h2><h3 id="web"><a href="#web" class="headerlink" title="/web"></a><code>/web</code></h3><p>特定于 Web 应用程序的组件:静态 Web 资产、服务器端模板和 SPAs。</p>
+<h2 id="通用应用目录"><a href="#通用应用目录" class="headerlink" title="通用应用目录"></a>通用应用目录</h2><h3 id="configs"><a href="#configs" class="headerlink" title="/configs"></a><code>/configs</code></h3><p>配置文件模板或默认配置。</p>
+<p>将你的 <code>confd</code> 或 <code>consul-template</code> 模板文件放在这里。</p>
+<h3 id="init"><a href="#init" class="headerlink" title="/init"></a><code>/init</code></h3><p>System init（systemd，upstart，sysv）和 process manager/supervisor（runit，supervisor）配置。</p>
+<h3 id="scripts"><a href="#scripts" class="headerlink" title="/scripts"></a><code>/scripts</code></h3><p>执行各种构建、安装、分析等操作的脚本。</p>
+<p>这些脚本保持了根级别的 Makefile 变得小而简单(例如， <a href="https://github.com/hashicorp/terraform/blob/master/Makefile" target="_blank" rel="noopener"><code>https://github.com/hashicorp/terraform/blob/master/Makefile</code></a> )。</p>
+<p>有关示例，请参见  <a href="scripts/README.md"><code>/scripts</code></a> 目录。</p>
+<h3 id="build"><a href="#build" class="headerlink" title="/build"></a><code>/build</code></h3><p>打包和持续集成。</p>
+<p>将你的云( AMI )、容器( Docker )、操作系统( deb、rpm、pkg )包配置和脚本放在 <code>/build/package</code> 目录下。</p>
+<p>将你的 CI (travis、circle、drone)配置和脚本放在 <code>/build/ci</code> 目录中。请注意，有些 CI 工具(例如 Travis CI)对配置文件的位置非常挑剔。尝试将配置文件放在 <code>/build/ci</code> 目录中，将它们链接到 CI 工具期望它们的位置(如果可能的话)。</p>
+<h3 id="deployments"><a href="#deployments" class="headerlink" title="/deployments"></a><code>/deployments</code></h3><p>IaaS、PaaS、系统和容器编排部署配置和模板(docker-compose、kubernetes/helm、mesos、terraform、bosh)。注意，在一些存储库中(特别是使用 kubernetes 部署的应用程序)，这个目录被称为 <code>/deploy</code>。</p>
+<h3 id="test"><a href="#test" class="headerlink" title="/test"></a><code>/test</code></h3><p>额外的外部测试应用程序和测试数据。你可以随时根据需求构造 <code>/test</code> 目录。对于较大的项目，有一个数据子目录是有意义的。例如，你可以使用 <code>/test/data</code> 或 <code>/test/testdata</code> (如果你需要忽略目录中的内容)。请注意，Go 还会忽略以“.”或“_”开头的目录或文件，因此在如何命名测试数据目录方面有更大的灵活性。</p>
+<p>有关示例，请参见  <a href="test/README.md"><code>/test</code></a> 目录。</p>
+<h2 id="其他目录"><a href="#其他目录" class="headerlink" title="其他目录"></a>其他目录</h2><h3 id="docs"><a href="#docs" class="headerlink" title="/docs"></a><code>/docs</code></h3><p>设计和用户文档(除了 godoc 生成的文档之外)。</p>
+<p>有关示例，请参阅 <a href="docs/README.md"><code>/docs</code></a> 目录。</p>
+<h3 id="tools"><a href="#tools" class="headerlink" title="/tools"></a><code>/tools</code></h3><p>这个项目的支持工具。注意，这些工具可以从 <code>/pkg</code> 和 <code>/internal</code> 目录导入代码。</p>
+<p>有关示例，请参见 <a href="tools/README.md"><code>/tools</code></a> 目录。</p>
+<h3 id="examples"><a href="#examples" class="headerlink" title="/examples"></a><code>/examples</code></h3><p>你的应用程序和/或公共库的示例。</p>
+<p>有关示例，请参见 <a href="examples/README.md"><code>/examples</code></a> 目录。</p>
+<h3 id="third-party"><a href="#third-party" class="headerlink" title="/third_party"></a><code>/third_party</code></h3><p>外部辅助工具，分叉代码和其他第三方工具(例如 Swagger UI)。</p>
+<h3 id="githooks"><a href="#githooks" class="headerlink" title="/githooks"></a><code>/githooks</code></h3><p>Git hooks。</p>
+<h3 id="assets"><a href="#assets" class="headerlink" title="/assets"></a><code>/assets</code></h3><p>与存储库一起使用的其他资产(图像、徽标等)。</p>
+<h3 id="website"><a href="#website" class="headerlink" title="/website"></a><code>/website</code></h3><p>如果你不使用 Github 页面，则在这里放置项目的网站数据。</p>
+<p>有关示例，请参见 <a href="website/README.md"><code>/website</code></a> 目录。</p>
+<h2 id="你不应该拥有的目录"><a href="#你不应该拥有的目录" class="headerlink" title="你不应该拥有的目录"></a>你不应该拥有的目录</h2><h3 id="src"><a href="#src" class="headerlink" title="/src"></a><code>/src</code></h3><p>有些 Go 项目确实有一个 <code>src</code> 文件夹，但这通常发生在开发人员有 Java 背景，在那里它是一种常见的模式。如果可以的话，尽量不要采用这种 Java 模式。你真的不希望你的 Go 代码或 Go 项目看起来像 Java:-)</p>
+<p>不要将项目级别 <code>src</code> 目录与 Go 用于其工作空间的 <code>src</code> 目录(如 <a href="https://golang.org/doc/code.html" target="_blank" rel="noopener"><code>How to Write Go Code</code></a> 中所述)混淆。<code>$GOPATH</code> 环境变量指向你的(当前)工作空间(默认情况下，它指向非 windows 系统上的 <code>$HOME/go</code>)。这个工作空间包括顶层 <code>/pkg</code>, <code>/bin</code> 和 <code>/src</code> 目录。你的实际项目最终是 <code>/src</code> 下的一个子目录，因此，如果你的项目中有 <code>/src</code> 目录，那么项目路径将是这样的: <code>/some/path/to/workspace/src/your_project/src/your_code.go</code>。注意，在 Go 1.11 中，可以将项目放在 <code>GOPATH</code> 之外，但这并不意味着使用这种布局模式是一个好主意。</p>
+<h2 id="Badges"><a href="#Badges" class="headerlink" title="Badges"></a>Badges</h2><ul>
+<li><p><a href="https://goreportcard.com/" target="_blank" rel="noopener">Go Report Card</a> - It will scan your code with <code>gofmt</code>, <code>go vet</code>, <code>gocyclo</code>, <code>golint</code>, <code>ineffassign</code>, <code>license</code> and <code>misspell</code>. Replace <code>github.com/golang-standards/project-layout</code> with your project reference.</p>
+</li>
+<li><p><a href="http://godoc.org" target="_blank" rel="noopener">GoDoc</a> - It will provide online version of your GoDoc generated documentation. Change the link to point to your project.</p>
+</li>
+<li><p>Release - It will show the latest release number for your project. Change the github link to point to your project.</p>
+</li>
+</ul>
+<p><a href="https://goreportcard.com/report/github.com/golang-standards/project-layout" target="_blank" rel="noopener"><img src="https://goreportcard.com/badge/github.com/golang-standards/project-layout?style=flat-square" alt="Go Report Card"></a><br><a href="http://godoc.org/github.com/golang-standards/project-layout" target="_blank" rel="noopener"><img src="https://img.shields.io/badge/godoc-reference-blue.svg?style=flat-square" alt="Go Doc"></a><br><a href="https://github.com/golang-standards/project-layout/releases/latest" target="_blank" rel="noopener"><img src="https://img.shields.io/github/release/golang-standards/project-layout.svg?style=flat-square" alt="Release"></a></p>
+<h2 id="Notes"><a href="#Notes" class="headerlink" title="Notes"></a>Notes</h2><p>A more opinionated project template with sample/reusable configs, scripts and code is a WIP.</p>
+]]></content>
+      <categories>
+        <category>go</category>
+      </categories>
+      <tags>
+        <tag>golang规范</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>go/golang面试题</title>
+    <url>/2023/01/11/go/golang%E9%9D%A2%E8%AF%95%E9%A2%98/</url>
+    <content><![CDATA[<h2 id="golang-调度"><a href="#golang-调度" class="headerlink" title="golang 调度"></a>golang 调度</h2><ul>
+<li>CSP(通信顺序进程)</li>
+<li>顺序一致性模型 <blockquote>
+<p>1.Go语言中，同一个Goroutine线程内部，顺序一致性内存模型是得到保证的;<br>  2.不同的Goroutine之间，并不满足顺序一致性内存模型，需要通过明确定义的同步事件来作为同步的参考</p>
+</blockquote>
+<a id="more"></a></li>
+<li>Goroutine采用的是半抢占式的协作调度，只有在当前Goroutine发生阻塞时才会导致调度 。以下是可能导致调度的点 <blockquote>
+<p>1.I/O,select<br>  2.channel<br>  3.等待锁<br>  4.函数调用（有时）<br>  5.runtime.Gosched(),由程序主动交出控制权</p>
+</blockquote>
+</li>
+</ul>
+<h2 id="go-结构体能不能进行比较"><a href="#go-结构体能不能进行比较" class="headerlink" title="go 结构体能不能进行比较"></a>go 结构体能不能进行比较</h2><ul>
+<li>如果结构体的所有成员变量都是可以比较的，那么结构体就可以比较</li>
+<li>结构体之间进行转换需要他们具备完全相同的成员（字段名，字段类型，字段个数）</li>
+<li>切片，map不能进行比较</li>
+</ul>
+<h2 id="结构体可以作为map的key吗"><a href="#结构体可以作为map的key吗" class="headerlink" title="结构体可以作为map的key吗"></a>结构体可以作为map的key吗</h2><ul>
+<li>结构体必须是可以比较的，才能作为key，否则编译报错</li>
+</ul>
+<h2 id="go-defer-先进后出，栈结构"><a href="#go-defer-先进后出，栈结构" class="headerlink" title="go defer 先进后出，栈结构"></a>go defer 先进后出，栈结构</h2><h2 id="select作用"><a href="#select作用" class="headerlink" title="select作用"></a>select作用</h2><ul>
+<li>用于监听和channel有关的IO操作，当IO操作触发时，触发相应的动作</li>
+<li>所有的channel表达式都会被求值，所有被发送的表达式都会被求值，求值顺序：自上而下，从左到右</li>
+<li>select常用于协程的安全退出</li>
+</ul>
+<h2 id="context包"><a href="#context包" class="headerlink" title="context包"></a>context包</h2><ul>
+<li>context 一般理解为程序单元（goroutine）的一个运行状态，现场，快照,通过context将当前程序的状态传递给下（goroutine）</li>
+<li>context 常用于将过期或者撤销的信号传递给被调用的程序单元</li>
+</ul>
+<h2 id="主协成如何等待其余协程完成"><a href="#主协成如何等待其余协程完成" class="headerlink" title="主协成如何等待其余协程完成"></a>主协成如何等待其余协程完成</h2><ul>
+<li>使用channel进行通信</li>
+<li>使用sync.WaitGroup包</li>
+</ul>
+<h2 id="slice-len-cap-共享-扩容"><a href="#slice-len-cap-共享-扩容" class="headerlink" title="slice,len,cap,共享,扩容"></a>slice,len,cap,共享,扩容</h2><ul>
+<li>slice底层数据结构由，数组，len,cap 组成，append扩容时是以当前容量的2倍进行扩容</li>
+<li>slice 加锁可以实现消息队列</li>
+</ul>
+<h2 id="map"><a href="#map" class="headerlink" title="map"></a>map</h2><ul>
+<li>map 是非线程安全的，多个协程同时操作一个map，会导致程序崩溃</li>
+<li>map 是无序的，想要顺序读取，可将map的key放入切片后排序后进行map读取</li>
+<li>map key是唯一的，可用于实现set集合</li>
+<li>map 可实现发布订阅</li>
+</ul>
+<h2 id="大文件排序"><a href="#大文件排序" class="headerlink" title="大文件排序"></a>大文件排序</h2><ul>
+<li>归并算法</li>
+<li>利用goroutine 并发排序缩短时间</li>
+</ul>
+<h2 id="标准Http协议6种请求方法"><a href="#标准Http协议6种请求方法" class="headerlink" title="标准Http协议6种请求方法"></a>标准Http协议6种请求方法</h2><ul>
+<li>GET</li>
+<li>POST</li>
+<li>PUT</li>
+<li>DELETE</li>
+<li>HEAD<blockquote>
+<p>HEAD 常用于判定某个资源是否存在 </p>
+</blockquote>
+</li>
+<li>Options<blockquote>
+<p>用于检查资源地址是否有效</p>
+</blockquote>
+</li>
+</ul>
+<h2 id="分布式事务"><a href="#分布式事务" class="headerlink" title="分布式事务"></a>分布式事务</h2><ul>
+<li>2PC</li>
+<li>TCC</li>
+<li>本地消息表</li>
+<li>MQ事务（RocketMQ）</li>
+</ul>
+<h2 id="golang中值类型和引用类型"><a href="#golang中值类型和引用类型" class="headerlink" title="golang中值类型和引用类型"></a>golang中值类型和引用类型</h2><ul>
+<li>值类型分别有：int系列、float系列、bool、string、数组和结构体</li>
+<li>引用类型有：指针、slice切片、管道channel、接口interface、map、函数等</li>
+<li>值类型的特点是：变量直接存储值，内存通常在栈中分配</li>
+<li>引用类型的特点是：变量存储的是一个地址，这个地址对应的空间里才是真正存储的值，内存通常在堆中分配,编译器会隐式地为我们解引用，取到指针指向的实际变量</li>
+</ul>
+<h2 id="Golang中除了加Mutex锁以外还有哪些方式安全读写共享变量？"><a href="#Golang中除了加Mutex锁以外还有哪些方式安全读写共享变量？" class="headerlink" title="Golang中除了加Mutex锁以外还有哪些方式安全读写共享变量？"></a>Golang中除了加Mutex锁以外还有哪些方式安全读写共享变量？</h2><p>Golang中Goroutine 可以通过 Channel 进行安全读写共享变量。</p>
+<h2 id="无缓冲-Chan-的发送和接收是否同步"><a href="#无缓冲-Chan-的发送和接收是否同步" class="headerlink" title="无缓冲 Chan 的发送和接收是否同步?"></a>无缓冲 Chan 的发送和接收是否同步?</h2><p>无缓冲的channel由于没有缓冲发送和接收需要同步.<br>有缓冲channel不要求发送和接收操作同步.<br>channel无缓冲时，发送阻塞直到数据被接收，接收阻塞直到读到数据。<br>channel有缓冲时，当缓冲满时发送阻塞，当缓冲空时接收阻塞。  </p>
+<h2 id="go语言的并发机制以及它所使用的CSP并发模型-GMP"><a href="#go语言的并发机制以及它所使用的CSP并发模型-GMP" class="headerlink" title="go语言的并发机制以及它所使用的CSP并发模型 GMP"></a>go语言的并发机制以及它所使用的CSP并发模型 GMP</h2><p>CSP模型是上个世纪七十年代提出的,不同于传统的多线程通过共享内存来通信，CSP讲究的是“以通信的方式来共享内存”。用于描述两个独立的并发实体通过共享的通讯 channel(管道)进行通信的并发模型。 CSP中channel是第一类对象，它不关注发送消息的实体，而关注与发送消息时使用的channel。<br>Golang中channel 是被单独创建并且可以在进程之间传递，它的通信模式类似于 boss-worker 模式的，一个实体通过将消息发送到channel 中，然后又监听这个 channel 的实体处理，两个实体之间是匿名的，这个就实现实体中间的解耦，其中 channel 是同步的一个消息被发送到 channel 中，最终是一定要被另外的实体消费掉的，在实现原理上其实类似一个阻塞的消息队列。<br>Goroutine 是Golang实际并发执行的实体，它底层是使用协程(coroutine)实现并发，coroutine是一种运行在用户态的用户线程，类似于 greenthread，go底层选择使用coroutine的出发点是因为，它具有以下特点：  </p>
+<ul>
+<li>用户空间 避免了内核态和用户态的切换导致的成本。</li>
+<li>可以由语言和框架层进行调度。</li>
+<li>更小的栈空间允许创建大量的实例。</li>
+</ul>
+<p>Golang中的Goroutine的特性:<br>Golang内部有三个对象： P对象(processor) 代表上下文（或者可以认为是cpu），M(work thread)代表工作线程，G对象（goroutine）.  </p>
+<ul>
+<li>G（Goroutine）我们所说的协程，为用户级的轻量级线程，每个Goroutine对象中的sched保存着其上下文信息.</li>
+<li>M（Machine） 对内核级线程的封装，数量最大值为1000</li>
+<li>P（Processor） 即为G和M的调度对象，用来调度G和M之间的关联关系，其数量可通过GOMAXPROCS()来设置，默认为核心数.</li>
+</ul>
+<p>GMP调度原理:<br>Goroutine 调度器和 OS 调度器是通过 M 结合起来的，每个 M 都代表了 1 个内核线程，OS 调度器负责把内核线程分配到 CPU 的核上执行。<br>M想要执行G,必须先获得P,在go中有,两个队列,一个全局的G队列和P本地队列,M从P本地队列中获取G,如果P本地队列为空,则从全局队列中拉取一些G放到本地队列,如果全局队列为空则从其他P本地队列偷取G来,放到自己的本地队列中.如果偷取失败,则当前M进入自旋状态,等待可执行的G,<br>而其他未获得P的会进入休眠状态,一定时间过后会被操作系统回收.<br>如果当前M执行G的过程中G发生阻塞,则P会立即分离出来,寻找空闲M进行绑定</p>
+<p>Golang的CSP并发模型，是通过Goroutine和Channel来实现的。<br>Goroutine 是Go语言中并发的执行单位。有点抽象，其实就是和传统概念上的”线程“类似，可以理解为”线程“。 Channel是Go语言中各个并发结构体(Goroutine)之前的通信机制。通常Channel，是各个Goroutine之间通信的”管道“，有点类似于Linux中的管道。<br>在通信过程中，传数据channel &lt;- data和取数据&lt;-channel必然会成对出现，因为这边传，那边取，两个goroutine之间才会实现通信。  </p>
+<h2 id="Golang-中常用的并发模式？"><a href="#Golang-中常用的并发模式？" class="headerlink" title="Golang 中常用的并发模式？"></a>Golang 中常用的并发模式？</h2><h3 id="生产者消费者模型"><a href="#生产者消费者模型" class="headerlink" title="生产者消费者模型"></a>生产者消费者模型</h3><p>并发编程中最常见的例子就是生产者消费者模式，该模式主要通过平衡生产线程和消费线程的工作能力来提高程序的整体处理数据的速度。简单地说，就是生产者生产一些数据，然后放到成果队列中，同时消费者从成果队列中来取这些数据。这样就让生产消费变成了异步的两个过程。当成果队列中没有数据时，消费者就进入饥饿的等待中；而当成果队列中数据已满时，生产者则面临因产品挤压导致CPU被剥夺的下岗问题。</p>
+<h3 id="发布订阅模型"><a href="#发布订阅模型" class="headerlink" title="发布订阅模型"></a>发布订阅模型</h3><p>发布订阅（publish-and-subscribe）模型通常被简写为pub/sub模型。在这个模型中，消息生产者成为发布者（publisher），而消息消费者则成为订阅者（subscriber），生产者和消费者是M:N的关系。在传统生产者和消费者模型中，是将消息发送到一个队列中，而发布订阅模型则是将消息发布给一个主题。</p>
+<h3 id="控制并发数"><a href="#控制并发数" class="headerlink" title="控制并发数"></a>控制并发数</h3><p>利用带缓存的channel实现</p>
+<h3 id="赢者为王"><a href="#赢者为王" class="headerlink" title="赢者为王"></a>赢者为王</h3><p>开启多个Goroutine 执行相同的任务,谁先返回,取谁的结果</p>
+<h3 id="并发的安全退出"><a href="#并发的安全退出" class="headerlink" title="并发的安全退出"></a>并发的安全退出</h3><p>通过select和channel 实现</p>
+<h3 id="context包-1"><a href="#context包-1" class="headerlink" title="context包"></a>context包</h3><p>在Go1.7发布时，标准库增加了一个context包，用来简化对于处理单个请求的多个Goroutine之间与请求域的数据、超时和退出等操作  </p>
+<h3 id="通过sync-WaitGroup实现并发控制"><a href="#通过sync-WaitGroup实现并发控制" class="headerlink" title="通过sync.WaitGroup实现并发控制"></a>通过sync.WaitGroup实现并发控制</h3><h2 id="JSON标准库对nil-slice和空slice的处理是一致的吗？"><a href="#JSON标准库对nil-slice和空slice的处理是一致的吗？" class="headerlink" title="JSON标准库对nil slice和空slice的处理是一致的吗？　"></a>JSON标准库对nil slice和空slice的处理是一致的吗？　</h2><p>不一直,nil slice会序列化成null ,空slice会序列化成空数组[]</p>
+<h2 id="协程，线程，进程的区别。"><a href="#协程，线程，进程的区别。" class="headerlink" title="协程，线程，进程的区别。"></a>协程，线程，进程的区别。</h2><h3 id="进程"><a href="#进程" class="headerlink" title="进程"></a>进程</h3><p>程是具有一定独立功能的程序关于某个数据集合上的一次运行活动,进程是系统进行资源分配和调度的一个独立单位。每个进程都有自己的独立内存空间，不同进程通过进程间通信来通信。由于进程比较重量，占据独立的内存，所以上下文进程间的切换开销（栈、寄存器、虚拟内存、文件句柄等）比较大，但相对比较稳定安全。</p>
+<h3 id="线程"><a href="#线程" class="headerlink" title="线程"></a>线程</h3><p>线程是进程的一个实体,是CPU调度和分派的基本单位,它是比进程更小的能独立运行的基本单位.线程自己基本上不拥有系统资源,只拥有一点在运行中必不可少的资源(如程序计数器,一组寄存器和栈),但是它可与同属一个进程的其他的线程共享进程所拥有的全部资源。线程间通信主要通过共享内存，上下文切换很快，资源开销较少，但相比进程不够稳定容易丢失数据。</p>
+<h3 id="协程"><a href="#协程" class="headerlink" title="协程"></a>协程</h3><p>协程是一种用户态的轻量级线程，协程的调度完全由用户控制。协程拥有自己的寄存器上下文和栈。协程调度切换时，将寄存器上下文和栈保存到其他地方，在切回来的时候，恢复先前保存的寄存器上下文和栈，直接操作栈则基本没有内核切换的开销，可以不加锁的访问全局变量，所以上下文的切换非常快。</p>
+<h2 id="互斥锁，读写锁，死锁问题是怎么解决"><a href="#互斥锁，读写锁，死锁问题是怎么解决" class="headerlink" title="互斥锁，读写锁，死锁问题是怎么解决"></a>互斥锁，读写锁，死锁问题是怎么解决</h2><h3 id="互斥锁"><a href="#互斥锁" class="headerlink" title="互斥锁"></a>互斥锁</h3><p>互斥锁就是互斥变量mutex，用来锁住临界区的.<br>条件锁就是条件变量，当进程的某些资源要求不满足时就进入休眠，也就是锁住了。当资源被分配到了，条件锁打开，进程继续运行；读写锁，也类似，用于缓冲区等临界资源能互斥访问的。  </p>
+<h3 id="读写锁"><a href="#读写锁" class="headerlink" title="读写锁"></a>读写锁</h3><p>通常有些公共数据修改的机会很少，但其读的机会很多。并且在读的过程中会伴随着查找，给这种代码加锁会降低我们的程序效率。读写锁可以解决这个问题。  </p>
+<blockquote>
+<p>注意：写独占，读共享，写锁优先级高</p>
+</blockquote>
+<h3 id="死锁"><a href="#死锁" class="headerlink" title="死锁"></a>死锁</h3><p>一般情况下，如果同一个线程先后两次调用lock，在第二次调用时，由于锁已经被占用，该线程会挂起等待别的线程释放锁，然而锁正是被自己占用着的，该线程又被挂起而没有机会释放锁，因此就永远处于挂起等待状态了，这叫做死锁（Deadlock）。 另外一种情况是：若线程A获得了锁1，线程B获得了锁2，这时线程A调用lock试图获得锁2，结果是需要挂起等待线程B释放锁2，而这时线程B也调用lock试图获得锁1，结果是需要挂起等待线程A释放锁1，于是线程A和B都永远处于挂起状态了。</p>
+<h4 id="死锁产生的四个必要条件"><a href="#死锁产生的四个必要条件" class="headerlink" title="死锁产生的四个必要条件"></a>死锁产生的四个必要条件</h4><p>1.互斥条件：一个资源每次只能被一个进程使用<br>2.请求与保持条件：一个进程因请求资源而阻塞时，对已获得的资源保持不放。<br>3.不剥夺条件:进程已获得的资源，在末使用完之前，不能强行剥夺。<br>4.循环等待条件:若干进程之间形成一种头尾相接的循环等待资源关系。<br> 这四个条件是死锁的必要条件，只要系统发生死锁，这些条件必然成立，而只要上述条件之一不满足，就不会发生死锁。  </p>
+<h3 id="怎么解决死锁问题"><a href="#怎么解决死锁问题" class="headerlink" title="怎么解决死锁问题"></a>怎么解决死锁问题</h3><h4 id="预防死锁"><a href="#预防死锁" class="headerlink" title="预防死锁"></a>预防死锁</h4><p>可以把资源一次性分配：（破坏请求和保持条件）<br>然后剥夺资源：即当某进程新的资源未满足时，释放已占有的资源（破坏不可剥夺条件）<br>资源有序分配法：系统给每类资源赋予一个编号，每一个进程按编号递增的顺序请求资源，释放则相反（破坏环路等待条件）</p>
+<h4 id="避免死锁"><a href="#避免死锁" class="headerlink" title="避免死锁"></a>避免死锁</h4><p>预防死锁的几种策略，会严重地损害系统性能。因此在避免死锁时，要施加较弱的限制，从而获得 较满意的系统性能。由于在避免死锁的策略中，允许进程动态地申请资源。因而，系统在进行资源分配之前预先计算资源分配的安全性。若此次分配不会导致系统进入不安全状态，则将资源分配给进程；否则，进程等待。其中最具有代表性的避免死锁算法是银行家算法。</p>
+<h4 id="检测死锁"><a href="#检测死锁" class="headerlink" title="检测死锁"></a>检测死锁</h4><p>首先为每个进程和每个资源指定一个唯一的号码,然后建立资源分配表和进程等待表.</p>
+<h4 id="解除死锁"><a href="#解除死锁" class="headerlink" title="解除死锁"></a>解除死锁</h4><p>当发现有进程死锁后，便应立即把它从死锁状态中解脱出来，常采用的方法有:  </p>
+<ol>
+<li>剥夺资源 从其它进程剥夺足够数量的资源给死锁进程，以解除死锁状态.</li>
+<li>撤消进程 可以直接撤消死锁进程或撤消代价最小的进程，直至有足够的资源可用，死锁状态.消除为止.所谓代价是指优先级、运行代价、进程的重要性和价值等。</li>
+</ol>
+<h2 id="Golang的内存模型，为什么小对象多了会造成gc压力"><a href="#Golang的内存模型，为什么小对象多了会造成gc压力" class="headerlink" title="Golang的内存模型，为什么小对象多了会造成gc压力"></a>Golang的内存模型，为什么小对象多了会造成gc压力</h2><h3 id="面向并发的内存模型"><a href="#面向并发的内存模型" class="headerlink" title="面向并发的内存模型"></a>面向并发的内存模型</h3><p>常见的并行编程有多种模型，主要有多线程、消息传递等。Go语言是基于消息并发模型的集大成者，它将基于CSP模型的并发编程内置到了语言中,并且go语言是共享内存的  </p>
+<h3 id="Goroutine和系统线程"><a href="#Goroutine和系统线程" class="headerlink" title="Goroutine和系统线程"></a>Goroutine和系统线程</h3><p>Goroutine采用的是半抢占式的协作调度，只有在当前Goroutine发生阻塞时才会导致调度；同时发生在用户态，调度器会根据具体函数只保存必要的寄存器，切换的代价要比系统线程低得多。运行时有一个runtime.GOMAXPROCS变量，用于控制当前运行正常非阻塞Goroutine的系统线程数目。  </p>
+<h3 id="原子操作"><a href="#原子操作" class="headerlink" title="原子操作"></a>原子操作</h3><p>所谓的原子操作就是并发编程中“最小的且不可并行化”的操作。</p>
+<h3 id="顺序一致性内存模型"><a href="#顺序一致性内存模型" class="headerlink" title="顺序一致性内存模型"></a>顺序一致性内存模型</h3><p>在Go语言中，同一个Goroutine线程内部，顺序一致性内存模型是得到保证的。但是不同的Goroutine之间，并不满足顺序一致性内存模型，需要通过明确定义的同步事件来作为同步的参考。</p>
+<p>通常小对象过多会导致GC三色法消耗过多的GPU。优化思路是，减少对象分配.</p>
+]]></content>
+      <categories>
+        <category>go</category>
+      </categories>
+      <tags>
+        <tag>goland面试题</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>go/golang代码风格</title>
     <url>/2023/01/11/go/golang%E4%BB%A3%E7%A0%81%E9%A3%8E%E6%A0%BC/</url>
     <content><![CDATA[<h1 id="Go-Code-Review-Comments-翻译-编写优雅golang代码"><a href="#Go-Code-Review-Comments-翻译-编写优雅golang代码" class="headerlink" title="Go Code Review Comments 翻译 编写优雅golang代码"></a>Go Code Review Comments 翻译 编写优雅golang代码</h1><p>官方代码规范指南  </p>
@@ -7176,226 +7505,6 @@ sudo apt-get install gcc-mingw-w64<figure class="highlight plain"><table><tr><td
 <li><a href="https://github.com/golang/go/wiki/CodeReviewComments" target="_blank" rel="noopener">https://github.com/golang/go/wiki/CodeReviewComments</a></li>
 <li><a href="https://blog.csdn.net/whatday/article/details/103611264" target="_blank" rel="noopener">Go Code Review Comments 翻译 编写优雅golang代码</a></li>
 </ul>
-]]></content>
-      <categories>
-        <category>go</category>
-      </categories>
-      <tags>
-        <tag>golang规范</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>go/golang面试题</title>
-    <url>/2023/01/11/go/golang%E9%9D%A2%E8%AF%95%E9%A2%98/</url>
-    <content><![CDATA[<h2 id="golang-调度"><a href="#golang-调度" class="headerlink" title="golang 调度"></a>golang 调度</h2><ul>
-<li>CSP(通信顺序进程)</li>
-<li>顺序一致性模型 <blockquote>
-<p>1.Go语言中，同一个Goroutine线程内部，顺序一致性内存模型是得到保证的;<br>  2.不同的Goroutine之间，并不满足顺序一致性内存模型，需要通过明确定义的同步事件来作为同步的参考</p>
-</blockquote>
-<a id="more"></a></li>
-<li>Goroutine采用的是半抢占式的协作调度，只有在当前Goroutine发生阻塞时才会导致调度 。以下是可能导致调度的点 <blockquote>
-<p>1.I/O,select<br>  2.channel<br>  3.等待锁<br>  4.函数调用（有时）<br>  5.runtime.Gosched(),由程序主动交出控制权</p>
-</blockquote>
-</li>
-</ul>
-<h2 id="go-结构体能不能进行比较"><a href="#go-结构体能不能进行比较" class="headerlink" title="go 结构体能不能进行比较"></a>go 结构体能不能进行比较</h2><ul>
-<li>如果结构体的所有成员变量都是可以比较的，那么结构体就可以比较</li>
-<li>结构体之间进行转换需要他们具备完全相同的成员（字段名，字段类型，字段个数）</li>
-<li>切片，map不能进行比较</li>
-</ul>
-<h2 id="结构体可以作为map的key吗"><a href="#结构体可以作为map的key吗" class="headerlink" title="结构体可以作为map的key吗"></a>结构体可以作为map的key吗</h2><ul>
-<li>结构体必须是可以比较的，才能作为key，否则编译报错</li>
-</ul>
-<h2 id="go-defer-先进后出，栈结构"><a href="#go-defer-先进后出，栈结构" class="headerlink" title="go defer 先进后出，栈结构"></a>go defer 先进后出，栈结构</h2><h2 id="select作用"><a href="#select作用" class="headerlink" title="select作用"></a>select作用</h2><ul>
-<li>用于监听和channel有关的IO操作，当IO操作触发时，触发相应的动作</li>
-<li>所有的channel表达式都会被求值，所有被发送的表达式都会被求值，求值顺序：自上而下，从左到右</li>
-<li>select常用于协程的安全退出</li>
-</ul>
-<h2 id="context包"><a href="#context包" class="headerlink" title="context包"></a>context包</h2><ul>
-<li>context 一般理解为程序单元（goroutine）的一个运行状态，现场，快照,通过context将当前程序的状态传递给下（goroutine）</li>
-<li>context 常用于将过期或者撤销的信号传递给被调用的程序单元</li>
-</ul>
-<h2 id="主协成如何等待其余协程完成"><a href="#主协成如何等待其余协程完成" class="headerlink" title="主协成如何等待其余协程完成"></a>主协成如何等待其余协程完成</h2><ul>
-<li>使用channel进行通信</li>
-<li>使用sync.WaitGroup包</li>
-</ul>
-<h2 id="slice-len-cap-共享-扩容"><a href="#slice-len-cap-共享-扩容" class="headerlink" title="slice,len,cap,共享,扩容"></a>slice,len,cap,共享,扩容</h2><ul>
-<li>slice底层数据结构由，数组，len,cap 组成，append扩容时是以当前容量的2倍进行扩容</li>
-<li>slice 加锁可以实现消息队列</li>
-</ul>
-<h2 id="map"><a href="#map" class="headerlink" title="map"></a>map</h2><ul>
-<li>map 是非线程安全的，多个协程同时操作一个map，会导致程序崩溃</li>
-<li>map 是无序的，想要顺序读取，可将map的key放入切片后排序后进行map读取</li>
-<li>map key是唯一的，可用于实现set集合</li>
-<li>map 可实现发布订阅</li>
-</ul>
-<h2 id="大文件排序"><a href="#大文件排序" class="headerlink" title="大文件排序"></a>大文件排序</h2><ul>
-<li>归并算法</li>
-<li>利用goroutine 并发排序缩短时间</li>
-</ul>
-<h2 id="标准Http协议6种请求方法"><a href="#标准Http协议6种请求方法" class="headerlink" title="标准Http协议6种请求方法"></a>标准Http协议6种请求方法</h2><ul>
-<li>GET</li>
-<li>POST</li>
-<li>PUT</li>
-<li>DELETE</li>
-<li>HEAD<blockquote>
-<p>HEAD 常用于判定某个资源是否存在 </p>
-</blockquote>
-</li>
-<li>Options<blockquote>
-<p>用于检查资源地址是否有效</p>
-</blockquote>
-</li>
-</ul>
-<h2 id="分布式事务"><a href="#分布式事务" class="headerlink" title="分布式事务"></a>分布式事务</h2><ul>
-<li>2PC</li>
-<li>TCC</li>
-<li>本地消息表</li>
-<li>MQ事务（RocketMQ）</li>
-</ul>
-<h2 id="golang中值类型和引用类型"><a href="#golang中值类型和引用类型" class="headerlink" title="golang中值类型和引用类型"></a>golang中值类型和引用类型</h2><ul>
-<li>值类型分别有：int系列、float系列、bool、string、数组和结构体</li>
-<li>引用类型有：指针、slice切片、管道channel、接口interface、map、函数等</li>
-<li>值类型的特点是：变量直接存储值，内存通常在栈中分配</li>
-<li>引用类型的特点是：变量存储的是一个地址，这个地址对应的空间里才是真正存储的值，内存通常在堆中分配,编译器会隐式地为我们解引用，取到指针指向的实际变量</li>
-</ul>
-<h2 id="Golang中除了加Mutex锁以外还有哪些方式安全读写共享变量？"><a href="#Golang中除了加Mutex锁以外还有哪些方式安全读写共享变量？" class="headerlink" title="Golang中除了加Mutex锁以外还有哪些方式安全读写共享变量？"></a>Golang中除了加Mutex锁以外还有哪些方式安全读写共享变量？</h2><p>Golang中Goroutine 可以通过 Channel 进行安全读写共享变量。</p>
-<h2 id="无缓冲-Chan-的发送和接收是否同步"><a href="#无缓冲-Chan-的发送和接收是否同步" class="headerlink" title="无缓冲 Chan 的发送和接收是否同步?"></a>无缓冲 Chan 的发送和接收是否同步?</h2><p>无缓冲的channel由于没有缓冲发送和接收需要同步.<br>有缓冲channel不要求发送和接收操作同步.<br>channel无缓冲时，发送阻塞直到数据被接收，接收阻塞直到读到数据。<br>channel有缓冲时，当缓冲满时发送阻塞，当缓冲空时接收阻塞。  </p>
-<h2 id="go语言的并发机制以及它所使用的CSP并发模型-GMP"><a href="#go语言的并发机制以及它所使用的CSP并发模型-GMP" class="headerlink" title="go语言的并发机制以及它所使用的CSP并发模型 GMP"></a>go语言的并发机制以及它所使用的CSP并发模型 GMP</h2><p>CSP模型是上个世纪七十年代提出的,不同于传统的多线程通过共享内存来通信，CSP讲究的是“以通信的方式来共享内存”。用于描述两个独立的并发实体通过共享的通讯 channel(管道)进行通信的并发模型。 CSP中channel是第一类对象，它不关注发送消息的实体，而关注与发送消息时使用的channel。<br>Golang中channel 是被单独创建并且可以在进程之间传递，它的通信模式类似于 boss-worker 模式的，一个实体通过将消息发送到channel 中，然后又监听这个 channel 的实体处理，两个实体之间是匿名的，这个就实现实体中间的解耦，其中 channel 是同步的一个消息被发送到 channel 中，最终是一定要被另外的实体消费掉的，在实现原理上其实类似一个阻塞的消息队列。<br>Goroutine 是Golang实际并发执行的实体，它底层是使用协程(coroutine)实现并发，coroutine是一种运行在用户态的用户线程，类似于 greenthread，go底层选择使用coroutine的出发点是因为，它具有以下特点：  </p>
-<ul>
-<li>用户空间 避免了内核态和用户态的切换导致的成本。</li>
-<li>可以由语言和框架层进行调度。</li>
-<li>更小的栈空间允许创建大量的实例。</li>
-</ul>
-<p>Golang中的Goroutine的特性:<br>Golang内部有三个对象： P对象(processor) 代表上下文（或者可以认为是cpu），M(work thread)代表工作线程，G对象（goroutine）.  </p>
-<ul>
-<li>G（Goroutine）我们所说的协程，为用户级的轻量级线程，每个Goroutine对象中的sched保存着其上下文信息.</li>
-<li>M（Machine） 对内核级线程的封装，数量最大值为1000</li>
-<li>P（Processor） 即为G和M的调度对象，用来调度G和M之间的关联关系，其数量可通过GOMAXPROCS()来设置，默认为核心数.</li>
-</ul>
-<p>GMP调度原理:<br>Goroutine 调度器和 OS 调度器是通过 M 结合起来的，每个 M 都代表了 1 个内核线程，OS 调度器负责把内核线程分配到 CPU 的核上执行。<br>M想要执行G,必须先获得P,在go中有,两个队列,一个全局的G队列和P本地队列,M从P本地队列中获取G,如果P本地队列为空,则从全局队列中拉取一些G放到本地队列,如果全局队列为空则从其他P本地队列偷取G来,放到自己的本地队列中.如果偷取失败,则当前M进入自旋状态,等待可执行的G,<br>而其他未获得P的会进入休眠状态,一定时间过后会被操作系统回收.<br>如果当前M执行G的过程中G发生阻塞,则P会立即分离出来,寻找空闲M进行绑定</p>
-<p>Golang的CSP并发模型，是通过Goroutine和Channel来实现的。<br>Goroutine 是Go语言中并发的执行单位。有点抽象，其实就是和传统概念上的”线程“类似，可以理解为”线程“。 Channel是Go语言中各个并发结构体(Goroutine)之前的通信机制。通常Channel，是各个Goroutine之间通信的”管道“，有点类似于Linux中的管道。<br>在通信过程中，传数据channel &lt;- data和取数据&lt;-channel必然会成对出现，因为这边传，那边取，两个goroutine之间才会实现通信。  </p>
-<h2 id="Golang-中常用的并发模式？"><a href="#Golang-中常用的并发模式？" class="headerlink" title="Golang 中常用的并发模式？"></a>Golang 中常用的并发模式？</h2><h3 id="生产者消费者模型"><a href="#生产者消费者模型" class="headerlink" title="生产者消费者模型"></a>生产者消费者模型</h3><p>并发编程中最常见的例子就是生产者消费者模式，该模式主要通过平衡生产线程和消费线程的工作能力来提高程序的整体处理数据的速度。简单地说，就是生产者生产一些数据，然后放到成果队列中，同时消费者从成果队列中来取这些数据。这样就让生产消费变成了异步的两个过程。当成果队列中没有数据时，消费者就进入饥饿的等待中；而当成果队列中数据已满时，生产者则面临因产品挤压导致CPU被剥夺的下岗问题。</p>
-<h3 id="发布订阅模型"><a href="#发布订阅模型" class="headerlink" title="发布订阅模型"></a>发布订阅模型</h3><p>发布订阅（publish-and-subscribe）模型通常被简写为pub/sub模型。在这个模型中，消息生产者成为发布者（publisher），而消息消费者则成为订阅者（subscriber），生产者和消费者是M:N的关系。在传统生产者和消费者模型中，是将消息发送到一个队列中，而发布订阅模型则是将消息发布给一个主题。</p>
-<h3 id="控制并发数"><a href="#控制并发数" class="headerlink" title="控制并发数"></a>控制并发数</h3><p>利用带缓存的channel实现</p>
-<h3 id="赢者为王"><a href="#赢者为王" class="headerlink" title="赢者为王"></a>赢者为王</h3><p>开启多个Goroutine 执行相同的任务,谁先返回,取谁的结果</p>
-<h3 id="并发的安全退出"><a href="#并发的安全退出" class="headerlink" title="并发的安全退出"></a>并发的安全退出</h3><p>通过select和channel 实现</p>
-<h3 id="context包-1"><a href="#context包-1" class="headerlink" title="context包"></a>context包</h3><p>在Go1.7发布时，标准库增加了一个context包，用来简化对于处理单个请求的多个Goroutine之间与请求域的数据、超时和退出等操作  </p>
-<h3 id="通过sync-WaitGroup实现并发控制"><a href="#通过sync-WaitGroup实现并发控制" class="headerlink" title="通过sync.WaitGroup实现并发控制"></a>通过sync.WaitGroup实现并发控制</h3><h2 id="JSON标准库对nil-slice和空slice的处理是一致的吗？"><a href="#JSON标准库对nil-slice和空slice的处理是一致的吗？" class="headerlink" title="JSON标准库对nil slice和空slice的处理是一致的吗？　"></a>JSON标准库对nil slice和空slice的处理是一致的吗？　</h2><p>不一直,nil slice会序列化成null ,空slice会序列化成空数组[]</p>
-<h2 id="协程，线程，进程的区别。"><a href="#协程，线程，进程的区别。" class="headerlink" title="协程，线程，进程的区别。"></a>协程，线程，进程的区别。</h2><h3 id="进程"><a href="#进程" class="headerlink" title="进程"></a>进程</h3><p>程是具有一定独立功能的程序关于某个数据集合上的一次运行活动,进程是系统进行资源分配和调度的一个独立单位。每个进程都有自己的独立内存空间，不同进程通过进程间通信来通信。由于进程比较重量，占据独立的内存，所以上下文进程间的切换开销（栈、寄存器、虚拟内存、文件句柄等）比较大，但相对比较稳定安全。</p>
-<h3 id="线程"><a href="#线程" class="headerlink" title="线程"></a>线程</h3><p>线程是进程的一个实体,是CPU调度和分派的基本单位,它是比进程更小的能独立运行的基本单位.线程自己基本上不拥有系统资源,只拥有一点在运行中必不可少的资源(如程序计数器,一组寄存器和栈),但是它可与同属一个进程的其他的线程共享进程所拥有的全部资源。线程间通信主要通过共享内存，上下文切换很快，资源开销较少，但相比进程不够稳定容易丢失数据。</p>
-<h3 id="协程"><a href="#协程" class="headerlink" title="协程"></a>协程</h3><p>协程是一种用户态的轻量级线程，协程的调度完全由用户控制。协程拥有自己的寄存器上下文和栈。协程调度切换时，将寄存器上下文和栈保存到其他地方，在切回来的时候，恢复先前保存的寄存器上下文和栈，直接操作栈则基本没有内核切换的开销，可以不加锁的访问全局变量，所以上下文的切换非常快。</p>
-<h2 id="互斥锁，读写锁，死锁问题是怎么解决"><a href="#互斥锁，读写锁，死锁问题是怎么解决" class="headerlink" title="互斥锁，读写锁，死锁问题是怎么解决"></a>互斥锁，读写锁，死锁问题是怎么解决</h2><h3 id="互斥锁"><a href="#互斥锁" class="headerlink" title="互斥锁"></a>互斥锁</h3><p>互斥锁就是互斥变量mutex，用来锁住临界区的.<br>条件锁就是条件变量，当进程的某些资源要求不满足时就进入休眠，也就是锁住了。当资源被分配到了，条件锁打开，进程继续运行；读写锁，也类似，用于缓冲区等临界资源能互斥访问的。  </p>
-<h3 id="读写锁"><a href="#读写锁" class="headerlink" title="读写锁"></a>读写锁</h3><p>通常有些公共数据修改的机会很少，但其读的机会很多。并且在读的过程中会伴随着查找，给这种代码加锁会降低我们的程序效率。读写锁可以解决这个问题。  </p>
-<blockquote>
-<p>注意：写独占，读共享，写锁优先级高</p>
-</blockquote>
-<h3 id="死锁"><a href="#死锁" class="headerlink" title="死锁"></a>死锁</h3><p>一般情况下，如果同一个线程先后两次调用lock，在第二次调用时，由于锁已经被占用，该线程会挂起等待别的线程释放锁，然而锁正是被自己占用着的，该线程又被挂起而没有机会释放锁，因此就永远处于挂起等待状态了，这叫做死锁（Deadlock）。 另外一种情况是：若线程A获得了锁1，线程B获得了锁2，这时线程A调用lock试图获得锁2，结果是需要挂起等待线程B释放锁2，而这时线程B也调用lock试图获得锁1，结果是需要挂起等待线程A释放锁1，于是线程A和B都永远处于挂起状态了。</p>
-<h4 id="死锁产生的四个必要条件"><a href="#死锁产生的四个必要条件" class="headerlink" title="死锁产生的四个必要条件"></a>死锁产生的四个必要条件</h4><p>1.互斥条件：一个资源每次只能被一个进程使用<br>2.请求与保持条件：一个进程因请求资源而阻塞时，对已获得的资源保持不放。<br>3.不剥夺条件:进程已获得的资源，在末使用完之前，不能强行剥夺。<br>4.循环等待条件:若干进程之间形成一种头尾相接的循环等待资源关系。<br> 这四个条件是死锁的必要条件，只要系统发生死锁，这些条件必然成立，而只要上述条件之一不满足，就不会发生死锁。  </p>
-<h3 id="怎么解决死锁问题"><a href="#怎么解决死锁问题" class="headerlink" title="怎么解决死锁问题"></a>怎么解决死锁问题</h3><h4 id="预防死锁"><a href="#预防死锁" class="headerlink" title="预防死锁"></a>预防死锁</h4><p>可以把资源一次性分配：（破坏请求和保持条件）<br>然后剥夺资源：即当某进程新的资源未满足时，释放已占有的资源（破坏不可剥夺条件）<br>资源有序分配法：系统给每类资源赋予一个编号，每一个进程按编号递增的顺序请求资源，释放则相反（破坏环路等待条件）</p>
-<h4 id="避免死锁"><a href="#避免死锁" class="headerlink" title="避免死锁"></a>避免死锁</h4><p>预防死锁的几种策略，会严重地损害系统性能。因此在避免死锁时，要施加较弱的限制，从而获得 较满意的系统性能。由于在避免死锁的策略中，允许进程动态地申请资源。因而，系统在进行资源分配之前预先计算资源分配的安全性。若此次分配不会导致系统进入不安全状态，则将资源分配给进程；否则，进程等待。其中最具有代表性的避免死锁算法是银行家算法。</p>
-<h4 id="检测死锁"><a href="#检测死锁" class="headerlink" title="检测死锁"></a>检测死锁</h4><p>首先为每个进程和每个资源指定一个唯一的号码,然后建立资源分配表和进程等待表.</p>
-<h4 id="解除死锁"><a href="#解除死锁" class="headerlink" title="解除死锁"></a>解除死锁</h4><p>当发现有进程死锁后，便应立即把它从死锁状态中解脱出来，常采用的方法有:  </p>
-<ol>
-<li>剥夺资源 从其它进程剥夺足够数量的资源给死锁进程，以解除死锁状态.</li>
-<li>撤消进程 可以直接撤消死锁进程或撤消代价最小的进程，直至有足够的资源可用，死锁状态.消除为止.所谓代价是指优先级、运行代价、进程的重要性和价值等。</li>
-</ol>
-<h2 id="Golang的内存模型，为什么小对象多了会造成gc压力"><a href="#Golang的内存模型，为什么小对象多了会造成gc压力" class="headerlink" title="Golang的内存模型，为什么小对象多了会造成gc压力"></a>Golang的内存模型，为什么小对象多了会造成gc压力</h2><h3 id="面向并发的内存模型"><a href="#面向并发的内存模型" class="headerlink" title="面向并发的内存模型"></a>面向并发的内存模型</h3><p>常见的并行编程有多种模型，主要有多线程、消息传递等。Go语言是基于消息并发模型的集大成者，它将基于CSP模型的并发编程内置到了语言中,并且go语言是共享内存的  </p>
-<h3 id="Goroutine和系统线程"><a href="#Goroutine和系统线程" class="headerlink" title="Goroutine和系统线程"></a>Goroutine和系统线程</h3><p>Goroutine采用的是半抢占式的协作调度，只有在当前Goroutine发生阻塞时才会导致调度；同时发生在用户态，调度器会根据具体函数只保存必要的寄存器，切换的代价要比系统线程低得多。运行时有一个runtime.GOMAXPROCS变量，用于控制当前运行正常非阻塞Goroutine的系统线程数目。  </p>
-<h3 id="原子操作"><a href="#原子操作" class="headerlink" title="原子操作"></a>原子操作</h3><p>所谓的原子操作就是并发编程中“最小的且不可并行化”的操作。</p>
-<h3 id="顺序一致性内存模型"><a href="#顺序一致性内存模型" class="headerlink" title="顺序一致性内存模型"></a>顺序一致性内存模型</h3><p>在Go语言中，同一个Goroutine线程内部，顺序一致性内存模型是得到保证的。但是不同的Goroutine之间，并不满足顺序一致性内存模型，需要通过明确定义的同步事件来作为同步的参考。</p>
-<p>通常小对象过多会导致GC三色法消耗过多的GPU。优化思路是，减少对象分配.</p>
-]]></content>
-      <categories>
-        <category>go</category>
-      </categories>
-      <tags>
-        <tag>goland面试题</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>go/golang项目结构规范</title>
-    <url>/2023/01/11/go/golang%E9%A1%B9%E7%9B%AE%E7%BB%93%E6%9E%84%E8%A7%84%E8%8C%83/</url>
-    <content><![CDATA[<h1 id="golang项目结构规范"><a href="#golang项目结构规范" class="headerlink" title="golang项目结构规范"></a>golang项目结构规范</h1><p><a href="https://github.com/golang-standards/project-layout" target="_blank" rel="noopener">https://github.com/golang-standards/project-layout</a> 项目总结了 Go 项目的布局，这是Go应用程序项目的基本布局，并不是Go核心开发团队<br>定义的官方标准；但是，这是Go生态系统中的一种常见的项目布局模式。</p>
-<a id="more"></a>
-
-
-
-
-<p>这是 Go 应用程序项目的基本布局。它不是核心 Go 开发团队定义的官方标准；然而，它是 Go 生态系统中一组常见的老项目和新项目的布局模式。其中一些模式比其他模式更受欢迎。它还具有许多小的增强，以及对任何足够大的实际应用程序通用的几个支持目录。</p>
-<p>如果你尝试学习 Go，或者你正在为自己建立一个 PoC 或一个玩具项目，这个项目布局是没啥必要的。从一些非常简单的事情开始(一个 <code>main.go</code> 文件绰绰有余)。随着项目的增长，请记住保持代码结构良好非常重要，否则你最终会得到一个凌乱的代码，这其中就包含大量隐藏的依赖项和全局状态。当有更多的人参与这个项目时，你将需要更多的结构。这时候，介绍一种管理包/库的通用方法是很重要的。当你有一个开源项目时，或者当你知道其他项目从你的项目存储库中导入代码时，这时候拥有私有(又名 <code>internal</code>)包和代码就很重要。克隆存储库，保留你需要的内容，删除其他所有的内容!仅仅因为它在那里并不意味着你必须全部使用它。这些模式都没有在每个项目中使用。甚至 <code>vendor</code> 模式也不是通用的。</p>
-<p>Go 1.14 <a href="https://github.com/golang/go/wiki/Modules" target="_blank" rel="noopener"><code>Go Modules</code></a> 终于可以投入生产了。除非你有特定的理由不使用它们，否则使用 <a href="https://blog.golang.org/using-go-modules" target="_blank" rel="noopener"><code>Go Modules</code></a> 。如果你使用，就无需担心 $GOPATH 以及项目放置的位置。存储库中的 <code>go.mod</code> 文件基本假定你的项目托管在 Github 上，但这不是要求。模块路径可以是任何地方，尽管第一个模块路径组件的名称中应该有一个点（当前版本的 Go 不再强制使用该模块，但如果使用稍旧的版本，如果没有 <code>mod</code> 文件构建失败的话 ，不要惊讶）。如果你想知道更多信息，请参阅 Issues <a href="https://github.com/golang/go/issues/37554" target="_blank" rel="noopener"><code>37554</code></a> 和 <a href="https://github.com/golang/go/issues/32819" target="_blank" rel="noopener"><code>32819</code></a> 。</p>
-<p>此项目布局是通用的，并且不会尝试强加一个特定的 Go 包结构。</p>
-<p>这是社区的努力。 如果看到新的模式，或者认为一个现有的模式需要更新，请提一个 issue。</p>
-<p>如果需要命名、格式和样式方面的帮助，请运行 <a href="https://golang.org/cmd/gofmt/" target="_blank" rel="noopener"><code>gofmt</code></a> 和 <a href="https://github.com/golang/lint" target="_blank" rel="noopener"><code>golint</code></a> 。还要确保阅读这些 Go 代码风格的指导方针和建议:</p>
-<ul>
-<li><a href="https://talks.golang.org/2014/names.slide" target="_blank" rel="noopener">https://talks.golang.org/2014/names.slide</a></li>
-<li><a href="https://golang.org/doc/effective_go.html#names" target="_blank" rel="noopener">https://golang.org/doc/effective_go.html#names</a></li>
-<li><a href="https://blog.golang.org/package-names" target="_blank" rel="noopener">https://blog.golang.org/package-names</a></li>
-<li><a href="https://github.com/golang/go/wiki/CodeReviewComments" target="_blank" rel="noopener">https://github.com/golang/go/wiki/CodeReviewComments</a></li>
-<li><a href="https://rakyll.org/style-packages" target="_blank" rel="noopener">Style guideline for Go packages</a> (rakyll/JBD)</li>
-</ul>
-<p>参见 <a href="https://medium.com/golang-learn/go-project-layout-e5213cdcfaa2" target="_blank" rel="noopener"><code>Go Project Layout</code></a> 了解更多的背景信息。</p>
-<p>更多关于包的命名和组织以及其他代码结构的建议:</p>
-<ul>
-<li><a href="https://www.youtube.com/watch?v=PTE4VJIdHPg" target="_blank" rel="noopener">GopherCon EU 2018: Peter Bourgon - Best Practices for Industrial Programming</a></li>
-<li><a href="https://www.youtube.com/watch?v=MzTcsI6tn-0" target="_blank" rel="noopener">GopherCon Russia 2018: Ashley McNamara + Brian Ketelsen - Go best practices.</a></li>
-<li><a href="https://www.youtube.com/watch?v=ltqV6pDKZD8" target="_blank" rel="noopener">GopherCon 2017: Edward Muller - Go Anti-Patterns</a></li>
-<li><a href="https://www.youtube.com/watch?v=oL6JBUk6tj0" target="_blank" rel="noopener">GopherCon 2018: Kat Zien - How Do You Structure Your Go Apps</a></li>
-</ul>
-<h2 id="Go-目录"><a href="#Go-目录" class="headerlink" title="Go 目录"></a>Go 目录</h2><h3 id="cmd"><a href="#cmd" class="headerlink" title="/cmd"></a><code>/cmd</code></h3><p>本项目的主干。</p>
-<p>每个应用程序的目录名应该与你想要的可执行文件的名称相匹配(例如，<code>/cmd/myapp</code>)。</p>
-<p>不要在这个目录中放置太多代码。如果你认为代码可以导入并在其他项目中使用，那么它应该位于 <code>/pkg</code> 目录中。如果代码不是可重用的，或者你不希望其他人重用它，请将该代码放到 <code>/internal</code> 目录中。你会惊讶于别人会怎么做，所以要明确你的意图!</p>
-<p>通常有一个小的 <code>main</code> 函数，从 <code>/internal</code> 和 <code>/pkg</code> 目录导入和调用代码，除此之外没有别的东西。</p>
-<p>有关示例，请参阅 <a href="cmd/README.md"><code>/cmd</code></a> 目录。</p>
-<h3 id="internal"><a href="#internal" class="headerlink" title="/internal"></a><code>/internal</code></h3><p>私有应用程序和库代码。这是你不希望其他人在其应用程序或库中导入代码。请注意，这个布局模式是由 Go 编译器本身执行的。有关更多细节，请参阅Go 1.4 <a href="https://golang.org/doc/go1.4#internalpackages" target="_blank" rel="noopener"><code>release notes</code></a> 。注意，你并不局限于顶级 <code>internal</code> 目录。在项目树的任何级别上都可以有多个内部目录。</p>
-<p>你可以选择向 internal 包中添加一些额外的结构，以分隔共享和非共享的内部代码。这不是必需的(特别是对于较小的项目)，但是最好有有可视化的线索来显示预期的包的用途。你的实际应用程序代码可以放在 <code>/internal/app</code> 目录下(例如 <code>/internal/app/myapp</code>)，这些应用程序共享的代码可以放在 <code>/internal/pkg</code> 目录下(例如 <code>/internal/pkg/myprivlib</code>)。</p>
-<h3 id="pkg"><a href="#pkg" class="headerlink" title="/pkg"></a><code>/pkg</code></h3><p>外部应用程序可以使用的库代码(例如 <code>/pkg/mypubliclib</code>)。其他项目会导入这些库，希望它们能正常工作，所以在这里放东西之前要三思:-)注意，<code>internal</code> 目录是确保私有包不可导入的更好方法，因为它是由 Go 强制执行的。<code>/pkg</code> 目录仍然是一种很好的方式，可以显式地表示该目录中的代码对于其他人来说是安全使用的好方法。由 Travis Jeffery  撰写的 <a href="https://travisjeffery.com/b/2019/11/i-ll-take-pkg-over-internal/" target="_blank" rel="noopener"><code>I&#39;ll take pkg over internal</code></a> 博客文章提供了 <code>pkg</code> 和 <code>internal</code> 目录的一个很好的概述，以及什么时候使用它们是有意义的。</p>
-<p>当根目录包含大量非 Go 组件和目录时，这也是一种将 Go 代码分组到一个位置的方法，这使得运行各种 Go 工具变得更加容易（正如在这些演讲中提到的那样: 来自 GopherCon EU 2018 的 <a href="https://www.youtube.com/watch?v=PTE4VJIdHPg" target="_blank" rel="noopener"><code>Best Practices for Industrial Programming</code></a> , <a href="https://www.youtube.com/watch?v=oL6JBUk6tj0" target="_blank" rel="noopener">GopherCon 2018: Kat Zien - How Do You Structure Your Go Apps</a> 和 <a href="https://www.youtube.com/watch?v=3gQa1LWwuzk" target="_blank" rel="noopener">GoLab 2018 - Massimiliano Pippi - Project layout patterns in Go</a> ）。</p>
-<p>如果你想查看哪个流行的 Go 存储库使用此项目布局模式，请查看 <a href="pkg/README.md"><code>/pkg</code></a> 目录。这是一种常见的布局模式，但并不是所有人都接受它，一些 Go 社区的人也不推荐它。</p>
-<p>如果你的应用程序项目真的很小，并且额外的嵌套并不能增加多少价值(除非你真的想要:-)，那就不要使用它。当它变得足够大时，你的根目录会变得非常繁琐时(尤其是当你有很多非 Go 应用组件时)，请考虑一下。</p>
-<h3 id="vendor"><a href="#vendor" class="headerlink" title="/vendor"></a><code>/vendor</code></h3><p>应用程序依赖项(手动管理或使用你喜欢的依赖项管理工具，如新的内置 <a href="https://github.com/golang/go/wiki/Modules" target="_blank" rel="noopener"><code>Go Modules</code></a> 功能)。<code>go mod vendor</code> 命令将为你创建 <code>/vendor</code> 目录。请注意，如果未使用默认情况下处于启用状态的 Go 1.14，则可能需要在 <code>go build</code> 命令中添加 <code>-mod=vendor</code> 标志。</p>
-<p>如果你正在构建一个库，那么不要提交你的应用程序依赖项。</p>
-<p>注意，自从 <a href="https://golang.org/doc/go1.13#modules" target="_blank" rel="noopener"><code>1.13</code></a> 以后，Go 还启用了模块代理功能(默认使用 <a href="https://proxy.golang.org" target="_blank" rel="noopener"><code>https://proxy.golang.org</code></a> 作为他们的模块代理服务器)。在<a href="https://blog.golang.org/module-mirror-launch" target="_blank" rel="noopener"><code>here</code></a> 阅读更多关于它的信息，看看它是否符合你的所有需求和约束。如果需要，那么你根本不需要 <code>vendor</code> 目录。</p>
-<p>国内模块代理功能默认是被墙的，七牛云有维护专门的的<a href="https://github.com/goproxy/goproxy.cn/blob/master/README.zh-CN.md" target="_blank" rel="noopener"><code>模块代理</code></a> 。</p>
-<h2 id="服务应用程序目录"><a href="#服务应用程序目录" class="headerlink" title="服务应用程序目录"></a>服务应用程序目录</h2><h3 id="api"><a href="#api" class="headerlink" title="/api"></a><code>/api</code></h3><p>OpenAPI/Swagger 规范，JSON 模式文件，协议定义文件。</p>
-<p>有关示例，请参见 <a href="api/README.md"><code>/api</code></a> 目录。</p>
-<h2 id="Web-应用程序目录"><a href="#Web-应用程序目录" class="headerlink" title="Web 应用程序目录"></a>Web 应用程序目录</h2><h3 id="web"><a href="#web" class="headerlink" title="/web"></a><code>/web</code></h3><p>特定于 Web 应用程序的组件:静态 Web 资产、服务器端模板和 SPAs。</p>
-<h2 id="通用应用目录"><a href="#通用应用目录" class="headerlink" title="通用应用目录"></a>通用应用目录</h2><h3 id="configs"><a href="#configs" class="headerlink" title="/configs"></a><code>/configs</code></h3><p>配置文件模板或默认配置。</p>
-<p>将你的 <code>confd</code> 或 <code>consul-template</code> 模板文件放在这里。</p>
-<h3 id="init"><a href="#init" class="headerlink" title="/init"></a><code>/init</code></h3><p>System init（systemd，upstart，sysv）和 process manager/supervisor（runit，supervisor）配置。</p>
-<h3 id="scripts"><a href="#scripts" class="headerlink" title="/scripts"></a><code>/scripts</code></h3><p>执行各种构建、安装、分析等操作的脚本。</p>
-<p>这些脚本保持了根级别的 Makefile 变得小而简单(例如， <a href="https://github.com/hashicorp/terraform/blob/master/Makefile" target="_blank" rel="noopener"><code>https://github.com/hashicorp/terraform/blob/master/Makefile</code></a> )。</p>
-<p>有关示例，请参见  <a href="scripts/README.md"><code>/scripts</code></a> 目录。</p>
-<h3 id="build"><a href="#build" class="headerlink" title="/build"></a><code>/build</code></h3><p>打包和持续集成。</p>
-<p>将你的云( AMI )、容器( Docker )、操作系统( deb、rpm、pkg )包配置和脚本放在 <code>/build/package</code> 目录下。</p>
-<p>将你的 CI (travis、circle、drone)配置和脚本放在 <code>/build/ci</code> 目录中。请注意，有些 CI 工具(例如 Travis CI)对配置文件的位置非常挑剔。尝试将配置文件放在 <code>/build/ci</code> 目录中，将它们链接到 CI 工具期望它们的位置(如果可能的话)。</p>
-<h3 id="deployments"><a href="#deployments" class="headerlink" title="/deployments"></a><code>/deployments</code></h3><p>IaaS、PaaS、系统和容器编排部署配置和模板(docker-compose、kubernetes/helm、mesos、terraform、bosh)。注意，在一些存储库中(特别是使用 kubernetes 部署的应用程序)，这个目录被称为 <code>/deploy</code>。</p>
-<h3 id="test"><a href="#test" class="headerlink" title="/test"></a><code>/test</code></h3><p>额外的外部测试应用程序和测试数据。你可以随时根据需求构造 <code>/test</code> 目录。对于较大的项目，有一个数据子目录是有意义的。例如，你可以使用 <code>/test/data</code> 或 <code>/test/testdata</code> (如果你需要忽略目录中的内容)。请注意，Go 还会忽略以“.”或“_”开头的目录或文件，因此在如何命名测试数据目录方面有更大的灵活性。</p>
-<p>有关示例，请参见  <a href="test/README.md"><code>/test</code></a> 目录。</p>
-<h2 id="其他目录"><a href="#其他目录" class="headerlink" title="其他目录"></a>其他目录</h2><h3 id="docs"><a href="#docs" class="headerlink" title="/docs"></a><code>/docs</code></h3><p>设计和用户文档(除了 godoc 生成的文档之外)。</p>
-<p>有关示例，请参阅 <a href="docs/README.md"><code>/docs</code></a> 目录。</p>
-<h3 id="tools"><a href="#tools" class="headerlink" title="/tools"></a><code>/tools</code></h3><p>这个项目的支持工具。注意，这些工具可以从 <code>/pkg</code> 和 <code>/internal</code> 目录导入代码。</p>
-<p>有关示例，请参见 <a href="tools/README.md"><code>/tools</code></a> 目录。</p>
-<h3 id="examples"><a href="#examples" class="headerlink" title="/examples"></a><code>/examples</code></h3><p>你的应用程序和/或公共库的示例。</p>
-<p>有关示例，请参见 <a href="examples/README.md"><code>/examples</code></a> 目录。</p>
-<h3 id="third-party"><a href="#third-party" class="headerlink" title="/third_party"></a><code>/third_party</code></h3><p>外部辅助工具，分叉代码和其他第三方工具(例如 Swagger UI)。</p>
-<h3 id="githooks"><a href="#githooks" class="headerlink" title="/githooks"></a><code>/githooks</code></h3><p>Git hooks。</p>
-<h3 id="assets"><a href="#assets" class="headerlink" title="/assets"></a><code>/assets</code></h3><p>与存储库一起使用的其他资产(图像、徽标等)。</p>
-<h3 id="website"><a href="#website" class="headerlink" title="/website"></a><code>/website</code></h3><p>如果你不使用 Github 页面，则在这里放置项目的网站数据。</p>
-<p>有关示例，请参见 <a href="website/README.md"><code>/website</code></a> 目录。</p>
-<h2 id="你不应该拥有的目录"><a href="#你不应该拥有的目录" class="headerlink" title="你不应该拥有的目录"></a>你不应该拥有的目录</h2><h3 id="src"><a href="#src" class="headerlink" title="/src"></a><code>/src</code></h3><p>有些 Go 项目确实有一个 <code>src</code> 文件夹，但这通常发生在开发人员有 Java 背景，在那里它是一种常见的模式。如果可以的话，尽量不要采用这种 Java 模式。你真的不希望你的 Go 代码或 Go 项目看起来像 Java:-)</p>
-<p>不要将项目级别 <code>src</code> 目录与 Go 用于其工作空间的 <code>src</code> 目录(如 <a href="https://golang.org/doc/code.html" target="_blank" rel="noopener"><code>How to Write Go Code</code></a> 中所述)混淆。<code>$GOPATH</code> 环境变量指向你的(当前)工作空间(默认情况下，它指向非 windows 系统上的 <code>$HOME/go</code>)。这个工作空间包括顶层 <code>/pkg</code>, <code>/bin</code> 和 <code>/src</code> 目录。你的实际项目最终是 <code>/src</code> 下的一个子目录，因此，如果你的项目中有 <code>/src</code> 目录，那么项目路径将是这样的: <code>/some/path/to/workspace/src/your_project/src/your_code.go</code>。注意，在 Go 1.11 中，可以将项目放在 <code>GOPATH</code> 之外，但这并不意味着使用这种布局模式是一个好主意。</p>
-<h2 id="Badges"><a href="#Badges" class="headerlink" title="Badges"></a>Badges</h2><ul>
-<li><p><a href="https://goreportcard.com/" target="_blank" rel="noopener">Go Report Card</a> - It will scan your code with <code>gofmt</code>, <code>go vet</code>, <code>gocyclo</code>, <code>golint</code>, <code>ineffassign</code>, <code>license</code> and <code>misspell</code>. Replace <code>github.com/golang-standards/project-layout</code> with your project reference.</p>
-</li>
-<li><p><a href="http://godoc.org" target="_blank" rel="noopener">GoDoc</a> - It will provide online version of your GoDoc generated documentation. Change the link to point to your project.</p>
-</li>
-<li><p>Release - It will show the latest release number for your project. Change the github link to point to your project.</p>
-</li>
-</ul>
-<p><a href="https://goreportcard.com/report/github.com/golang-standards/project-layout" target="_blank" rel="noopener"><img src="https://goreportcard.com/badge/github.com/golang-standards/project-layout?style=flat-square" alt="Go Report Card"></a><br><a href="http://godoc.org/github.com/golang-standards/project-layout" target="_blank" rel="noopener"><img src="https://img.shields.io/badge/godoc-reference-blue.svg?style=flat-square" alt="Go Doc"></a><br><a href="https://github.com/golang-standards/project-layout/releases/latest" target="_blank" rel="noopener"><img src="https://img.shields.io/github/release/golang-standards/project-layout.svg?style=flat-square" alt="Release"></a></p>
-<h2 id="Notes"><a href="#Notes" class="headerlink" title="Notes"></a>Notes</h2><p>A more opinionated project template with sample/reusable configs, scripts and code is a WIP.</p>
 ]]></content>
       <categories>
         <category>go</category>
@@ -7936,27 +8045,6 @@ sudo apt-get install gcc-mingw-w64<figure class="highlight plain"><table><tr><td
       </tags>
   </entry>
   <entry>
-    <title>docker/docker-machine</title>
-    <url>/2023/01/11/docker/docker-machine/</url>
-    <content><![CDATA[<h2 id="下载"><a href="#下载" class="headerlink" title="下载"></a>下载</h2><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">base&#x3D;https:&#x2F;&#x2F;github.com&#x2F;docker&#x2F;machine&#x2F;releases&#x2F;download&#x2F;v0.16.0 &amp;&amp;</span><br><span class="line">  curl -L $base&#x2F;docker-machine-$(uname -s)-$(uname -m) &gt;&#x2F;tmp&#x2F;docker-machine &amp;&amp;</span><br><span class="line">  sudo mv &#x2F;tmp&#x2F;docker-machine &#x2F;usr&#x2F;local&#x2F;bin&#x2F;docker-machine &amp;&amp;</span><br><span class="line">  chmod +x &#x2F;usr&#x2F;local&#x2F;bin&#x2F;docker-mach</span><br></pre></td></tr></table></figure>
-<h3 id="网速慢"><a href="#网速慢" class="headerlink" title="网速慢"></a>网速慢</h3><p>使用xx_net代理</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">sudo  apt install privoxy</span><br><span class="line">export https_proxy&#x3D;127.0.0.1:8087</span><br><span class="line">export http_proxy&#x3D;127.0.0.1:8087</span><br></pre></td></tr></table></figure>
-
-<h3 id="x509问题"><a href="#x509问题" class="headerlink" title="x509问题"></a>x509问题</h3><p>curl -k 参数跳过证书验证</p>
-<h2 id="使用"><a href="#使用" class="headerlink" title="使用"></a>使用</h2><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">docker-machine create -d  virtualbox manager1</span><br><span class="line"></span><br><span class="line">输出：</span><br><span class="line">Running pre-create checks...</span><br><span class="line">(manager1) No default Boot2Docker ISO found locally, downloading the latest release...</span><br><span class="line">Error with pre-create check: &quot;Get https:&#x2F;&#x2F;api.github.com&#x2F;repos&#x2F;boot2docker&#x2F;boot2docker&#x2F;releases&#x2F;latest: x509: certificate signed by unknown authority&quot;</span><br></pre></td></tr></table></figure>
-<h3 id="直接去下载默认的iso文件"><a href="#直接去下载默认的iso文件" class="headerlink" title="直接去下载默认的iso文件"></a>直接去下载默认的iso文件</h3><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">curl -Lo ~&#x2F;.docker&#x2F;machine&#x2F;cache&#x2F;boot2docker.iso https:&#x2F;&#x2F;github.com&#x2F;boot2docker&#x2F;boot2docker&#x2F;releases&#x2F;download&#x2F;v19.03.5&#x2F;boot2docker.iso</span><br><span class="line"></span><br><span class="line">输出：</span><br><span class="line">curl: (60) SSL certificate problem: unable to get local issuer certificate</span><br><span class="line">More details here: https:&#x2F;&#x2F;curl.haxx.se&#x2F;docs&#x2F;sslcerts.html</span><br></pre></td></tr></table></figure>
-
-
-<h3 id="curl-60-SSL-certificate-problem-unable-to-get-local-issuer-certificate问题"><a href="#curl-60-SSL-certificate-problem-unable-to-get-local-issuer-certificate问题" class="headerlink" title="curl: (60) SSL certificate problem: unable to get local issuer certificate问题"></a>curl: (60) SSL certificate problem: unable to get local issuer certificate问题</h3><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">curl -k --remote-name --time-cond cacert.pem https:&#x2F;&#x2F;curl.haxx.se&#x2F;ca&#x2F;cacert.pem</span><br><span class="line"># 注意执行此命令后需要重新开终端</span><br></pre></td></tr></table></figure>
-
-<p>###　终端下载实在太慢问题</p>
-<ol>
-<li><a href="https://github.com/boot2docker/boot2docker/releases/download/v19.03.5/boot2docker.iso" target="_blank" rel="noopener">浏览器下载</a></li>
-<li>将iso文件移动到　 ~/.docker/machine/cache/boot2docker.iso</li>
-</ol>
-]]></content>
-  </entry>
-  <entry>
     <title>docker/docker问题</title>
     <url>/2023/01/11/docker/docker%E9%97%AE%E9%A2%98/</url>
     <content><![CDATA[<h1 id="docker本地空间足够，但容器日志提示空间不足"><a href="#docker本地空间足够，但容器日志提示空间不足" class="headerlink" title="docker本地空间足够，但容器日志提示空间不足"></a>docker本地空间足够，但容器日志提示空间不足</h1><h2 id="情况描述"><a href="#情况描述" class="headerlink" title="情况描述"></a>情况描述</h2><p>项目中，es报空间不足，es容器 已使用30G左右的空间<br>默认情况下docker 对每个容器使用空间有限制  </p>
@@ -7980,6 +8068,27 @@ sudo apt-get install gcc-mingw-w64<figure class="highlight plain"><table><tr><td
 <h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><ul>
 <li><a href="https://www.bilibili.com/read/cv16472262" target="_blank" rel="noopener">收藏！24 个 Docker 疑难杂症处理技巧</a></li>
 </ul>
+]]></content>
+  </entry>
+  <entry>
+    <title>docker/docker-machine</title>
+    <url>/2023/01/11/docker/docker-machine/</url>
+    <content><![CDATA[<h2 id="下载"><a href="#下载" class="headerlink" title="下载"></a>下载</h2><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">base&#x3D;https:&#x2F;&#x2F;github.com&#x2F;docker&#x2F;machine&#x2F;releases&#x2F;download&#x2F;v0.16.0 &amp;&amp;</span><br><span class="line">  curl -L $base&#x2F;docker-machine-$(uname -s)-$(uname -m) &gt;&#x2F;tmp&#x2F;docker-machine &amp;&amp;</span><br><span class="line">  sudo mv &#x2F;tmp&#x2F;docker-machine &#x2F;usr&#x2F;local&#x2F;bin&#x2F;docker-machine &amp;&amp;</span><br><span class="line">  chmod +x &#x2F;usr&#x2F;local&#x2F;bin&#x2F;docker-mach</span><br></pre></td></tr></table></figure>
+<h3 id="网速慢"><a href="#网速慢" class="headerlink" title="网速慢"></a>网速慢</h3><p>使用xx_net代理</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">sudo  apt install privoxy</span><br><span class="line">export https_proxy&#x3D;127.0.0.1:8087</span><br><span class="line">export http_proxy&#x3D;127.0.0.1:8087</span><br></pre></td></tr></table></figure>
+
+<h3 id="x509问题"><a href="#x509问题" class="headerlink" title="x509问题"></a>x509问题</h3><p>curl -k 参数跳过证书验证</p>
+<h2 id="使用"><a href="#使用" class="headerlink" title="使用"></a>使用</h2><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">docker-machine create -d  virtualbox manager1</span><br><span class="line"></span><br><span class="line">输出：</span><br><span class="line">Running pre-create checks...</span><br><span class="line">(manager1) No default Boot2Docker ISO found locally, downloading the latest release...</span><br><span class="line">Error with pre-create check: &quot;Get https:&#x2F;&#x2F;api.github.com&#x2F;repos&#x2F;boot2docker&#x2F;boot2docker&#x2F;releases&#x2F;latest: x509: certificate signed by unknown authority&quot;</span><br></pre></td></tr></table></figure>
+<h3 id="直接去下载默认的iso文件"><a href="#直接去下载默认的iso文件" class="headerlink" title="直接去下载默认的iso文件"></a>直接去下载默认的iso文件</h3><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">curl -Lo ~&#x2F;.docker&#x2F;machine&#x2F;cache&#x2F;boot2docker.iso https:&#x2F;&#x2F;github.com&#x2F;boot2docker&#x2F;boot2docker&#x2F;releases&#x2F;download&#x2F;v19.03.5&#x2F;boot2docker.iso</span><br><span class="line"></span><br><span class="line">输出：</span><br><span class="line">curl: (60) SSL certificate problem: unable to get local issuer certificate</span><br><span class="line">More details here: https:&#x2F;&#x2F;curl.haxx.se&#x2F;docs&#x2F;sslcerts.html</span><br></pre></td></tr></table></figure>
+
+
+<h3 id="curl-60-SSL-certificate-problem-unable-to-get-local-issuer-certificate问题"><a href="#curl-60-SSL-certificate-problem-unable-to-get-local-issuer-certificate问题" class="headerlink" title="curl: (60) SSL certificate problem: unable to get local issuer certificate问题"></a>curl: (60) SSL certificate problem: unable to get local issuer certificate问题</h3><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">curl -k --remote-name --time-cond cacert.pem https:&#x2F;&#x2F;curl.haxx.se&#x2F;ca&#x2F;cacert.pem</span><br><span class="line"># 注意执行此命令后需要重新开终端</span><br></pre></td></tr></table></figure>
+
+<p>###　终端下载实在太慢问题</p>
+<ol>
+<li><a href="https://github.com/boot2docker/boot2docker/releases/download/v19.03.5/boot2docker.iso" target="_blank" rel="noopener">浏览器下载</a></li>
+<li>将iso文件移动到　 ~/.docker/machine/cache/boot2docker.iso</li>
+</ol>
 ]]></content>
   </entry>
   <entry>
@@ -8079,20 +8188,6 @@ sudo apt-get install gcc-mingw-w64<figure class="highlight plain"><table><tr><td
       </tags>
   </entry>
   <entry>
-    <title>docker/rabbitmq</title>
-    <url>/2023/01/11/docker/rabbitmq/</url>
-    <content><![CDATA[<h1 id="Rabbitmq"><a href="#Rabbitmq" class="headerlink" title="Rabbitmq"></a>Rabbitmq</h1><h2 id="单机版"><a href="#单机版" class="headerlink" title="单机版"></a>单机版</h2><p>`<br>docker run –restart=always -d -p 5672:5672 -p 15672:15672  –name rabbitmq rabbitmq:3.8.3-management</p>
-<p>`</p>
-]]></content>
-      <categories>
-        <category>docker</category>
-      </categories>
-      <tags>
-        <tag>mysql</tag>
-        <tag>docker-install-ware</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>docker/redis</title>
     <url>/2023/01/11/docker/redis/</url>
     <content><![CDATA[<h1 id="docker-安装redis"><a href="#docker-安装redis" class="headerlink" title="docker 安装redis"></a>docker 安装redis</h1><h2 id="参数"><a href="#参数" class="headerlink" title="参数"></a>参数</h2><ul>
@@ -8108,6 +8203,20 @@ sudo apt-get install gcc-mingw-w64<figure class="highlight plain"><table><tr><td
       <tags>
         <tag>docker-install-ware</tag>
         <tag>redis</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>docker/rabbitmq</title>
+    <url>/2023/01/11/docker/rabbitmq/</url>
+    <content><![CDATA[<h1 id="Rabbitmq"><a href="#Rabbitmq" class="headerlink" title="Rabbitmq"></a>Rabbitmq</h1><h2 id="单机版"><a href="#单机版" class="headerlink" title="单机版"></a>单机版</h2><p>`<br>docker run –restart=always -d -p 5672:5672 -p 15672:15672  –name rabbitmq rabbitmq:3.8.3-management</p>
+<p>`</p>
+]]></content>
+      <categories>
+        <category>docker</category>
+      </categories>
+      <tags>
+        <tag>mysql</tag>
+        <tag>docker-install-ware</tag>
       </tags>
   </entry>
   <entry>
@@ -8278,116 +8387,6 @@ sudo apt-get install gcc-mingw-w64<figure class="highlight plain"><table><tr><td
       </tags>
   </entry>
   <entry>
-    <title>db/tidb安装</title>
-    <url>/2023/01/11/db/tidb%E5%AE%89%E8%A3%85/</url>
-    <content><![CDATA[<h1 id="TiDB-安装"><a href="#TiDB-安装" class="headerlink" title="TiDB 安装"></a>TiDB 安装</h1><p><a href="https://docs.pingcap.com/zh/tidb-in-kubernetes/stable" target="_blank" rel="noopener">k8s官网安装地址</a></p>
-<h2 id="1-安装-TiDB-Operator-CRDs"><a href="#1-安装-TiDB-Operator-CRDs" class="headerlink" title="1.安装 TiDB Operator CRDs"></a>1.安装 TiDB Operator CRDs</h2><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">kubectl apply -f https://raw.githubusercontent.com/pingcap/tidb-operator/master/manifests/crd.yaml -n beatflow-data</span><br></pre></td></tr></table></figure>
-
-
-
-<h2 id="2-安装-TiDB-Operator"><a href="#2-安装-TiDB-Operator" class="headerlink" title="2.安装 TiDB Operator"></a>2.安装 TiDB Operator</h2><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">helm repo add pingcap https://charts.pingcap.org/</span><br></pre></td></tr></table></figure>
-
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">helm install --namespace beatflow-data tidb-operator pingcap/tidb-operator --version v1.2.3</span><br></pre></td></tr></table></figure>
-
-<h2 id="3-安装-TiDB-集群"><a href="#3-安装-TiDB-集群" class="headerlink" title="3.安装 TiDB 集群"></a>3.安装 TiDB 集群</h2><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">kubectl -n tidb-cluster apply -f https://raw.githubusercontent.com/pingcap/tidb-operator/master/examples/basic/tidb-cluster.yaml -n beatflow-data</span><br></pre></td></tr></table></figure>
-
-<h2 id="4-安装-TiDB-集群监控"><a href="#4-安装-TiDB-集群监控" class="headerlink" title="4. 安装 TiDB 集群监控"></a>4. 安装 TiDB 集群监控</h2><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">kubectl -n tidb-cluster apply -f https://raw.githubusercontent.com/pingcap/tidb-operator/master/examples/basic/tidb-monitor.yaml -n beatflow-data</span><br></pre></td></tr></table></figure>
-
-<h2 id="5-期望输出"><a href="#5-期望输出" class="headerlink" title="5. 期望输出"></a>5. 期望输出</h2><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">NAME                              READY   STATUS    RESTARTS   AGE</span><br><span class="line">basic-discovery-6bb656bfd-xl5pb   1&#x2F;1     Running   0          9m9s</span><br><span class="line">basic-monitor-5fc8589c89-gvgjj    3&#x2F;3     Running   0          8m58s</span><br><span class="line">basic-pd-0                        1&#x2F;1     Running   0          9m8s</span><br><span class="line">basic-tidb-0                      2&#x2F;2     Running   0          7m14s</span><br><span class="line">basic-tikv-0                      1&#x2F;1     Running   0          8m13s</span><br></pre></td></tr></table></figure>
-
-]]></content>
-      <categories>
-        <category>tidb</category>
-      </categories>
-      <tags>
-        <tag>tidb</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>db/tidb数据迁移</title>
-    <url>/2023/01/11/db/tidb%E6%95%B0%E6%8D%AE%E8%BF%81%E7%A7%BB/</url>
-    <content><![CDATA[<h1 id="tidb-数据迁移"><a href="#tidb-数据迁移" class="headerlink" title="tidb 数据迁移"></a>tidb 数据迁移</h1><p>k8s上部署 tidb 数据迁移工具dm  </p>
-<p>方案: 全量迁移+增量迁移</p>
-<p>前置条件:  </p>
-<ul>
-<li><p>TiDB Operator <a href="https://docs.pingcap.com/zh/tidb-in-kubernetes/dev/deploy-tidb-operator" target="_blank" rel="noopener">部署</a>完成。</p>
-</li>
-<li><p>要求 TiDB Operator 版本 &gt;= 1.2.0。</p>
-</li>
-</ul>
-<h2 id="1-dm-cluster-yaml"><a href="#1-dm-cluster-yaml" class="headerlink" title="1.dm-cluster.yaml"></a>1.dm-cluster.yaml</h2><p>参考 DMCluster <a href="https://github.com/pingcap/tidb-operator/blob/master/examples/dm/dm-cluster.yaml" target="_blank" rel="noopener">示例</a></p>
-<p>创建文件: dm-cluster.yaml 内容:</p>
-<figure class="highlight yaml"><table><tr><td class="code"><pre><span class="line"><span class="attr">apiVersion:</span> <span class="string">pingcap.com/v1alpha1</span></span><br><span class="line"><span class="attr">kind:</span> <span class="string">DMCluster</span></span><br><span class="line"><span class="attr">metadata:</span></span><br><span class="line">  <span class="attr">name:</span> <span class="string">basic</span></span><br><span class="line"><span class="attr">spec:</span></span><br><span class="line">  <span class="attr">version:</span> <span class="string">v2.0.6</span></span><br><span class="line">  <span class="attr">pvReclaimPolicy:</span> <span class="string">Retain</span></span><br><span class="line">  <span class="attr">discovery:</span> <span class="string">&#123;&#125;</span></span><br><span class="line">  <span class="attr">master:</span></span><br><span class="line">    <span class="attr">baseImage:</span> <span class="string">pingcap/dm</span></span><br><span class="line">    <span class="attr">replicas:</span> <span class="number">1</span></span><br><span class="line">    <span class="comment"># if storageClassName is not set, the default Storage Class of the Kubernetes cluster will be used</span></span><br><span class="line">    <span class="comment"># storageClassName: local-storage</span></span><br><span class="line">    <span class="attr">storageSize:</span> <span class="string">"1Gi"</span></span><br><span class="line">    <span class="attr">requests:</span> <span class="string">&#123;&#125;</span></span><br><span class="line">    <span class="attr">config:</span> <span class="string">&#123;&#125;</span></span><br><span class="line">  <span class="attr">worker:</span></span><br><span class="line">    <span class="attr">baseImage:</span> <span class="string">pingcap/dm</span></span><br><span class="line">    <span class="attr">replicas:</span> <span class="number">1</span></span><br><span class="line">    <span class="comment"># if storageClassName is not set, the default Storage Class of the Kubernetes cluster will be used</span></span><br><span class="line">    <span class="comment"># storageClassName: local-storage</span></span><br><span class="line">    <span class="attr">storageSize:</span> <span class="string">"1Gi"</span></span><br><span class="line">    <span class="attr">requests:</span> <span class="string">&#123;&#125;</span></span><br><span class="line">    <span class="attr">config:</span> <span class="string">&#123;&#125;</span></span><br></pre></td></tr></table></figure>
-
-
-
-<h2 id="2-部署-DM-集群"><a href="#2-部署-DM-集群" class="headerlink" title="2.部署 DM 集群"></a>2.部署 DM 集群</h2><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">kubectl apply -f dm_cluster.yaml -n beatflow-data</span><br></pre></td></tr></table></figure>
-
-<h2 id="3-期望输出"><a href="#3-期望输出" class="headerlink" title="3.期望输出"></a>3.期望输出</h2><p> kubectl get pods -n beatflow-data</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">NAME                                      READY   STATUS    RESTARTS   AGE</span><br><span class="line">basic-dm-discovery-6b99d57d5c-w9qr7       1&#x2F;1     Running   0          18h</span><br><span class="line">basic-dm-master-0                         1&#x2F;1     Running   0          18h</span><br><span class="line">basic-dm-worker-0                         1&#x2F;1     Running   0          18h</span><br></pre></td></tr></table></figure>
-
-<h2 id="4-启动-DM-同步任务"><a href="#4-启动-DM-同步任务" class="headerlink" title="4.启动 DM 同步任务"></a>4.启动 DM 同步任务</h2><p>通过进入 DM-master 或 DM-worker pod 使用 image 内置 dmctl 进行操作。  </p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">kubectl exec -it basic-dm-master-0 -n beatflow-data -- sh</span><br></pre></td></tr></table></figure>
-
-<h3 id="1-创建数据源（mysql）"><a href="#1-创建数据源（mysql）" class="headerlink" title="1.创建数据源（mysql）"></a>1.创建数据源（mysql）</h3><p> vi source1.yaml  </p>
-<figure class="highlight yaml"><table><tr><td class="code"><pre><span class="line"><span class="comment"># MySQL1 Configuration.</span></span><br><span class="line"></span><br><span class="line"><span class="attr">source-id:</span> <span class="string">"mysql-replica-01"</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># DM-worker 是否使用全局事务标识符 (GTID) 拉取 binlog。使用前提是在上游 MySQL 已开启 GTID 模式。</span></span><br><span class="line"><span class="attr">enable-gtid:</span> <span class="literal">false</span></span><br><span class="line"></span><br><span class="line"><span class="attr">from:</span></span><br><span class="line">  <span class="attr">host:</span> <span class="string">"mysql.beatflow-data.svc"</span></span><br><span class="line">  <span class="attr">user:</span> <span class="string">"root"</span></span><br><span class="line">  <span class="attr">password:</span> <span class="string">"p@ss52Dnb"</span></span><br><span class="line">  <span class="attr">port:</span> <span class="number">3306</span></span><br></pre></td></tr></table></figure>
-
-
-
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">.&#x2F;dmctl --master-addr 127.0.0.1:8261 operate-source create source1.yaml</span><br></pre></td></tr></table></figure>
-
-
-
-<h3 id="2-配置同步任务"><a href="#2-配置同步任务" class="headerlink" title="2.配置同步任务"></a>2.配置同步任务</h3><p>vi task.yaml</p>
-<figure class="highlight yaml"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 任务名，多个同时运行的任务不能重名。</span></span><br><span class="line"><span class="attr">name:</span> <span class="string">"test"</span></span><br><span class="line"><span class="comment"># 全量+增量 (all) 迁移模式。</span></span><br><span class="line"><span class="attr">task-mode:</span> <span class="string">"all"</span></span><br><span class="line"><span class="comment"># 下游 TiDB 配置信息。</span></span><br><span class="line"><span class="attr">target-database:</span></span><br><span class="line">  <span class="attr">host:</span> <span class="string">"basic-tidb.beatflow-data.svc"</span></span><br><span class="line">  <span class="attr">port:</span> <span class="number">4000</span></span><br><span class="line">  <span class="attr">user:</span> <span class="string">"root"</span></span><br><span class="line">  <span class="attr">password:</span> <span class="string">""</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 当前数据迁移任务需要的全部上游 MySQL 实例配置。</span></span><br><span class="line"><span class="attr">mysql-instances:</span></span><br><span class="line"><span class="bullet">-</span></span><br><span class="line">  <span class="comment"># 上游实例或者复制组 ID，参考 `inventory.ini` 的 `source_id` 或者 `dm-master.toml` 的 `source-id 配置`。</span></span><br><span class="line">  <span class="attr">source-id:</span> <span class="string">"mysql-replica-01"</span></span><br><span class="line">  <span class="comment"># 需要迁移的库名或表名的黑白名单的配置项名称，用于引用全局的黑白名单配置，全局配置见下面的 `block-allow-list` 的配置。</span></span><br><span class="line">  <span class="attr">block-allow-list:</span> <span class="string">"global"</span>          <span class="comment"># 如果 DM 版本早于 v2.0.0-beta.2 则使用 black-white-list。</span></span><br><span class="line">  <span class="comment"># dump 处理单元的配置项名称，用于引用全局的 dump 处理单元配置。</span></span><br><span class="line">  <span class="attr">mydumper-config-name:</span> <span class="string">"global"</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment"># 黑白名单全局配置，各实例通过配置项名引用。</span></span><br><span class="line"><span class="attr">block-allow-list:</span>                     <span class="comment"># 如果 DM 版本早于 v2.0.0-beta.2 则使用 black-white-list。</span></span><br><span class="line">  <span class="attr">global:</span></span><br><span class="line">    <span class="attr">do-dbs:</span> <span class="string">["*"]</span></span><br><span class="line">    <span class="attr">ignore-tables:</span> </span><br><span class="line">    <span class="bullet">-</span> <span class="attr">db-name:</span> <span class="string">"*"</span></span><br><span class="line">      <span class="attr">tbl-name:</span> <span class="string">"PDMAN_DB_VERSION"</span></span><br><span class="line"><span class="comment"># dump 处理单元全局配置，各实例通过配置项名引用。</span></span><br><span class="line"><span class="attr">mydumpers:</span></span><br><span class="line">  <span class="attr">global:</span></span><br><span class="line">    <span class="attr">extra-args:</span> <span class="string">""</span></span><br></pre></td></tr></table></figure>
-
-<p>启动任务: </p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">./dmctl --master-addr 127.0.0.1:8261 start-task task.yaml</span><br></pre></td></tr></table></figure>
-
-<p>查询任务:</p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">./dmctl --master-addr 127.0.0.1:8261 query-status test</span><br></pre></td></tr></table></figure>
-
-
-
-
-
-<h2 id="遇到的问题"><a href="#遇到的问题" class="headerlink" title="遇到的问题"></a>遇到的问题</h2><ul>
-<li><p>block-allow-list 变更后需要重新命名任务名称，否则任务不会生效</p>
-</li>
-<li><p>由于包含全量复制，任务中途退出需要清空相关表，否则会遇到主键重复，task can’t auto resume 的错误</p>
-</li>
-<li><p>查看同步日志 </p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">kubectl logs -f basic-dm-worker-0 -n beatflow-data</span><br></pre></td></tr></table></figure>
-
-</li>
-</ul>
-]]></content>
-      <categories>
-        <category>tidb</category>
-      </categories>
-      <tags>
-        <tag>tidb</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>db/tidb数据对比</title>
-    <url>/2023/01/11/db/tidb%E6%95%B0%E6%8D%AE%E5%AF%B9%E6%AF%94/</url>
-    <content><![CDATA[<h2 id="配置文件"><a href="#配置文件" class="headerlink" title="配置文件"></a>配置文件</h2><figure class="highlight yaml"><table><tr><td class="code"><pre><span class="line"><span class="comment"># Diff Configuration.</span></span><br><span class="line"></span><br><span class="line"><span class="comment">######################### Global config #########################</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 日志级别，可以设置为 info、debug</span></span><br><span class="line"><span class="string">log-level</span> <span class="string">=</span> <span class="string">"info"</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># sync-diff-inspector 根据主键／唯一键／索引将数据划分为多个 chunk，</span></span><br><span class="line"><span class="comment"># 对每一个 chunk 的数据进行对比。使用 chunk-size 设置 chunk 的大小</span></span><br><span class="line"><span class="string">chunk-size</span> <span class="string">=</span> <span class="number">1000</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 检查数据的线程数量</span></span><br><span class="line"><span class="string">check-thread-count</span> <span class="string">=</span> <span class="number">4</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 抽样检查的比例，如果设置为 100 则检查全部数据</span></span><br><span class="line"><span class="string">sample-percent</span> <span class="string">=</span> <span class="number">100</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 通过计算 chunk 的 checksum 来对比数据，如果不开启则逐行对比数据</span></span><br><span class="line"><span class="string">use-checksum</span> <span class="string">=</span> <span class="literal">true</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 如果设置为 true 则只会通过计算 checksum 来校验数据，如果上下游的 checksum 不一致也不会查出数据再进行校验</span></span><br><span class="line"><span class="string">only-use-checksum</span> <span class="string">=</span> <span class="literal">false</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 是否使用上次校验的 checkpoint，如果开启，则只校验上次未校验以及校验失败的 chunk</span></span><br><span class="line"><span class="string">use-checkpoint</span> <span class="string">=</span> <span class="literal">true</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 不对比数据</span></span><br><span class="line"><span class="string">ignore-data-check</span> <span class="string">=</span> <span class="literal">false</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 不对比表结构</span></span><br><span class="line"><span class="string">ignore-struct-check</span> <span class="string">=</span> <span class="literal">false</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 保存用于修复数据的 sql 的文件名称</span></span><br><span class="line"><span class="string">fix-sql-file</span> <span class="string">=</span> <span class="string">"fix.sql"</span></span><br><span class="line"></span><br><span class="line"><span class="comment">######################### Tables config #########################</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 如果需要对比大量的不同库名或者表名的表的数据，或者用于校验上游多个分表与下游总表的数据，可以通过 table-rule 来设置映射关系</span></span><br><span class="line"><span class="comment"># 可以只配置 schema 或者 table 的映射关系，也可以都配置</span></span><br><span class="line"><span class="comment">#[[table-rules]]</span></span><br><span class="line">    <span class="comment"># schema-pattern 和 table-pattern 支持通配符 *?</span></span><br><span class="line">    <span class="comment">#schema-pattern = "test_*"</span></span><br><span class="line">    <span class="comment">#table-pattern = "t_*"</span></span><br><span class="line">    <span class="comment">#target-schema = "test"</span></span><br><span class="line">    <span class="comment">#target-table = "t"</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 配置需要对比的*目标数据库*中的表</span></span><br><span class="line"><span class="string">[[check-tables]]</span></span><br><span class="line">    <span class="comment"># 目标库中数据库的名称</span></span><br><span class="line">    <span class="string">schema</span> <span class="string">=</span> <span class="string">"pricing"</span></span><br><span class="line"></span><br><span class="line">    <span class="comment"># 需要检查的表</span></span><br><span class="line">    <span class="string">tables</span> <span class="string">=</span> <span class="string">["filter"]</span></span><br><span class="line"></span><br><span class="line">    <span class="comment"># 支持使用正则表达式配置检查的表，需要以‘~’开始，</span></span><br><span class="line">    <span class="comment"># 下面的配置会检查所有表名以‘test’为前缀的表</span></span><br><span class="line">    <span class="comment"># tables = ["~^test.*"]</span></span><br><span class="line">    <span class="comment"># 下面的配置会检查配置库中所有的表</span></span><br><span class="line">    <span class="comment"># tables = ["~^"]</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 对部分表进行特殊的配置，配置的表必须包含在 check-tables 中</span></span><br><span class="line"></span><br><span class="line"><span class="comment">######################### Databases config #########################</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 源数据库实例的配置</span></span><br><span class="line"><span class="string">[[source-db]]</span></span><br><span class="line">    <span class="string">host</span> <span class="string">=</span> <span class="string">"192.168.49.2"</span></span><br><span class="line">    <span class="string">port</span> <span class="string">=</span> <span class="number">32316</span></span><br><span class="line">    <span class="string">user</span> <span class="string">=</span> <span class="string">"root"</span></span><br><span class="line">    <span class="string">password</span> <span class="string">=</span> <span class="string">"p@ss52Dnb"</span></span><br><span class="line">    <span class="comment"># 源数据库实例的 id，唯一标识一个数据库实例</span></span><br><span class="line">    <span class="string">instance-id</span> <span class="string">=</span> <span class="string">"source-1"</span></span><br><span class="line">    <span class="comment"># 使用 TiDB 的 snapshot 功能，如果开启的话会使用历史数据进行对比</span></span><br><span class="line">    <span class="comment"># snapshot = "2016-10-08 16:45:26"</span></span><br><span class="line">    <span class="comment"># 设置数据库的 sql-mode，用于解析表结构</span></span><br><span class="line">    <span class="comment"># sql-mode = ""</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 目标数据库实例的配置</span></span><br><span class="line"><span class="string">[target-db]</span></span><br><span class="line">    <span class="string">host</span> <span class="string">=</span> <span class="string">"192.168.49.2"</span></span><br><span class="line">    <span class="string">port</span> <span class="string">=</span> <span class="number">30492</span></span><br><span class="line">    <span class="string">user</span> <span class="string">=</span> <span class="string">"root"</span></span><br><span class="line">    <span class="string">password</span> <span class="string">=</span> <span class="string">""</span></span><br><span class="line">    <span class="comment"># 使用 TiDB 的 snapshot 功能，如果开启的话会使用历史数据进行对比</span></span><br><span class="line">    <span class="comment"># snapshot = "2016-10-08 16:45:26"</span></span><br><span class="line">    <span class="comment"># 设置数据库的 sql-mode，用于解析表结构</span></span><br><span class="line">    <span class="comment"># sql-mode = ""</span></span><br></pre></td></tr></table></figure>
-
-
-
-
-
-<h2 id="命令"><a href="#命令" class="headerlink" title="命令"></a>命令</h2><p>docker run –network=host    -v <code>pwd</code>:/home/tidb pingcap/tidb-enterprise-tools  ./sync_diff_inspector –config=/home/tidb/diff.yaml</p>
-]]></content>
-      <categories>
-        <category>tidb</category>
-      </categories>
-      <tags>
-        <tag>tidb</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>db/navicat_linux破解</title>
     <url>/2023/01/11/db/navicat_linux%E7%A0%B4%E8%A7%A3/</url>
     <content><![CDATA[<h1 id="网址"><a href="#网址" class="headerlink" title="网址"></a>网址</h1><p><a href="https://rlds.tk/" target="_blank" rel="noopener">https://rlds.tk/</a></p>
@@ -8401,42 +8400,6 @@ sudo apt-get install gcc-mingw-w64<figure class="highlight plain"><table><tr><td
 <li>生成激活码</li>
 </ol>
 ]]></content>
-  </entry>
-  <entry>
-    <title>db/通过Docker安装配置MySQL主从节点</title>
-    <url>/2023/01/11/db/%E9%80%9A%E8%BF%87Docker%E5%AE%89%E8%A3%85%E9%85%8D%E7%BD%AEMySQL%E4%B8%BB%E4%BB%8E%E8%8A%82%E7%82%B9/</url>
-    <content><![CDATA[<h2 id="拉取最新版mysql镜像"><a href="#拉取最新版mysql镜像" class="headerlink" title="拉取最新版mysql镜像"></a>拉取最新版mysql镜像</h2><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">docker pull mysql</span><br></pre></td></tr></table></figure>
-<h2 id="mysql主服务器"><a href="#mysql主服务器" class="headerlink" title="mysql主服务器"></a>mysql主服务器</h2><h3 id="启动容器"><a href="#启动容器" class="headerlink" title="启动容器"></a>启动容器</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">docker run -p 3307:3306 --name mysql_master -e MYSQL_ROOT_PASSWORD=123456 -d mysql:latest</span><br></pre></td></tr></table></figure>
-<a id="more"></a>
-
-<h3 id="修改配置并添加slave用户"><a href="#修改配置并添加slave用户" class="headerlink" title="修改配置并添加slave用户"></a>修改配置并添加slave用户</h3><p>1.进入容器</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">docker exec -it d45457d26cad &#x2F;bin&#x2F;bash</span><br></pre></td></tr></table></figure>
-
-<p>2.修改配置    </p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">apt update &amp;&amp; apt install  vim -y</span><br><span class="line">vim /etc/mysql/my.cnf</span><br><span class="line"></span><br><span class="line">[mysqld]</span><br><span class="line"><span class="comment">## 同一局域网内注意要唯一</span></span><br><span class="line">server-id=100  </span><br><span class="line"><span class="comment">## 开启二进制日志功能，可以随便取（关键）</span></span><br><span class="line"><span class="built_in">log</span>-bin=mysql-bin</span><br></pre></td></tr></table></figure>
-<p>3.添加slave用户，用于slave读取binlog</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">mysql -uroot -p123456 </span><br><span class="line"></span><br><span class="line"><span class="comment">#mysql5.7以下使用 CREATE USER 'slave'@'%' IDENTIFIED BY '123456';</span></span><br><span class="line"><span class="comment">#mysql5.8修改了默认的认证方式为caching_sha2_password ,如果使用此方式创建slave用户，</span></span><br><span class="line"><span class="comment">#那么在后面slave连接master的时候就需要使用加密方式进行连接，否则会报错：Authentication requires secure connection</span></span><br><span class="line"></span><br><span class="line">CREATE USER <span class="string">'slave'</span>@<span class="string">'%'</span> IDENTIFIED WITH mysql_native_password BY <span class="string">'123456'</span>;</span><br><span class="line"></span><br><span class="line">GRANT REPLICATION SLAVE, REPLICATION CLIENT ON *.* TO <span class="string">'slave'</span>@<span class="string">'%'</span>;</span><br></pre></td></tr></table></figure>
-
-<p>4.重启容器</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">docker restart d45457d26cad</span><br></pre></td></tr></table></figure>
-
-<h2 id="mysql从服务器"><a href="#mysql从服务器" class="headerlink" title="mysql从服务器"></a>mysql从服务器</h2><h3 id="启动容器-1"><a href="#启动容器-1" class="headerlink" title="启动容器"></a>启动容器</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">docker run -p 3308:3306 --name mysql_slave -e MYSQL_ROOT_PASSWORD=123456 -d mysql:latest</span><br></pre></td></tr></table></figure>
-<h3 id="修改配置"><a href="#修改配置" class="headerlink" title="修改配置"></a>修改配置</h3><p>1.进入容器</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">docker <span class="built_in">exec</span> -it 3e80d15d8b00 /bin/bash</span><br></pre></td></tr></table></figure>
-<p>2.修改配置    </p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">apt update &amp;&amp; apt install  vim -y</span><br><span class="line">vim /etc/mysql/my.cnf</span><br><span class="line"></span><br><span class="line">[mysqld]</span><br><span class="line"><span class="comment">## 设置server_id,注意要唯一</span></span><br><span class="line">server-id=101  </span><br><span class="line"><span class="comment">## 开启二进制日志功能，以备Slave作为其它Slave的Master时使用</span></span><br><span class="line"><span class="built_in">log</span>-bin=mysql-slave-bin   </span><br><span class="line"><span class="comment">## relay_log配置中继日志</span></span><br><span class="line">relay_log=edu-mysql-relay-bin</span><br></pre></td></tr></table></figure>
-<p>3.重启容器</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">docker restart 3e80d15d8b00</span><br><span class="line">```    </span><br><span class="line"><span class="comment">## 配置slave使其连上master    </span></span><br><span class="line">```bash</span><br><span class="line">change master to master_host=<span class="string">'192.168.11.36'</span>, master_user=<span class="string">'slave'</span>, master_password=<span class="string">'123456'</span>, master_port=3307, master_log_file=<span class="string">'mysql-bin.000001'</span>, master_log_pos= 605, master_connect_retry=30;</span><br><span class="line"></span><br><span class="line">start slave </span><br><span class="line"></span><br><span class="line">show slave status \G 查看主从状态</span><br></pre></td></tr></table></figure>
-<blockquote>
-<p>参考文章<br><a href="https://www.cnblogs.com/songwenjie/p/9371422.html" target="_blank" rel="noopener">基于Docker的Mysql主从复制搭建</a></p>
-</blockquote>
-]]></content>
-      <categories>
-        <category>mysql</category>
-      </categories>
-      <tags>
-        <tag>mysql主从同步</tag>
-      </tags>
   </entry>
   <entry>
     <title>db/一站式学习redis从入门到高可用分布式实践</title>
@@ -8929,6 +8892,86 @@ sudo apt-get install gcc-mingw-w64<figure class="highlight plain"><table><tr><td
       </categories>
   </entry>
   <entry>
+    <title>db/tidb安装</title>
+    <url>/2023/01/11/db/tidb%E5%AE%89%E8%A3%85/</url>
+    <content><![CDATA[<h1 id="TiDB-安装"><a href="#TiDB-安装" class="headerlink" title="TiDB 安装"></a>TiDB 安装</h1><p><a href="https://docs.pingcap.com/zh/tidb-in-kubernetes/stable" target="_blank" rel="noopener">k8s官网安装地址</a></p>
+<h2 id="1-安装-TiDB-Operator-CRDs"><a href="#1-安装-TiDB-Operator-CRDs" class="headerlink" title="1.安装 TiDB Operator CRDs"></a>1.安装 TiDB Operator CRDs</h2><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">kubectl apply -f https://raw.githubusercontent.com/pingcap/tidb-operator/master/manifests/crd.yaml -n beatflow-data</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="2-安装-TiDB-Operator"><a href="#2-安装-TiDB-Operator" class="headerlink" title="2.安装 TiDB Operator"></a>2.安装 TiDB Operator</h2><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">helm repo add pingcap https://charts.pingcap.org/</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">helm install --namespace beatflow-data tidb-operator pingcap/tidb-operator --version v1.2.3</span><br></pre></td></tr></table></figure>
+
+<h2 id="3-安装-TiDB-集群"><a href="#3-安装-TiDB-集群" class="headerlink" title="3.安装 TiDB 集群"></a>3.安装 TiDB 集群</h2><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">kubectl -n tidb-cluster apply -f https://raw.githubusercontent.com/pingcap/tidb-operator/master/examples/basic/tidb-cluster.yaml -n beatflow-data</span><br></pre></td></tr></table></figure>
+
+<h2 id="4-安装-TiDB-集群监控"><a href="#4-安装-TiDB-集群监控" class="headerlink" title="4. 安装 TiDB 集群监控"></a>4. 安装 TiDB 集群监控</h2><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">kubectl -n tidb-cluster apply -f https://raw.githubusercontent.com/pingcap/tidb-operator/master/examples/basic/tidb-monitor.yaml -n beatflow-data</span><br></pre></td></tr></table></figure>
+
+<h2 id="5-期望输出"><a href="#5-期望输出" class="headerlink" title="5. 期望输出"></a>5. 期望输出</h2><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">NAME                              READY   STATUS    RESTARTS   AGE</span><br><span class="line">basic-discovery-6bb656bfd-xl5pb   1&#x2F;1     Running   0          9m9s</span><br><span class="line">basic-monitor-5fc8589c89-gvgjj    3&#x2F;3     Running   0          8m58s</span><br><span class="line">basic-pd-0                        1&#x2F;1     Running   0          9m8s</span><br><span class="line">basic-tidb-0                      2&#x2F;2     Running   0          7m14s</span><br><span class="line">basic-tikv-0                      1&#x2F;1     Running   0          8m13s</span><br></pre></td></tr></table></figure>
+
+]]></content>
+      <categories>
+        <category>tidb</category>
+      </categories>
+      <tags>
+        <tag>tidb</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>db/通过Docker安装配置MySQL主从节点</title>
+    <url>/2023/01/11/db/%E9%80%9A%E8%BF%87Docker%E5%AE%89%E8%A3%85%E9%85%8D%E7%BD%AEMySQL%E4%B8%BB%E4%BB%8E%E8%8A%82%E7%82%B9/</url>
+    <content><![CDATA[<h2 id="拉取最新版mysql镜像"><a href="#拉取最新版mysql镜像" class="headerlink" title="拉取最新版mysql镜像"></a>拉取最新版mysql镜像</h2><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">docker pull mysql</span><br></pre></td></tr></table></figure>
+<h2 id="mysql主服务器"><a href="#mysql主服务器" class="headerlink" title="mysql主服务器"></a>mysql主服务器</h2><h3 id="启动容器"><a href="#启动容器" class="headerlink" title="启动容器"></a>启动容器</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">docker run -p 3307:3306 --name mysql_master -e MYSQL_ROOT_PASSWORD=123456 -d mysql:latest</span><br></pre></td></tr></table></figure>
+<a id="more"></a>
+
+<h3 id="修改配置并添加slave用户"><a href="#修改配置并添加slave用户" class="headerlink" title="修改配置并添加slave用户"></a>修改配置并添加slave用户</h3><p>1.进入容器</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">docker exec -it d45457d26cad &#x2F;bin&#x2F;bash</span><br></pre></td></tr></table></figure>
+
+<p>2.修改配置    </p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">apt update &amp;&amp; apt install  vim -y</span><br><span class="line">vim /etc/mysql/my.cnf</span><br><span class="line"></span><br><span class="line">[mysqld]</span><br><span class="line"><span class="comment">## 同一局域网内注意要唯一</span></span><br><span class="line">server-id=100  </span><br><span class="line"><span class="comment">## 开启二进制日志功能，可以随便取（关键）</span></span><br><span class="line"><span class="built_in">log</span>-bin=mysql-bin</span><br></pre></td></tr></table></figure>
+<p>3.添加slave用户，用于slave读取binlog</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">mysql -uroot -p123456 </span><br><span class="line"></span><br><span class="line"><span class="comment">#mysql5.7以下使用 CREATE USER 'slave'@'%' IDENTIFIED BY '123456';</span></span><br><span class="line"><span class="comment">#mysql5.8修改了默认的认证方式为caching_sha2_password ,如果使用此方式创建slave用户，</span></span><br><span class="line"><span class="comment">#那么在后面slave连接master的时候就需要使用加密方式进行连接，否则会报错：Authentication requires secure connection</span></span><br><span class="line"></span><br><span class="line">CREATE USER <span class="string">'slave'</span>@<span class="string">'%'</span> IDENTIFIED WITH mysql_native_password BY <span class="string">'123456'</span>;</span><br><span class="line"></span><br><span class="line">GRANT REPLICATION SLAVE, REPLICATION CLIENT ON *.* TO <span class="string">'slave'</span>@<span class="string">'%'</span>;</span><br></pre></td></tr></table></figure>
+
+<p>4.重启容器</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">docker restart d45457d26cad</span><br></pre></td></tr></table></figure>
+
+<h2 id="mysql从服务器"><a href="#mysql从服务器" class="headerlink" title="mysql从服务器"></a>mysql从服务器</h2><h3 id="启动容器-1"><a href="#启动容器-1" class="headerlink" title="启动容器"></a>启动容器</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">docker run -p 3308:3306 --name mysql_slave -e MYSQL_ROOT_PASSWORD=123456 -d mysql:latest</span><br></pre></td></tr></table></figure>
+<h3 id="修改配置"><a href="#修改配置" class="headerlink" title="修改配置"></a>修改配置</h3><p>1.进入容器</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">docker <span class="built_in">exec</span> -it 3e80d15d8b00 /bin/bash</span><br></pre></td></tr></table></figure>
+<p>2.修改配置    </p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">apt update &amp;&amp; apt install  vim -y</span><br><span class="line">vim /etc/mysql/my.cnf</span><br><span class="line"></span><br><span class="line">[mysqld]</span><br><span class="line"><span class="comment">## 设置server_id,注意要唯一</span></span><br><span class="line">server-id=101  </span><br><span class="line"><span class="comment">## 开启二进制日志功能，以备Slave作为其它Slave的Master时使用</span></span><br><span class="line"><span class="built_in">log</span>-bin=mysql-slave-bin   </span><br><span class="line"><span class="comment">## relay_log配置中继日志</span></span><br><span class="line">relay_log=edu-mysql-relay-bin</span><br></pre></td></tr></table></figure>
+<p>3.重启容器</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">docker restart 3e80d15d8b00</span><br><span class="line">```    </span><br><span class="line"><span class="comment">## 配置slave使其连上master    </span></span><br><span class="line">```bash</span><br><span class="line">change master to master_host=<span class="string">'192.168.11.36'</span>, master_user=<span class="string">'slave'</span>, master_password=<span class="string">'123456'</span>, master_port=3307, master_log_file=<span class="string">'mysql-bin.000001'</span>, master_log_pos= 605, master_connect_retry=30;</span><br><span class="line"></span><br><span class="line">start slave </span><br><span class="line"></span><br><span class="line">show slave status \G 查看主从状态</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>参考文章<br><a href="https://www.cnblogs.com/songwenjie/p/9371422.html" target="_blank" rel="noopener">基于Docker的Mysql主从复制搭建</a></p>
+</blockquote>
+]]></content>
+      <categories>
+        <category>mysql</category>
+      </categories>
+      <tags>
+        <tag>mysql主从同步</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>db/tidb数据对比</title>
+    <url>/2023/01/11/db/tidb%E6%95%B0%E6%8D%AE%E5%AF%B9%E6%AF%94/</url>
+    <content><![CDATA[<h2 id="配置文件"><a href="#配置文件" class="headerlink" title="配置文件"></a>配置文件</h2><figure class="highlight yaml"><table><tr><td class="code"><pre><span class="line"><span class="comment"># Diff Configuration.</span></span><br><span class="line"></span><br><span class="line"><span class="comment">######################### Global config #########################</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 日志级别，可以设置为 info、debug</span></span><br><span class="line"><span class="string">log-level</span> <span class="string">=</span> <span class="string">"info"</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># sync-diff-inspector 根据主键／唯一键／索引将数据划分为多个 chunk，</span></span><br><span class="line"><span class="comment"># 对每一个 chunk 的数据进行对比。使用 chunk-size 设置 chunk 的大小</span></span><br><span class="line"><span class="string">chunk-size</span> <span class="string">=</span> <span class="number">1000</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 检查数据的线程数量</span></span><br><span class="line"><span class="string">check-thread-count</span> <span class="string">=</span> <span class="number">4</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 抽样检查的比例，如果设置为 100 则检查全部数据</span></span><br><span class="line"><span class="string">sample-percent</span> <span class="string">=</span> <span class="number">100</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 通过计算 chunk 的 checksum 来对比数据，如果不开启则逐行对比数据</span></span><br><span class="line"><span class="string">use-checksum</span> <span class="string">=</span> <span class="literal">true</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 如果设置为 true 则只会通过计算 checksum 来校验数据，如果上下游的 checksum 不一致也不会查出数据再进行校验</span></span><br><span class="line"><span class="string">only-use-checksum</span> <span class="string">=</span> <span class="literal">false</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 是否使用上次校验的 checkpoint，如果开启，则只校验上次未校验以及校验失败的 chunk</span></span><br><span class="line"><span class="string">use-checkpoint</span> <span class="string">=</span> <span class="literal">true</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 不对比数据</span></span><br><span class="line"><span class="string">ignore-data-check</span> <span class="string">=</span> <span class="literal">false</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 不对比表结构</span></span><br><span class="line"><span class="string">ignore-struct-check</span> <span class="string">=</span> <span class="literal">false</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 保存用于修复数据的 sql 的文件名称</span></span><br><span class="line"><span class="string">fix-sql-file</span> <span class="string">=</span> <span class="string">"fix.sql"</span></span><br><span class="line"></span><br><span class="line"><span class="comment">######################### Tables config #########################</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 如果需要对比大量的不同库名或者表名的表的数据，或者用于校验上游多个分表与下游总表的数据，可以通过 table-rule 来设置映射关系</span></span><br><span class="line"><span class="comment"># 可以只配置 schema 或者 table 的映射关系，也可以都配置</span></span><br><span class="line"><span class="comment">#[[table-rules]]</span></span><br><span class="line">    <span class="comment"># schema-pattern 和 table-pattern 支持通配符 *?</span></span><br><span class="line">    <span class="comment">#schema-pattern = "test_*"</span></span><br><span class="line">    <span class="comment">#table-pattern = "t_*"</span></span><br><span class="line">    <span class="comment">#target-schema = "test"</span></span><br><span class="line">    <span class="comment">#target-table = "t"</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 配置需要对比的*目标数据库*中的表</span></span><br><span class="line"><span class="string">[[check-tables]]</span></span><br><span class="line">    <span class="comment"># 目标库中数据库的名称</span></span><br><span class="line">    <span class="string">schema</span> <span class="string">=</span> <span class="string">"pricing"</span></span><br><span class="line"></span><br><span class="line">    <span class="comment"># 需要检查的表</span></span><br><span class="line">    <span class="string">tables</span> <span class="string">=</span> <span class="string">["filter"]</span></span><br><span class="line"></span><br><span class="line">    <span class="comment"># 支持使用正则表达式配置检查的表，需要以‘~’开始，</span></span><br><span class="line">    <span class="comment"># 下面的配置会检查所有表名以‘test’为前缀的表</span></span><br><span class="line">    <span class="comment"># tables = ["~^test.*"]</span></span><br><span class="line">    <span class="comment"># 下面的配置会检查配置库中所有的表</span></span><br><span class="line">    <span class="comment"># tables = ["~^"]</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 对部分表进行特殊的配置，配置的表必须包含在 check-tables 中</span></span><br><span class="line"></span><br><span class="line"><span class="comment">######################### Databases config #########################</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 源数据库实例的配置</span></span><br><span class="line"><span class="string">[[source-db]]</span></span><br><span class="line">    <span class="string">host</span> <span class="string">=</span> <span class="string">"192.168.49.2"</span></span><br><span class="line">    <span class="string">port</span> <span class="string">=</span> <span class="number">32316</span></span><br><span class="line">    <span class="string">user</span> <span class="string">=</span> <span class="string">"root"</span></span><br><span class="line">    <span class="string">password</span> <span class="string">=</span> <span class="string">"p@ss52Dnb"</span></span><br><span class="line">    <span class="comment"># 源数据库实例的 id，唯一标识一个数据库实例</span></span><br><span class="line">    <span class="string">instance-id</span> <span class="string">=</span> <span class="string">"source-1"</span></span><br><span class="line">    <span class="comment"># 使用 TiDB 的 snapshot 功能，如果开启的话会使用历史数据进行对比</span></span><br><span class="line">    <span class="comment"># snapshot = "2016-10-08 16:45:26"</span></span><br><span class="line">    <span class="comment"># 设置数据库的 sql-mode，用于解析表结构</span></span><br><span class="line">    <span class="comment"># sql-mode = ""</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 目标数据库实例的配置</span></span><br><span class="line"><span class="string">[target-db]</span></span><br><span class="line">    <span class="string">host</span> <span class="string">=</span> <span class="string">"192.168.49.2"</span></span><br><span class="line">    <span class="string">port</span> <span class="string">=</span> <span class="number">30492</span></span><br><span class="line">    <span class="string">user</span> <span class="string">=</span> <span class="string">"root"</span></span><br><span class="line">    <span class="string">password</span> <span class="string">=</span> <span class="string">""</span></span><br><span class="line">    <span class="comment"># 使用 TiDB 的 snapshot 功能，如果开启的话会使用历史数据进行对比</span></span><br><span class="line">    <span class="comment"># snapshot = "2016-10-08 16:45:26"</span></span><br><span class="line">    <span class="comment"># 设置数据库的 sql-mode，用于解析表结构</span></span><br><span class="line">    <span class="comment"># sql-mode = ""</span></span><br></pre></td></tr></table></figure>
+
+
+
+
+
+<h2 id="命令"><a href="#命令" class="headerlink" title="命令"></a>命令</h2><p>docker run –network=host    -v <code>pwd</code>:/home/tidb pingcap/tidb-enterprise-tools  ./sync_diff_inspector –config=/home/tidb/diff.yaml</p>
+]]></content>
+      <categories>
+        <category>tidb</category>
+      </categories>
+      <tags>
+        <tag>tidb</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>db/锁相关问题排查</title>
     <url>/2023/01/11/db/%E9%94%81%E7%9B%B8%E5%85%B3%E9%97%AE%E9%A2%98%E6%8E%92%E6%9F%A5/</url>
     <content><![CDATA[<h1 id="mysql8-锁相关问题"><a href="#mysql8-锁相关问题" class="headerlink" title="mysql8 锁相关问题"></a>mysql8 锁相关问题</h1><h1 id="事务"><a href="#事务" class="headerlink" title="事务"></a>事务</h1><p>golang事务中不能并发执行sql 否则会出现bad connection 的错误，导致事务不能提交</p>
@@ -8977,6 +9020,72 @@ sudo apt-get install gcc-mingw-w64<figure class="highlight plain"><table><tr><td
       </categories>
       <tags>
         <tag>mysql锁</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>db/tidb数据迁移</title>
+    <url>/2023/01/11/db/tidb%E6%95%B0%E6%8D%AE%E8%BF%81%E7%A7%BB/</url>
+    <content><![CDATA[<h1 id="tidb-数据迁移"><a href="#tidb-数据迁移" class="headerlink" title="tidb 数据迁移"></a>tidb 数据迁移</h1><p>k8s上部署 tidb 数据迁移工具dm  </p>
+<p>方案: 全量迁移+增量迁移</p>
+<p>前置条件:  </p>
+<ul>
+<li><p>TiDB Operator <a href="https://docs.pingcap.com/zh/tidb-in-kubernetes/dev/deploy-tidb-operator" target="_blank" rel="noopener">部署</a>完成。</p>
+</li>
+<li><p>要求 TiDB Operator 版本 &gt;= 1.2.0。</p>
+</li>
+</ul>
+<h2 id="1-dm-cluster-yaml"><a href="#1-dm-cluster-yaml" class="headerlink" title="1.dm-cluster.yaml"></a>1.dm-cluster.yaml</h2><p>参考 DMCluster <a href="https://github.com/pingcap/tidb-operator/blob/master/examples/dm/dm-cluster.yaml" target="_blank" rel="noopener">示例</a></p>
+<p>创建文件: dm-cluster.yaml 内容:</p>
+<figure class="highlight yaml"><table><tr><td class="code"><pre><span class="line"><span class="attr">apiVersion:</span> <span class="string">pingcap.com/v1alpha1</span></span><br><span class="line"><span class="attr">kind:</span> <span class="string">DMCluster</span></span><br><span class="line"><span class="attr">metadata:</span></span><br><span class="line">  <span class="attr">name:</span> <span class="string">basic</span></span><br><span class="line"><span class="attr">spec:</span></span><br><span class="line">  <span class="attr">version:</span> <span class="string">v2.0.6</span></span><br><span class="line">  <span class="attr">pvReclaimPolicy:</span> <span class="string">Retain</span></span><br><span class="line">  <span class="attr">discovery:</span> <span class="string">&#123;&#125;</span></span><br><span class="line">  <span class="attr">master:</span></span><br><span class="line">    <span class="attr">baseImage:</span> <span class="string">pingcap/dm</span></span><br><span class="line">    <span class="attr">replicas:</span> <span class="number">1</span></span><br><span class="line">    <span class="comment"># if storageClassName is not set, the default Storage Class of the Kubernetes cluster will be used</span></span><br><span class="line">    <span class="comment"># storageClassName: local-storage</span></span><br><span class="line">    <span class="attr">storageSize:</span> <span class="string">"1Gi"</span></span><br><span class="line">    <span class="attr">requests:</span> <span class="string">&#123;&#125;</span></span><br><span class="line">    <span class="attr">config:</span> <span class="string">&#123;&#125;</span></span><br><span class="line">  <span class="attr">worker:</span></span><br><span class="line">    <span class="attr">baseImage:</span> <span class="string">pingcap/dm</span></span><br><span class="line">    <span class="attr">replicas:</span> <span class="number">1</span></span><br><span class="line">    <span class="comment"># if storageClassName is not set, the default Storage Class of the Kubernetes cluster will be used</span></span><br><span class="line">    <span class="comment"># storageClassName: local-storage</span></span><br><span class="line">    <span class="attr">storageSize:</span> <span class="string">"1Gi"</span></span><br><span class="line">    <span class="attr">requests:</span> <span class="string">&#123;&#125;</span></span><br><span class="line">    <span class="attr">config:</span> <span class="string">&#123;&#125;</span></span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="2-部署-DM-集群"><a href="#2-部署-DM-集群" class="headerlink" title="2.部署 DM 集群"></a>2.部署 DM 集群</h2><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">kubectl apply -f dm_cluster.yaml -n beatflow-data</span><br></pre></td></tr></table></figure>
+
+<h2 id="3-期望输出"><a href="#3-期望输出" class="headerlink" title="3.期望输出"></a>3.期望输出</h2><p> kubectl get pods -n beatflow-data</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">NAME                                      READY   STATUS    RESTARTS   AGE</span><br><span class="line">basic-dm-discovery-6b99d57d5c-w9qr7       1&#x2F;1     Running   0          18h</span><br><span class="line">basic-dm-master-0                         1&#x2F;1     Running   0          18h</span><br><span class="line">basic-dm-worker-0                         1&#x2F;1     Running   0          18h</span><br></pre></td></tr></table></figure>
+
+<h2 id="4-启动-DM-同步任务"><a href="#4-启动-DM-同步任务" class="headerlink" title="4.启动 DM 同步任务"></a>4.启动 DM 同步任务</h2><p>通过进入 DM-master 或 DM-worker pod 使用 image 内置 dmctl 进行操作。  </p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">kubectl exec -it basic-dm-master-0 -n beatflow-data -- sh</span><br></pre></td></tr></table></figure>
+
+<h3 id="1-创建数据源（mysql）"><a href="#1-创建数据源（mysql）" class="headerlink" title="1.创建数据源（mysql）"></a>1.创建数据源（mysql）</h3><p> vi source1.yaml  </p>
+<figure class="highlight yaml"><table><tr><td class="code"><pre><span class="line"><span class="comment"># MySQL1 Configuration.</span></span><br><span class="line"></span><br><span class="line"><span class="attr">source-id:</span> <span class="string">"mysql-replica-01"</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># DM-worker 是否使用全局事务标识符 (GTID) 拉取 binlog。使用前提是在上游 MySQL 已开启 GTID 模式。</span></span><br><span class="line"><span class="attr">enable-gtid:</span> <span class="literal">false</span></span><br><span class="line"></span><br><span class="line"><span class="attr">from:</span></span><br><span class="line">  <span class="attr">host:</span> <span class="string">"mysql.beatflow-data.svc"</span></span><br><span class="line">  <span class="attr">user:</span> <span class="string">"root"</span></span><br><span class="line">  <span class="attr">password:</span> <span class="string">"p@ss52Dnb"</span></span><br><span class="line">  <span class="attr">port:</span> <span class="number">3306</span></span><br></pre></td></tr></table></figure>
+
+
+
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">.&#x2F;dmctl --master-addr 127.0.0.1:8261 operate-source create source1.yaml</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="2-配置同步任务"><a href="#2-配置同步任务" class="headerlink" title="2.配置同步任务"></a>2.配置同步任务</h3><p>vi task.yaml</p>
+<figure class="highlight yaml"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 任务名，多个同时运行的任务不能重名。</span></span><br><span class="line"><span class="attr">name:</span> <span class="string">"test"</span></span><br><span class="line"><span class="comment"># 全量+增量 (all) 迁移模式。</span></span><br><span class="line"><span class="attr">task-mode:</span> <span class="string">"all"</span></span><br><span class="line"><span class="comment"># 下游 TiDB 配置信息。</span></span><br><span class="line"><span class="attr">target-database:</span></span><br><span class="line">  <span class="attr">host:</span> <span class="string">"basic-tidb.beatflow-data.svc"</span></span><br><span class="line">  <span class="attr">port:</span> <span class="number">4000</span></span><br><span class="line">  <span class="attr">user:</span> <span class="string">"root"</span></span><br><span class="line">  <span class="attr">password:</span> <span class="string">""</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 当前数据迁移任务需要的全部上游 MySQL 实例配置。</span></span><br><span class="line"><span class="attr">mysql-instances:</span></span><br><span class="line"><span class="bullet">-</span></span><br><span class="line">  <span class="comment"># 上游实例或者复制组 ID，参考 `inventory.ini` 的 `source_id` 或者 `dm-master.toml` 的 `source-id 配置`。</span></span><br><span class="line">  <span class="attr">source-id:</span> <span class="string">"mysql-replica-01"</span></span><br><span class="line">  <span class="comment"># 需要迁移的库名或表名的黑白名单的配置项名称，用于引用全局的黑白名单配置，全局配置见下面的 `block-allow-list` 的配置。</span></span><br><span class="line">  <span class="attr">block-allow-list:</span> <span class="string">"global"</span>          <span class="comment"># 如果 DM 版本早于 v2.0.0-beta.2 则使用 black-white-list。</span></span><br><span class="line">  <span class="comment"># dump 处理单元的配置项名称，用于引用全局的 dump 处理单元配置。</span></span><br><span class="line">  <span class="attr">mydumper-config-name:</span> <span class="string">"global"</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment"># 黑白名单全局配置，各实例通过配置项名引用。</span></span><br><span class="line"><span class="attr">block-allow-list:</span>                     <span class="comment"># 如果 DM 版本早于 v2.0.0-beta.2 则使用 black-white-list。</span></span><br><span class="line">  <span class="attr">global:</span></span><br><span class="line">    <span class="attr">do-dbs:</span> <span class="string">["*"]</span></span><br><span class="line">    <span class="attr">ignore-tables:</span> </span><br><span class="line">    <span class="bullet">-</span> <span class="attr">db-name:</span> <span class="string">"*"</span></span><br><span class="line">      <span class="attr">tbl-name:</span> <span class="string">"PDMAN_DB_VERSION"</span></span><br><span class="line"><span class="comment"># dump 处理单元全局配置，各实例通过配置项名引用。</span></span><br><span class="line"><span class="attr">mydumpers:</span></span><br><span class="line">  <span class="attr">global:</span></span><br><span class="line">    <span class="attr">extra-args:</span> <span class="string">""</span></span><br></pre></td></tr></table></figure>
+
+<p>启动任务: </p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">./dmctl --master-addr 127.0.0.1:8261 start-task task.yaml</span><br></pre></td></tr></table></figure>
+
+<p>查询任务:</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">./dmctl --master-addr 127.0.0.1:8261 query-status test</span><br></pre></td></tr></table></figure>
+
+
+
+
+
+<h2 id="遇到的问题"><a href="#遇到的问题" class="headerlink" title="遇到的问题"></a>遇到的问题</h2><ul>
+<li><p>block-allow-list 变更后需要重新命名任务名称，否则任务不会生效</p>
+</li>
+<li><p>由于包含全量复制，任务中途退出需要清空相关表，否则会遇到主键重复，task can’t auto resume 的错误</p>
+</li>
+<li><p>查看同步日志 </p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">kubectl logs -f basic-dm-worker-0 -n beatflow-data</span><br></pre></td></tr></table></figure>
+
+</li>
+</ul>
+]]></content>
+      <categories>
+        <category>tidb</category>
+      </categories>
+      <tags>
+        <tag>tidb</tag>
       </tags>
   </entry>
   <entry>

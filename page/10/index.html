@@ -210,6 +210,285 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://phpdi.github.io/2023/01/11/docker/consul/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/head.jpeg">
+      <meta itemprop="name" content="Chen Yu">
+      <meta itemprop="description" content="自律给我自由">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="goeoeo">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2023/01/11/docker/consul/" class="post-title-link" itemprop="url">docker/consul</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2023-01-11 22:59:23" itemprop="dateCreated datePublished" datetime="2023-01-11T22:59:23+08:00">2023-01-11</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/docker/" itemprop="url" rel="index">
+                    <span itemprop="name">docker</span>
+                  </a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="docker-安装consul"><a href="#docker-安装consul" class="headerlink" title="docker 安装consul"></a>docker 安装consul</h1><h2 id="参数"><a href="#参数" class="headerlink" title="参数"></a>参数</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">8500 http 端口，用于 http 接口和 web ui</span><br><span class="line">8300 server rpc 端口，同一数据中心 consul server 之间通过该端口通信</span><br><span class="line">8301 serf lan 端口，同一数据中心 consul client 通过该端口通信</span><br><span class="line">8302 serf wan 端口，不同数据中心 consul server 通过该端口通信</span><br><span class="line">8600 dns 端口，用于服务发现</span><br><span class="line">-bbostrap-expect 2: 集群至少两台服务器，才能选举集群leader</span><br><span class="line">-ui：运行 web 控制台</span><br><span class="line">-bind： 监听网口，0.0.0.0 表示所有网口，如果不指定默认为127.0.0.1，则无法和容器通信</span><br><span class="line">-client ： 限制某些网口可以访问</span><br></pre></td></tr></table></figure>
+
+<h2 id="单机版"><a href="#单机版" class="headerlink" title="单机版"></a>单机版</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker run --name consul -d -p 8500:8500 -p 8300:8300 -p 8301:8301 -p 8302:8302 -p 8600:8600 consul agent -server -bootstrap-expect 1 -ui -bind&#x3D;0.0.0.0 -client&#x3D;0.0.0.0</span><br></pre></td></tr></table></figure>
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+        
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://phpdi.github.io/2023/01/11/docker/compose/graylog/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/head.jpeg">
+      <meta itemprop="name" content="Chen Yu">
+      <meta itemprop="description" content="自律给我自由">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="goeoeo">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2023/01/11/docker/compose/graylog/" class="post-title-link" itemprop="url">docker/compose/graylog</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2023-01-11 22:59:23" itemprop="dateCreated datePublished" datetime="2023-01-11T22:59:23+08:00">2023-01-11</time>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          {"version":"3","services":{"mongo":{"image":"mongo:3","restart":"on-failure","volumes":["mongo_data:/data/db"]},"elasticsearch":{"image":"docker.elastic.co/elasticsearch/elasticsearch-oss:6.8.10","environment":["http.host=0.0.0.0","transport.host=localhost","network.host=0.0.0.0","ES_JAVA_OPTS=-Xms512m -Xmx512m"],"ulimits":{"memlock":{"soft":-1,"hard":-1}},"deploy":{"resources":{"limits":{"memory":"1g"}}},"ports":["19300:9300","19200:9200"],"restart":"on-failure","volumes":["es_data:/usr/share/elasticsearch/data"]},"graylog":{"image":"graylog/graylog:3.3","environment":["GRAYLOG_MESSAGE_JOURNAL_MAX_SIZE=5gb","GRATLOG_MESSAGE_JOURNAL_MAX_AGE=2h","GRAYLOG_PASSWORD_SECRET=somepasswordpepper","GRAYLOG_ROOT_PASSWORD_SHA2=8c6976e5b5410415bde908bd4dee15dfb167a9c873fc4bb8a81f6f2ab448a918","GRAYLOG_HTTP_EXTERNAL_URI=${GRAYLOG_HTTP_EXTERNAL_URI}","GRAYLOG_ROOT_TIMEZONE=${GRAYLOG_ROOT_TIMEZONE}"],"depends_on":["mongo","elasticsearch"],"ports":["9000:9000","1514:1514","1514:1514/udp","12201:12201","12201:12201/udp"],"volumes":["graylog_data:/usr/share/graylog/data"]},"jaeger-collector":{"image":"jaegertracing/jaeger-collector","ports":["14269:14269","14268:14268","14250:14250","9411:9411"],"restart":"on-failure","environment":["SPAN_STORAGE_TYPE=elasticsearch"],"command":["--es.server-urls=http://elasticsearch:9200","--es.num-shards=1","--es.num-replicas=0","--log-level=error"],"depends_on":["elasticsearch"]},"jaeger-agent":{"image":"jaegertracing/jaeger-agent","hostname":"jaeger-agent","command":["--reporter.grpc.host-port=jaeger-collector:14250"],"ports":["5775:5775/udp","6831:6831/udp","6832:6832/udp","5778:5778"],"restart":"on-failure","environment":["SPAN_STORAGE_TYPE=elasticsearch"],"depends_on":["jaeger-collector"]},"jaeger-query":{"image":"jaegertracing/jaeger-query","environment":["SPAN_STORAGE_TYPE=elasticsearch","no_proxy=localhost"],"ports":["16686:16686","16687:16687"],"restart":"on-failure","command":["--es.server-urls=http://elasticsearch:9200","--span-storage.type=elasticsearch","--log-level=debug"],"depends_on":["jaeger-agent"]}},"volumes":{"mongo_data":{"driver":"local"},"es_data":{"driver":"local"},"graylog_data":{"driver":"local"}}}
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+        
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://phpdi.github.io/2023/01/11/db/etcd%E6%A6%82%E5%BF%B5%E4%BB%A5%E5%8F%8A%E5%8E%9F%E7%90%86/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/head.jpeg">
+      <meta itemprop="name" content="Chen Yu">
+      <meta itemprop="description" content="自律给我自由">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="goeoeo">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2023/01/11/db/etcd%E6%A6%82%E5%BF%B5%E4%BB%A5%E5%8F%8A%E5%8E%9F%E7%90%86/" class="post-title-link" itemprop="url">db/etcd概念以及原理</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2023-01-11 22:59:23" itemprop="dateCreated datePublished" datetime="2023-01-11T22:59:23+08:00">2023-01-11</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/etcd/" itemprop="url" rel="index">
+                    <span itemprop="name">etcd</span>
+                  </a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h2 id="什么是Etcd"><a href="#什么是Etcd" class="headerlink" title="什么是Etcd"></a>什么是Etcd</h2><h3 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h3><p>etcd是CoreOS团队于2013年6月发起的开源项目，它的目标是构建一个高可用的分布式键值(key-value)数据库。etcd内部采用raft协议作为一致性算法，etcd基于Go语言实现。</p>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2023/01/11/db/etcd%E6%A6%82%E5%BF%B5%E4%BB%A5%E5%8F%8A%E5%8E%9F%E7%90%86/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+        
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://phpdi.github.io/2023/01/11/db/MySQL%E5%9C%A8%E4%BB%80%E4%B9%88%E6%83%85%E5%86%B5%E4%B8%8B%E4%BC%9A%E4%BD%BF%E7%94%A8%E5%88%B0%E4%B8%B4%E6%97%B6%E8%A1%A8/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/head.jpeg">
+      <meta itemprop="name" content="Chen Yu">
+      <meta itemprop="description" content="自律给我自由">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="goeoeo">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2023/01/11/db/MySQL%E5%9C%A8%E4%BB%80%E4%B9%88%E6%83%85%E5%86%B5%E4%B8%8B%E4%BC%9A%E4%BD%BF%E7%94%A8%E5%88%B0%E4%B8%B4%E6%97%B6%E8%A1%A8/" class="post-title-link" itemprop="url">db/MySQL在什么情况下会使用到临时表</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2023-01-11 22:59:23" itemprop="dateCreated datePublished" datetime="2023-01-11T22:59:23+08:00">2023-01-11</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/mysql/" itemprop="url" rel="index">
+                    <span itemprop="name">mysql</span>
+                  </a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <p>MySQL在执行SQL查询时可能会用到临时表，一般情况下，用到临时表就意味着性能较低。临时表存储，MySQL临时表分为“内存临时表”和“磁盘临时表”，<br>其中内存临时表使用MySQL的MEMORY存储引擎，磁盘临时表使用MySQL的MyISAM存储引擎；</p>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2023/01/11/db/MySQL%E5%9C%A8%E4%BB%80%E4%B9%88%E6%83%85%E5%86%B5%E4%B8%8B%E4%BC%9A%E4%BD%BF%E7%94%A8%E5%88%B0%E4%B8%B4%E6%97%B6%E8%A1%A8/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+        
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="https://phpdi.github.io/2023/01/11/db/MySQL%E6%8F%90%E5%8D%87%E8%AF%BE%E7%A8%8B%E5%85%A8%E9%9D%A2%E8%AE%B2%E8%A7%A3MySQL%E6%9E%B6%E6%9E%84%E8%AE%BE%E8%AE%A1/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -692,97 +971,11 @@
   
   
 
-        
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://phpdi.github.io/2023/01/11/android/ubuntu%E5%AE%89%E8%A3%85AndroidSDK%E5%92%8CNDK/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/head.jpeg">
-      <meta itemprop="name" content="Chen Yu">
-      <meta itemprop="description" content="自律给我自由">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="goeoeo">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2023/01/11/android/ubuntu%E5%AE%89%E8%A3%85AndroidSDK%E5%92%8CNDK/" class="post-title-link" itemprop="url">android/ubuntu安装AndroidSDK和NDK</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2023-01-11 22:59:23" itemprop="dateCreated datePublished" datetime="2023-01-11T22:59:23+08:00">2023-01-11</time>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h1 id="安装java"><a href="#安装java" class="headerlink" title="安装java"></a>安装java</h1><p>参考:<br><a href="https://medium.com/@barcelos.ds/install-openjdk-11-lts-in-the-ubuntu-20-04-lts-2c06f17c990" target="_blank" rel="noopener">https://medium.com/@barcelos.ds/install-openjdk-11-lts-in-the-ubuntu-20-04-lts-2c06f17c990</a></p>
-<h2 id="下载"><a href="#下载" class="headerlink" title="下载"></a>下载</h2><p><a href="https://adoptopenjdk.net" target="_blank" rel="noopener">https://adoptopenjdk.net</a></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">sudo mkdir ~&#x2F;DevTools</span><br><span class="line">sudo mkdir ~&#x2F;DevTools&#x2F;JDK</span><br><span class="line">sudo tar -zxvf ~&#x2F;下载&#x2F;OpenJDK11U-jdk***tar.gz -C ~&#x2F;DevTools&#x2F;JDK&#x2F;</span><br></pre></td></tr></table></figure>
-
-<h2 id="设置JAVA-HOME环境变量"><a href="#设置JAVA-HOME环境变量" class="headerlink" title="设置JAVA_HOME环境变量"></a>设置JAVA_HOME环境变量</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">sudo  vim ~&#x2F;.profile</span><br><span class="line"></span><br><span class="line">DEV_TOOLS&#x3D;&quot;&#x2F;home&#x2F;$USER&#x2F;DevTools&quot;</span><br><span class="line">JAVA_HOME&#x3D;&quot;$DEV_TOOLS&#x2F;JDK&#x2F;jdk-11.0.7+10&quot;</span><br><span class="line">export JAVA_HOME</span><br><span class="line">PATH&#x3D;&quot;$JAVA_HOME&#x2F;bin:$PATH&quot;</span><br><span class="line"></span><br><span class="line">source ~&#x2F;.profile</span><br></pre></td></tr></table></figure>
-<h2 id="测试"><a href="#测试" class="headerlink" title="测试"></a>测试</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">#JRE</span><br><span class="line">java --version</span><br><span class="line"></span><br><span class="line">#JDK</span><br><span class="line">javac --version</span><br></pre></td></tr></table></figure>
-
-
-<h1 id="安装Android-SDK"><a href="#安装Android-SDK" class="headerlink" title="安装Android SDK"></a>安装Android SDK</h1><p>参考:<br><a href="https://medium.com/@barcelos.ds/install-android-sdk-in-the-ubuntu-20-04-lts-without-android-studio-1b629924d6c5" target="_blank" rel="noopener">https://medium.com/@barcelos.ds/install-android-sdk-in-the-ubuntu-20-04-lts-without-android-studio-1b629924d6c5</a></p>
-<h2 id="下载命令行工具"><a href="#下载命令行工具" class="headerlink" title="下载命令行工具"></a>下载命令行工具</h2><p>网址：<a href="https://developer.android.com/studio" target="_blank" rel="noopener">https://developer.android.com/studio</a><br><img src="/2023/01/11/android/ubuntu%E5%AE%89%E8%A3%85AndroidSDK%E5%92%8CNDK/command-tools.png" alt></p>
-<h2 id="目录"><a href="#目录" class="headerlink" title="目录"></a>目录</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sudo mkdir ~&#x2F;DevTools</span><br><span class="line">sudo mkdir -P ~&#x2F;DevTools&#x2F;Android&#x2F;cmdline-tools&#x2F;latest</span><br></pre></td></tr></table></figure>
-
-<h2 id="解压放至于-DevTools-Android-cmdline-tools-latest"><a href="#解压放至于-DevTools-Android-cmdline-tools-latest" class="headerlink" title="解压放至于  ~/DevTools/Android/cmdline-tools/latest"></a>解压放至于  ~/DevTools/Android/cmdline-tools/latest</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<h2 id="设置ANDROID-HOME环境变量"><a href="#设置ANDROID-HOME环境变量" class="headerlink" title="设置ANDROID_HOME环境变量"></a>设置ANDROID_HOME环境变量</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">sudo  vim ~&#x2F;.profile</span><br><span class="line"></span><br><span class="line">DEV_TOOLS&#x3D;&quot;&#x2F;home&#x2F;$USER&#x2F;DevTools&quot;</span><br><span class="line">JAVA_HOME&#x3D;&quot;$DEV_TOOLS&#x2F;JDK&#x2F;jdk-11.0.7+10&quot;</span><br><span class="line">ANDROID_HOME&#x3D;&quot;$DEV_TOOLS&#x2F;Android&quot;</span><br><span class="line">export JAVA_HOME</span><br><span class="line">export ANDROID_HOME</span><br><span class="line">PATH&#x3D;&quot;$JAVA_HOME&#x2F;bin:$ANDROID_HOME&#x2F;cmdline-tools&#x2F;latest&#x2F;bin:$ANDROID_HOME&#x2F;platform-tools:$PATH&quot;</span><br><span class="line"></span><br><span class="line">source ~&#x2F;.profile</span><br></pre></td></tr></table></figure>
-
-<h2 id="Install-Platform-for-Android-29"><a href="#Install-Platform-for-Android-29" class="headerlink" title="Install Platform for Android 29"></a>Install Platform for Android 29</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sdkmanager &quot;platform-tools&quot; &quot;platforms;android-29&quot;</span><br></pre></td></tr></table></figure>
-
-<h2 id="Install-Build-Tools-for-Android-29"><a href="#Install-Build-Tools-for-Android-29" class="headerlink" title="Install Build Tools for Android 29"></a>Install Build Tools for Android 29</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sdkmanager &quot;build-tools&quot; &quot;build-tools;29.0.3&quot;</span><br></pre></td></tr></table></figure>
-
-<h2 id="Accept-Android-Licenses"><a href="#Accept-Android-Licenses" class="headerlink" title="Accept Android Licenses"></a>Accept Android Licenses</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sdkmanager --licenses</span><br></pre></td></tr></table></figure>
-
-<h2 id="Update-Android-Packages-when-necessary"><a href="#Update-Android-Packages-when-necessary" class="headerlink" title="Update Android Packages when necessary:"></a>Update Android Packages when necessary:</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sdkmanager --update</span><br></pre></td></tr></table></figure>
-
-<h2 id="测试-1"><a href="#测试-1" class="headerlink" title="测试"></a>测试</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sdkmanager --version</span><br><span class="line">sdkmanager --list</span><br></pre></td></tr></table></figure>
-
-<h1 id="安装NDK"><a href="#安装NDK" class="headerlink" title="安装NDK"></a>安装NDK</h1><h2 id="官网下载"><a href="#官网下载" class="headerlink" title="官网下载"></a>官网下载</h2><p><a href="https://developer.android.com/ndk/downloads/index.html" target="_blank" rel="noopener">https://developer.android.com/ndk/downloads/index.html</a></p>
-<h2 id="解压到-DevTools-Android"><a href="#解压到-DevTools-Android" class="headerlink" title="解压到 ~/DevTools/Android"></a>解压到 ~/DevTools/Android</h2><h2 id="设置ANDROID-NDK"><a href="#设置ANDROID-NDK" class="headerlink" title="设置ANDROID_NDK"></a>设置ANDROID_NDK</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">sudo  vim ~&#x2F;.profile</span><br><span class="line"></span><br><span class="line">DEV_TOOLS&#x3D;&quot;&#x2F;home&#x2F;$USER&#x2F;DevTools&quot;</span><br><span class="line">JAVA_HOME&#x3D;&quot;$DEV_TOOLS&#x2F;JDK&#x2F;jdk-11.0.9.1+1&quot;</span><br><span class="line">ANDROID_HOME&#x3D;&quot;$DEV_TOOLS&#x2F;Android&quot;</span><br><span class="line"></span><br><span class="line">export JAVA_HOME</span><br><span class="line">export ANDROID_HOME</span><br><span class="line">export ANDROID_NDK&#x3D;$ANDROID_HOME&#x2F;android-ndk-r21b</span><br><span class="line"></span><br><span class="line">export GOPATH&#x3D;&#x2F;home&#x2F;yu&#x2F;go</span><br><span class="line">export PATH&#x3D;$PATH:&#x2F;usr&#x2F;local&#x2F;go&#x2F;bin:$GOPATH&#x2F;bin:$JAVA_HOME&#x2F;bin:$ANDROID_HOME&#x2F;cmdline-tools&#x2F;latest&#x2F;bin:$ANDROID_HOME&#x2F;platform-tools:$ANDROID_NDK</span><br><span class="line">export GOROOT&#x3D;&#x2F;usr&#x2F;local&#x2F;go</span><br><span class="line">export GOPROXY&#x3D;https:&#x2F;&#x2F;goproxy.cn</span><br><span class="line"></span><br><span class="line">source ~&#x2F;.profile</span><br></pre></td></tr></table></figure>
-
-<h2 id="测试-2"><a href="#测试-2" class="headerlink" title="测试"></a>测试</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ndk-build -v</span><br></pre></td></tr></table></figure>
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
   </div>
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/page/9/"><i class="fa fa-angle-left" aria-label="上一页"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/9/">9</a><span class="page-number current">10</span>
+    <a class="extend prev" rel="prev" href="/page/9/"><i class="fa fa-angle-left" aria-label="上一页"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/9/">9</a><span class="page-number current">10</span><a class="page-number" href="/page/11/">11</a><a class="extend next" rel="next" href="/page/11/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
   </nav>
 
 
@@ -850,7 +1043,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">97</span>
+          <span class="site-state-item-count">101</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -863,7 +1056,7 @@
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">70</span>
+        <span class="site-state-item-count">73</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>

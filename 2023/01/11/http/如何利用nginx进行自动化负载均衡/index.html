@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
 <meta name="theme-color" content="#222">
-<meta name="generator" content="Hexo 4.2.0">
+<meta name="generator" content="Hexo 6.3.0">
   <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
   <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
   <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
@@ -49,13 +49,13 @@
 
   <meta name="description" content="基于Docker + Consul + Nginx + Consul-Template + Registrator的服务自动负载均衡实现">
 <meta property="og:type" content="article">
-<meta property="og:title" content="http&#x2F;如何利用nginx进行自动化负载均衡">
+<meta property="og:title" content="如何利用nginx进行自动化负载均衡">
 <meta property="og:url" content="https://phpdi.github.io/2023/01/11/http/%E5%A6%82%E4%BD%95%E5%88%A9%E7%94%A8nginx%E8%BF%9B%E8%A1%8C%E8%87%AA%E5%8A%A8%E5%8C%96%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1/index.html">
 <meta property="og:site_name" content="goeoeo">
 <meta property="og:description" content="基于Docker + Consul + Nginx + Consul-Template + Registrator的服务自动负载均衡实现">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2023-01-11T14:59:23.589Z">
-<meta property="article:modified_time" content="2023-01-11T14:59:23.589Z">
+<meta property="article:modified_time" content="2023-09-14T02:50:03.188Z">
 <meta property="article:author" content="Chen Yu">
 <meta property="article:tag" content="自动负载均衡">
 <meta property="article:tag" content="Nginx">
@@ -73,7 +73,7 @@
   };
 </script>
 
-  <title>http/如何利用nginx进行自动化负载均衡 | goeoeo</title>
+  <title>如何利用nginx进行自动化负载均衡 | goeoeo</title>
   
 
 
@@ -227,7 +227,7 @@
     </span>
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
-          http/如何利用nginx进行自动化负载均衡
+          如何利用nginx进行自动化负载均衡
         </h2>
 
         <div class="post-meta">
@@ -239,6 +239,13 @@
 
               <time title="创建时间：2023-01-11 22:59:23" itemprop="dateCreated datePublished" datetime="2023-01-11T22:59:23+08:00">2023-01-11</time>
             </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2023-09-14 10:50:03" itemprop="dateModified" datetime="2023-09-14T10:50:03+08:00">2023-09-14</time>
+              </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
                 <i class="fa fa-folder-o"></i>
@@ -263,17 +270,15 @@
 
       
         <p>基于Docker + Consul + Nginx + Consul-Template + Registrator的服务自动负载均衡实现 </p>
-<a id="more"></a>
+<span id="more"></span>
 
 <h2 id="docker-composer相关知识点"><a href="#docker-composer相关知识点" class="headerlink" title="docker-composer相关知识点"></a>docker-composer相关知识点</h2><ul>
-<li>ports 暴露容器端口到主机的任意端口或指定端口, 用法如下<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">ports:</span><br><span class="line"> </span><br><span class="line">    - &quot;80:80&quot; # 绑定容器的80端口到主机的80端口</span><br><span class="line">     </span><br><span class="line">    - &quot;9000:8080&quot; # 绑定容器的8080端口到主机的9000端口</span><br><span class="line">     </span><br><span class="line">    - &quot;443&quot; # 绑定容器的443端口到主机的任意端口，容器启动时随机分配绑定的主机端口</span><br></pre></td></tr></table></figure></li>
+<li>ports 暴露容器端口到主机的任意端口或指定端口, 用法如下<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">ports:</span><br><span class="line"> </span><br><span class="line">    - &quot;80:80&quot; # 绑定容器的80端口到主机的80端口</span><br><span class="line">     </span><br><span class="line">    - &quot;9000:8080&quot; # 绑定容器的8080端口到主机的9000端口</span><br><span class="line">     </span><br><span class="line">    - &quot;443&quot; # 绑定容器的443端口到主机的任意端口，容器启动时随机分配绑定的主机端口</span><br><span class="line"></span><br></pre></td></tr></table></figure></li>
 <li>links 使得docker容器间通过指定的名字来和目标容器通信 <blockquote>
 <p>如果使用links则容器间通信 只能通过该使用容器的ip地址来通信或者通过宿主机的ip加上容器暴露出的端口号来通信 （这两种都有弊端）</p>
 </blockquote>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">links:</span><br><span class="line">    -  consul_server_master:consul # 当前容器中使用consul 即可获取容器consul_server_master的ip地址,便于通信</span><br></pre></td></tr></table></figure></li>
-<li>depends_on 决定容器的依赖, 也就是指定当前容器的启动顺序，必须依赖启动后才会启动<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">depends_on:</span><br><span class="line">    - lb</span><br><span class="line">    - registrator</span><br></pre></td></tr></table></figure>
-
-</li>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">links:</span><br><span class="line">    -  consul_server_master:consul # 当前容器中使用consul 即可获取容器consul_server_master的ip地址,便于通信</span><br></pre></td></tr></table></figure></li>
+<li>depends_on 决定容器的依赖, 也就是指定当前容器的启动顺序，必须依赖启动后才会启动<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">depends_on:</span><br><span class="line">    - lb</span><br><span class="line">    - registrator</span><br></pre></td></tr></table></figure></li>
 </ul>
 <h2 id="consul-相关知识点"><a href="#consul-相关知识点" class="headerlink" title="consul 相关知识点"></a>consul 相关知识点</h2><ul>
 <li><p>Client模式 就是客户端模式。是 Consul 节点的一种模式，这种模式下，所有注册到当前节点的服务会被转发到 Server，本身是不持久化这些信息。</p>
@@ -282,7 +287,7 @@
 <blockquote>
 <p>Server 节点之间的数据一致性保证协议使用的是 raft，而 zookeeper 用的 paxos，etcd采用的也是raft</p>
 </blockquote>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">command: consul agent -server -bootstrap-expect 1 -advertise 192.168.1.181 -node consul_server_master -data-dir &#x2F;tmp&#x2F;data-dir -client 0.0.0.0 -ui</span><br><span class="line"># -bootstrap-expect&#x3D;2 表示节点个数为2个</span><br><span class="line"># -node&#x3D;consul-server-1 表示节点名称为consul-server-1</span><br><span class="line"># -client&#x3D;0.0.0.0 表示允许连接的客户端 IP</span><br><span class="line"># -bind&#x3D;10.211.55.2 表示服务端 IP为10.211.55.2</span><br><span class="line"># -datacenter&#x3D;dc1 数据中心名称</span><br><span class="line"># -join&#x3D;10.211.55.4 表示加入10.211.55.4节点的集群</span><br></pre></td></tr></table></figure>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">command: consul agent -server -bootstrap-expect 1 -advertise 192.168.1.181 -node consul_server_master -data-dir /tmp/data-dir -client 0.0.0.0 -ui</span><br><span class="line"># -bootstrap-expect=2 表示节点个数为2个</span><br><span class="line"># -node=consul-server-1 表示节点名称为consul-server-1</span><br><span class="line"># -client=0.0.0.0 表示允许连接的客户端 IP</span><br><span class="line"># -bind=10.211.55.2 表示服务端 IP为10.211.55.2</span><br><span class="line"># -datacenter=dc1 数据中心名称</span><br><span class="line"># -join=10.211.55.4 表示加入10.211.55.4节点的集群</span><br></pre></td></tr></table></figure>
 </li>
 <li><p>服务发现协议 Consul 采用 http 和 DNS 协议，etcd 只支持 http </p>
 </li>
@@ -334,32 +339,32 @@
 <p>数据流向： docker 容器数据-&gt; registrator -&gt; consul -&gt;consul-template -&gt; nginx</p>
 <h2 id="镜像构建"><a href="#镜像构建" class="headerlink" title="镜像构建"></a>镜像构建</h2><ul>
 <li>Consul：consul:latest</li>
-<li>Registrator：gliderlabs/registrator:latest</li>
-<li>Nginx和Consul-template：liberalman/nginx-consul-template:latest</li>
-<li>Web: yeasy/simple-web:latest</li>
+<li>Registrator：gliderlabs&#x2F;registrator:latest</li>
+<li>Nginx和Consul-template：liberalman&#x2F;nginx-consul-template:latest</li>
+<li>Web: yeasy&#x2F;simple-web:latest</li>
 </ul>
-<h2 id="docker-compose-yml"><a href="#docker-compose-yml" class="headerlink" title="docker-compose.yml"></a>docker-compose.yml</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br></pre></td><td class="code"><pre><span class="line">version: &#39;3&#39;</span><br><span class="line">#backend web application, scale this with docker-compose scale web&#x3D;3</span><br><span class="line">services:</span><br><span class="line">    web:</span><br><span class="line">      image: yeasy&#x2F;simple-web:latest</span><br><span class="line">      environment:</span><br><span class="line">        - SERVICE_80_NAME&#x3D;my-web-server</span><br><span class="line">      ports:</span><br><span class="line">      - &quot;80&quot;</span><br><span class="line">      depends_on:</span><br><span class="line">          - lb</span><br><span class="line">          - registrator  </span><br><span class="line"></span><br><span class="line">    #load balancer will automatically update the config using consul-template</span><br><span class="line">    lb:</span><br><span class="line">      image: liberalman&#x2F;nginx-consul-template:latest</span><br><span class="line">      hostname: lb</span><br><span class="line">      environment:</span><br><span class="line">          - SERVICE_IGNORE&#x3D;true</span><br><span class="line">      links:</span><br><span class="line">      -  consul_server_master:consul</span><br><span class="line">      ports:</span><br><span class="line">      - &quot;80:80&quot;</span><br><span class="line">      depends_on:</span><br><span class="line">          - consul_server_master</span><br><span class="line">          </span><br><span class="line">    consul_server_master:</span><br><span class="line">      image:  consul:latest</span><br><span class="line">      hostname: consul_server_master</span><br><span class="line">      environment:</span><br><span class="line">          - SERVICE_IGNORE&#x3D;true</span><br><span class="line">      ports:</span><br><span class="line">      - &quot;8500:8500&quot;</span><br><span class="line">      command: consul agent -server -bootstrap-expect 1 -node consul_server_master -data-dir &#x2F;tmp&#x2F;consul -client 0.0.0.0 -ui</span><br><span class="line"></span><br><span class="line">    # listen on local docker sock to register the container with public ports to the consul service</span><br><span class="line">    registrator:</span><br><span class="line">      image: gliderlabs&#x2F;registrator:master</span><br><span class="line">      hostname: registrator</span><br><span class="line">      environment:</span><br><span class="line">          - SERVICE_IGNORE&#x3D;true</span><br><span class="line">      links:</span><br><span class="line">      - consul_server_master:consul</span><br><span class="line">      depends_on:</span><br><span class="line">          - consul_server_master</span><br><span class="line">      volumes:</span><br><span class="line">      - &quot;&#x2F;var&#x2F;run&#x2F;docker.sock:&#x2F;tmp&#x2F;docker.sock&quot;</span><br><span class="line">      command: -internal consul:&#x2F;&#x2F;consul:8500</span><br></pre></td></tr></table></figure>
+<h2 id="docker-compose-yml"><a href="#docker-compose-yml" class="headerlink" title="docker-compose.yml"></a>docker-compose.yml</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br></pre></td><td class="code"><pre><span class="line">version: &#x27;3&#x27;</span><br><span class="line">#backend web application, scale this with docker-compose scale web=3</span><br><span class="line">services:</span><br><span class="line">    web:</span><br><span class="line">      image: yeasy/simple-web:latest</span><br><span class="line">      environment:</span><br><span class="line">        - SERVICE_80_NAME=my-web-server</span><br><span class="line">      ports:</span><br><span class="line">      - &quot;80&quot;</span><br><span class="line">      depends_on:</span><br><span class="line">          - lb</span><br><span class="line">          - registrator  </span><br><span class="line"></span><br><span class="line">    #load balancer will automatically update the config using consul-template</span><br><span class="line">    lb:</span><br><span class="line">      image: liberalman/nginx-consul-template:latest</span><br><span class="line">      hostname: lb</span><br><span class="line">      environment:</span><br><span class="line">          - SERVICE_IGNORE=true</span><br><span class="line">      links:</span><br><span class="line">      -  consul_server_master:consul</span><br><span class="line">      ports:</span><br><span class="line">      - &quot;80:80&quot;</span><br><span class="line">      depends_on:</span><br><span class="line">          - consul_server_master</span><br><span class="line">          </span><br><span class="line">    consul_server_master:</span><br><span class="line">      image:  consul:latest</span><br><span class="line">      hostname: consul_server_master</span><br><span class="line">      environment:</span><br><span class="line">          - SERVICE_IGNORE=true</span><br><span class="line">      ports:</span><br><span class="line">      - &quot;8500:8500&quot;</span><br><span class="line">      command: consul agent -server -bootstrap-expect 1 -node consul_server_master -data-dir /tmp/consul -client 0.0.0.0 -ui</span><br><span class="line"></span><br><span class="line">    # listen on local docker sock to register the container with public ports to the consul service</span><br><span class="line">    registrator:</span><br><span class="line">      image: gliderlabs/registrator:master</span><br><span class="line">      hostname: registrator</span><br><span class="line">      environment:</span><br><span class="line">          - SERVICE_IGNORE=true</span><br><span class="line">      links:</span><br><span class="line">      - consul_server_master:consul</span><br><span class="line">      depends_on:</span><br><span class="line">          - consul_server_master</span><br><span class="line">      volumes:</span><br><span class="line">      - &quot;/var/run/docker.sock:/tmp/docker.sock&quot;</span><br><span class="line">      command: -internal consul://consul:8500</span><br></pre></td></tr></table></figure>
 <blockquote>
-<p>注意：我们使用的第三方镜像 liberalman/nginx-consul-template，Nginx 会把名称为 my-web-server的服务容器作为后台转发的目标服务器,当然你也可以自己制作镜像指定模板. </p>
+<p>注意：我们使用的第三方镜像 liberalman&#x2F;nginx-consul-template，Nginx 会把名称为 my-web-server的服务容器作为后台转发的目标服务器,当然你也可以自己制作镜像指定模板. </p>
 </blockquote>
 <h2 id="测试步骤"><a href="#测试步骤" class="headerlink" title="测试步骤"></a>测试步骤</h2><ol>
 <li><p>docker-compose 模板所在目录，执行</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo docker-compose up</span><br></pre></td></tr></table></figure></li>
-<li><p>访问 <a href="http://localhost" target="_blank" rel="noopener">http://localhost</a> 可以看到一个 web 页面，提示实际访问的目标地址。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">#2019-12-20 04:12:30: 19 requests from &lt;LOCAL: 172.17.0.6&gt; to WebServer &lt;172.17.0.4&gt;</span><br></pre></td></tr></table></figure>
+<li><p>访问 <a target="_blank" rel="noopener" href="http://localhost/">http://localhost</a> 可以看到一个 web 页面，提示实际访问的目标地址。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">#2019-12-20 04:12:30: 19 requests from &lt;LOCAL: 172.17.0.6&gt; to WebServer &lt;172.17.0.4&gt;</span><br></pre></td></tr></table></figure>
 </li>
 <li><p>增加web 测试负载</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo docker-compose scale web=3</span><br></pre></td></tr></table></figure>
 </li>
-<li><p>重复刷新<a href="http://localhost" target="_blank" rel="noopener">http://localhost</a> 观察ip变化</p>
+<li><p>重复刷新<a target="_blank" rel="noopener" href="http://localhost/">http://localhost</a> 观察ip变化</p>
 </li>
 </ol>
-<h2 id="总结测试"><a href="#总结测试" class="headerlink" title="总结测试"></a>总结测试</h2><p>最先我未去指定容器的启动顺序（deponds_on） 导致docker-compose up 后访问<a href="http://localhost" target="_blank" rel="noopener">http://localhost</a> 报错 nginx 502<br>原因是因为 registrator容器先于web容器启动，导致未将web容器注册到consul 所以生成的nginx配置文件中，没用web参与负载</p>
-<p>本文搭建的consul为单节点版本 ， 集群版 <a href="https://www.jianshu.com/p/fa41434d444a" target="_blank" rel="noopener">参考文章1</a></p>
+<h2 id="总结测试"><a href="#总结测试" class="headerlink" title="总结测试"></a>总结测试</h2><p>最先我未去指定容器的启动顺序（deponds_on） 导致docker-compose up 后访问<a target="_blank" rel="noopener" href="http://localhost/">http://localhost</a> 报错 nginx 502<br>原因是因为 registrator容器先于web容器启动，导致未将web容器注册到consul 所以生成的nginx配置文件中，没用web参与负载</p>
+<p>本文搭建的consul为单节点版本 ， 集群版 <a target="_blank" rel="noopener" href="https://www.jianshu.com/p/fa41434d444a">参考文章1</a></p>
 <h2 id="参考文章"><a href="#参考文章" class="headerlink" title="参考文章"></a>参考文章</h2><ol>
-<li><a href="https://www.jianshu.com/p/fa41434d444a" target="_blank" rel="noopener">基于Docker + Consul + Nginx + Consul-Template的服务负载均衡实现</a></li>
-<li><a href="https://my.oschina.net/xiaominmin/blog/1597660" target="_blank" rel="noopener">用 consul + consul-template + registrator + nginx 打造真正可动态扩展的服务架构 </a></li>
-<li><a href="https://www.sohu.com/a/282625515_468635" target="_blank" rel="noopener">8分钟学会Consul集群搭建及微服务概念 </a></li>
+<li><a target="_blank" rel="noopener" href="https://www.jianshu.com/p/fa41434d444a">基于Docker + Consul + Nginx + Consul-Template的服务负载均衡实现</a></li>
+<li><a target="_blank" rel="noopener" href="https://my.oschina.net/xiaominmin/blog/1597660">用 consul + consul-template + registrator + nginx 打造真正可动态扩展的服务架构 </a></li>
+<li><a target="_blank" rel="noopener" href="https://www.sohu.com/a/282625515_468635">8分钟学会Consul集群搭建及微服务概念 </a></li>
 </ol>
 
     </div>
@@ -380,12 +385,12 @@
         
     <div class="post-nav">
       <div class="post-nav-item">
-    <a href="/2023/01/11/interview/Docker%E9%9D%A2%E8%AF%95%E9%A2%98/" rel="prev" title="interview/Docker面试题">
-      <i class="fa fa-chevron-left"></i> interview/Docker面试题
+    <a href="/2023/01/11/go/%E5%B7%A5%E4%BD%9C%E4%B8%AD%E9%81%87%E5%88%B0%E7%9A%84%E9%97%AE%E9%A2%98/" rel="prev" title="工作中遇到的问题">
+      <i class="fa fa-chevron-left"></i> 工作中遇到的问题
     </a></div>
       <div class="post-nav-item">
-    <a href="/2023/01/11/http/Http%E6%9D%83%E5%A8%81%E6%8C%87%E5%8D%97/" rel="next" title="http/Http权威指南">
-      http/Http权威指南 <i class="fa fa-chevron-right"></i>
+    <a href="/2023/01/11/http/Http%E6%9D%83%E5%A8%81%E6%8C%87%E5%8D%97/" rel="next" title="Http权威指南">
+      Http权威指南 <i class="fa fa-chevron-right"></i>
     </a></div>
     </div>
       </footer>
@@ -446,7 +451,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#docker-composer相关知识点"><span class="nav-number">1.</span> <span class="nav-text">docker-composer相关知识点</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#consul-相关知识点"><span class="nav-number">2.</span> <span class="nav-text">consul 相关知识点</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#实现原理"><span class="nav-number">3.</span> <span class="nav-text">实现原理</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#镜像构建"><span class="nav-number">4.</span> <span class="nav-text">镜像构建</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#docker-compose-yml"><span class="nav-number">5.</span> <span class="nav-text">docker-compose.yml</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#测试步骤"><span class="nav-number">6.</span> <span class="nav-text">测试步骤</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#总结测试"><span class="nav-number">7.</span> <span class="nav-text">总结测试</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#参考文章"><span class="nav-number">8.</span> <span class="nav-text">参考文章</span></a></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#docker-composer%E7%9B%B8%E5%85%B3%E7%9F%A5%E8%AF%86%E7%82%B9"><span class="nav-number">1.</span> <span class="nav-text">docker-composer相关知识点</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#consul-%E7%9B%B8%E5%85%B3%E7%9F%A5%E8%AF%86%E7%82%B9"><span class="nav-number">2.</span> <span class="nav-text">consul 相关知识点</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%9E%E7%8E%B0%E5%8E%9F%E7%90%86"><span class="nav-number">3.</span> <span class="nav-text">实现原理</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%95%9C%E5%83%8F%E6%9E%84%E5%BB%BA"><span class="nav-number">4.</span> <span class="nav-text">镜像构建</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#docker-compose-yml"><span class="nav-number">5.</span> <span class="nav-text">docker-compose.yml</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%B5%8B%E8%AF%95%E6%AD%A5%E9%AA%A4"><span class="nav-number">6.</span> <span class="nav-text">测试步骤</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%80%BB%E7%BB%93%E6%B5%8B%E8%AF%95"><span class="nav-number">7.</span> <span class="nav-text">总结测试</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8F%82%E8%80%83%E6%96%87%E7%AB%A0"><span class="nav-number">8.</span> <span class="nav-text">参考文章</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 
@@ -462,14 +467,14 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">101</span>
+          <span class="site-state-item-count">96</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
             <a href="/categories/">
           
-        <span class="site-state-item-count">18</span>
+        <span class="site-state-item-count">19</span>
         <span class="site-state-item-name">分类</span></a>
       </div>
       <div class="site-state-item site-state-tags">
@@ -506,7 +511,7 @@
   </span>
   <span class="author" itemprop="copyrightHolder">Chen Yu</span>
 </div>
-  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v4.2.0
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v6.3.0
   </div>
   <span class="post-meta-divider">|</span>
   <div class="theme-info">主题 – <a href="https://theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a> v7.7.0

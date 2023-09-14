@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
 <meta name="theme-color" content="#222">
-<meta name="generator" content="Hexo 4.2.0">
+<meta name="generator" content="Hexo 6.3.0">
   <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
   <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
   <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
@@ -47,15 +47,15 @@
   };
 </script>
 
-  <meta name="description" content="拉取最新版mysql镜像1docker pull mysql mysql主服务器启动容器1docker run -p 3307:3306 --name mysql_master -e MYSQL_ROOT_PASSWORD&#x3D;123456 -d mysql:latest">
+  <meta name="description" content="拉取最新版mysql镜像1docker pull mysql  mysql主服务器启动容器1docker run -p 3307:3306 --name mysql_master -e MYSQL_ROOT_PASSWORD&#x3D;123456 -d mysql:latest">
 <meta property="og:type" content="article">
-<meta property="og:title" content="db&#x2F;通过Docker安装配置MySQL主从节点">
+<meta property="og:title" content="通过Docker安装配置MySQL主从节点">
 <meta property="og:url" content="https://phpdi.github.io/2023/01/11/db/%E9%80%9A%E8%BF%87Docker%E5%AE%89%E8%A3%85%E9%85%8D%E7%BD%AEMySQL%E4%B8%BB%E4%BB%8E%E8%8A%82%E7%82%B9/index.html">
 <meta property="og:site_name" content="goeoeo">
-<meta property="og:description" content="拉取最新版mysql镜像1docker pull mysql mysql主服务器启动容器1docker run -p 3307:3306 --name mysql_master -e MYSQL_ROOT_PASSWORD&#x3D;123456 -d mysql:latest">
+<meta property="og:description" content="拉取最新版mysql镜像1docker pull mysql  mysql主服务器启动容器1docker run -p 3307:3306 --name mysql_master -e MYSQL_ROOT_PASSWORD&#x3D;123456 -d mysql:latest">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2023-01-11T14:59:23.564Z">
-<meta property="article:modified_time" content="2023-01-11T14:59:23.564Z">
+<meta property="article:modified_time" content="2023-09-14T02:31:06.920Z">
 <meta property="article:author" content="Chen Yu">
 <meta property="article:tag" content="mysql主从同步">
 <meta name="twitter:card" content="summary">
@@ -72,7 +72,7 @@
   };
 </script>
 
-  <title>db/通过Docker安装配置MySQL主从节点 | goeoeo</title>
+  <title>通过Docker安装配置MySQL主从节点 | goeoeo</title>
   
 
 
@@ -226,7 +226,7 @@
     </span>
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
-          db/通过Docker安装配置MySQL主从节点
+          通过Docker安装配置MySQL主从节点
         </h2>
 
         <div class="post-meta">
@@ -238,6 +238,13 @@
 
               <time title="创建时间：2023-01-11 22:59:23" itemprop="dateCreated datePublished" datetime="2023-01-11T22:59:23+08:00">2023-01-11</time>
             </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2023-09-14 10:31:06" itemprop="dateModified" datetime="2023-09-14T10:31:06+08:00">2023-09-14</time>
+              </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
                 <i class="fa fa-folder-o"></i>
@@ -261,30 +268,30 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <h2 id="拉取最新版mysql镜像"><a href="#拉取最新版mysql镜像" class="headerlink" title="拉取最新版mysql镜像"></a>拉取最新版mysql镜像</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker pull mysql</span><br></pre></td></tr></table></figure>
+        <h2 id="拉取最新版mysql镜像"><a href="#拉取最新版mysql镜像" class="headerlink" title="拉取最新版mysql镜像"></a>拉取最新版mysql镜像</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker pull mysql </span><br></pre></td></tr></table></figure>
 <h2 id="mysql主服务器"><a href="#mysql主服务器" class="headerlink" title="mysql主服务器"></a>mysql主服务器</h2><h3 id="启动容器"><a href="#启动容器" class="headerlink" title="启动容器"></a>启动容器</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker run -p 3307:3306 --name mysql_master -e MYSQL_ROOT_PASSWORD=123456 -d mysql:latest</span><br></pre></td></tr></table></figure>
-<a id="more"></a>
+<span id="more"></span>
 
 <h3 id="修改配置并添加slave用户"><a href="#修改配置并添加slave用户" class="headerlink" title="修改配置并添加slave用户"></a>修改配置并添加slave用户</h3><p>1.进入容器</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker exec -it d45457d26cad &#x2F;bin&#x2F;bash</span><br></pre></td></tr></table></figure>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker exec -it d45457d26cad /bin/bash</span><br></pre></td></tr></table></figure>
 
 <p>2.修改配置    </p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">apt update &amp;&amp; apt install  vim -y</span><br><span class="line">vim /etc/mysql/my.cnf</span><br><span class="line"></span><br><span class="line">[mysqld]</span><br><span class="line"><span class="comment">## 同一局域网内注意要唯一</span></span><br><span class="line">server-id=100  </span><br><span class="line"><span class="comment">## 开启二进制日志功能，可以随便取（关键）</span></span><br><span class="line"><span class="built_in">log</span>-bin=mysql-bin</span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">apt update &amp;&amp; apt install  vim -y</span><br><span class="line">vim /etc/mysql/my.cnf</span><br><span class="line"></span><br><span class="line">[mysqld]</span><br><span class="line"><span class="comment">## 同一局域网内注意要唯一</span></span><br><span class="line">server-id=100  </span><br><span class="line"><span class="comment">## 开启二进制日志功能，可以随便取（关键）</span></span><br><span class="line">log-bin=mysql-bin</span><br></pre></td></tr></table></figure>
 <p>3.添加slave用户，用于slave读取binlog</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">mysql -uroot -p123456 </span><br><span class="line"></span><br><span class="line"><span class="comment">#mysql5.7以下使用 CREATE USER 'slave'@'%' IDENTIFIED BY '123456';</span></span><br><span class="line"><span class="comment">#mysql5.8修改了默认的认证方式为caching_sha2_password ,如果使用此方式创建slave用户，</span></span><br><span class="line"><span class="comment">#那么在后面slave连接master的时候就需要使用加密方式进行连接，否则会报错：Authentication requires secure connection</span></span><br><span class="line"></span><br><span class="line">CREATE USER <span class="string">'slave'</span>@<span class="string">'%'</span> IDENTIFIED WITH mysql_native_password BY <span class="string">'123456'</span>;</span><br><span class="line"></span><br><span class="line">GRANT REPLICATION SLAVE, REPLICATION CLIENT ON *.* TO <span class="string">'slave'</span>@<span class="string">'%'</span>;</span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">mysql -uroot -p123456 </span><br><span class="line"></span><br><span class="line"><span class="comment">#mysql5.7以下使用 CREATE USER &#x27;slave&#x27;@&#x27;%&#x27; IDENTIFIED BY &#x27;123456&#x27;;</span></span><br><span class="line"><span class="comment">#mysql5.8修改了默认的认证方式为caching_sha2_password ,如果使用此方式创建slave用户，</span></span><br><span class="line"><span class="comment">#那么在后面slave连接master的时候就需要使用加密方式进行连接，否则会报错：Authentication requires secure connection</span></span><br><span class="line"></span><br><span class="line">CREATE USER <span class="string">&#x27;slave&#x27;</span>@<span class="string">&#x27;%&#x27;</span> IDENTIFIED WITH mysql_native_password BY <span class="string">&#x27;123456&#x27;</span>;</span><br><span class="line"></span><br><span class="line">GRANT REPLICATION SLAVE, REPLICATION CLIENT ON *.* TO <span class="string">&#x27;slave&#x27;</span>@<span class="string">&#x27;%&#x27;</span>;</span><br></pre></td></tr></table></figure>
 
 <p>4.重启容器</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker restart d45457d26cad</span><br></pre></td></tr></table></figure>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker restart d45457d26cad</span><br></pre></td></tr></table></figure>
 
 <h2 id="mysql从服务器"><a href="#mysql从服务器" class="headerlink" title="mysql从服务器"></a>mysql从服务器</h2><h3 id="启动容器-1"><a href="#启动容器-1" class="headerlink" title="启动容器"></a>启动容器</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker run -p 3308:3306 --name mysql_slave -e MYSQL_ROOT_PASSWORD=123456 -d mysql:latest</span><br></pre></td></tr></table></figure>
 <h3 id="修改配置"><a href="#修改配置" class="headerlink" title="修改配置"></a>修改配置</h3><p>1.进入容器</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker <span class="built_in">exec</span> -it 3e80d15d8b00 /bin/bash</span><br></pre></td></tr></table></figure>
 <p>2.修改配置    </p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">apt update &amp;&amp; apt install  vim -y</span><br><span class="line">vim /etc/mysql/my.cnf</span><br><span class="line"></span><br><span class="line">[mysqld]</span><br><span class="line"><span class="comment">## 设置server_id,注意要唯一</span></span><br><span class="line">server-id=101  </span><br><span class="line"><span class="comment">## 开启二进制日志功能，以备Slave作为其它Slave的Master时使用</span></span><br><span class="line"><span class="built_in">log</span>-bin=mysql-slave-bin   </span><br><span class="line"><span class="comment">## relay_log配置中继日志</span></span><br><span class="line">relay_log=edu-mysql-relay-bin</span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">apt update &amp;&amp; apt install  vim -y</span><br><span class="line">vim /etc/mysql/my.cnf</span><br><span class="line"></span><br><span class="line">[mysqld]</span><br><span class="line"><span class="comment">## 设置server_id,注意要唯一</span></span><br><span class="line">server-id=101  </span><br><span class="line"><span class="comment">## 开启二进制日志功能，以备Slave作为其它Slave的Master时使用</span></span><br><span class="line">log-bin=mysql-slave-bin   </span><br><span class="line"><span class="comment">## relay_log配置中继日志</span></span><br><span class="line">relay_log=edu-mysql-relay-bin  </span><br></pre></td></tr></table></figure>
 <p>3.重启容器</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">docker restart 3e80d15d8b00</span><br><span class="line">```    </span><br><span class="line"><span class="comment">## 配置slave使其连上master    </span></span><br><span class="line">```bash</span><br><span class="line">change master to master_host=<span class="string">'192.168.11.36'</span>, master_user=<span class="string">'slave'</span>, master_password=<span class="string">'123456'</span>, master_port=3307, master_log_file=<span class="string">'mysql-bin.000001'</span>, master_log_pos= 605, master_connect_retry=30;</span><br><span class="line"></span><br><span class="line">start slave </span><br><span class="line"></span><br><span class="line">show slave status \G 查看主从状态</span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">docker restart 3e80d15d8b00</span><br><span class="line">```    </span><br><span class="line"><span class="comment">## 配置slave使其连上master    </span></span><br><span class="line">```bash</span><br><span class="line">change master to master_host=<span class="string">&#x27;192.168.11.36&#x27;</span>, master_user=<span class="string">&#x27;slave&#x27;</span>, master_password=<span class="string">&#x27;123456&#x27;</span>, master_port=3307, master_log_file=<span class="string">&#x27;mysql-bin.000001&#x27;</span>, master_log_pos= 605, master_connect_retry=30;</span><br><span class="line"></span><br><span class="line">start slave </span><br><span class="line"></span><br><span class="line">show slave status \G 查看主从状态</span><br><span class="line"></span><br></pre></td></tr></table></figure>
 <blockquote>
-<p>参考文章<br><a href="https://www.cnblogs.com/songwenjie/p/9371422.html" target="_blank" rel="noopener">基于Docker的Mysql主从复制搭建</a></p>
+<p>参考文章<br><a target="_blank" rel="noopener" href="https://www.cnblogs.com/songwenjie/p/9371422.html">基于Docker的Mysql主从复制搭建</a></p>
 </blockquote>
 
     </div>
@@ -304,12 +311,12 @@
         
     <div class="post-nav">
       <div class="post-nav-item">
-    <a href="/2023/01/11/db/%E4%B8%80%E7%AB%99%E5%BC%8F%E5%AD%A6%E4%B9%A0redis%E4%BB%8E%E5%85%A5%E9%97%A8%E5%88%B0%E9%AB%98%E5%8F%AF%E7%94%A8%E5%88%86%E5%B8%83%E5%BC%8F%E5%AE%9E%E8%B7%B5/" rel="prev" title="db/一站式学习redis从入门到高可用分布式实践">
-      <i class="fa fa-chevron-left"></i> db/一站式学习redis从入门到高可用分布式实践
+    <a href="/2023/01/11/db/%E4%B8%80%E7%AB%99%E5%BC%8F%E5%AD%A6%E4%B9%A0redis%E4%BB%8E%E5%85%A5%E9%97%A8%E5%88%B0%E9%AB%98%E5%8F%AF%E7%94%A8%E5%88%86%E5%B8%83%E5%BC%8F%E5%AE%9E%E8%B7%B5/" rel="prev" title="一站式学习redis从入门到高可用分布式实践">
+      <i class="fa fa-chevron-left"></i> 一站式学习redis从入门到高可用分布式实践
     </a></div>
       <div class="post-nav-item">
-    <a href="/2023/01/11/db/navicat_linux%E7%A0%B4%E8%A7%A3/" rel="next" title="db/navicat_linux破解">
-      db/navicat_linux破解 <i class="fa fa-chevron-right"></i>
+    <a href="/2023/01/11/db/tidb%E6%95%B0%E6%8D%AE%E8%BF%81%E7%A7%BB/" rel="next" title="tidb数据迁移">
+      tidb数据迁移 <i class="fa fa-chevron-right"></i>
     </a></div>
     </div>
       </footer>
@@ -370,7 +377,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#拉取最新版mysql镜像"><span class="nav-number">1.</span> <span class="nav-text">拉取最新版mysql镜像</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#mysql主服务器"><span class="nav-number">2.</span> <span class="nav-text">mysql主服务器</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#启动容器"><span class="nav-number">2.1.</span> <span class="nav-text">启动容器</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#修改配置并添加slave用户"><span class="nav-number">2.2.</span> <span class="nav-text">修改配置并添加slave用户</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#mysql从服务器"><span class="nav-number">3.</span> <span class="nav-text">mysql从服务器</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#启动容器-1"><span class="nav-number">3.1.</span> <span class="nav-text">启动容器</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#修改配置"><span class="nav-number">3.2.</span> <span class="nav-text">修改配置</span></a></li></ol></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%8B%89%E5%8F%96%E6%9C%80%E6%96%B0%E7%89%88mysql%E9%95%9C%E5%83%8F"><span class="nav-number">1.</span> <span class="nav-text">拉取最新版mysql镜像</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#mysql%E4%B8%BB%E6%9C%8D%E5%8A%A1%E5%99%A8"><span class="nav-number">2.</span> <span class="nav-text">mysql主服务器</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%90%AF%E5%8A%A8%E5%AE%B9%E5%99%A8"><span class="nav-number">2.1.</span> <span class="nav-text">启动容器</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BF%AE%E6%94%B9%E9%85%8D%E7%BD%AE%E5%B9%B6%E6%B7%BB%E5%8A%A0slave%E7%94%A8%E6%88%B7"><span class="nav-number">2.2.</span> <span class="nav-text">修改配置并添加slave用户</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#mysql%E4%BB%8E%E6%9C%8D%E5%8A%A1%E5%99%A8"><span class="nav-number">3.</span> <span class="nav-text">mysql从服务器</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%90%AF%E5%8A%A8%E5%AE%B9%E5%99%A8-1"><span class="nav-number">3.1.</span> <span class="nav-text">启动容器</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BF%AE%E6%94%B9%E9%85%8D%E7%BD%AE"><span class="nav-number">3.2.</span> <span class="nav-text">修改配置</span></a></li></ol></li></ol></div>
       </div>
       <!--/noindex-->
 
@@ -386,14 +393,14 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">101</span>
+          <span class="site-state-item-count">96</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
             <a href="/categories/">
           
-        <span class="site-state-item-count">18</span>
+        <span class="site-state-item-count">19</span>
         <span class="site-state-item-name">分类</span></a>
       </div>
       <div class="site-state-item site-state-tags">
@@ -430,7 +437,7 @@
   </span>
   <span class="author" itemprop="copyrightHolder">Chen Yu</span>
 </div>
-  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v4.2.0
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v6.3.0
   </div>
   <span class="post-meta-divider">|</span>
   <div class="theme-info">主题 – <a href="https://theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a> v7.7.0

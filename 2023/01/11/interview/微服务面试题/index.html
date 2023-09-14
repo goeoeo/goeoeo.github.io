@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
 <meta name="theme-color" content="#222">
-<meta name="generator" content="Hexo 4.2.0">
+<meta name="generator" content="Hexo 6.3.0">
   <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
   <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
   <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
@@ -49,7 +49,7 @@
 
   <meta name="description" content="说说微服务架构的优势。   优势 说明    独立开发 所有微服务都可以根据各自的功能轻松开发   独立部署 根据他们所提供的服务，可以在任何应用中单独部署   故障隔离 即使应用中的一个服务不起作用，系统仍然继续运行   混合技术栈 可以用不同的语言和技术来构建同一应用程序的不同服务   粒度缩放 各个组件可根据需要进行扩展，无需将所有组件融合到一起">
 <meta property="og:type" content="article">
-<meta property="og:title" content="interview&#x2F;微服务面试题">
+<meta property="og:title" content="微服务面试题">
 <meta property="og:url" content="https://phpdi.github.io/2023/01/11/interview/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E9%9D%A2%E8%AF%95%E9%A2%98/index.html">
 <meta property="og:site_name" content="goeoeo">
 <meta property="og:description" content="说说微服务架构的优势。   优势 说明    独立开发 所有微服务都可以根据各自的功能轻松开发   独立部署 根据他们所提供的服务，可以在任何应用中单独部署   故障隔离 即使应用中的一个服务不起作用，系统仍然继续运行   混合技术栈 可以用不同的语言和技术来构建同一应用程序的不同服务   粒度缩放 各个组件可根据需要进行扩展，无需将所有组件融合到一起">
@@ -59,7 +59,7 @@
 <meta property="og:image" content="https://phpdi.github.io/2023/01/11/interview/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E9%9D%A2%E8%AF%95%E9%A2%98/4272216804-5d5637015b5cb_article732.png">
 <meta property="og:image" content="https://phpdi.github.io/2023/01/11/interview/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E9%9D%A2%E8%AF%95%E9%A2%98/2112962994-5d56372221472_article732.png">
 <meta property="article:published_time" content="2023-01-11T14:59:23.593Z">
-<meta property="article:modified_time" content="2023-01-11T14:59:23.593Z">
+<meta property="article:modified_time" content="2023-09-14T02:52:09.407Z">
 <meta property="article:author" content="Chen Yu">
 <meta property="article:tag" content="微服务面试题">
 <meta name="twitter:card" content="summary">
@@ -77,7 +77,7 @@
   };
 </script>
 
-  <title>interview/微服务面试题 | goeoeo</title>
+  <title>微服务面试题 | goeoeo</title>
   
 
 
@@ -231,7 +231,7 @@
     </span>
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
-          interview/微服务面试题
+          微服务面试题
         </h2>
 
         <div class="post-meta">
@@ -243,6 +243,13 @@
 
               <time title="创建时间：2023-01-11 22:59:23" itemprop="dateCreated datePublished" datetime="2023-01-11T22:59:23+08:00">2023-01-11</time>
             </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2023-09-14 10:52:09" itemprop="dateModified" datetime="2023-09-14T10:52:09+08:00">2023-09-14</time>
+              </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
                 <i class="fa fa-folder-o"></i>
@@ -294,11 +301,11 @@
 <td align="center">各个组件可根据需要进行扩展，无需将所有组件融合到一起</td>
 </tr>
 </tbody></table>
-<a id="more"></a>
+<span id="more"></span>
 
 <h2 id="你对微服务是怎么理解的？"><a href="#你对微服务是怎么理解的？" class="headerlink" title="你对微服务是怎么理解的？"></a>你对微服务是怎么理解的？</h2><p>微服务，又名微服务架构，是一种架构风格，它将应用构建为一个小型自治服务的集合，以业务领域为模型。  </p>
-<p>通俗地说，就像蜜蜂通过对蜡制的等边六角形单元来构建它们的蜂巢。他们最初从使用各种材料的小单元开始，一点点的搭建出一个大型蜂巢。 这些小单元组成坚固的结构，将蜂窝的特定部分固定在一起。这里，每个小单元都独立于另一个，但它也与其他小单元相关。这意味着对一个小单元的损害不会损害其他的单元，因此，蜜蜂可以在不影响完整蜂巢的情况下重建这些单元。<br><img src="/2023/01/11/interview/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E9%9D%A2%E8%AF%95%E9%A2%98/2597948906-5d5636a47815d_article732.png" alt><br>请参考上图。这里，每个六边形都代表单独的服务组件。与蜜蜂的工作类似，每个敏捷团队都使用可用的框架和所选的技术栈构建单独的服务组件。就像在蜂巢中一样，这些服务组件形成一个强大的微服务架构，以提供更好的可扩展性。此外敏捷团队可以单独处理每个服务组件的问题，而不会对整个应用程序产生影响或使影响最小。  </p>
-<h2 id="微服务有哪些特点？"><a href="#微服务有哪些特点？" class="headerlink" title="微服务有哪些特点？"></a>微服务有哪些特点？</h2><p><img src="/2023/01/11/interview/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E9%9D%A2%E8%AF%95%E9%A2%98/2085427301-5d5636cc8c659_article732.png" alt></p>
+<p>通俗地说，就像蜜蜂通过对蜡制的等边六角形单元来构建它们的蜂巢。他们最初从使用各种材料的小单元开始，一点点的搭建出一个大型蜂巢。 这些小单元组成坚固的结构，将蜂窝的特定部分固定在一起。这里，每个小单元都独立于另一个，但它也与其他小单元相关。这意味着对一个小单元的损害不会损害其他的单元，因此，蜜蜂可以在不影响完整蜂巢的情况下重建这些单元。<br><img src="/2023/01/11/interview/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E9%9D%A2%E8%AF%95%E9%A2%98/2597948906-5d5636a47815d_article732.png"><br>请参考上图。这里，每个六边形都代表单独的服务组件。与蜜蜂的工作类似，每个敏捷团队都使用可用的框架和所选的技术栈构建单独的服务组件。就像在蜂巢中一样，这些服务组件形成一个强大的微服务架构，以提供更好的可扩展性。此外敏捷团队可以单独处理每个服务组件的问题，而不会对整个应用程序产生影响或使影响最小。  </p>
+<h2 id="微服务有哪些特点？"><a href="#微服务有哪些特点？" class="headerlink" title="微服务有哪些特点？"></a>微服务有哪些特点？</h2><p><img src="/2023/01/11/interview/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E9%9D%A2%E8%AF%95%E9%A2%98/2085427301-5d5636cc8c659_article732.png"></p>
 <ul>
 <li>解耦（Decoupling） - 系统内的服务很大程度上是分离的。因此整个应用可以被轻松构建、修改和扩展</li>
 <li>组件化（Componentization） - 微服务被视为可以被轻松替换和升级的独立组件</li>
@@ -310,7 +317,7 @@
 <li>敏捷性（Agility） - 微服务支持敏捷开发。任何新功能都可以快速开发并被再次丢弃</li>
 </ul>
 <h2 id="设计微服务的最佳实践是什么？"><a href="#设计微服务的最佳实践是什么？" class="headerlink" title="设计微服务的最佳实践是什么？"></a>设计微服务的最佳实践是什么？</h2><p>以下是设计微服务的最佳实践：<br>1.为每个微服务分开数据存储<br>2.将代码保持在类似的成熟度等级上<br>3.为每个微服务进行单独的构建<br>4.部署到容器中<br>5.将服务器视为无状态的</p>
-<h2 id="微服务架构是如何运作的？"><a href="#微服务架构是如何运作的？" class="headerlink" title="微服务架构是如何运作的？"></a>微服务架构是如何运作的？</h2><p>微服务架构具有以下组件：<br><img src="/2023/01/11/interview/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E9%9D%A2%E8%AF%95%E9%A2%98/4272216804-5d5637015b5cb_article732.png" alt></p>
+<h2 id="微服务架构是如何运作的？"><a href="#微服务架构是如何运作的？" class="headerlink" title="微服务架构是如何运作的？"></a>微服务架构是如何运作的？</h2><p>微服务架构具有以下组件：<br><img src="/2023/01/11/interview/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E9%9D%A2%E8%AF%95%E9%A2%98/4272216804-5d5637015b5cb_article732.png"></p>
 <ul>
 <li>Clients – 来自不同设备的不同用户发送请求。</li>
 <li>Identity Providers – 对用户或客户端身份进行身份验证，并颁发安全令牌。</li>
@@ -353,7 +360,7 @@
 <td align="center">服务之间难以编码</td>
 </tr>
 </tbody></table>
-<h2 id="单体应用、SOA-和微服务架构有什么区别？"><a href="#单体应用、SOA-和微服务架构有什么区别？" class="headerlink" title="单体应用、SOA 和微服务架构有什么区别？"></a>单体应用、SOA 和微服务架构有什么区别？</h2><p><img src="/2023/01/11/interview/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E9%9D%A2%E8%AF%95%E9%A2%98/2112962994-5d56372221472_article732.png" alt></p>
+<h2 id="单体应用、SOA-和微服务架构有什么区别？"><a href="#单体应用、SOA-和微服务架构有什么区别？" class="headerlink" title="单体应用、SOA 和微服务架构有什么区别？"></a>单体应用、SOA 和微服务架构有什么区别？</h2><p><img src="/2023/01/11/interview/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E9%9D%A2%E8%AF%95%E9%A2%98/2112962994-5d56372221472_article732.png"></p>
 <ul>
 <li>单体应用类似于一个大容器，其中程序的所有组件都被组装在一起并紧密包装。</li>
 <li>SOA是一组相互通信的服务。通信可以涉及简单的数据传送，也可以涉及两个或多个协调某些活动的服务。</li>
@@ -391,11 +398,11 @@
 </tr>
 <tr>
 <td align="center">支持多消息协议</td>
-<td align="center">使用轻量级协议，例如 HTTP/REST 等</td>
+<td align="center">使用轻量级协议，例如 HTTP&#x2F;REST 等</td>
 </tr>
 <tr>
-<td align="center">多线程，有更多的开销来处理I / O</td>
-<td align="center">单线程，通常使用事件循环进行非锁定 I/O 处理</td>
+<td align="center">多线程，有更多的开销来处理I &#x2F; O</td>
+<td align="center">单线程，通常使用事件循环进行非锁定 I&#x2F;O 处理</td>
 </tr>
 <tr>
 <td align="center">最大化服务的可重用性</td>
@@ -416,7 +423,7 @@
 </tbody></table>
 <h2 id="什么是内聚？"><a href="#什么是内聚？" class="headerlink" title="什么是内聚？"></a>什么是内聚？</h2><p>内聚是一个模块内部各元素之间相关联程度的度量</p>
 <h2 id="什么是耦合？"><a href="#什么是耦合？" class="headerlink" title="什么是耦合？"></a>什么是耦合？</h2><p>组件之间依赖关系强度的度量被称为耦合。好的设计总是高内聚和低耦合的。</p>
-<h2 id="什么是REST-RESTful-？它的用途是什么？"><a href="#什么是REST-RESTful-？它的用途是什么？" class="headerlink" title="什么是REST/RESTful ？它的用途是什么？"></a>什么是REST/RESTful ？它的用途是什么？</h2><p>Representational State Transfer（REST）/ RESTful （表述性状态转移）是一种帮助计算机系统通过 Internet 进行通信的架构风格。这使得微服务更容易理解和实现。<br>微服务可以用 RESTful API 来实现，当然也可以不用，但是用 RESTful API 去构建松散耦合的微服务总是更容易些。  </p>
+<h2 id="什么是REST-RESTful-？它的用途是什么？"><a href="#什么是REST-RESTful-？它的用途是什么？" class="headerlink" title="什么是REST&#x2F;RESTful ？它的用途是什么？"></a>什么是REST&#x2F;RESTful ？它的用途是什么？</h2><p>Representational State Transfer（REST）&#x2F; RESTful （表述性状态转移）是一种帮助计算机系统通过 Internet 进行通信的架构风格。这使得微服务更容易理解和实现。<br>微服务可以用 RESTful API 来实现，当然也可以不用，但是用 RESTful API 去构建松散耦合的微服务总是更容易些。  </p>
 <h2 id="你对分布式事务的理解？"><a href="#你对分布式事务的理解？" class="headerlink" title="你对分布式事务的理解？"></a>你对分布式事务的理解？</h2><p>分布式事务是单个事件导致两个或多个不能以原子方式提交的单独数据源的突变的情况。在微服务的世界中，它变得更加复杂，因为每个服务都是一个工作单元，并且在大多数情况下，多个服务必须协同工作才能使业务成功。  </p>
 <h2 id="什么是幂等性（Idempotence）及用在那里？"><a href="#什么是幂等性（Idempotence）及用在那里？" class="headerlink" title="什么是幂等性（Idempotence）及用在那里？"></a>什么是幂等性（Idempotence）及用在那里？</h2><p>幂等性是能够以同样的方式做两次，而最终结果将保持不变，就好像它只做了一次的特性。<br>用法：在远程服务或数据源中使用幂等性，以便当它多次接收指令时，只处理一次。  </p>
 <h2 id="什么是客户端证书？"><a href="#什么是客户端证书？" class="headerlink" title="什么是客户端证书？"></a>什么是客户端证书？</h2><p>客户端系统向远程服务器发出经过身份验证的请求所用的数字证书被称为客户端证书。客户端证书在许多相互认证设计中起着非常重要的作用，为请求者的身份提供了强有力的保证。  </p>
@@ -433,9 +440,9 @@
 <li>为开发微服务的团队提供某些工具和技术的建议。</li>
 <li>提供技术治理，以便技术开发团队遵循微服务原则。</li>
 </ul>
-<h2 id="微服务之间是如何通讯的？"><a href="#微服务之间是如何通讯的？" class="headerlink" title="微服务之间是如何通讯的？"></a>微服务之间是如何通讯的？</h2><h3 id="远程过程调用（Remote-Procedure-Invocation）"><a href="#远程过程调用（Remote-Procedure-Invocation）" class="headerlink" title="远程过程调用（Remote Procedure Invocation）"></a>远程过程调用（Remote Procedure Invocation）</h3><p>直接通过远程过程调用来访问别的service。<br>示例：REST、gRPC、Apache、Thrift<br>简单，常见。因为没有中间件代理，系统更简单<br>只支持请求/响应的模式，不支持别的，比如通知、请求/异步响应、发布/订阅、发布/异步响应降低了可用性，因为客户端和服务端在请求过程中必须都是可用的  </p>
+<h2 id="微服务之间是如何通讯的？"><a href="#微服务之间是如何通讯的？" class="headerlink" title="微服务之间是如何通讯的？"></a>微服务之间是如何通讯的？</h2><h3 id="远程过程调用（Remote-Procedure-Invocation）"><a href="#远程过程调用（Remote-Procedure-Invocation）" class="headerlink" title="远程过程调用（Remote Procedure Invocation）"></a>远程过程调用（Remote Procedure Invocation）</h3><p>直接通过远程过程调用来访问别的service。<br>示例：REST、gRPC、Apache、Thrift<br>简单，常见。因为没有中间件代理，系统更简单<br>只支持请求&#x2F;响应的模式，不支持别的，比如通知、请求&#x2F;异步响应、发布&#x2F;订阅、发布&#x2F;异步响应降低了可用性，因为客户端和服务端在请求过程中必须都是可用的  </p>
 <h3 id="消息"><a href="#消息" class="headerlink" title="消息"></a>消息</h3><p>使用异步消息来做服务间通信。服务间通过消息管道来交换消息，从而通信。<br>示例：Apache Kafka、RabbitMQ  </p>
-<p>把客户端和服务端解耦，更松耦合 提高可用性，因为消息中间件缓存了消息，直到消费者可以消费<br>支持很多通信机制比如通知、请求/异步响应、发布/订阅、发布/异步响应  </p>
+<p>把客户端和服务端解耦，更松耦合 提高可用性，因为消息中间件缓存了消息，直到消费者可以消费<br>支持很多通信机制比如通知、请求&#x2F;异步响应、发布&#x2F;订阅、发布&#x2F;异步响应  </p>
 <p>消息中间件有额外的复杂性  </p>
 <h2 id="分布式系统面临的问题"><a href="#分布式系统面临的问题" class="headerlink" title="分布式系统面临的问题?"></a>分布式系统面临的问题?</h2><p>复杂分布式体系结构中的应用程序有数十个依赖关系，每个依赖关系在某些时候将不可避免地失败。  </p>
 <p>服务雪崩多个微服务之间调用的时候，假设微服务A调用微服务B和微服务C，微服务B和微服务C又调用其它的微服务，这就是所谓的“扇出”。如果扇出的链路上某个微服务的调用响应时间过长或者不可用，对微服务A的调用就会占用越来越多的系统资源，进而引起系统崩溃，所谓的“雪崩效应”.  </p>
@@ -444,7 +451,7 @@
 <ol>
 <li><p>熔断模式：这种模式主要是参考电路熔断，如果一条线路电压过高，保险丝会熔断，防止火灾。放到我们的系统中，如果某个目标服务调用慢或者有大量超时，此时，熔断该服务的调用，对于后续调用请求，不在继续调用目标服务，直接返回，快速释放资源。如果目标服务情况好转则恢复调用。</p>
 </li>
-<li><p>隔离模式：这种模式就像对系统请求按类型划分成一个个小岛的一样，当某个小岛被火少光了，不会影响到其他的小岛。例如可以对不同类型的请求使用线程池来资源隔离，每种类型的请求互不影响，如果一种类型的请求线程资源耗尽，则对后续的该类型请求直接返回，不再调用后续资源。这种模式使用场景非常多，例如将一个服务拆开，对于重要的服务使用单独服务器来部署，再或者公司最近推广的多中心。  </p>
+<li><p>隔离模式：这种模式就像对系统请求按类型划分成一个个小岛的一样，当某个小岛被火少光了，不会影响到其他的小岛。例如可以对不同类型的请求使用线程池来资源隔离，每种类型的请求互不影响，如果一种类型的请求线程资源耗尽，则对后续的该类型请求直接返回，不再调用后续资源。这种模式使用场景非常多，例如将一个服务拆开，对于重要的服务使用单独服务器来部署，再或者公司最近推广的多中心。</p>
 </li>
 </ol>
 <p>3.限流模式：上述的熔断模式和隔离模式都属于出错后的容错处理机制，而限流模式则可以称为预防模式。限流模式主要是提前对各个类型的请求设置最高的QPS阈值，若高于设置的阈值则对该请求直接返回，不再调用后续资源。这种模式不能解决服务依赖的问题，只能解决系统整体资源分配问题，因为没有被限流的请求依然有可能造成雪崩效应。  </p>
@@ -512,12 +519,12 @@
         
     <div class="post-nav">
       <div class="post-nav-item">
-    <a href="/2023/01/11/interview/Kafka%E9%9D%A2%E8%AF%95%E9%A2%98/" rel="prev" title="interview/Kafka面试题">
-      <i class="fa fa-chevron-left"></i> interview/Kafka面试题
+    <a href="/2023/01/11/interview/Kafka%E9%9D%A2%E8%AF%95%E9%A2%98/" rel="prev" title="Kafka面试题">
+      <i class="fa fa-chevron-left"></i> Kafka面试题
     </a></div>
       <div class="post-nav-item">
-    <a href="/2023/01/11/interview/Redis%E9%9D%A2%E8%AF%95%E9%A2%98/" rel="next" title="interview/Redis面试题">
-      interview/Redis面试题 <i class="fa fa-chevron-right"></i>
+    <a href="/2023/01/11/interview/Redis%E9%9D%A2%E8%AF%95%E9%A2%98/" rel="next" title="Redis面试题">
+      Redis面试题 <i class="fa fa-chevron-right"></i>
     </a></div>
     </div>
       </footer>
@@ -578,7 +585,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#说说微服务架构的优势。"><span class="nav-number">1.</span> <span class="nav-text">说说微服务架构的优势。</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#你对微服务是怎么理解的？"><span class="nav-number">2.</span> <span class="nav-text">你对微服务是怎么理解的？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#微服务有哪些特点？"><span class="nav-number">3.</span> <span class="nav-text">微服务有哪些特点？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#设计微服务的最佳实践是什么？"><span class="nav-number">4.</span> <span class="nav-text">设计微服务的最佳实践是什么？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#微服务架构是如何运作的？"><span class="nav-number">5.</span> <span class="nav-text">微服务架构是如何运作的？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#微服务架构的优点和缺点是什么？"><span class="nav-number">6.</span> <span class="nav-text">微服务架构的优点和缺点是什么？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#单体应用、SOA-和微服务架构有什么区别？"><span class="nav-number">7.</span> <span class="nav-text">单体应用、SOA 和微服务架构有什么区别？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#在使用微服务架构时，你面临的挑战是什么？"><span class="nav-number">8.</span> <span class="nav-text">在使用微服务架构时，你面临的挑战是什么？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#SOA-和微服务架构之间的主要区别是什么？"><span class="nav-number">9.</span> <span class="nav-text">SOA 和微服务架构之间的主要区别是什么？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#什么是内聚？"><span class="nav-number">10.</span> <span class="nav-text">什么是内聚？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#什么是耦合？"><span class="nav-number">11.</span> <span class="nav-text">什么是耦合？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#什么是REST-RESTful-？它的用途是什么？"><span class="nav-number">12.</span> <span class="nav-text">什么是REST&#x2F;RESTful ？它的用途是什么？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#你对分布式事务的理解？"><span class="nav-number">13.</span> <span class="nav-text">你对分布式事务的理解？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#什么是幂等性（Idempotence）及用在那里？"><span class="nav-number">14.</span> <span class="nav-text">什么是幂等性（Idempotence）及用在那里？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#什么是客户端证书？"><span class="nav-number">15.</span> <span class="nav-text">什么是客户端证书？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#什么是OAuth？"><span class="nav-number">16.</span> <span class="nav-text">什么是OAuth？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#容器在微服务中的用途是什么？"><span class="nav-number">17.</span> <span class="nav-text">容器在微服务中的用途是什么？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Docker-的用途是什么？"><span class="nav-number">18.</span> <span class="nav-text">Docker 的用途是什么？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#什么是金丝雀发布（Canary-Releasing）？"><span class="nav-number">19.</span> <span class="nav-text">什么是金丝雀发布（Canary Releasing）？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#什么是持续集成（CI）？"><span class="nav-number">20.</span> <span class="nav-text">什么是持续集成（CI）？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#架构师在微服务架构中的角色是什么？"><span class="nav-number">21.</span> <span class="nav-text">架构师在微服务架构中的角色是什么？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#微服务之间是如何通讯的？"><span class="nav-number">22.</span> <span class="nav-text">微服务之间是如何通讯的？</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#远程过程调用（Remote-Procedure-Invocation）"><span class="nav-number">22.1.</span> <span class="nav-text">远程过程调用（Remote Procedure Invocation）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#消息"><span class="nav-number">22.2.</span> <span class="nav-text">消息</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#分布式系统面临的问题"><span class="nav-number">23.</span> <span class="nav-text">分布式系统面临的问题?</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#什么是服务熔断，什么是服务降级"><span class="nav-number">24.</span> <span class="nav-text">什么是服务熔断，什么是服务降级?</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#服务熔断"><span class="nav-number">24.1.</span> <span class="nav-text">服务熔断</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Hystrix服务降级"><span class="nav-number">24.2.</span> <span class="nav-text">Hystrix服务降级</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#微服务的优缺点分别是什么？说下你在项目开发中碰到的坑？"><span class="nav-number">25.</span> <span class="nav-text">微服务的优缺点分别是什么？说下你在项目开发中碰到的坑？</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#优点"><span class="nav-number">25.1.</span> <span class="nav-text">优点</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#缺点"><span class="nav-number">25.2.</span> <span class="nav-text">缺点</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#你所知道的微服务技术栈有哪些？请列举一二"><span class="nav-number">26.</span> <span class="nav-text">你所知道的微服务技术栈有哪些？请列举一二</span></a></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%AF%B4%E8%AF%B4%E5%BE%AE%E6%9C%8D%E5%8A%A1%E6%9E%B6%E6%9E%84%E7%9A%84%E4%BC%98%E5%8A%BF%E3%80%82"><span class="nav-number">1.</span> <span class="nav-text">说说微服务架构的优势。</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BD%A0%E5%AF%B9%E5%BE%AE%E6%9C%8D%E5%8A%A1%E6%98%AF%E6%80%8E%E4%B9%88%E7%90%86%E8%A7%A3%E7%9A%84%EF%BC%9F"><span class="nav-number">2.</span> <span class="nav-text">你对微服务是怎么理解的？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%BE%AE%E6%9C%8D%E5%8A%A1%E6%9C%89%E5%93%AA%E4%BA%9B%E7%89%B9%E7%82%B9%EF%BC%9F"><span class="nav-number">3.</span> <span class="nav-text">微服务有哪些特点？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%AE%BE%E8%AE%A1%E5%BE%AE%E6%9C%8D%E5%8A%A1%E7%9A%84%E6%9C%80%E4%BD%B3%E5%AE%9E%E8%B7%B5%E6%98%AF%E4%BB%80%E4%B9%88%EF%BC%9F"><span class="nav-number">4.</span> <span class="nav-text">设计微服务的最佳实践是什么？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%BE%AE%E6%9C%8D%E5%8A%A1%E6%9E%B6%E6%9E%84%E6%98%AF%E5%A6%82%E4%BD%95%E8%BF%90%E4%BD%9C%E7%9A%84%EF%BC%9F"><span class="nav-number">5.</span> <span class="nav-text">微服务架构是如何运作的？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%BE%AE%E6%9C%8D%E5%8A%A1%E6%9E%B6%E6%9E%84%E7%9A%84%E4%BC%98%E7%82%B9%E5%92%8C%E7%BC%BA%E7%82%B9%E6%98%AF%E4%BB%80%E4%B9%88%EF%BC%9F"><span class="nav-number">6.</span> <span class="nav-text">微服务架构的优点和缺点是什么？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8D%95%E4%BD%93%E5%BA%94%E7%94%A8%E3%80%81SOA-%E5%92%8C%E5%BE%AE%E6%9C%8D%E5%8A%A1%E6%9E%B6%E6%9E%84%E6%9C%89%E4%BB%80%E4%B9%88%E5%8C%BA%E5%88%AB%EF%BC%9F"><span class="nav-number">7.</span> <span class="nav-text">单体应用、SOA 和微服务架构有什么区别？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9C%A8%E4%BD%BF%E7%94%A8%E5%BE%AE%E6%9C%8D%E5%8A%A1%E6%9E%B6%E6%9E%84%E6%97%B6%EF%BC%8C%E4%BD%A0%E9%9D%A2%E4%B8%B4%E7%9A%84%E6%8C%91%E6%88%98%E6%98%AF%E4%BB%80%E4%B9%88%EF%BC%9F"><span class="nav-number">8.</span> <span class="nav-text">在使用微服务架构时，你面临的挑战是什么？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#SOA-%E5%92%8C%E5%BE%AE%E6%9C%8D%E5%8A%A1%E6%9E%B6%E6%9E%84%E4%B9%8B%E9%97%B4%E7%9A%84%E4%B8%BB%E8%A6%81%E5%8C%BA%E5%88%AB%E6%98%AF%E4%BB%80%E4%B9%88%EF%BC%9F"><span class="nav-number">9.</span> <span class="nav-text">SOA 和微服务架构之间的主要区别是什么？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BB%80%E4%B9%88%E6%98%AF%E5%86%85%E8%81%9A%EF%BC%9F"><span class="nav-number">10.</span> <span class="nav-text">什么是内聚？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BB%80%E4%B9%88%E6%98%AF%E8%80%A6%E5%90%88%EF%BC%9F"><span class="nav-number">11.</span> <span class="nav-text">什么是耦合？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BB%80%E4%B9%88%E6%98%AFREST-RESTful-%EF%BC%9F%E5%AE%83%E7%9A%84%E7%94%A8%E9%80%94%E6%98%AF%E4%BB%80%E4%B9%88%EF%BC%9F"><span class="nav-number">12.</span> <span class="nav-text">什么是REST&#x2F;RESTful ？它的用途是什么？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BD%A0%E5%AF%B9%E5%88%86%E5%B8%83%E5%BC%8F%E4%BA%8B%E5%8A%A1%E7%9A%84%E7%90%86%E8%A7%A3%EF%BC%9F"><span class="nav-number">13.</span> <span class="nav-text">你对分布式事务的理解？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BB%80%E4%B9%88%E6%98%AF%E5%B9%82%E7%AD%89%E6%80%A7%EF%BC%88Idempotence%EF%BC%89%E5%8F%8A%E7%94%A8%E5%9C%A8%E9%82%A3%E9%87%8C%EF%BC%9F"><span class="nav-number">14.</span> <span class="nav-text">什么是幂等性（Idempotence）及用在那里？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BB%80%E4%B9%88%E6%98%AF%E5%AE%A2%E6%88%B7%E7%AB%AF%E8%AF%81%E4%B9%A6%EF%BC%9F"><span class="nav-number">15.</span> <span class="nav-text">什么是客户端证书？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BB%80%E4%B9%88%E6%98%AFOAuth%EF%BC%9F"><span class="nav-number">16.</span> <span class="nav-text">什么是OAuth？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%B9%E5%99%A8%E5%9C%A8%E5%BE%AE%E6%9C%8D%E5%8A%A1%E4%B8%AD%E7%9A%84%E7%94%A8%E9%80%94%E6%98%AF%E4%BB%80%E4%B9%88%EF%BC%9F"><span class="nav-number">17.</span> <span class="nav-text">容器在微服务中的用途是什么？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Docker-%E7%9A%84%E7%94%A8%E9%80%94%E6%98%AF%E4%BB%80%E4%B9%88%EF%BC%9F"><span class="nav-number">18.</span> <span class="nav-text">Docker 的用途是什么？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BB%80%E4%B9%88%E6%98%AF%E9%87%91%E4%B8%9D%E9%9B%80%E5%8F%91%E5%B8%83%EF%BC%88Canary-Releasing%EF%BC%89%EF%BC%9F"><span class="nav-number">19.</span> <span class="nav-text">什么是金丝雀发布（Canary Releasing）？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BB%80%E4%B9%88%E6%98%AF%E6%8C%81%E7%BB%AD%E9%9B%86%E6%88%90%EF%BC%88CI%EF%BC%89%EF%BC%9F"><span class="nav-number">20.</span> <span class="nav-text">什么是持续集成（CI）？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%9E%B6%E6%9E%84%E5%B8%88%E5%9C%A8%E5%BE%AE%E6%9C%8D%E5%8A%A1%E6%9E%B6%E6%9E%84%E4%B8%AD%E7%9A%84%E8%A7%92%E8%89%B2%E6%98%AF%E4%BB%80%E4%B9%88%EF%BC%9F"><span class="nav-number">21.</span> <span class="nav-text">架构师在微服务架构中的角色是什么？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%BE%AE%E6%9C%8D%E5%8A%A1%E4%B9%8B%E9%97%B4%E6%98%AF%E5%A6%82%E4%BD%95%E9%80%9A%E8%AE%AF%E7%9A%84%EF%BC%9F"><span class="nav-number">22.</span> <span class="nav-text">微服务之间是如何通讯的？</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%BF%9C%E7%A8%8B%E8%BF%87%E7%A8%8B%E8%B0%83%E7%94%A8%EF%BC%88Remote-Procedure-Invocation%EF%BC%89"><span class="nav-number">22.1.</span> <span class="nav-text">远程过程调用（Remote Procedure Invocation）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%B6%88%E6%81%AF"><span class="nav-number">22.2.</span> <span class="nav-text">消息</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%88%86%E5%B8%83%E5%BC%8F%E7%B3%BB%E7%BB%9F%E9%9D%A2%E4%B8%B4%E7%9A%84%E9%97%AE%E9%A2%98"><span class="nav-number">23.</span> <span class="nav-text">分布式系统面临的问题?</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BB%80%E4%B9%88%E6%98%AF%E6%9C%8D%E5%8A%A1%E7%86%94%E6%96%AD%EF%BC%8C%E4%BB%80%E4%B9%88%E6%98%AF%E6%9C%8D%E5%8A%A1%E9%99%8D%E7%BA%A7"><span class="nav-number">24.</span> <span class="nav-text">什么是服务熔断，什么是服务降级?</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%9C%8D%E5%8A%A1%E7%86%94%E6%96%AD"><span class="nav-number">24.1.</span> <span class="nav-text">服务熔断</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Hystrix%E6%9C%8D%E5%8A%A1%E9%99%8D%E7%BA%A7"><span class="nav-number">24.2.</span> <span class="nav-text">Hystrix服务降级</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%BE%AE%E6%9C%8D%E5%8A%A1%E7%9A%84%E4%BC%98%E7%BC%BA%E7%82%B9%E5%88%86%E5%88%AB%E6%98%AF%E4%BB%80%E4%B9%88%EF%BC%9F%E8%AF%B4%E4%B8%8B%E4%BD%A0%E5%9C%A8%E9%A1%B9%E7%9B%AE%E5%BC%80%E5%8F%91%E4%B8%AD%E7%A2%B0%E5%88%B0%E7%9A%84%E5%9D%91%EF%BC%9F"><span class="nav-number">25.</span> <span class="nav-text">微服务的优缺点分别是什么？说下你在项目开发中碰到的坑？</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BC%98%E7%82%B9"><span class="nav-number">25.1.</span> <span class="nav-text">优点</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%BC%BA%E7%82%B9"><span class="nav-number">25.2.</span> <span class="nav-text">缺点</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BD%A0%E6%89%80%E7%9F%A5%E9%81%93%E7%9A%84%E5%BE%AE%E6%9C%8D%E5%8A%A1%E6%8A%80%E6%9C%AF%E6%A0%88%E6%9C%89%E5%93%AA%E4%BA%9B%EF%BC%9F%E8%AF%B7%E5%88%97%E4%B8%BE%E4%B8%80%E4%BA%8C"><span class="nav-number">26.</span> <span class="nav-text">你所知道的微服务技术栈有哪些？请列举一二</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 
@@ -594,14 +601,14 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">101</span>
+          <span class="site-state-item-count">96</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
             <a href="/categories/">
           
-        <span class="site-state-item-count">18</span>
+        <span class="site-state-item-count">19</span>
         <span class="site-state-item-name">分类</span></a>
       </div>
       <div class="site-state-item site-state-tags">
@@ -638,7 +645,7 @@
   </span>
   <span class="author" itemprop="copyrightHolder">Chen Yu</span>
 </div>
-  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v4.2.0
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v6.3.0
   </div>
   <span class="post-meta-divider">|</span>
   <div class="theme-info">主题 – <a href="https://theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a> v7.7.0

@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
 <meta name="theme-color" content="#222">
-<meta name="generator" content="Hexo 4.2.0">
+<meta name="generator" content="Hexo 6.3.0">
   <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
   <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
   <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
@@ -210,7 +210,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://phpdi.github.io/2023/01/11/git/%E5%BF%AB%E9%80%9F%E8%AE%A4%E8%AF%86Git/">
+    <link itemprop="mainEntityOfPage" href="https://phpdi.github.io/2023/01/11/docker/elasticsearch/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/head.jpeg">
@@ -224,7 +224,7 @@
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
           
-            <a href="/2023/01/11/git/%E5%BF%AB%E9%80%9F%E8%AE%A4%E8%AF%86Git/" class="post-title-link" itemprop="url">git/快速认识Git</a>
+            <a href="/2023/01/11/docker/elasticsearch/" class="post-title-link" itemprop="url">elasticsearch</a>
         </h2>
 
         <div class="post-meta">
@@ -236,14 +236,21 @@
 
               <time title="创建时间：2023-01-11 22:59:23" itemprop="dateCreated datePublished" datetime="2023-01-11T22:59:23+08:00">2023-01-11</time>
             </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2023-09-14 10:34:33" itemprop="dateModified" datetime="2023-09-14T10:34:33+08:00">2023-09-14</time>
+              </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
                 <i class="fa fa-folder-o"></i>
               </span>
               <span class="post-meta-item-text">分类于</span>
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/git/" itemprop="url" rel="index">
-                    <span itemprop="name">git</span>
+                  <a href="/categories/docker/" itemprop="url" rel="index">
+                    <span itemprop="name">docker</span>
                   </a>
                 </span>
             </span>
@@ -259,231 +266,15 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <h2 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h2><p>分布式版本控制系统，由Linux创始人Linus使用C语言实现</p>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2023/01/11/git/%E5%BF%AB%E9%80%9F%E8%AE%A4%E8%AF%86Git/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
+          <h1 id="docker安装elasticsearch7-7-0"><a href="#docker安装elasticsearch7-7-0" class="headerlink" title="docker安装elasticsearch7.7.0"></a>docker安装elasticsearch7.7.0</h1><h2 id="手动版安装"><a href="#手动版安装" class="headerlink" title="手动版安装"></a>手动版安装</h2><h3 id="获取镜像"><a href="#获取镜像" class="headerlink" title="获取镜像"></a>获取镜像</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker pull docker.elastic.co/elasticsearch/elasticsearch:7.7.0</span><br></pre></td></tr></table></figure>
 
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
+<h3 id="运行elasticsearch"><a href="#运行elasticsearch" class="headerlink" title="运行elasticsearch"></a>运行elasticsearch</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker run --name=elastic770 -p 9200:9200 -p 9300:9300 -e &quot;discovery.type=single-node&quot; --network=network_172_19 --ip=172.19.0.101 -v /var/docker/elastic/data:/data docker.elastic.co/elasticsearch/elasticsearch:7.7.0</span><br></pre></td></tr></table></figure>
 
-        
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://phpdi.github.io/2023/01/11/docker/docker-machine/">
+<h3 id="安装ik分词插件"><a href="#安装ik分词插件" class="headerlink" title="安装ik分词插件"></a>安装ik分词插件</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">docker exec -it elastic770 /bin/bash</span><br><span class="line"></span><br><span class="line">./bin/elasticsearch-plugin install https://github.com/medcl/elasticsearch-analysis-ik/releases/download/v7.7.0/elasticsearch-analysis-ik-7.7.0.zip</span><br></pre></td></tr></table></figure>
 
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/head.jpeg">
-      <meta itemprop="name" content="Chen Yu">
-      <meta itemprop="description" content="自律给我自由">
-    </span>
+<h2 id="docker-compose安装"><a href="#docker-compose安装" class="headerlink" title="docker-compose安装"></a>docker-compose安装</h2><h3 id="Dockerfile"><a href="#Dockerfile" class="headerlink" title="Dockerfile"></a>Dockerfile</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">FROM docker.elastic.co/elasticsearch/elasticsearch:7.7.0</span><br><span class="line">ENV VERSION=7.7.0</span><br><span class="line"></span><br><span class="line"># https://github.com/medcl/elasticsearch-analysis-ik/releases</span><br><span class="line">ADD https://github.com/medcl/elasticsearch-analysis-ik/releases/download/v$&#123;VERSION&#125;/elasticsearch-analysis-ik-$VERSION.zip /tmp/</span><br><span class="line"></span><br><span class="line">RUN /usr/share/elasticsearch/bin/elasticsearch-plugin install -b file:///tmp/elasticsearch-analysis-ik-$VERSION.zip</span><br><span class="line">RUN rm -rf /tmp/*</span><br></pre></td></tr></table></figure>
 
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="goeoeo">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2023/01/11/docker/docker-machine/" class="post-title-link" itemprop="url">docker/docker-machine</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2023-01-11 22:59:23" itemprop="dateCreated datePublished" datetime="2023-01-11T22:59:23+08:00">2023-01-11</time>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h2 id="下载"><a href="#下载" class="headerlink" title="下载"></a>下载</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">base&#x3D;https:&#x2F;&#x2F;github.com&#x2F;docker&#x2F;machine&#x2F;releases&#x2F;download&#x2F;v0.16.0 &amp;&amp;</span><br><span class="line">  curl -L $base&#x2F;docker-machine-$(uname -s)-$(uname -m) &gt;&#x2F;tmp&#x2F;docker-machine &amp;&amp;</span><br><span class="line">  sudo mv &#x2F;tmp&#x2F;docker-machine &#x2F;usr&#x2F;local&#x2F;bin&#x2F;docker-machine &amp;&amp;</span><br><span class="line">  chmod +x &#x2F;usr&#x2F;local&#x2F;bin&#x2F;docker-mach</span><br></pre></td></tr></table></figure>
-<h3 id="网速慢"><a href="#网速慢" class="headerlink" title="网速慢"></a>网速慢</h3><p>使用xx_net代理</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">sudo  apt install privoxy</span><br><span class="line">export https_proxy&#x3D;127.0.0.1:8087</span><br><span class="line">export http_proxy&#x3D;127.0.0.1:8087</span><br></pre></td></tr></table></figure>
-
-<h3 id="x509问题"><a href="#x509问题" class="headerlink" title="x509问题"></a>x509问题</h3><p>curl -k 参数跳过证书验证</p>
-<h2 id="使用"><a href="#使用" class="headerlink" title="使用"></a>使用</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">docker-machine create -d  virtualbox manager1</span><br><span class="line"></span><br><span class="line">输出：</span><br><span class="line">Running pre-create checks...</span><br><span class="line">(manager1) No default Boot2Docker ISO found locally, downloading the latest release...</span><br><span class="line">Error with pre-create check: &quot;Get https:&#x2F;&#x2F;api.github.com&#x2F;repos&#x2F;boot2docker&#x2F;boot2docker&#x2F;releases&#x2F;latest: x509: certificate signed by unknown authority&quot;</span><br></pre></td></tr></table></figure>
-<h3 id="直接去下载默认的iso文件"><a href="#直接去下载默认的iso文件" class="headerlink" title="直接去下载默认的iso文件"></a>直接去下载默认的iso文件</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">curl -Lo ~&#x2F;.docker&#x2F;machine&#x2F;cache&#x2F;boot2docker.iso https:&#x2F;&#x2F;github.com&#x2F;boot2docker&#x2F;boot2docker&#x2F;releases&#x2F;download&#x2F;v19.03.5&#x2F;boot2docker.iso</span><br><span class="line"></span><br><span class="line">输出：</span><br><span class="line">curl: (60) SSL certificate problem: unable to get local issuer certificate</span><br><span class="line">More details here: https:&#x2F;&#x2F;curl.haxx.se&#x2F;docs&#x2F;sslcerts.html</span><br></pre></td></tr></table></figure>
-
-
-<h3 id="curl-60-SSL-certificate-problem-unable-to-get-local-issuer-certificate问题"><a href="#curl-60-SSL-certificate-problem-unable-to-get-local-issuer-certificate问题" class="headerlink" title="curl: (60) SSL certificate problem: unable to get local issuer certificate问题"></a>curl: (60) SSL certificate problem: unable to get local issuer certificate问题</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">curl -k --remote-name --time-cond cacert.pem https:&#x2F;&#x2F;curl.haxx.se&#x2F;ca&#x2F;cacert.pem</span><br><span class="line"># 注意执行此命令后需要重新开终端</span><br></pre></td></tr></table></figure>
-
-<p>###　终端下载实在太慢问题</p>
-<ol>
-<li><a href="https://github.com/boot2docker/boot2docker/releases/download/v19.03.5/boot2docker.iso" target="_blank" rel="noopener">浏览器下载</a></li>
-<li>将iso文件移动到　 ~/.docker/machine/cache/boot2docker.iso</li>
-</ol>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-        
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://phpdi.github.io/2023/01/11/docker/elasticsearch/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/head.jpeg">
-      <meta itemprop="name" content="Chen Yu">
-      <meta itemprop="description" content="自律给我自由">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="goeoeo">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2023/01/11/docker/elasticsearch/" class="post-title-link" itemprop="url">docker/elasticsearch</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2023-01-11 22:59:23" itemprop="dateCreated datePublished" datetime="2023-01-11T22:59:23+08:00">2023-01-11</time>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h1 id="docker安装elasticsearch7-7-0"><a href="#docker安装elasticsearch7-7-0" class="headerlink" title="docker安装elasticsearch7.7.0"></a>docker安装elasticsearch7.7.0</h1><h2 id="手动版安装"><a href="#手动版安装" class="headerlink" title="手动版安装"></a>手动版安装</h2><h3 id="获取镜像"><a href="#获取镜像" class="headerlink" title="获取镜像"></a>获取镜像</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker pull docker.elastic.co&#x2F;elasticsearch&#x2F;elasticsearch:7.7.0</span><br></pre></td></tr></table></figure>
-
-<h3 id="运行elasticsearch"><a href="#运行elasticsearch" class="headerlink" title="运行elasticsearch"></a>运行elasticsearch</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker run --name&#x3D;elastic770 -p 9200:9200 -p 9300:9300 -e &quot;discovery.type&#x3D;single-node&quot; --network&#x3D;network_172_19 --ip&#x3D;172.19.0.101 -v &#x2F;var&#x2F;docker&#x2F;elastic&#x2F;data:&#x2F;data docker.elastic.co&#x2F;elasticsearch&#x2F;elasticsearch:7.7.0</span><br></pre></td></tr></table></figure>
-
-<h3 id="安装ik分词插件"><a href="#安装ik分词插件" class="headerlink" title="安装ik分词插件"></a>安装ik分词插件</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">docker exec -it elastic770 &#x2F;bin&#x2F;bash</span><br><span class="line"></span><br><span class="line">.&#x2F;bin&#x2F;elasticsearch-plugin install https:&#x2F;&#x2F;github.com&#x2F;medcl&#x2F;elasticsearch-analysis-ik&#x2F;releases&#x2F;download&#x2F;v7.7.0&#x2F;elasticsearch-analysis-ik-7.7.0.zip</span><br></pre></td></tr></table></figure>
-
-<h2 id="docker-compose安装"><a href="#docker-compose安装" class="headerlink" title="docker-compose安装"></a>docker-compose安装</h2><h3 id="Dockerfile"><a href="#Dockerfile" class="headerlink" title="Dockerfile"></a>Dockerfile</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">FROM docker.elastic.co&#x2F;elasticsearch&#x2F;elasticsearch:7.7.0</span><br><span class="line">ENV VERSION&#x3D;7.7.0</span><br><span class="line"></span><br><span class="line"># https:&#x2F;&#x2F;github.com&#x2F;medcl&#x2F;elasticsearch-analysis-ik&#x2F;releases</span><br><span class="line">ADD https:&#x2F;&#x2F;github.com&#x2F;medcl&#x2F;elasticsearch-analysis-ik&#x2F;releases&#x2F;download&#x2F;v$&#123;VERSION&#125;&#x2F;elasticsearch-analysis-ik-$VERSION.zip &#x2F;tmp&#x2F;</span><br><span class="line"></span><br><span class="line">RUN &#x2F;usr&#x2F;share&#x2F;elasticsearch&#x2F;bin&#x2F;elasticsearch-plugin install -b file:&#x2F;&#x2F;&#x2F;tmp&#x2F;elasticsearch-analysis-ik-$VERSION.zip</span><br><span class="line">RUN rm -rf &#x2F;tmp&#x2F;*</span><br></pre></td></tr></table></figure>
-
-<h3 id="docker-compose-yml"><a href="#docker-compose-yml" class="headerlink" title="docker-compose.yml"></a>docker-compose.yml</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">version: &#39;3.5&#39;</span><br><span class="line"></span><br><span class="line">services:</span><br><span class="line">    elastic770:</span><br><span class="line">        build: .&#x2F;</span><br><span class="line">        container_name: elastic770</span><br><span class="line">        hostname: elastic770</span><br><span class="line">        volumes:</span><br><span class="line">        - .&#x2F;data:&#x2F;usr&#x2F;share&#x2F;elasticsearch&#x2F;data　　#这里将elasticsearch的数据文件映射本地，以保证下次如果删除了容器还有数据</span><br><span class="line">        environment:</span><br><span class="line">        - discovery.type&#x3D;single-node</span><br><span class="line">        ports:</span><br><span class="line">        - &quot;9200:9200&quot;</span><br></pre></td></tr></table></figure>
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-        
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://phpdi.github.io/2023/01/11/docker/docker%E9%97%AE%E9%A2%98/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/head.jpeg">
-      <meta itemprop="name" content="Chen Yu">
-      <meta itemprop="description" content="自律给我自由">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="goeoeo">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2023/01/11/docker/docker%E9%97%AE%E9%A2%98/" class="post-title-link" itemprop="url">docker/docker问题</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2023-01-11 22:59:23" itemprop="dateCreated datePublished" datetime="2023-01-11T22:59:23+08:00">2023-01-11</time>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h1 id="docker本地空间足够，但容器日志提示空间不足"><a href="#docker本地空间足够，但容器日志提示空间不足" class="headerlink" title="docker本地空间足够，但容器日志提示空间不足"></a>docker本地空间足够，但容器日志提示空间不足</h1><h2 id="情况描述"><a href="#情况描述" class="headerlink" title="情况描述"></a>情况描述</h2><p>项目中，es报空间不足，es容器 已使用30G左右的空间<br>默认情况下docker 对每个容器使用空间有限制  </p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Elasticsearch：high disk watermark [90%] exceeded</span><br></pre></td></tr></table></figure>
-
-<h2 id="处理"><a href="#处理" class="headerlink" title="处理"></a>处理</h2><p>修改配置<br>vim /etc/docker/daemon.json   </p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    &quot;storage-opt&quot;: [ &quot;dm.basesize&#x3D;80G&quot; ]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>重启 </p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo systemctl daemon-reload &amp;&amp;  sudo systemctl restart docker</span><br></pre></td></tr></table></figure>
-
-<h1 id="docker-清理磁盘"><a href="#docker-清理磁盘" class="headerlink" title="docker 清理磁盘"></a>docker 清理磁盘</h1><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker system df -v # -v 可以显示详细信息</span><br></pre></td></tr></table></figure>
-<p>该命令列出了 docker 使用磁盘的 4 种类型：  </p>
-<ul>
-<li>Images: 所有镜像占用的空间，包括拉取的镜像、本地构建的镜像</li>
-<li>Containers: 运行中的容器所占用的空间（没运行就不占空间），其实就是每个容器读写层的空间</li>
-<li>Local Volumes: 本地数据卷的空间</li>
-<li>Build Cache: 镜像构建过程中，产生的缓存数据</li>
-</ul>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">docker system prune -f</span><br><span class="line"><span class="meta">#</span><span class="bash"><span class="comment"># 可以配置定时任务每天凌晨1点清理</span></span></span><br><span class="line">0 0 1 * * docker system prune -f</span><br></pre></td></tr></table></figure>
-<p>该命令会删除暂停中的容器、没有关联容器的镜像、没有 tag 的镜像、没有被使用的数据卷，简单而言，没有在 run 或被使用的东西都被清理掉，<br>注意，如果你有一些暂时暂停的容器，这个命令也会将其清理掉。</p>
-<h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><ul>
-<li><a href="https://www.bilibili.com/read/cv16472262" target="_blank" rel="noopener">收藏！24 个 Docker 疑难杂症处理技巧</a></li>
-</ul>
-
+<h3 id="docker-compose-yml"><a href="#docker-compose-yml" class="headerlink" title="docker-compose.yml"></a>docker-compose.yml</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">version: &#x27;3.5&#x27;</span><br><span class="line"></span><br><span class="line">services:</span><br><span class="line">    elastic770:</span><br><span class="line">        build: ./</span><br><span class="line">        container_name: elastic770</span><br><span class="line">        hostname: elastic770</span><br><span class="line">        volumes:</span><br><span class="line">        - ./data:/usr/share/elasticsearch/data　　#这里将elasticsearch的数据文件映射本地，以保证下次如果删除了容器还有数据</span><br><span class="line">        environment:</span><br><span class="line">        - discovery.type=single-node</span><br><span class="line">        ports:</span><br><span class="line">        - &quot;9200:9200&quot;</span><br></pre></td></tr></table></figure>
       
     </div>
 
@@ -516,7 +307,7 @@
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
           
-            <a href="/2023/01/11/docker/etcd/" class="post-title-link" itemprop="url">docker/etcd</a>
+            <a href="/2023/01/11/docker/etcd/" class="post-title-link" itemprop="url">etcd</a>
         </h2>
 
         <div class="post-meta">
@@ -528,6 +319,13 @@
 
               <time title="创建时间：2023-01-11 22:59:23" itemprop="dateCreated datePublished" datetime="2023-01-11T22:59:23+08:00">2023-01-11</time>
             </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2023-09-14 10:34:57" itemprop="dateModified" datetime="2023-09-14T10:34:57+08:00">2023-09-14</time>
+              </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
                 <i class="fa fa-folder-o"></i>
@@ -561,7 +359,7 @@
 <li>-listen-client-urls：对外提供服务的地址：比如 <a href="http://ip:2379,http://127.0.0.1:2379，客户端会连接到这里和etcd交互">http://ip:2379,http://127.0.0.1:2379，客户端会连接到这里和etcd交互</a></li>
 <li>-advertise-client-urls：对外公告的该节点客户端监听地址，这个值会告诉集群中其他节点</li>
 <li>-initial-advertise-peer-urls：该节点同伴监听地址，这个值会告诉集群中其他节点</li>
-<li>-initial-cluster：集群中所有节点的信息，格式为 node1=<a href="http://ip1:2380,node2=http://ip2:2380,…。需要注意的是，这里的">http://ip1:2380,node2=http://ip2:2380,…。需要注意的是，这里的</a> node1 是节点的–name指定的名字；后面的ip1:2380 是–initial-advertise-peer-urls 指定的值</li>
+<li>-initial-cluster：集群中所有节点的信息，格式为 node1&#x3D;<a href="http://ip1:2380,node2=http://ip2:2380,…。需要注意的是，这里的">http://ip1:2380,node2=http://ip2:2380,…。需要注意的是，这里的</a> node1 是节点的–name指定的名字；后面的ip1:2380 是–initial-advertise-peer-urls 指定的值</li>
 <li>-initial-cluster-state：新建集群的时候，这个值为 new；假如已经存在的集群，这个值为existing</li>
 <li>-initial-cluster-token：创建集群的token，这个值每个集群保持唯一。这样的话，如果你要重新创建集群，即使配置和之前一样，也会再次生成新的集群和节点 uuid；否则会导致多个集群之间的冲突，造成未知的错误</li>
 </ul>
@@ -573,76 +371,6 @@
             </div>
           <!--/noindex-->
         
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-        
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://phpdi.github.io/2023/01/11/docker/kafak/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/head.jpeg">
-      <meta itemprop="name" content="Chen Yu">
-      <meta itemprop="description" content="自律给我自由">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="goeoeo">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2023/01/11/docker/kafak/" class="post-title-link" itemprop="url">docker/kafak</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2023-01-11 22:59:23" itemprop="dateCreated datePublished" datetime="2023-01-11T22:59:23+08:00">2023-01-11</time>
-            </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/docker/" itemprop="url" rel="index">
-                    <span itemprop="name">docker</span>
-                  </a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h1 id="docker-安装kafak"><a href="#docker-安装kafak" class="headerlink" title="docker 安装kafak"></a>docker 安装kafak</h1><h2 id="单机版"><a href="#单机版" class="headerlink" title="单机版"></a>单机版</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker run -p 2181:2181 -p 9092:9092 --env ADVERTISED_HOST&#x3D;192.168.11.36 --env ADVERTISED_PORT&#x3D;9092 -d spotify&#x2F;kafka</span><br></pre></td></tr></table></figure>
-
-
       
     </div>
 
@@ -675,7 +403,7 @@
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
           
-            <a href="/2023/01/11/docker/mysql/" class="post-title-link" itemprop="url">docker/mysql</a>
+            <a href="/2023/01/11/docker/mysql/" class="post-title-link" itemprop="url">mysql</a>
         </h2>
 
         <div class="post-meta">
@@ -687,6 +415,13 @@
 
               <time title="创建时间：2023-01-11 22:59:23" itemprop="dateCreated datePublished" datetime="2023-01-11T22:59:23+08:00">2023-01-11</time>
             </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2023-09-14 10:35:17" itemprop="dateModified" datetime="2023-09-14T10:35:17+08:00">2023-09-14</time>
+              </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
                 <i class="fa fa-folder-o"></i>
@@ -710,10 +445,87 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <h1 id="docker-安装mysql"><a href="#docker-安装mysql" class="headerlink" title="docker 安装mysql"></a>docker 安装mysql</h1><h2 id="单机版"><a href="#单机版" class="headerlink" title="单机版"></a>单机版</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">docker run -it -d -p 3306:3306 --name docker_mysql -e MYSQL_ROOT_PASSWORD&#x3D;123456  --restart&#x3D;always  mysql </span><br><span class="line">docker run -it -d -p 13306:3306 --name newbilling_mysql -e MYSQL_ROOT_PASSWORD&#x3D;p@ss52Dnb  --restart&#x3D;always  mysql</span><br></pre></td></tr></table></figure>
+          <h1 id="docker-安装mysql"><a href="#docker-安装mysql" class="headerlink" title="docker 安装mysql"></a>docker 安装mysql</h1><h2 id="单机版"><a href="#单机版" class="headerlink" title="单机版"></a>单机版</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">docker run -it -d -p 3306:3306 --name docker_mysql -e MYSQL_ROOT_PASSWORD=123456  --restart=always  mysql </span><br><span class="line">docker run -it -d -p 13306:3306 --name newbilling_mysql -e MYSQL_ROOT_PASSWORD=p@ss52Dnb  --restart=always  mysql </span><br></pre></td></tr></table></figure>
 
-<p>docker run -it -d -p 33063:3306 –name mysql5.6.47-1 -e MYSQL_ROOT_PASSWORD=123456  –restart=always  mysql:5.6.47 </p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker run --name postgres -e POSTGRES_PASSWORD&#x3D;p@ss52Dnb -p 5432:5432 --restart&#x3D;always -d postgres</span><br></pre></td></tr></table></figure>
+<p>docker run -it -d -p 33063:3306 –name mysql5.6.47-1 -e MYSQL_ROOT_PASSWORD&#x3D;123456  –restart&#x3D;always  mysql:5.6.47 </p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker run --name postgres -e POSTGRES_PASSWORD=p@ss52Dnb -p 5432:5432 --restart=always -d postgres</span><br></pre></td></tr></table></figure>
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+        
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://phpdi.github.io/2023/01/11/docker/kafak/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/head.jpeg">
+      <meta itemprop="name" content="Chen Yu">
+      <meta itemprop="description" content="自律给我自由">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="goeoeo">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2023/01/11/docker/kafak/" class="post-title-link" itemprop="url">kafak</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2023-01-11 22:59:23" itemprop="dateCreated datePublished" datetime="2023-01-11T22:59:23+08:00">2023-01-11</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2023-09-14 10:35:08" itemprop="dateModified" datetime="2023-09-14T10:35:08+08:00">2023-09-14</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/docker/" itemprop="url" rel="index">
+                    <span itemprop="name">docker</span>
+                  </a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="docker-安装kafak"><a href="#docker-安装kafak" class="headerlink" title="docker 安装kafak"></a>docker 安装kafak</h1><h2 id="单机版"><a href="#单机版" class="headerlink" title="单机版"></a>单机版</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker run -p 2181:2181 -p 9092:9092 --env ADVERTISED_HOST=192.168.11.36 --env ADVERTISED_PORT=9092 -d spotify/kafka</span><br></pre></td></tr></table></figure>
+
+
       
     </div>
 
@@ -746,7 +558,7 @@
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
           
-            <a href="/2023/01/11/docker/pgsql/" class="post-title-link" itemprop="url">docker/pgsql</a>
+            <a href="/2023/01/11/docker/pgsql/" class="post-title-link" itemprop="url">pgsql</a>
         </h2>
 
         <div class="post-meta">
@@ -758,6 +570,13 @@
 
               <time title="创建时间：2023-01-11 22:59:23" itemprop="dateCreated datePublished" datetime="2023-01-11T22:59:23+08:00">2023-01-11</time>
             </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2023-09-14 10:35:27" itemprop="dateModified" datetime="2023-09-14T10:35:27+08:00">2023-09-14</time>
+              </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
                 <i class="fa fa-folder-o"></i>
@@ -781,77 +600,7 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <h1 id="docker-安装pgsql"><a href="#docker-安装pgsql" class="headerlink" title="docker 安装pgsql"></a>docker 安装pgsql</h1><h2 id="单机版"><a href="#单机版" class="headerlink" title="单机版"></a>单机版</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker run --name mypostgres -e POSTGRES_PASSWORD&#x3D;p@ss52Dnb -e POSTGRES_USER&#x3D;yunify --restart&#x3D;always -d -p 5432:5432 postgres</span><br></pre></td></tr></table></figure>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-        
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://phpdi.github.io/2023/01/11/docker/rabbitmq/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/head.jpeg">
-      <meta itemprop="name" content="Chen Yu">
-      <meta itemprop="description" content="自律给我自由">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="goeoeo">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2023/01/11/docker/rabbitmq/" class="post-title-link" itemprop="url">docker/rabbitmq</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2023-01-11 22:59:23" itemprop="dateCreated datePublished" datetime="2023-01-11T22:59:23+08:00">2023-01-11</time>
-            </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/docker/" itemprop="url" rel="index">
-                    <span itemprop="name">docker</span>
-                  </a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h1 id="Rabbitmq"><a href="#Rabbitmq" class="headerlink" title="Rabbitmq"></a>Rabbitmq</h1><h2 id="单机版"><a href="#单机版" class="headerlink" title="单机版"></a>单机版</h2><p>`<br>docker run –restart=always -d -p 5672:5672 -p 15672:15672  –name rabbitmq rabbitmq:3.8.3-management</p>
-<p>`</p>
+          <h1 id="docker-安装pgsql"><a href="#docker-安装pgsql" class="headerlink" title="docker 安装pgsql"></a>docker 安装pgsql</h1><h2 id="单机版"><a href="#单机版" class="headerlink" title="单机版"></a>单机版</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker run --name mypostgres -e POSTGRES_PASSWORD=p@ss52Dnb -e POSTGRES_USER=yunify --restart=always -d -p 5432:5432 postgres </span><br></pre></td></tr></table></figure>
 
       
     </div>
@@ -885,7 +634,7 @@
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
           
-            <a href="/2023/01/11/docker/redis/" class="post-title-link" itemprop="url">docker/redis</a>
+            <a href="/2023/01/11/docker/redis/" class="post-title-link" itemprop="url">redis</a>
         </h2>
 
         <div class="post-meta">
@@ -897,6 +646,13 @@
 
               <time title="创建时间：2023-01-11 22:59:23" itemprop="dateCreated datePublished" datetime="2023-01-11T22:59:23+08:00">2023-01-11</time>
             </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2023-09-14 10:35:42" itemprop="dateModified" datetime="2023-09-14T10:35:42+08:00">2023-09-14</time>
+              </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
                 <i class="fa fa-folder-o"></i>
@@ -922,11 +678,328 @@
       
           <h1 id="docker-安装redis"><a href="#docker-安装redis" class="headerlink" title="docker 安装redis"></a>docker 安装redis</h1><h2 id="参数"><a href="#参数" class="headerlink" title="参数"></a>参数</h2><ul>
 <li>appendonly 是否开启数据持久化</li>
-<li>requirepass 用户名密码 默认:不使用<h2 id="单机版"><a href="#单机版" class="headerlink" title="单机版"></a>单机版</h2></li>
+<li>requirepass 用户名密码 默认:不使用</li>
 </ul>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker run --name redis -p 16000:6379 -d --restart&#x3D;always -v &#x2F;usr&#x2F;local&#x2F;docker&#x2F;redis&#x2F;redis.conf:&#x2F;etc&#x2F;redis&#x2F;redis.conf  redis:latest redis-server &#x2F;etc&#x2F;redis&#x2F;redis.conf --appendonly yes</span><br></pre></td></tr></table></figure>
+<h2 id="单机版"><a href="#单机版" class="headerlink" title="单机版"></a>单机版</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker run --name redis -p 16000:6379 -d --restart=always -v /usr/local/docker/redis/redis.conf:/etc/redis/redis.conf  redis:latest redis-server /etc/redis/redis.conf --appendonly yes </span><br></pre></td></tr></table></figure>
 
-<h2 id="主从版"><a href="#主从版" class="headerlink" title="主从版"></a>主从版</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">docker run --name redis -p 6379:6379 -d --restart&#x3D;always -v &#x2F;usr&#x2F;local&#x2F;docker&#x2F;redis&#x2F;redis.conf:&#x2F;etc&#x2F;redis&#x2F;redis.conf  redis:latest redis-server &#x2F;etc&#x2F;redis&#x2F;redis.conf --appendonly yes --requirepass &quot;123456&quot;</span><br><span class="line">docker run --name redis -p 6380:6379 -d --restart&#x3D;always -v &#x2F;usr&#x2F;local&#x2F;docker&#x2F;redis&#x2F;redis-slave.conf:&#x2F;etc&#x2F;redis&#x2F;redis.conf  redis:latest redis-server &#x2F;etc&#x2F;redis&#x2F;redis.conf --appendonly yes --requirepass &quot;123456&quot;</span><br></pre></td></tr></table></figure>
+<h2 id="主从版"><a href="#主从版" class="headerlink" title="主从版"></a>主从版</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">docker run --name redis -p 6379:6379 -d --restart=always -v /usr/local/docker/redis/redis.conf:/etc/redis/redis.conf  redis:latest redis-server /etc/redis/redis.conf --appendonly yes --requirepass &quot;123456&quot;</span><br><span class="line">docker run --name redis -p 6380:6379 -d --restart=always -v /usr/local/docker/redis/redis-slave.conf:/etc/redis/redis.conf  redis:latest redis-server /etc/redis/redis.conf --appendonly yes --requirepass &quot;123456&quot;</span><br></pre></td></tr></table></figure>
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+        
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://phpdi.github.io/2023/01/11/docker/rabbitmq/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/head.jpeg">
+      <meta itemprop="name" content="Chen Yu">
+      <meta itemprop="description" content="自律给我自由">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="goeoeo">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2023/01/11/docker/rabbitmq/" class="post-title-link" itemprop="url">rabbitmq</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2023-01-11 22:59:23" itemprop="dateCreated datePublished" datetime="2023-01-11T22:59:23+08:00">2023-01-11</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2023-09-14 10:35:36" itemprop="dateModified" datetime="2023-09-14T10:35:36+08:00">2023-09-14</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/docker/" itemprop="url" rel="index">
+                    <span itemprop="name">docker</span>
+                  </a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="Rabbitmq"><a href="#Rabbitmq" class="headerlink" title="Rabbitmq"></a>Rabbitmq</h1><h2 id="单机版"><a href="#单机版" class="headerlink" title="单机版"></a>单机版</h2><p>&#96;<br>docker run –restart&#x3D;always -d -p 5672:5672 -p 15672:15672  –name rabbitmq rabbitmq:3.8.3-management</p>
+<p>&#96;</p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+        
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://phpdi.github.io/2023/01/11/docker/zookeeper/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/head.jpeg">
+      <meta itemprop="name" content="Chen Yu">
+      <meta itemprop="description" content="自律给我自由">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="goeoeo">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2023/01/11/docker/zookeeper/" class="post-title-link" itemprop="url">zookeeper</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2023-01-11 22:59:23" itemprop="dateCreated datePublished" datetime="2023-01-11T22:59:23+08:00">2023-01-11</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2023-09-14 10:35:56" itemprop="dateModified" datetime="2023-09-14T10:35:56+08:00">2023-09-14</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/docker/" itemprop="url" rel="index">
+                    <span itemprop="name">docker</span>
+                  </a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="docker-安装zookeeper"><a href="#docker-安装zookeeper" class="headerlink" title="docker 安装zookeeper"></a>docker 安装zookeeper</h1><h2 id="单机版"><a href="#单机版" class="headerlink" title="单机版"></a>单机版</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker run -d -p 2181:2181 --name some-zookeeper --restart=always zookeeper</span><br></pre></td></tr></table></figure>
+
+<h2 id="zookeeper-简单使用"><a href="#zookeeper-简单使用" class="headerlink" title="zookeeper 简单使用"></a>zookeeper 简单使用</h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">cd /apache-zookeeper-3.7.0-bin/bin &amp;&amp; zkCli.sh</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">查看节点</span> </span><br><span class="line">ls /server</span><br><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+        
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://phpdi.github.io/2023/01/11/git/Git%E5%9B%A2%E9%98%9F%E5%8D%8F%E4%BD%9C%E6%9C%80%E4%BD%B3%E5%AE%9E%E8%B7%B5-GitFlow/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/head.jpeg">
+      <meta itemprop="name" content="Chen Yu">
+      <meta itemprop="description" content="自律给我自由">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="goeoeo">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2023/01/11/git/Git%E5%9B%A2%E9%98%9F%E5%8D%8F%E4%BD%9C%E6%9C%80%E4%BD%B3%E5%AE%9E%E8%B7%B5-GitFlow/" class="post-title-link" itemprop="url">Git团队协作最佳实践-GitFlow</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2023-01-11 22:59:23" itemprop="dateCreated datePublished" datetime="2023-01-11T22:59:23+08:00">2023-01-11</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2023-09-14 10:37:09" itemprop="dateModified" datetime="2023-09-14T10:37:09+08:00">2023-09-14</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/git/" itemprop="url" rel="index">
+                    <span itemprop="name">git</span>
+                  </a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h2 id="Git的优点"><a href="#Git的优点" class="headerlink" title="Git的优点"></a>Git的优点</h2><ul>
+<li>分布式，不需要远程仓库，也可以正常工作</li>
+<li>优秀的分支模型，创建和删除方便且高效，因为分支的创建和删除，只是操作HEAD指针。</li>
+<li>分支合并轻松</li></ul>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2023/01/11/git/Git%E5%9B%A2%E9%98%9F%E5%8D%8F%E4%BD%9C%E6%9C%80%E4%BD%B3%E5%AE%9E%E8%B7%B5-GitFlow/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+        
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://phpdi.github.io/2023/01/11/docker/consul/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/head.jpeg">
+      <meta itemprop="name" content="Chen Yu">
+      <meta itemprop="description" content="自律给我自由">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="goeoeo">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2023/01/11/docker/consul/" class="post-title-link" itemprop="url">consul</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2023-01-11 22:59:23" itemprop="dateCreated datePublished" datetime="2023-01-11T22:59:23+08:00">2023-01-11</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2023-09-14 10:33:48" itemprop="dateModified" datetime="2023-09-14T10:33:48+08:00">2023-09-14</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/docker/" itemprop="url" rel="index">
+                    <span itemprop="name">docker</span>
+                  </a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="docker-安装consul"><a href="#docker-安装consul" class="headerlink" title="docker 安装consul"></a>docker 安装consul</h1><h2 id="参数"><a href="#参数" class="headerlink" title="参数"></a>参数</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">8500 http 端口，用于 http 接口和 web ui</span><br><span class="line">8300 server rpc 端口，同一数据中心 consul server 之间通过该端口通信</span><br><span class="line">8301 serf lan 端口，同一数据中心 consul client 通过该端口通信</span><br><span class="line">8302 serf wan 端口，不同数据中心 consul server 通过该端口通信</span><br><span class="line">8600 dns 端口，用于服务发现</span><br><span class="line">-bbostrap-expect 2: 集群至少两台服务器，才能选举集群leader</span><br><span class="line">-ui：运行 web 控制台</span><br><span class="line">-bind： 监听网口，0.0.0.0 表示所有网口，如果不指定默认为127.0.0.1，则无法和容器通信</span><br><span class="line">-client ： 限制某些网口可以访问</span><br></pre></td></tr></table></figure>
+
+<h2 id="单机版"><a href="#单机版" class="headerlink" title="单机版"></a>单机版</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker run --name consul -d -p 8500:8500 -p 8300:8300 -p 8301:8301 -p 8302:8302 -p 8600:8600 consul agent -server -bootstrap-expect 1 -ui -bind=0.0.0.0 -client=0.0.0.0</span><br></pre></td></tr></table></figure>
       
     </div>
 
@@ -945,7 +1018,7 @@
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/page/7/"><i class="fa fa-angle-left" aria-label="上一页"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/7/">7</a><span class="page-number current">8</span><a class="page-number" href="/page/9/">9</a><span class="space">&hellip;</span><a class="page-number" href="/page/11/">11</a><a class="extend next" rel="next" href="/page/9/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
+    <a class="extend prev" rel="prev" href="/page/7/"><i class="fa fa-angle-left" aria-label="上一页"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/7/">7</a><span class="page-number current">8</span><a class="page-number" href="/page/9/">9</a><a class="page-number" href="/page/10/">10</a><a class="extend next" rel="next" href="/page/9/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
   </nav>
 
 
@@ -1013,14 +1086,14 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">101</span>
+          <span class="site-state-item-count">96</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
             <a href="/categories/">
           
-        <span class="site-state-item-count">18</span>
+        <span class="site-state-item-count">19</span>
         <span class="site-state-item-name">分类</span></a>
       </div>
       <div class="site-state-item site-state-tags">
@@ -1057,7 +1130,7 @@
   </span>
   <span class="author" itemprop="copyrightHolder">Chen Yu</span>
 </div>
-  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v4.2.0
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v6.3.0
   </div>
   <span class="post-meta-divider">|</span>
   <div class="theme-info">主题 – <a href="https://theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a> v7.7.0

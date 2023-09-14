@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
 <meta name="theme-color" content="#222">
-<meta name="generator" content="Hexo 4.2.0">
+<meta name="generator" content="Hexo 6.3.0">
   <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
   <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
   <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
@@ -49,13 +49,13 @@
 
   <meta name="description" content="什么是虚拟化？虚拟化允许在同一硬件上运行两个完全不同的操作系统，每个客户操作系统都经历了引导，加载内核等所有过程。可以拥有非常严格的安全性！   可以基于虚拟化方法如何模仿客户操作系统的硬件并模拟客户操作环境来对虚拟化方法进行分类。   主要有三种类型的虚拟化：    仿真 半虚拟化 基于容器的虚拟化">
 <meta property="og:type" content="article">
-<meta property="og:title" content="interview&#x2F;Docker面试题">
+<meta property="og:title" content="Docker面试题">
 <meta property="og:url" content="https://phpdi.github.io/2023/01/11/interview/Docker%E9%9D%A2%E8%AF%95%E9%A2%98/index.html">
 <meta property="og:site_name" content="goeoeo">
 <meta property="og:description" content="什么是虚拟化？虚拟化允许在同一硬件上运行两个完全不同的操作系统，每个客户操作系统都经历了引导，加载内核等所有过程。可以拥有非常严格的安全性！   可以基于虚拟化方法如何模仿客户操作系统的硬件并模拟客户操作环境来对虚拟化方法进行分类。   主要有三种类型的虚拟化：    仿真 半虚拟化 基于容器的虚拟化">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2023-01-11T14:59:23.589Z">
-<meta property="article:modified_time" content="2023-01-11T14:59:23.590Z">
+<meta property="article:modified_time" content="2023-09-14T02:52:09.404Z">
 <meta property="article:author" content="Chen Yu">
 <meta property="article:tag" content="docker面试题">
 <meta name="twitter:card" content="summary">
@@ -72,7 +72,7 @@
   };
 </script>
 
-  <title>interview/Docker面试题 | goeoeo</title>
+  <title>Docker面试题 | goeoeo</title>
   
 
 
@@ -226,7 +226,7 @@
     </span>
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
-          interview/Docker面试题
+          Docker面试题
         </h2>
 
         <div class="post-meta">
@@ -238,6 +238,13 @@
 
               <time title="创建时间：2023-01-11 22:59:23" itemprop="dateCreated datePublished" datetime="2023-01-11T22:59:23+08:00">2023-01-11</time>
             </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2023-09-14 10:52:09" itemprop="dateModified" datetime="2023-09-14T10:52:09+08:00">2023-09-14</time>
+              </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
                 <i class="fa fa-folder-o"></i>
@@ -267,10 +274,7 @@
 <ul>
 <li>仿真</li>
 <li>半虚拟化</li>
-<li>基于容器的虚拟化<a id="more"></a>
-
-
-</li>
+<li>基于容器的虚拟化<span id="more"></span></li>
 </ul>
 <h2 id="docker与虚拟机有何不同？"><a href="#docker与虚拟机有何不同？" class="headerlink" title="docker与虚拟机有何不同？"></a>docker与虚拟机有何不同？</h2><p>docker不是虚拟化方法，它依赖与实际实现基于容器的虚拟化或操作系统及虚拟化的其他工具。为此，docker最初使用LXC驱动程序，然后移动到libcontainer现在重命名为runc。Docker主要专注于在应用程序容器内自动部署应用程序。应用程序容器旨在打包和运行单个服务，而系统容器则设计为运行多个进程，如虚拟机。因此，Docker被视为容器化系统上的容器管理或应用程序部署工具。<br>主要表现在以下几个方面：  </p>
 <ul>
@@ -318,7 +322,7 @@
 </ul>
 <p>注意：<br>（1）RUN在building时运行，可以写多条；<br>（2）CMD和ENTRYPOINT在运行container时，只能写一条，如果写多条，最后一条生效；<br>（3）CMD在构建容器时可以被COMMAND覆盖，ENTRYPOINT不会被COMMAND覆盖，但可以指定——entrypoint覆盖；<br>（4）如果在Dockerfile文件中需要往镜像中导入文件，则该文件必须在Dockerfile所在目录或子目录中；<br>（5）每个目录下最好就只有一个Dockerfile，如果有多个Dockerfile文件时，使用Dockerfile生成镜像时便需要使用“-f”来指定具体的Dockerfile文件；<br>（6）指令必须全部为大写；<br>（7）使用Dockerfile生成镜像时，保证Dockerfile中所需的软件、文件与Dockerfile在同一个目录下；  </p>
 <h2 id="dockerfile的ONBUILD指令？"><a href="#dockerfile的ONBUILD指令？" class="headerlink" title="dockerfile的ONBUILD指令？"></a>dockerfile的ONBUILD指令？</h2><p>当镜像用作另一个镜像构建的基础是，ONBUILD指令向镜像添加将在稍后执行的触发指令。如果要构建其他镜像的基础的镜像（例如，可以使用特定于用户的配置自定义的应用程序构建环境或守护程序），这将非常有用。</p>
-<p>##　docker镜像和层有什么区别？<br>镜像：Docker镜像是由一些列只读层构建的；　　<br>层：每个层代表镜像Dockerfile中的一条指令；　　<br>重要的是，每个层只是与之前一层的一组差异层（相同的就不再放到锌层中）；　　</p>
+<h2 id="docker镜像和层有什么区别？"><a href="#docker镜像和层有什么区别？" class="headerlink" title="docker镜像和层有什么区别？"></a>docker镜像和层有什么区别？</h2><p>镜像：Docker镜像是由一些列只读层构建的；　　<br>层：每个层代表镜像Dockerfile中的一条指令；　　<br>重要的是，每个层只是与之前一层的一组差异层（相同的就不再放到锌层中）；　　</p>
 <h2 id="什么是docker-swarm？"><a href="#什么是docker-swarm？" class="headerlink" title="什么是docker swarm？"></a>什么是docker swarm？</h2><p>docker swarm是Docker的本机群集，它将Docker主机池转变为单个虚拟Docker主机。Docker swarm提供标准的Docker API，任何已经与Docker守护进程通信的工具都可以使用Swarm透明地扩展到多个主机。</p>
 <h2 id="如何在多个环境中使用Docker？"><a href="#如何在多个环境中使用Docker？" class="headerlink" title="如何在多个环境中使用Docker？"></a>如何在多个环境中使用Docker？</h2><p>可以进行以下更改：  </p>
 <ul>
@@ -388,12 +392,12 @@
         
     <div class="post-nav">
       <div class="post-nav-item">
-    <a href="/2023/01/11/go/%E5%A6%82%E4%BD%95%E5%86%99%E5%87%BA%E4%BC%98%E9%9B%85%E7%9A%84%20Go%20%E8%AF%AD%E8%A8%80%E4%BB%A3%E7%A0%81/" rel="prev" title="go/如何写出优雅的 Go 语言代码">
-      <i class="fa fa-chevron-left"></i> go/如何写出优雅的 Go 语言代码
+    <a href="/2023/01/11/http/Http%E6%9D%83%E5%A8%81%E6%8C%87%E5%8D%97/" rel="prev" title="Http权威指南">
+      <i class="fa fa-chevron-left"></i> Http权威指南
     </a></div>
       <div class="post-nav-item">
-    <a href="/2023/01/11/http/%E5%A6%82%E4%BD%95%E5%88%A9%E7%94%A8nginx%E8%BF%9B%E8%A1%8C%E8%87%AA%E5%8A%A8%E5%8C%96%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1/" rel="next" title="http/如何利用nginx进行自动化负载均衡">
-      http/如何利用nginx进行自动化负载均衡 <i class="fa fa-chevron-right"></i>
+    <a href="/2023/01/11/algo/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/" rel="next" title="设计模式">
+      设计模式 <i class="fa fa-chevron-right"></i>
     </a></div>
     </div>
       </footer>
@@ -454,7 +458,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#什么是虚拟化？"><span class="nav-number">1.</span> <span class="nav-text">什么是虚拟化？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#docker与虚拟机有何不同？"><span class="nav-number">2.</span> <span class="nav-text">docker与虚拟机有何不同？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#CI（持续集成）服务器的功能是什么？"><span class="nav-number">3.</span> <span class="nav-text">CI（持续集成）服务器的功能是什么？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#容器内部机制？"><span class="nav-number">4.</span> <span class="nav-text">容器内部机制？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#什么是docker？"><span class="nav-number">5.</span> <span class="nav-text">什么是docker？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#什么是docker镜像？"><span class="nav-number">6.</span> <span class="nav-text">什么是docker镜像？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#什么是docker容器？"><span class="nav-number">7.</span> <span class="nav-text">什么是docker容器？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#docker容器常见的几种状态？"><span class="nav-number">8.</span> <span class="nav-text">docker容器常见的几种状态？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#docker的基本使用流程？"><span class="nav-number">9.</span> <span class="nav-text">docker的基本使用流程？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Dockerfile中常见的指令？"><span class="nav-number">10.</span> <span class="nav-text">Dockerfile中常见的指令？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#dockerfile的ONBUILD指令？"><span class="nav-number">11.</span> <span class="nav-text">dockerfile的ONBUILD指令？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#什么是docker-swarm？"><span class="nav-number">12.</span> <span class="nav-text">什么是docker swarm？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#如何在多个环境中使用Docker？"><span class="nav-number">13.</span> <span class="nav-text">如何在多个环境中使用Docker？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#docker默认的网络类型？"><span class="nav-number">14.</span> <span class="nav-text">docker默认的网络类型？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#docker容器的跨主机网络通信？"><span class="nav-number">15.</span> <span class="nav-text">docker容器的跨主机网络通信？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#docker数据持久化"><span class="nav-number">16.</span> <span class="nav-text">docker数据持久化</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Bind-mount（绑定挂载）："><span class="nav-number">16.1.</span> <span class="nav-text">Bind mount（绑定挂载）：</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#特点："><span class="nav-number">16.1.1.</span> <span class="nav-text">特点：</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#注意："><span class="nav-number">16.1.2.</span> <span class="nav-text">注意：</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Manager-Volume（数据卷管理员）"><span class="nav-number">16.2.</span> <span class="nav-text">Manager Volume（数据卷管理员）</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#特点：-1"><span class="nav-number">16.2.1.</span> <span class="nav-text">特点：</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Volume-containe（容器与容器的数据共享）"><span class="nav-number">16.3.</span> <span class="nav-text">Volume containe（容器与容器的数据共享）</span></a></li></ol></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BB%80%E4%B9%88%E6%98%AF%E8%99%9A%E6%8B%9F%E5%8C%96%EF%BC%9F"><span class="nav-number">1.</span> <span class="nav-text">什么是虚拟化？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#docker%E4%B8%8E%E8%99%9A%E6%8B%9F%E6%9C%BA%E6%9C%89%E4%BD%95%E4%B8%8D%E5%90%8C%EF%BC%9F"><span class="nav-number">2.</span> <span class="nav-text">docker与虚拟机有何不同？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#CI%EF%BC%88%E6%8C%81%E7%BB%AD%E9%9B%86%E6%88%90%EF%BC%89%E6%9C%8D%E5%8A%A1%E5%99%A8%E7%9A%84%E5%8A%9F%E8%83%BD%E6%98%AF%E4%BB%80%E4%B9%88%EF%BC%9F"><span class="nav-number">3.</span> <span class="nav-text">CI（持续集成）服务器的功能是什么？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%B9%E5%99%A8%E5%86%85%E9%83%A8%E6%9C%BA%E5%88%B6%EF%BC%9F"><span class="nav-number">4.</span> <span class="nav-text">容器内部机制？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BB%80%E4%B9%88%E6%98%AFdocker%EF%BC%9F"><span class="nav-number">5.</span> <span class="nav-text">什么是docker？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BB%80%E4%B9%88%E6%98%AFdocker%E9%95%9C%E5%83%8F%EF%BC%9F"><span class="nav-number">6.</span> <span class="nav-text">什么是docker镜像？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BB%80%E4%B9%88%E6%98%AFdocker%E5%AE%B9%E5%99%A8%EF%BC%9F"><span class="nav-number">7.</span> <span class="nav-text">什么是docker容器？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#docker%E5%AE%B9%E5%99%A8%E5%B8%B8%E8%A7%81%E7%9A%84%E5%87%A0%E7%A7%8D%E7%8A%B6%E6%80%81%EF%BC%9F"><span class="nav-number">8.</span> <span class="nav-text">docker容器常见的几种状态？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#docker%E7%9A%84%E5%9F%BA%E6%9C%AC%E4%BD%BF%E7%94%A8%E6%B5%81%E7%A8%8B%EF%BC%9F"><span class="nav-number">9.</span> <span class="nav-text">docker的基本使用流程？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Dockerfile%E4%B8%AD%E5%B8%B8%E8%A7%81%E7%9A%84%E6%8C%87%E4%BB%A4%EF%BC%9F"><span class="nav-number">10.</span> <span class="nav-text">Dockerfile中常见的指令？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#dockerfile%E7%9A%84ONBUILD%E6%8C%87%E4%BB%A4%EF%BC%9F"><span class="nav-number">11.</span> <span class="nav-text">dockerfile的ONBUILD指令？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#docker%E9%95%9C%E5%83%8F%E5%92%8C%E5%B1%82%E6%9C%89%E4%BB%80%E4%B9%88%E5%8C%BA%E5%88%AB%EF%BC%9F"><span class="nav-number">12.</span> <span class="nav-text">docker镜像和层有什么区别？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BB%80%E4%B9%88%E6%98%AFdocker-swarm%EF%BC%9F"><span class="nav-number">13.</span> <span class="nav-text">什么是docker swarm？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%A6%82%E4%BD%95%E5%9C%A8%E5%A4%9A%E4%B8%AA%E7%8E%AF%E5%A2%83%E4%B8%AD%E4%BD%BF%E7%94%A8Docker%EF%BC%9F"><span class="nav-number">14.</span> <span class="nav-text">如何在多个环境中使用Docker？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#docker%E9%BB%98%E8%AE%A4%E7%9A%84%E7%BD%91%E7%BB%9C%E7%B1%BB%E5%9E%8B%EF%BC%9F"><span class="nav-number">15.</span> <span class="nav-text">docker默认的网络类型？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#docker%E5%AE%B9%E5%99%A8%E7%9A%84%E8%B7%A8%E4%B8%BB%E6%9C%BA%E7%BD%91%E7%BB%9C%E9%80%9A%E4%BF%A1%EF%BC%9F"><span class="nav-number">16.</span> <span class="nav-text">docker容器的跨主机网络通信？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#docker%E6%95%B0%E6%8D%AE%E6%8C%81%E4%B9%85%E5%8C%96"><span class="nav-number">17.</span> <span class="nav-text">docker数据持久化</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Bind-mount%EF%BC%88%E7%BB%91%E5%AE%9A%E6%8C%82%E8%BD%BD%EF%BC%89%EF%BC%9A"><span class="nav-number">17.1.</span> <span class="nav-text">Bind mount（绑定挂载）：</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%89%B9%E7%82%B9%EF%BC%9A"><span class="nav-number">17.1.1.</span> <span class="nav-text">特点：</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%B3%A8%E6%84%8F%EF%BC%9A"><span class="nav-number">17.1.2.</span> <span class="nav-text">注意：</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Manager-Volume%EF%BC%88%E6%95%B0%E6%8D%AE%E5%8D%B7%E7%AE%A1%E7%90%86%E5%91%98%EF%BC%89"><span class="nav-number">17.2.</span> <span class="nav-text">Manager Volume（数据卷管理员）</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%89%B9%E7%82%B9%EF%BC%9A-1"><span class="nav-number">17.2.1.</span> <span class="nav-text">特点：</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Volume-containe%EF%BC%88%E5%AE%B9%E5%99%A8%E4%B8%8E%E5%AE%B9%E5%99%A8%E7%9A%84%E6%95%B0%E6%8D%AE%E5%85%B1%E4%BA%AB%EF%BC%89"><span class="nav-number">17.3.</span> <span class="nav-text">Volume containe（容器与容器的数据共享）</span></a></li></ol></li></ol></div>
       </div>
       <!--/noindex-->
 
@@ -470,14 +474,14 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">101</span>
+          <span class="site-state-item-count">96</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
             <a href="/categories/">
           
-        <span class="site-state-item-count">18</span>
+        <span class="site-state-item-count">19</span>
         <span class="site-state-item-name">分类</span></a>
       </div>
       <div class="site-state-item site-state-tags">
@@ -514,7 +518,7 @@
   </span>
   <span class="author" itemprop="copyrightHolder">Chen Yu</span>
 </div>
-  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v4.2.0
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v6.3.0
   </div>
   <span class="post-meta-divider">|</span>
   <div class="theme-info">主题 – <a href="https://theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a> v7.7.0

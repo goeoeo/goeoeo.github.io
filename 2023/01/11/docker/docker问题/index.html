@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
 <meta name="theme-color" content="#222">
-<meta name="generator" content="Hexo 4.2.0">
+<meta name="generator" content="Hexo 6.3.0">
   <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
   <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
   <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
@@ -47,16 +47,17 @@
   };
 </script>
 
-  <meta name="description" content="docker本地空间足够，但容器日志提示空间不足情况描述项目中，es报空间不足，es容器 已使用30G左右的空间默认情况下docker 对每个容器使用空间有限制   1Elasticsearch：high disk watermark [90%] exceeded  处理修改配置vim &#x2F;etc&#x2F;docker&#x2F;daemon.json    123&amp;#123;    &quot;storage-op">
+  <meta name="description" content="docker本地空间足够，但容器日志提示空间不足情况描述项目中，es报空间不足，es容器 已使用30G左右的空间默认情况下docker 对每个容器使用空间有限制   1Elasticsearch：high disk watermark [90%] exceeded">
 <meta property="og:type" content="article">
-<meta property="og:title" content="docker&#x2F;docker问题">
+<meta property="og:title" content="docker问题">
 <meta property="og:url" content="https://phpdi.github.io/2023/01/11/docker/docker%E9%97%AE%E9%A2%98/index.html">
 <meta property="og:site_name" content="goeoeo">
-<meta property="og:description" content="docker本地空间足够，但容器日志提示空间不足情况描述项目中，es报空间不足，es容器 已使用30G左右的空间默认情况下docker 对每个容器使用空间有限制   1Elasticsearch：high disk watermark [90%] exceeded  处理修改配置vim &#x2F;etc&#x2F;docker&#x2F;daemon.json    123&amp;#123;    &quot;storage-op">
+<meta property="og:description" content="docker本地空间足够，但容器日志提示空间不足情况描述项目中，es报空间不足，es容器 已使用30G左右的空间默认情况下docker 对每个容器使用空间有限制   1Elasticsearch：high disk watermark [90%] exceeded">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2023-01-11T14:59:23.565Z">
-<meta property="article:modified_time" content="2023-01-11T14:59:23.565Z">
+<meta property="article:modified_time" content="2023-09-14T02:34:13.387Z">
 <meta property="article:author" content="Chen Yu">
+<meta property="article:tag" content="docker-install-ware">
 <meta name="twitter:card" content="summary">
 
 <link rel="canonical" href="https://phpdi.github.io/2023/01/11/docker/docker%E9%97%AE%E9%A2%98/">
@@ -71,7 +72,7 @@
   };
 </script>
 
-  <title>docker/docker问题 | goeoeo</title>
+  <title>docker问题 | goeoeo</title>
   
 
 
@@ -225,7 +226,7 @@
     </span>
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
-          docker/docker问题
+          docker问题
         </h2>
 
         <div class="post-meta">
@@ -236,6 +237,24 @@
               <span class="post-meta-item-text">发表于</span>
 
               <time title="创建时间：2023-01-11 22:59:23" itemprop="dateCreated datePublished" datetime="2023-01-11T22:59:23+08:00">2023-01-11</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2023-09-14 10:34:13" itemprop="dateModified" datetime="2023-09-14T10:34:13+08:00">2023-09-14</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/docker/" itemprop="url" rel="index">
+                    <span itemprop="name">docker</span>
+                  </a>
+                </span>
             </span>
 
           
@@ -250,12 +269,13 @@
 
       
         <h1 id="docker本地空间足够，但容器日志提示空间不足"><a href="#docker本地空间足够，但容器日志提示空间不足" class="headerlink" title="docker本地空间足够，但容器日志提示空间不足"></a>docker本地空间足够，但容器日志提示空间不足</h1><h2 id="情况描述"><a href="#情况描述" class="headerlink" title="情况描述"></a>情况描述</h2><p>项目中，es报空间不足，es容器 已使用30G左右的空间<br>默认情况下docker 对每个容器使用空间有限制  </p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Elasticsearch：high disk watermark [90%] exceeded</span><br></pre></td></tr></table></figure>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Elasticsearch：high disk watermark [90%] exceeded</span><br></pre></td></tr></table></figure>
+<span id="more"></span>
 
-<h2 id="处理"><a href="#处理" class="headerlink" title="处理"></a>处理</h2><p>修改配置<br>vim /etc/docker/daemon.json   </p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    &quot;storage-opt&quot;: [ &quot;dm.basesize&#x3D;80G&quot; ]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="处理"><a href="#处理" class="headerlink" title="处理"></a>处理</h2><p>修改配置<br>vim &#x2F;etc&#x2F;docker&#x2F;daemon.json   </p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    &quot;storage-opt&quot;: [ &quot;dm.basesize=80G&quot; ]</span><br><span class="line">&#125; </span><br></pre></td></tr></table></figure>
 <p>重启 </p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo systemctl daemon-reload &amp;&amp;  sudo systemctl restart docker</span><br></pre></td></tr></table></figure>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo systemctl daemon-reload &amp;&amp;  sudo systemctl restart docker</span><br></pre></td></tr></table></figure>
 
 <h1 id="docker-清理磁盘"><a href="#docker-清理磁盘" class="headerlink" title="docker 清理磁盘"></a>docker 清理磁盘</h1><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker system df -v # -v 可以显示详细信息</span><br></pre></td></tr></table></figure>
 <p>该命令列出了 docker 使用磁盘的 4 种类型：  </p>
@@ -265,10 +285,10 @@
 <li>Local Volumes: 本地数据卷的空间</li>
 <li>Build Cache: 镜像构建过程中，产生的缓存数据</li>
 </ul>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">docker system prune -f</span><br><span class="line"><span class="meta">#</span><span class="bash"><span class="comment"># 可以配置定时任务每天凌晨1点清理</span></span></span><br><span class="line">0 0 1 * * docker system prune -f</span><br></pre></td></tr></table></figure>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">docker system prune -f</span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash"><span class="comment"># 可以配置定时任务每天凌晨1点清理</span></span></span><br><span class="line">0 0 1 * * docker system prune -f</span><br></pre></td></tr></table></figure>
 <p>该命令会删除暂停中的容器、没有关联容器的镜像、没有 tag 的镜像、没有被使用的数据卷，简单而言，没有在 run 或被使用的东西都被清理掉，<br>注意，如果你有一些暂时暂停的容器，这个命令也会将其清理掉。</p>
 <h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><ul>
-<li><a href="https://www.bilibili.com/read/cv16472262" target="_blank" rel="noopener">收藏！24 个 Docker 疑难杂症处理技巧</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.bilibili.com/read/cv16472262">收藏！24 个 Docker 疑难杂症处理技巧</a></li>
 </ul>
 
     </div>
@@ -278,6 +298,9 @@
     
 
       <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/docker-install-ware/" rel="tag"># docker-install-ware</a>
+          </div>
 
         
 
@@ -285,12 +308,12 @@
         
     <div class="post-nav">
       <div class="post-nav-item">
-    <a href="/2023/01/11/docker/etcd/" rel="prev" title="docker/etcd">
-      <i class="fa fa-chevron-left"></i> docker/etcd
+    <a href="/2023/01/11/docker/elasticsearch/" rel="prev" title="elasticsearch">
+      <i class="fa fa-chevron-left"></i> elasticsearch
     </a></div>
       <div class="post-nav-item">
-    <a href="/2023/01/11/docker/elasticsearch/" rel="next" title="docker/elasticsearch">
-      docker/elasticsearch <i class="fa fa-chevron-right"></i>
+    <a href="/2023/01/11/docker/docker-machine/" rel="next" title="docker-machine">
+      docker-machine <i class="fa fa-chevron-right"></i>
     </a></div>
     </div>
       </footer>
@@ -351,7 +374,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#docker本地空间足够，但容器日志提示空间不足"><span class="nav-number">1.</span> <span class="nav-text">docker本地空间足够，但容器日志提示空间不足</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#情况描述"><span class="nav-number">1.1.</span> <span class="nav-text">情况描述</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#处理"><span class="nav-number">1.2.</span> <span class="nav-text">处理</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#docker-清理磁盘"><span class="nav-number">2.</span> <span class="nav-text">docker 清理磁盘</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#参考"><span class="nav-number">3.</span> <span class="nav-text">参考</span></a></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#docker%E6%9C%AC%E5%9C%B0%E7%A9%BA%E9%97%B4%E8%B6%B3%E5%A4%9F%EF%BC%8C%E4%BD%86%E5%AE%B9%E5%99%A8%E6%97%A5%E5%BF%97%E6%8F%90%E7%A4%BA%E7%A9%BA%E9%97%B4%E4%B8%8D%E8%B6%B3"><span class="nav-number">1.</span> <span class="nav-text">docker本地空间足够，但容器日志提示空间不足</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%83%85%E5%86%B5%E6%8F%8F%E8%BF%B0"><span class="nav-number">1.1.</span> <span class="nav-text">情况描述</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%A4%84%E7%90%86"><span class="nav-number">1.2.</span> <span class="nav-text">处理</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#docker-%E6%B8%85%E7%90%86%E7%A3%81%E7%9B%98"><span class="nav-number">2.</span> <span class="nav-text">docker 清理磁盘</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%8F%82%E8%80%83"><span class="nav-number">3.</span> <span class="nav-text">参考</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 
@@ -367,14 +390,14 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">101</span>
+          <span class="site-state-item-count">96</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
             <a href="/categories/">
           
-        <span class="site-state-item-count">18</span>
+        <span class="site-state-item-count">19</span>
         <span class="site-state-item-name">分类</span></a>
       </div>
       <div class="site-state-item site-state-tags">
@@ -411,7 +434,7 @@
   </span>
   <span class="author" itemprop="copyrightHolder">Chen Yu</span>
 </div>
-  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v4.2.0
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v6.3.0
   </div>
   <span class="post-meta-divider">|</span>
   <div class="theme-info">主题 – <a href="https://theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a> v7.7.0

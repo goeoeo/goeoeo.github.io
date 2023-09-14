@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
 <meta name="theme-color" content="#222">
-<meta name="generator" content="Hexo 4.2.0">
+<meta name="generator" content="Hexo 6.3.0">
   <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
   <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
   <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
@@ -49,13 +49,13 @@
 
   <meta name="description" content="docker安装docker-desktop 太消耗资源且无法商用，这里使用 colima +dockercli 的方案     安装docker client    1brew install docker docker-compose 安装colima (很漫长)   1brew install colima  将docker-compose 作为docker的插件   12$ mkdir -">
 <meta property="og:type" content="article">
-<meta property="og:title" content="linux&#x2F;mac日常使用">
+<meta property="og:title" content="mac日常使用">
 <meta property="og:url" content="https://phpdi.github.io/2023/01/12/linux/mac%E6%97%A5%E5%B8%B8%E4%BD%BF%E7%94%A8/index.html">
 <meta property="og:site_name" content="goeoeo">
 <meta property="og:description" content="docker安装docker-desktop 太消耗资源且无法商用，这里使用 colima +dockercli 的方案     安装docker client    1brew install docker docker-compose 安装colima (很漫长)   1brew install colima  将docker-compose 作为docker的插件   12$ mkdir -">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2023-01-12T07:22:58.803Z">
-<meta property="article:modified_time" content="2023-02-23T09:35:26.773Z">
+<meta property="article:modified_time" content="2023-09-14T03:09:09.677Z">
 <meta property="article:author" content="Chen Yu">
 <meta property="article:tag" content="mac">
 <meta name="twitter:card" content="summary">
@@ -72,7 +72,7 @@
   };
 </script>
 
-  <title>linux/mac日常使用 | goeoeo</title>
+  <title>mac日常使用 | goeoeo</title>
   
 
 
@@ -226,7 +226,7 @@
     </span>
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
-          linux/mac日常使用
+          mac日常使用
         </h2>
 
         <div class="post-meta">
@@ -243,7 +243,7 @@
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2023-02-23 17:35:26" itemprop="dateModified" datetime="2023-02-23T17:35:26+08:00">2023-02-23</time>
+                <time title="修改时间：2023-09-14 11:09:09" itemprop="dateModified" datetime="2023-09-14T11:09:09+08:00">2023-09-14</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -276,33 +276,28 @@
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">brew install colima</span><br></pre></td></tr></table></figure>
 </li>
 <li><p>将docker-compose 作为docker的插件  </p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> mkdir -p ~/.docker/cli-plugins</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> ln -sfn $(brew --prefix)/opt/docker-compose/bin/docker-compose ~/.docker/cli-plugins/docker-compose</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_">$ </span><span class="language-bash"><span class="built_in">mkdir</span> -p ~/.docker/cli-plugins</span></span><br><span class="line"><span class="meta prompt_">$ </span><span class="language-bash"><span class="built_in">ln</span> -sfn $(brew --prefix)/opt/docker-compose/bin/docker-compose ~/.docker/cli-plugins/docker-compose</span></span><br></pre></td></tr></table></figure>
 <blockquote>
 <p>docker info 可以看到 不再报找不到插件的错误</p>
 </blockquote>
 </li>
 <li><p>启动colima 同时配置镜像</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 找到docker 配置  <span class="string">"registry-mirrors"</span>: [<span class="string">"https://9lrfffi7.mirror.aliyuncs.com"</span>]</span></span><br><span class="line">colima start -e</span><br></pre></td></tr></table></figure>
-
-
-
-
-</li>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_"># </span><span class="language-bash">找到docker 配置  <span class="string">&quot;registry-mirrors&quot;</span>: [<span class="string">&quot;https://9lrfffi7.mirror.aliyuncs.com&quot;</span>]</span></span><br><span class="line">colima start -e </span><br></pre></td></tr></table></figure></li>
 </ol>
 <h1 id="mac宿主机和docker容器网络不通-测试无效"><a href="#mac宿主机和docker容器网络不通-测试无效" class="headerlink" title="mac宿主机和docker容器网络不通 (测试无效)"></a>mac宿主机和docker容器网络不通 (测试无效)</h1><p>安装docker-connector服务  </p>
 <ol>
 <li><p>使用brew安装docker-connector  </p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">brew install wenjunxiao/brew/docker-connector</span><br></pre></td></tr></table></figure></li>
 <li><p>执行下面命令将docker所有 bridge 网络都添加到docker-connector路由</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker network ls --filter driver=bridge --format "&#123;&#123;.ID&#125;&#125;" | xargs docker network inspect --format "route &#123;&#123;range .IPAM.Config&#125;&#125;&#123;&#123;.Subnet&#125;&#125;&#123;&#123;end&#125;&#125;" &gt;&gt; "$(brew --prefix)/etc/docker-connector.conf"</span><br></pre></td></tr></table></figure>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker network ls --filter driver=bridge --format &quot;&#123;&#123;.ID&#125;&#125;&quot; | xargs docker network inspect --format &quot;route &#123;&#123;range .IPAM.Config&#125;&#125;&#123;&#123;.Subnet&#125;&#125;&#123;&#123;end&#125;&#125;&quot; &gt;&gt; &quot;$(brew --prefix)/etc/docker-connector.conf&quot;</span><br></pre></td></tr></table></figure>
 <blockquote>
-<p>/usr/local/etc/docker-connector.conf是安装docker-connector后生成的配置文件</p>
+<p>&#x2F;usr&#x2F;local&#x2F;etc&#x2F;docker-connector.conf是安装docker-connector后生成的配置文件</p>
 </blockquote>
 </li>
 <li><p>使用sudo启动docker-connector服务  </p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo brew services start docker-connector</span><br></pre></td></tr></table></figure>
 </li>
-<li><p>使用下面命令创建wenjunxiao/mac-docker-connector容器，要求使用 host 网络并且允许 NET_ADMIN</p>
+<li><p>使用下面命令创建wenjunxiao&#x2F;mac-docker-connector容器，要求使用 host 网络并且允许 NET_ADMIN</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker run -it -d --restart always --net host --cap-add NET_ADMIN --name connector wenjunxiao/mac-docker-connector</span><br></pre></td></tr></table></figure>
 <p>注意服务启动后宿主机和容器网络还是没有生效 执行下面这个，可以不以守护进程的模式启动</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo docker-connector -config /opt/homebrew/etc/docker-connector.conf</span><br></pre></td></tr></table></figure>
@@ -311,33 +306,33 @@
 </ol>
 <h1 id="解决brew-install-缓慢问题"><a href="#解决brew-install-缓慢问题" class="headerlink" title="解决brew install 缓慢问题"></a>解决brew install 缓慢问题</h1><h2 id="首次安装"><a href="#首次安装" class="headerlink" title="首次安装"></a>首次安装</h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">curl https://raw.githubusercontent.com/Homebrew/install/master/install.sh  &gt; install-brew.sh</span><br></pre></td></tr></table></figure>
 <p>然后,在下载的文件中, 修改BREW_REPO为:  </p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">BREW_REPO="https://mirrors.ustc.edu.cn/brew.git"</span><br></pre></td></tr></table></figure>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">BREW_REPO=&quot;https://mirrors.ustc.edu.cn/brew.git&quot;</span><br></pre></td></tr></table></figure>
 
 <p>最后, 运行:  </p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">HOMEBREW_CORE_GIT_REMOTE=https://mirrors.ustc.edu.cn/homebrew-core.git bash install-brew.sh</span><br></pre></td></tr></table></figure>
 
-<h2 id="已经安装"><a href="#已经安装" class="headerlink" title="已经安装"></a>已经安装</h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">cd "$(brew --repo)"</span><br><span class="line">git remote set-url origin https://mirrors.ustc.edu.cn/brew.git</span><br><span class="line"></span><br><span class="line">echo 'export HOMEBREW_BOTTLE_DOMAIN=https://mirrors.ustc.edu.cn/homebrew-bottles' &gt;&gt; ~/.bash_profile</span><br><span class="line">source ~/.bash_profile</span><br><span class="line"></span><br><span class="line">cd "$(brew --repo)/Library/Taps/homebrew/homebrew-core"</span><br><span class="line">git remote set-url origin https://mirrors.ustc.edu.cn/homebrew-core.git</span><br></pre></td></tr></table></figure>
+<h2 id="已经安装"><a href="#已经安装" class="headerlink" title="已经安装"></a>已经安装</h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">cd &quot;$(brew --repo)&quot;</span><br><span class="line">git remote set-url origin https://mirrors.ustc.edu.cn/brew.git</span><br><span class="line"></span><br><span class="line">echo &#x27;export HOMEBREW_BOTTLE_DOMAIN=https://mirrors.ustc.edu.cn/homebrew-bottles&#x27; &gt;&gt; ~/.bash_profile</span><br><span class="line">source ~/.bash_profile</span><br><span class="line"></span><br><span class="line">cd &quot;$(brew --repo)/Library/Taps/homebrew/homebrew-core&quot;</span><br><span class="line">git remote set-url origin https://mirrors.ustc.edu.cn/homebrew-core.git</span><br></pre></td></tr></table></figure>
 
 
 <h1 id="命令自动补全"><a href="#命令自动补全" class="headerlink" title="命令自动补全"></a>命令自动补全</h1><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git clone https://github.com/zsh-users/zsh-autosuggestions $&#123;ZSH_CUSTOM:-~/.oh-my-zsh/custom&#125;/plugins/zsh-autosuggestions</span><br></pre></td></tr></table></figure>
 <p>vim .zshrc 写入</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">plugins&#x3D;(git zsh-autosuggestions)</span><br></pre></td></tr></table></figure>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">plugins=(git zsh-autosuggestions)</span><br></pre></td></tr></table></figure>
 
 <h2 id="git命令-自动补全"><a href="#git命令-自动补全" class="headerlink" title="git命令 自动补全"></a>git命令 自动补全</h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">brew install bash-completion</span><br><span class="line">mkdir .zsh_fpath</span><br><span class="line">curl https://raw.githubusercontent.com/git/git/master/contrib/completion/git-completion.zsh \</span><br><span class="line">-o ~/.zsh_fpath/.git-completion.zsh</span><br></pre></td></tr></table></figure>
 <p>vim .zshrc 内容如下  </p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">zstyle &#39;:completion:*:*:git:*&#39; script ~&#x2F;.zsh_fpath&#x2F;.git-completion.zsh</span><br><span class="line">fpath&#x3D;(~&#x2F;.zsh_fpath $fpath)</span><br><span class="line">autoload -Uz compinit &amp;&amp; compinit</span><br></pre></td></tr></table></figure>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">zstyle &#x27;:completion:*:*:git:*&#x27; script ~/.zsh_fpath/.git-completion.zsh</span><br><span class="line">fpath=(~/.zsh_fpath $fpath)</span><br><span class="line">autoload -Uz compinit &amp;&amp; compinit</span><br></pre></td></tr></table></figure>
 
 
 <h1 id="安装ab压测工具"><a href="#安装ab压测工具" class="headerlink" title="安装ab压测工具"></a>安装ab压测工具</h1><h2 id="先安装三个工具"><a href="#先安装三个工具" class="headerlink" title="先安装三个工具"></a>先安装三个工具</h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">brew install apr</span><br><span class="line">brew install apr-util</span><br><span class="line">brew install prce</span><br></pre></td></tr></table></figure>
 
 <blockquote>
-<p>注意根据输出更新 ~/.zshrc 以及对应环境变量</p>
+<p>注意根据输出更新 ~&#x2F;.zshrc 以及对应环境变量</p>
 </blockquote>
-<h2 id="下载httpd"><a href="#下载httpd" class="headerlink" title="下载httpd"></a>下载httpd</h2><p><a href="https://httpd.apache.org/download.cgi#apache24" target="_blank" rel="noopener">https://httpd.apache.org/download.cgi#apache24</a><br>解压进行 httpd目录   </p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">.&#x2F;configure</span><br><span class="line">make  </span><br><span class="line">sudo make install </span><br><span class="line"></span><br><span class="line"># 测试</span><br><span class="line">ab -v</span><br></pre></td></tr></table></figure>
+<h2 id="下载httpd"><a href="#下载httpd" class="headerlink" title="下载httpd"></a>下载httpd</h2><p><a target="_blank" rel="noopener" href="https://httpd.apache.org/download.cgi#apache24">https://httpd.apache.org/download.cgi#apache24</a><br>解压进行 httpd目录   </p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">./configure</span><br><span class="line">make  </span><br><span class="line">sudo make install </span><br><span class="line"></span><br><span class="line"># 测试</span><br><span class="line">ab -v</span><br></pre></td></tr></table></figure>
 
 <h1 id="mac-添加-ssh-agent"><a href="#mac-添加-ssh-agent" class="headerlink" title="mac 添加 ssh-agent"></a>mac 添加 ssh-agent</h1><p>现象：当我用golang代码通过sshtunnel 通过跳板机连接数据库的时候，报错 认证失败<br>原因：我本地mac 机器没有添加ssh client<br>解决： </p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">eval &#39;ssh-agent&#39;</span><br><span class="line">ssh-add ~&#x2F;.ssh&#x2F;id_rsa</span><br></pre></td></tr></table></figure>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">eval &#x27;ssh-agent&#x27;</span><br><span class="line">ssh-add ~/.ssh/id_rsa</span><br></pre></td></tr></table></figure>
 
     </div>
 
@@ -356,12 +351,12 @@
         
     <div class="post-nav">
       <div class="post-nav-item">
-    <a href="/2023/01/12/linux/ubuntu%20%E5%AE%89%E8%A3%85%E5%90%84%E7%A7%8D%E8%BD%AF%E4%BB%B6/" rel="prev" title="linux/ubuntu 安装各种软件">
-      <i class="fa fa-chevron-left"></i> linux/ubuntu 安装各种软件
+    <a href="/2023/01/12/linux/ubuntu%20%E5%AE%89%E8%A3%85%E5%90%84%E7%A7%8D%E8%BD%AF%E4%BB%B6/" rel="prev" title="ubuntu 安装各种软件">
+      <i class="fa fa-chevron-left"></i> ubuntu 安装各种软件
     </a></div>
       <div class="post-nav-item">
-    <a href="/2023/05/17/db/MySQL%E7%B4%A2%E5%BC%9515%E9%97%AE/" rel="next" title="db/MySQL索引15问">
-      db/MySQL索引15问 <i class="fa fa-chevron-right"></i>
+    <a href="/2023/05/17/db/MySQL%E7%B4%A2%E5%BC%9515%E9%97%AE/" rel="next" title="MySQL索引15问">
+      MySQL索引15问 <i class="fa fa-chevron-right"></i>
     </a></div>
     </div>
       </footer>
@@ -422,7 +417,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#docker安装"><span class="nav-number">1.</span> <span class="nav-text">docker安装</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#mac宿主机和docker容器网络不通-测试无效"><span class="nav-number">2.</span> <span class="nav-text">mac宿主机和docker容器网络不通 (测试无效)</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#解决brew-install-缓慢问题"><span class="nav-number">3.</span> <span class="nav-text">解决brew install 缓慢问题</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#首次安装"><span class="nav-number">3.1.</span> <span class="nav-text">首次安装</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#已经安装"><span class="nav-number">3.2.</span> <span class="nav-text">已经安装</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#命令自动补全"><span class="nav-number">4.</span> <span class="nav-text">命令自动补全</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#git命令-自动补全"><span class="nav-number">4.1.</span> <span class="nav-text">git命令 自动补全</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#安装ab压测工具"><span class="nav-number">5.</span> <span class="nav-text">安装ab压测工具</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#先安装三个工具"><span class="nav-number">5.1.</span> <span class="nav-text">先安装三个工具</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#下载httpd"><span class="nav-number">5.2.</span> <span class="nav-text">下载httpd</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#mac-添加-ssh-agent"><span class="nav-number">6.</span> <span class="nav-text">mac 添加 ssh-agent</span></a></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#docker%E5%AE%89%E8%A3%85"><span class="nav-number">1.</span> <span class="nav-text">docker安装</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#mac%E5%AE%BF%E4%B8%BB%E6%9C%BA%E5%92%8Cdocker%E5%AE%B9%E5%99%A8%E7%BD%91%E7%BB%9C%E4%B8%8D%E9%80%9A-%E6%B5%8B%E8%AF%95%E6%97%A0%E6%95%88"><span class="nav-number">2.</span> <span class="nav-text">mac宿主机和docker容器网络不通 (测试无效)</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E8%A7%A3%E5%86%B3brew-install-%E7%BC%93%E6%85%A2%E9%97%AE%E9%A2%98"><span class="nav-number">3.</span> <span class="nav-text">解决brew install 缓慢问题</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%A6%96%E6%AC%A1%E5%AE%89%E8%A3%85"><span class="nav-number">3.1.</span> <span class="nav-text">首次安装</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%B7%B2%E7%BB%8F%E5%AE%89%E8%A3%85"><span class="nav-number">3.2.</span> <span class="nav-text">已经安装</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%91%BD%E4%BB%A4%E8%87%AA%E5%8A%A8%E8%A1%A5%E5%85%A8"><span class="nav-number">4.</span> <span class="nav-text">命令自动补全</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#git%E5%91%BD%E4%BB%A4-%E8%87%AA%E5%8A%A8%E8%A1%A5%E5%85%A8"><span class="nav-number">4.1.</span> <span class="nav-text">git命令 自动补全</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%AE%89%E8%A3%85ab%E5%8E%8B%E6%B5%8B%E5%B7%A5%E5%85%B7"><span class="nav-number">5.</span> <span class="nav-text">安装ab压测工具</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%85%88%E5%AE%89%E8%A3%85%E4%B8%89%E4%B8%AA%E5%B7%A5%E5%85%B7"><span class="nav-number">5.1.</span> <span class="nav-text">先安装三个工具</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%8B%E8%BD%BDhttpd"><span class="nav-number">5.2.</span> <span class="nav-text">下载httpd</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#mac-%E6%B7%BB%E5%8A%A0-ssh-agent"><span class="nav-number">6.</span> <span class="nav-text">mac 添加 ssh-agent</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 
@@ -438,14 +433,14 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">101</span>
+          <span class="site-state-item-count">96</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
             <a href="/categories/">
           
-        <span class="site-state-item-count">18</span>
+        <span class="site-state-item-count">19</span>
         <span class="site-state-item-name">分类</span></a>
       </div>
       <div class="site-state-item site-state-tags">
@@ -482,7 +477,7 @@
   </span>
   <span class="author" itemprop="copyrightHolder">Chen Yu</span>
 </div>
-  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v4.2.0
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v6.3.0
   </div>
   <span class="post-meta-divider">|</span>
   <div class="theme-info">主题 – <a href="https://theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a> v7.7.0

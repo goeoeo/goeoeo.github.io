@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
 <meta name="theme-color" content="#222">
-<meta name="generator" content="Hexo 4.2.0">
+<meta name="generator" content="Hexo 6.3.0">
   <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
   <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
   <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
@@ -49,13 +49,13 @@
 
   <meta name="description" content="领域驱动设计代码实现">
 <meta property="og:type" content="article">
-<meta property="og:title" content="micro&#x2F;领域驱动设计代码实践">
+<meta property="og:title" content="领域驱动设计代码实践">
 <meta property="og:url" content="https://phpdi.github.io/2023/01/11/micro/%E9%A2%86%E5%9F%9F%E9%A9%B1%E5%8A%A8%E8%AE%BE%E8%AE%A1%E4%BB%A3%E7%A0%81%E5%AE%9E%E8%B7%B5/index.html">
 <meta property="og:site_name" content="goeoeo">
 <meta property="og:description" content="领域驱动设计代码实现">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2023-01-11T14:59:23.616Z">
-<meta property="article:modified_time" content="2023-01-11T14:59:23.616Z">
+<meta property="article:modified_time" content="2023-09-14T03:13:34.900Z">
 <meta property="article:author" content="Chen Yu">
 <meta property="article:tag" content="DDD">
 <meta name="twitter:card" content="summary">
@@ -72,7 +72,7 @@
   };
 </script>
 
-  <title>micro/领域驱动设计代码实践 | goeoeo</title>
+  <title>领域驱动设计代码实践 | goeoeo</title>
   
 
 
@@ -226,7 +226,7 @@
     </span>
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
-          micro/领域驱动设计代码实践
+          领域驱动设计代码实践
         </h2>
 
         <div class="post-meta">
@@ -238,6 +238,13 @@
 
               <time title="创建时间：2023-01-11 22:59:23" itemprop="dateCreated datePublished" datetime="2023-01-11T22:59:23+08:00">2023-01-11</time>
             </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2023-09-14 11:13:34" itemprop="dateModified" datetime="2023-09-14T11:13:34+08:00">2023-09-14</time>
+              </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
                 <i class="fa fa-folder-o"></i>
@@ -262,7 +269,7 @@
 
       
         <p>领域驱动设计代码实现</p>
-<a id="more"></a>
+<span id="more"></span>
 
 
 <h1 id="DDD-基础概念"><a href="#DDD-基础概念" class="headerlink" title="DDD 基础概念"></a>DDD 基础概念</h1><ul>
@@ -306,7 +313,7 @@
 <h3 id="值对象-1"><a href="#值对象-1" class="headerlink" title="值对象"></a>值对象</h3><p>是真实世界中那些一成不变的，本质性的事物，这样的领域对象叫值对象  </p>
 <h2 id="充血模型VS贫血模型"><a href="#充血模型VS贫血模型" class="headerlink" title="充血模型VS贫血模型"></a>充血模型VS贫血模型</h2><h4 id="充血模型"><a href="#充血模型" class="headerlink" title="充血模型"></a>充血模型</h4><p>充血模型保持了领域模型的原貌，可以比较直接地映射程序的变更，代码修改起来比较直接  </p>
 <p>保持了对象的封装性，使得领域模型在面临多态、继承等复杂结构时，易于变更。  </p>
-<p>充血模型需要开发人员具有更强的OOA/D能力、分析业务、业务建模与设计能力</p>
+<p>充血模型需要开发人员具有更强的OOA&#x2F;D能力、分析业务、业务建模与设计能力</p>
 <h4 id="需要封装起来按照充血模型设计的业务逻辑"><a href="#需要封装起来按照充血模型设计的业务逻辑" class="headerlink" title="需要封装起来按照充血模型设计的业务逻辑"></a>需要封装起来按照充血模型设计的业务逻辑</h4><ul>
 <li>在领域模型中出现了类似继承、多态的情况</li>
 <li>在软件设计过程中需要将一些类型或者编码进行转换</li>
@@ -333,12 +340,12 @@
         
     <div class="post-nav">
       <div class="post-nav-item">
-    <a href="/2023/01/11/micro/ELK/" rel="prev" title="micro/ELK">
-      <i class="fa fa-chevron-left"></i> micro/ELK
+    <a href="/2023/01/11/micro/%E5%88%86%E5%B8%83%E5%BC%8F%E6%94%B9%E9%80%A0%E7%90%86%E8%AE%BA%E4%B8%8E%E5%AE%9E%E6%88%98/" rel="prev" title="分布式改造理论与实战">
+      <i class="fa fa-chevron-left"></i> 分布式改造理论与实战
     </a></div>
       <div class="post-nav-item">
-    <a href="/2023/01/11/micro/%E5%BB%B6%E8%BF%9F%E9%98%9F%E5%88%97/" rel="next" title="micro/延迟队列">
-      micro/延迟队列 <i class="fa fa-chevron-right"></i>
+    <a href="/2023/01/11/micro/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E6%89%8B%E8%AE%B0/" rel="next" title="微服务手记">
+      微服务手记 <i class="fa fa-chevron-right"></i>
     </a></div>
     </div>
       </footer>
@@ -399,7 +406,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#DDD-基础概念"><span class="nav-number">1.</span> <span class="nav-text">DDD 基础概念</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#DDD-四层架构规范"><span class="nav-number">2.</span> <span class="nav-text">DDD 四层架构规范</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#代码实现原则"><span class="nav-number">3.</span> <span class="nav-text">代码实现原则</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#实体"><span class="nav-number">3.1.</span> <span class="nav-text">实体</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#值对象"><span class="nav-number">3.2.</span> <span class="nav-text">值对象</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#软件退化的根源"><span class="nav-number">4.</span> <span class="nav-text">软件退化的根源</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#为什么软件会退化，会随着变更而设计质量下降呢？"><span class="nav-number">4.1.</span> <span class="nav-text">为什么软件会退化，会随着变更而设计质量下降呢？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#开放-封闭原则（OCP）"><span class="nav-number">4.2.</span> <span class="nav-text">开放-封闭原则（OCP）</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#开放原则"><span class="nav-number">4.2.1.</span> <span class="nav-text">开放原则</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#封闭原则"><span class="nav-number">4.2.2.</span> <span class="nav-text">封闭原则</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#单一职责原则"><span class="nav-number">4.3.</span> <span class="nav-text">单一职责原则</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#什么是高质量的代码？"><span class="nav-number">4.3.0.1.</span> <span class="nav-text">什么是高质量的代码？</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#DDD落实到数据库设计的整个过程"><span class="nav-number">4.4.</span> <span class="nav-text">DDD落实到数据库设计的整个过程</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#领域模型如何指导程序设计"><span class="nav-number">4.5.</span> <span class="nav-text">领域模型如何指导程序设计</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#服务（service）"><span class="nav-number">4.5.1.</span> <span class="nav-text">服务（service）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#实体-1"><span class="nav-number">4.5.2.</span> <span class="nav-text">实体</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#值对象-1"><span class="nav-number">4.5.3.</span> <span class="nav-text">值对象</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#充血模型VS贫血模型"><span class="nav-number">4.6.</span> <span class="nav-text">充血模型VS贫血模型</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#充血模型"><span class="nav-number">4.6.0.1.</span> <span class="nav-text">充血模型</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#需要封装起来按照充血模型设计的业务逻辑"><span class="nav-number">4.6.0.2.</span> <span class="nav-text">需要封装起来按照充血模型设计的业务逻辑</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#总结"><span class="nav-number">4.6.1.</span> <span class="nav-text">总结</span></a></li></ol></li></ol></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#DDD-%E5%9F%BA%E7%A1%80%E6%A6%82%E5%BF%B5"><span class="nav-number">1.</span> <span class="nav-text">DDD 基础概念</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#DDD-%E5%9B%9B%E5%B1%82%E6%9E%B6%E6%9E%84%E8%A7%84%E8%8C%83"><span class="nav-number">2.</span> <span class="nav-text">DDD 四层架构规范</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%BB%A3%E7%A0%81%E5%AE%9E%E7%8E%B0%E5%8E%9F%E5%88%99"><span class="nav-number">3.</span> <span class="nav-text">代码实现原则</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%9E%E4%BD%93"><span class="nav-number">3.1.</span> <span class="nav-text">实体</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%80%BC%E5%AF%B9%E8%B1%A1"><span class="nav-number">3.2.</span> <span class="nav-text">值对象</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E8%BD%AF%E4%BB%B6%E9%80%80%E5%8C%96%E7%9A%84%E6%A0%B9%E6%BA%90"><span class="nav-number">4.</span> <span class="nav-text">软件退化的根源</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%BA%E4%BB%80%E4%B9%88%E8%BD%AF%E4%BB%B6%E4%BC%9A%E9%80%80%E5%8C%96%EF%BC%8C%E4%BC%9A%E9%9A%8F%E7%9D%80%E5%8F%98%E6%9B%B4%E8%80%8C%E8%AE%BE%E8%AE%A1%E8%B4%A8%E9%87%8F%E4%B8%8B%E9%99%8D%E5%91%A2%EF%BC%9F"><span class="nav-number">4.1.</span> <span class="nav-text">为什么软件会退化，会随着变更而设计质量下降呢？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%BC%80%E6%94%BE-%E5%B0%81%E9%97%AD%E5%8E%9F%E5%88%99%EF%BC%88OCP%EF%BC%89"><span class="nav-number">4.2.</span> <span class="nav-text">开放-封闭原则（OCP）</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%BC%80%E6%94%BE%E5%8E%9F%E5%88%99"><span class="nav-number">4.2.1.</span> <span class="nav-text">开放原则</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%B0%81%E9%97%AD%E5%8E%9F%E5%88%99"><span class="nav-number">4.2.2.</span> <span class="nav-text">封闭原则</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8D%95%E4%B8%80%E8%81%8C%E8%B4%A3%E5%8E%9F%E5%88%99"><span class="nav-number">4.3.</span> <span class="nav-text">单一职责原则</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%BB%80%E4%B9%88%E6%98%AF%E9%AB%98%E8%B4%A8%E9%87%8F%E7%9A%84%E4%BB%A3%E7%A0%81%EF%BC%9F"><span class="nav-number">4.3.0.1.</span> <span class="nav-text">什么是高质量的代码？</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#DDD%E8%90%BD%E5%AE%9E%E5%88%B0%E6%95%B0%E6%8D%AE%E5%BA%93%E8%AE%BE%E8%AE%A1%E7%9A%84%E6%95%B4%E4%B8%AA%E8%BF%87%E7%A8%8B"><span class="nav-number">4.4.</span> <span class="nav-text">DDD落实到数据库设计的整个过程</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%A2%86%E5%9F%9F%E6%A8%A1%E5%9E%8B%E5%A6%82%E4%BD%95%E6%8C%87%E5%AF%BC%E7%A8%8B%E5%BA%8F%E8%AE%BE%E8%AE%A1"><span class="nav-number">4.5.</span> <span class="nav-text">领域模型如何指导程序设计</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%9C%8D%E5%8A%A1%EF%BC%88service%EF%BC%89"><span class="nav-number">4.5.1.</span> <span class="nav-text">服务（service）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%9E%E4%BD%93-1"><span class="nav-number">4.5.2.</span> <span class="nav-text">实体</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%80%BC%E5%AF%B9%E8%B1%A1-1"><span class="nav-number">4.5.3.</span> <span class="nav-text">值对象</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%85%85%E8%A1%80%E6%A8%A1%E5%9E%8BVS%E8%B4%AB%E8%A1%80%E6%A8%A1%E5%9E%8B"><span class="nav-number">4.6.</span> <span class="nav-text">充血模型VS贫血模型</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%85%85%E8%A1%80%E6%A8%A1%E5%9E%8B"><span class="nav-number">4.6.0.1.</span> <span class="nav-text">充血模型</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%9C%80%E8%A6%81%E5%B0%81%E8%A3%85%E8%B5%B7%E6%9D%A5%E6%8C%89%E7%85%A7%E5%85%85%E8%A1%80%E6%A8%A1%E5%9E%8B%E8%AE%BE%E8%AE%A1%E7%9A%84%E4%B8%9A%E5%8A%A1%E9%80%BB%E8%BE%91"><span class="nav-number">4.6.0.2.</span> <span class="nav-text">需要封装起来按照充血模型设计的业务逻辑</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%80%BB%E7%BB%93"><span class="nav-number">4.6.1.</span> <span class="nav-text">总结</span></a></li></ol></li></ol></li></ol></div>
       </div>
       <!--/noindex-->
 
@@ -415,14 +422,14 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">101</span>
+          <span class="site-state-item-count">96</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
             <a href="/categories/">
           
-        <span class="site-state-item-count">18</span>
+        <span class="site-state-item-count">19</span>
         <span class="site-state-item-name">分类</span></a>
       </div>
       <div class="site-state-item site-state-tags">
@@ -459,7 +466,7 @@
   </span>
   <span class="author" itemprop="copyrightHolder">Chen Yu</span>
 </div>
-  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v4.2.0
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v6.3.0
   </div>
   <span class="post-meta-divider">|</span>
   <div class="theme-info">主题 – <a href="https://theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a> v7.7.0

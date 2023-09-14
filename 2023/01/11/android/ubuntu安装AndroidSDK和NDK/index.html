@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
 <meta name="theme-color" content="#222">
-<meta name="generator" content="Hexo 4.2.0">
+<meta name="generator" content="Hexo 6.3.0">
   <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
   <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
   <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
@@ -47,17 +47,18 @@
   };
 </script>
 
-  <meta name="description" content="安装java参考:https:&#x2F;&#x2F;medium.com&#x2F;@barcelos.ds&#x2F;install-openjdk-11-lts-in-the-ubuntu-20-04-lts-2c06f17c990 下载https:&#x2F;&#x2F;adoptopenjdk.net 123sudo mkdir ~&#x2F;DevToolssudo mkdir ~&#x2F;DevTools&#x2F;JDKsudo tar">
+  <meta name="description" content="安装java参考:https:&#x2F;&#x2F;medium.com&#x2F;@barcelos.ds&#x2F;install-openjdk-11-lts-in-the-ubuntu-20-04-lts-2c06f17c990 下载https:&#x2F;&#x2F;adoptopenjdk.net 123sudo mkdir ~&#x2F;DevToolssudo mkdir ~&#x2F;DevTools&#x2F;JDKsudo tar -zxvf ~&#x2F;下载&#x2F;Open">
 <meta property="og:type" content="article">
-<meta property="og:title" content="android&#x2F;ubuntu安装AndroidSDK和NDK">
+<meta property="og:title" content="ubuntu安装AndroidSDK和NDK">
 <meta property="og:url" content="https://phpdi.github.io/2023/01/11/android/ubuntu%E5%AE%89%E8%A3%85AndroidSDK%E5%92%8CNDK/index.html">
 <meta property="og:site_name" content="goeoeo">
-<meta property="og:description" content="安装java参考:https:&#x2F;&#x2F;medium.com&#x2F;@barcelos.ds&#x2F;install-openjdk-11-lts-in-the-ubuntu-20-04-lts-2c06f17c990 下载https:&#x2F;&#x2F;adoptopenjdk.net 123sudo mkdir ~&#x2F;DevToolssudo mkdir ~&#x2F;DevTools&#x2F;JDKsudo tar">
+<meta property="og:description" content="安装java参考:https:&#x2F;&#x2F;medium.com&#x2F;@barcelos.ds&#x2F;install-openjdk-11-lts-in-the-ubuntu-20-04-lts-2c06f17c990 下载https:&#x2F;&#x2F;adoptopenjdk.net 123sudo mkdir ~&#x2F;DevToolssudo mkdir ~&#x2F;DevTools&#x2F;JDKsudo tar -zxvf ~&#x2F;下载&#x2F;Open">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://phpdi.github.io/2023/01/11/android/ubuntu%E5%AE%89%E8%A3%85AndroidSDK%E5%92%8CNDK/command-tools.png">
 <meta property="article:published_time" content="2023-01-11T14:59:23.561Z">
-<meta property="article:modified_time" content="2023-01-11T14:59:23.561Z">
+<meta property="article:modified_time" content="2023-09-14T02:21:41.470Z">
 <meta property="article:author" content="Chen Yu">
+<meta property="article:tag" content="android">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="https://phpdi.github.io/2023/01/11/android/ubuntu%E5%AE%89%E8%A3%85AndroidSDK%E5%92%8CNDK/command-tools.png">
 
@@ -73,7 +74,7 @@
   };
 </script>
 
-  <title>android/ubuntu安装AndroidSDK和NDK | goeoeo</title>
+  <title>ubuntu安装AndroidSDK和NDK | goeoeo</title>
   
 
 
@@ -227,7 +228,7 @@
     </span>
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
-          android/ubuntu安装AndroidSDK和NDK
+          ubuntu安装AndroidSDK和NDK
         </h2>
 
         <div class="post-meta">
@@ -238,6 +239,24 @@
               <span class="post-meta-item-text">发表于</span>
 
               <time title="创建时间：2023-01-11 22:59:23" itemprop="dateCreated datePublished" datetime="2023-01-11T22:59:23+08:00">2023-01-11</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2023-09-14 10:21:41" itemprop="dateModified" datetime="2023-09-14T10:21:41+08:00">2023-09-14</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/android/" itemprop="url" rel="index">
+                    <span itemprop="name">android</span>
+                  </a>
+                </span>
             </span>
 
           
@@ -251,36 +270,38 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <h1 id="安装java"><a href="#安装java" class="headerlink" title="安装java"></a>安装java</h1><p>参考:<br><a href="https://medium.com/@barcelos.ds/install-openjdk-11-lts-in-the-ubuntu-20-04-lts-2c06f17c990" target="_blank" rel="noopener">https://medium.com/@barcelos.ds/install-openjdk-11-lts-in-the-ubuntu-20-04-lts-2c06f17c990</a></p>
-<h2 id="下载"><a href="#下载" class="headerlink" title="下载"></a>下载</h2><p><a href="https://adoptopenjdk.net" target="_blank" rel="noopener">https://adoptopenjdk.net</a></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">sudo mkdir ~&#x2F;DevTools</span><br><span class="line">sudo mkdir ~&#x2F;DevTools&#x2F;JDK</span><br><span class="line">sudo tar -zxvf ~&#x2F;下载&#x2F;OpenJDK11U-jdk***tar.gz -C ~&#x2F;DevTools&#x2F;JDK&#x2F;</span><br></pre></td></tr></table></figure>
+        <h1 id="安装java"><a href="#安装java" class="headerlink" title="安装java"></a>安装java</h1><p>参考:<br><a target="_blank" rel="noopener" href="https://medium.com/@barcelos.ds/install-openjdk-11-lts-in-the-ubuntu-20-04-lts-2c06f17c990">https://medium.com/@barcelos.ds/install-openjdk-11-lts-in-the-ubuntu-20-04-lts-2c06f17c990</a></p>
+<h2 id="下载"><a href="#下载" class="headerlink" title="下载"></a>下载</h2><p><a target="_blank" rel="noopener" href="https://adoptopenjdk.net/">https://adoptopenjdk.net</a></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">sudo mkdir ~/DevTools</span><br><span class="line">sudo mkdir ~/DevTools/JDK</span><br><span class="line">sudo tar -zxvf ~/下载/OpenJDK11U-jdk***tar.gz -C ~/DevTools/JDK/</span><br></pre></td></tr></table></figure>
 
-<h2 id="设置JAVA-HOME环境变量"><a href="#设置JAVA-HOME环境变量" class="headerlink" title="设置JAVA_HOME环境变量"></a>设置JAVA_HOME环境变量</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">sudo  vim ~&#x2F;.profile</span><br><span class="line"></span><br><span class="line">DEV_TOOLS&#x3D;&quot;&#x2F;home&#x2F;$USER&#x2F;DevTools&quot;</span><br><span class="line">JAVA_HOME&#x3D;&quot;$DEV_TOOLS&#x2F;JDK&#x2F;jdk-11.0.7+10&quot;</span><br><span class="line">export JAVA_HOME</span><br><span class="line">PATH&#x3D;&quot;$JAVA_HOME&#x2F;bin:$PATH&quot;</span><br><span class="line"></span><br><span class="line">source ~&#x2F;.profile</span><br></pre></td></tr></table></figure>
-<h2 id="测试"><a href="#测试" class="headerlink" title="测试"></a>测试</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">#JRE</span><br><span class="line">java --version</span><br><span class="line"></span><br><span class="line">#JDK</span><br><span class="line">javac --version</span><br></pre></td></tr></table></figure>
+<span id="more"></span>
+
+<h2 id="设置JAVA-HOME环境变量"><a href="#设置JAVA-HOME环境变量" class="headerlink" title="设置JAVA_HOME环境变量"></a>设置JAVA_HOME环境变量</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">sudo  vim ~/.profile</span><br><span class="line"></span><br><span class="line">DEV_TOOLS=&quot;/home/$USER/DevTools&quot;</span><br><span class="line">JAVA_HOME=&quot;$DEV_TOOLS/JDK/jdk-11.0.7+10&quot;</span><br><span class="line">export JAVA_HOME</span><br><span class="line">PATH=&quot;$JAVA_HOME/bin:$PATH&quot;</span><br><span class="line"></span><br><span class="line">source ~/.profile</span><br></pre></td></tr></table></figure>
+<h2 id="测试"><a href="#测试" class="headerlink" title="测试"></a>测试</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">#JRE</span><br><span class="line">java --version</span><br><span class="line"></span><br><span class="line">#JDK</span><br><span class="line">javac --version</span><br></pre></td></tr></table></figure>
 
 
-<h1 id="安装Android-SDK"><a href="#安装Android-SDK" class="headerlink" title="安装Android SDK"></a>安装Android SDK</h1><p>参考:<br><a href="https://medium.com/@barcelos.ds/install-android-sdk-in-the-ubuntu-20-04-lts-without-android-studio-1b629924d6c5" target="_blank" rel="noopener">https://medium.com/@barcelos.ds/install-android-sdk-in-the-ubuntu-20-04-lts-without-android-studio-1b629924d6c5</a></p>
-<h2 id="下载命令行工具"><a href="#下载命令行工具" class="headerlink" title="下载命令行工具"></a>下载命令行工具</h2><p>网址：<a href="https://developer.android.com/studio" target="_blank" rel="noopener">https://developer.android.com/studio</a><br><img src="/2023/01/11/android/ubuntu%E5%AE%89%E8%A3%85AndroidSDK%E5%92%8CNDK/command-tools.png" alt></p>
-<h2 id="目录"><a href="#目录" class="headerlink" title="目录"></a>目录</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sudo mkdir ~&#x2F;DevTools</span><br><span class="line">sudo mkdir -P ~&#x2F;DevTools&#x2F;Android&#x2F;cmdline-tools&#x2F;latest</span><br></pre></td></tr></table></figure>
+<h1 id="安装Android-SDK"><a href="#安装Android-SDK" class="headerlink" title="安装Android SDK"></a>安装Android SDK</h1><p>参考:<br><a target="_blank" rel="noopener" href="https://medium.com/@barcelos.ds/install-android-sdk-in-the-ubuntu-20-04-lts-without-android-studio-1b629924d6c5">https://medium.com/@barcelos.ds/install-android-sdk-in-the-ubuntu-20-04-lts-without-android-studio-1b629924d6c5</a></p>
+<h2 id="下载命令行工具"><a href="#下载命令行工具" class="headerlink" title="下载命令行工具"></a>下载命令行工具</h2><p>网址：<a target="_blank" rel="noopener" href="https://developer.android.com/studio">https://developer.android.com/studio</a><br><img src="/2023/01/11/android/ubuntu%E5%AE%89%E8%A3%85AndroidSDK%E5%92%8CNDK/command-tools.png"></p>
+<h2 id="目录"><a href="#目录" class="headerlink" title="目录"></a>目录</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sudo mkdir ~/DevTools</span><br><span class="line">sudo mkdir -P ~/DevTools/Android/cmdline-tools/latest</span><br></pre></td></tr></table></figure>
 
-<h2 id="解压放至于-DevTools-Android-cmdline-tools-latest"><a href="#解压放至于-DevTools-Android-cmdline-tools-latest" class="headerlink" title="解压放至于  ~/DevTools/Android/cmdline-tools/latest"></a>解压放至于  ~/DevTools/Android/cmdline-tools/latest</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<h2 id="解压放至于-DevTools-Android-cmdline-tools-latest"><a href="#解压放至于-DevTools-Android-cmdline-tools-latest" class="headerlink" title="解压放至于  ~&#x2F;DevTools&#x2F;Android&#x2F;cmdline-tools&#x2F;latest"></a>解压放至于  ~&#x2F;DevTools&#x2F;Android&#x2F;cmdline-tools&#x2F;latest</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"></span><br></pre></td></tr></table></figure>
 
-<h2 id="设置ANDROID-HOME环境变量"><a href="#设置ANDROID-HOME环境变量" class="headerlink" title="设置ANDROID_HOME环境变量"></a>设置ANDROID_HOME环境变量</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">sudo  vim ~&#x2F;.profile</span><br><span class="line"></span><br><span class="line">DEV_TOOLS&#x3D;&quot;&#x2F;home&#x2F;$USER&#x2F;DevTools&quot;</span><br><span class="line">JAVA_HOME&#x3D;&quot;$DEV_TOOLS&#x2F;JDK&#x2F;jdk-11.0.7+10&quot;</span><br><span class="line">ANDROID_HOME&#x3D;&quot;$DEV_TOOLS&#x2F;Android&quot;</span><br><span class="line">export JAVA_HOME</span><br><span class="line">export ANDROID_HOME</span><br><span class="line">PATH&#x3D;&quot;$JAVA_HOME&#x2F;bin:$ANDROID_HOME&#x2F;cmdline-tools&#x2F;latest&#x2F;bin:$ANDROID_HOME&#x2F;platform-tools:$PATH&quot;</span><br><span class="line"></span><br><span class="line">source ~&#x2F;.profile</span><br></pre></td></tr></table></figure>
+<h2 id="设置ANDROID-HOME环境变量"><a href="#设置ANDROID-HOME环境变量" class="headerlink" title="设置ANDROID_HOME环境变量"></a>设置ANDROID_HOME环境变量</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">sudo  vim ~/.profile</span><br><span class="line"></span><br><span class="line">DEV_TOOLS=&quot;/home/$USER/DevTools&quot;</span><br><span class="line">JAVA_HOME=&quot;$DEV_TOOLS/JDK/jdk-11.0.7+10&quot;</span><br><span class="line">ANDROID_HOME=&quot;$DEV_TOOLS/Android&quot;</span><br><span class="line">export JAVA_HOME</span><br><span class="line">export ANDROID_HOME</span><br><span class="line">PATH=&quot;$JAVA_HOME/bin:$ANDROID_HOME/cmdline-tools/latest/bin:$ANDROID_HOME/platform-tools:$PATH&quot;</span><br><span class="line"></span><br><span class="line">source ~/.profile</span><br><span class="line"></span><br></pre></td></tr></table></figure>
 
-<h2 id="Install-Platform-for-Android-29"><a href="#Install-Platform-for-Android-29" class="headerlink" title="Install Platform for Android 29"></a>Install Platform for Android 29</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sdkmanager &quot;platform-tools&quot; &quot;platforms;android-29&quot;</span><br></pre></td></tr></table></figure>
+<h2 id="Install-Platform-for-Android-29"><a href="#Install-Platform-for-Android-29" class="headerlink" title="Install Platform for Android 29"></a>Install Platform for Android 29</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sdkmanager &quot;platform-tools&quot; &quot;platforms;android-29&quot;</span><br></pre></td></tr></table></figure>
 
-<h2 id="Install-Build-Tools-for-Android-29"><a href="#Install-Build-Tools-for-Android-29" class="headerlink" title="Install Build Tools for Android 29"></a>Install Build Tools for Android 29</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sdkmanager &quot;build-tools&quot; &quot;build-tools;29.0.3&quot;</span><br></pre></td></tr></table></figure>
+<h2 id="Install-Build-Tools-for-Android-29"><a href="#Install-Build-Tools-for-Android-29" class="headerlink" title="Install Build Tools for Android 29"></a>Install Build Tools for Android 29</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sdkmanager &quot;build-tools&quot; &quot;build-tools;29.0.3&quot;</span><br></pre></td></tr></table></figure>
 
-<h2 id="Accept-Android-Licenses"><a href="#Accept-Android-Licenses" class="headerlink" title="Accept Android Licenses"></a>Accept Android Licenses</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sdkmanager --licenses</span><br></pre></td></tr></table></figure>
+<h2 id="Accept-Android-Licenses"><a href="#Accept-Android-Licenses" class="headerlink" title="Accept Android Licenses"></a>Accept Android Licenses</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sdkmanager --licenses</span><br></pre></td></tr></table></figure>
 
-<h2 id="Update-Android-Packages-when-necessary"><a href="#Update-Android-Packages-when-necessary" class="headerlink" title="Update Android Packages when necessary:"></a>Update Android Packages when necessary:</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sdkmanager --update</span><br></pre></td></tr></table></figure>
+<h2 id="Update-Android-Packages-when-necessary"><a href="#Update-Android-Packages-when-necessary" class="headerlink" title="Update Android Packages when necessary:"></a>Update Android Packages when necessary:</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sdkmanager --update</span><br></pre></td></tr></table></figure>
 
-<h2 id="测试-1"><a href="#测试-1" class="headerlink" title="测试"></a>测试</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sdkmanager --version</span><br><span class="line">sdkmanager --list</span><br></pre></td></tr></table></figure>
+<h2 id="测试-1"><a href="#测试-1" class="headerlink" title="测试"></a>测试</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sdkmanager --version</span><br><span class="line">sdkmanager --list</span><br></pre></td></tr></table></figure>
 
-<h1 id="安装NDK"><a href="#安装NDK" class="headerlink" title="安装NDK"></a>安装NDK</h1><h2 id="官网下载"><a href="#官网下载" class="headerlink" title="官网下载"></a>官网下载</h2><p><a href="https://developer.android.com/ndk/downloads/index.html" target="_blank" rel="noopener">https://developer.android.com/ndk/downloads/index.html</a></p>
-<h2 id="解压到-DevTools-Android"><a href="#解压到-DevTools-Android" class="headerlink" title="解压到 ~/DevTools/Android"></a>解压到 ~/DevTools/Android</h2><h2 id="设置ANDROID-NDK"><a href="#设置ANDROID-NDK" class="headerlink" title="设置ANDROID_NDK"></a>设置ANDROID_NDK</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">sudo  vim ~&#x2F;.profile</span><br><span class="line"></span><br><span class="line">DEV_TOOLS&#x3D;&quot;&#x2F;home&#x2F;$USER&#x2F;DevTools&quot;</span><br><span class="line">JAVA_HOME&#x3D;&quot;$DEV_TOOLS&#x2F;JDK&#x2F;jdk-11.0.9.1+1&quot;</span><br><span class="line">ANDROID_HOME&#x3D;&quot;$DEV_TOOLS&#x2F;Android&quot;</span><br><span class="line"></span><br><span class="line">export JAVA_HOME</span><br><span class="line">export ANDROID_HOME</span><br><span class="line">export ANDROID_NDK&#x3D;$ANDROID_HOME&#x2F;android-ndk-r21b</span><br><span class="line"></span><br><span class="line">export GOPATH&#x3D;&#x2F;home&#x2F;yu&#x2F;go</span><br><span class="line">export PATH&#x3D;$PATH:&#x2F;usr&#x2F;local&#x2F;go&#x2F;bin:$GOPATH&#x2F;bin:$JAVA_HOME&#x2F;bin:$ANDROID_HOME&#x2F;cmdline-tools&#x2F;latest&#x2F;bin:$ANDROID_HOME&#x2F;platform-tools:$ANDROID_NDK</span><br><span class="line">export GOROOT&#x3D;&#x2F;usr&#x2F;local&#x2F;go</span><br><span class="line">export GOPROXY&#x3D;https:&#x2F;&#x2F;goproxy.cn</span><br><span class="line"></span><br><span class="line">source ~&#x2F;.profile</span><br></pre></td></tr></table></figure>
+<h1 id="安装NDK"><a href="#安装NDK" class="headerlink" title="安装NDK"></a>安装NDK</h1><h2 id="官网下载"><a href="#官网下载" class="headerlink" title="官网下载"></a>官网下载</h2><p><a target="_blank" rel="noopener" href="https://developer.android.com/ndk/downloads/index.html">https://developer.android.com/ndk/downloads/index.html</a></p>
+<h2 id="解压到-DevTools-Android"><a href="#解压到-DevTools-Android" class="headerlink" title="解压到 ~&#x2F;DevTools&#x2F;Android"></a>解压到 ~&#x2F;DevTools&#x2F;Android</h2><h2 id="设置ANDROID-NDK"><a href="#设置ANDROID-NDK" class="headerlink" title="设置ANDROID_NDK"></a>设置ANDROID_NDK</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">sudo  vim ~/.profile</span><br><span class="line"></span><br><span class="line">DEV_TOOLS=&quot;/home/$USER/DevTools&quot;</span><br><span class="line">JAVA_HOME=&quot;$DEV_TOOLS/JDK/jdk-11.0.9.1+1&quot;</span><br><span class="line">ANDROID_HOME=&quot;$DEV_TOOLS/Android&quot;</span><br><span class="line"></span><br><span class="line">export JAVA_HOME</span><br><span class="line">export ANDROID_HOME</span><br><span class="line">export ANDROID_NDK=$ANDROID_HOME/android-ndk-r21b</span><br><span class="line"></span><br><span class="line">export GOPATH=/home/yu/go</span><br><span class="line">export PATH=$PATH:/usr/local/go/bin:$GOPATH/bin:$JAVA_HOME/bin:$ANDROID_HOME/cmdline-tools/latest/bin:$ANDROID_HOME/platform-tools:$ANDROID_NDK</span><br><span class="line">export GOROOT=/usr/local/go</span><br><span class="line">export GOPROXY=https://goproxy.cn</span><br><span class="line"></span><br><span class="line">source ~/.profile</span><br></pre></td></tr></table></figure>
 
-<h2 id="测试-2"><a href="#测试-2" class="headerlink" title="测试"></a>测试</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ndk-build -v</span><br></pre></td></tr></table></figure>
+<h2 id="测试-2"><a href="#测试-2" class="headerlink" title="测试"></a>测试</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ndk-build -v</span><br></pre></td></tr></table></figure>
     </div>
 
     
@@ -288,6 +309,9 @@
     
 
       <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/android/" rel="tag"># android</a>
+          </div>
 
         
 
@@ -296,8 +320,8 @@
     <div class="post-nav">
       <div class="post-nav-item"></div>
       <div class="post-nav-item">
-    <a href="/2023/01/11/algo/%E5%8A%9B%E6%89%A3-%E6%95%B0%E7%BB%84%E5%92%8C%E5%AD%97%E7%AC%A6%E4%B8%B2/" rel="next" title="algo/力扣-数组和字符串">
-      algo/力扣-数组和字符串 <i class="fa fa-chevron-right"></i>
+    <a href="/2023/01/11/algo/%E5%8A%9B%E6%89%A3-%E6%95%B0%E7%BB%84%E5%92%8C%E5%AD%97%E7%AC%A6%E4%B8%B2/" rel="next" title="力扣-数组和字符串">
+      力扣-数组和字符串 <i class="fa fa-chevron-right"></i>
     </a></div>
     </div>
       </footer>
@@ -358,7 +382,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#安装java"><span class="nav-number">1.</span> <span class="nav-text">安装java</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#下载"><span class="nav-number">1.1.</span> <span class="nav-text">下载</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#设置JAVA-HOME环境变量"><span class="nav-number">1.2.</span> <span class="nav-text">设置JAVA_HOME环境变量</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#测试"><span class="nav-number">1.3.</span> <span class="nav-text">测试</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#安装Android-SDK"><span class="nav-number">2.</span> <span class="nav-text">安装Android SDK</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#下载命令行工具"><span class="nav-number">2.1.</span> <span class="nav-text">下载命令行工具</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#目录"><span class="nav-number">2.2.</span> <span class="nav-text">目录</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#解压放至于-DevTools-Android-cmdline-tools-latest"><span class="nav-number">2.3.</span> <span class="nav-text">解压放至于  ~&#x2F;DevTools&#x2F;Android&#x2F;cmdline-tools&#x2F;latest</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#设置ANDROID-HOME环境变量"><span class="nav-number">2.4.</span> <span class="nav-text">设置ANDROID_HOME环境变量</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Install-Platform-for-Android-29"><span class="nav-number">2.5.</span> <span class="nav-text">Install Platform for Android 29</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Install-Build-Tools-for-Android-29"><span class="nav-number">2.6.</span> <span class="nav-text">Install Build Tools for Android 29</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Accept-Android-Licenses"><span class="nav-number">2.7.</span> <span class="nav-text">Accept Android Licenses</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Update-Android-Packages-when-necessary"><span class="nav-number">2.8.</span> <span class="nav-text">Update Android Packages when necessary:</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#测试-1"><span class="nav-number">2.9.</span> <span class="nav-text">测试</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#安装NDK"><span class="nav-number">3.</span> <span class="nav-text">安装NDK</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#官网下载"><span class="nav-number">3.1.</span> <span class="nav-text">官网下载</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#解压到-DevTools-Android"><span class="nav-number">3.2.</span> <span class="nav-text">解压到 ~&#x2F;DevTools&#x2F;Android</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#设置ANDROID-NDK"><span class="nav-number">3.3.</span> <span class="nav-text">设置ANDROID_NDK</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#测试-2"><span class="nav-number">3.4.</span> <span class="nav-text">测试</span></a></li></ol></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%AE%89%E8%A3%85java"><span class="nav-number">1.</span> <span class="nav-text">安装java</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%8B%E8%BD%BD"><span class="nav-number">1.1.</span> <span class="nav-text">下载</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%AE%BE%E7%BD%AEJAVA-HOME%E7%8E%AF%E5%A2%83%E5%8F%98%E9%87%8F"><span class="nav-number">1.2.</span> <span class="nav-text">设置JAVA_HOME环境变量</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%B5%8B%E8%AF%95"><span class="nav-number">1.3.</span> <span class="nav-text">测试</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%AE%89%E8%A3%85Android-SDK"><span class="nav-number">2.</span> <span class="nav-text">安装Android SDK</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%8B%E8%BD%BD%E5%91%BD%E4%BB%A4%E8%A1%8C%E5%B7%A5%E5%85%B7"><span class="nav-number">2.1.</span> <span class="nav-text">下载命令行工具</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%9B%AE%E5%BD%95"><span class="nav-number">2.2.</span> <span class="nav-text">目录</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%A7%A3%E5%8E%8B%E6%94%BE%E8%87%B3%E4%BA%8E-DevTools-Android-cmdline-tools-latest"><span class="nav-number">2.3.</span> <span class="nav-text">解压放至于  ~&#x2F;DevTools&#x2F;Android&#x2F;cmdline-tools&#x2F;latest</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%AE%BE%E7%BD%AEANDROID-HOME%E7%8E%AF%E5%A2%83%E5%8F%98%E9%87%8F"><span class="nav-number">2.4.</span> <span class="nav-text">设置ANDROID_HOME环境变量</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Install-Platform-for-Android-29"><span class="nav-number">2.5.</span> <span class="nav-text">Install Platform for Android 29</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Install-Build-Tools-for-Android-29"><span class="nav-number">2.6.</span> <span class="nav-text">Install Build Tools for Android 29</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Accept-Android-Licenses"><span class="nav-number">2.7.</span> <span class="nav-text">Accept Android Licenses</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Update-Android-Packages-when-necessary"><span class="nav-number">2.8.</span> <span class="nav-text">Update Android Packages when necessary:</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%B5%8B%E8%AF%95-1"><span class="nav-number">2.9.</span> <span class="nav-text">测试</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%AE%89%E8%A3%85NDK"><span class="nav-number">3.</span> <span class="nav-text">安装NDK</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%98%E7%BD%91%E4%B8%8B%E8%BD%BD"><span class="nav-number">3.1.</span> <span class="nav-text">官网下载</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%A7%A3%E5%8E%8B%E5%88%B0-DevTools-Android"><span class="nav-number">3.2.</span> <span class="nav-text">解压到 ~&#x2F;DevTools&#x2F;Android</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%AE%BE%E7%BD%AEANDROID-NDK"><span class="nav-number">3.3.</span> <span class="nav-text">设置ANDROID_NDK</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%B5%8B%E8%AF%95-2"><span class="nav-number">3.4.</span> <span class="nav-text">测试</span></a></li></ol></li></ol></div>
       </div>
       <!--/noindex-->
 
@@ -374,14 +398,14 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">101</span>
+          <span class="site-state-item-count">96</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
             <a href="/categories/">
           
-        <span class="site-state-item-count">18</span>
+        <span class="site-state-item-count">19</span>
         <span class="site-state-item-name">分类</span></a>
       </div>
       <div class="site-state-item site-state-tags">
@@ -418,7 +442,7 @@
   </span>
   <span class="author" itemprop="copyrightHolder">Chen Yu</span>
 </div>
-  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v4.2.0
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v6.3.0
   </div>
   <span class="post-meta-divider">|</span>
   <div class="theme-info">主题 – <a href="https://theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a> v7.7.0

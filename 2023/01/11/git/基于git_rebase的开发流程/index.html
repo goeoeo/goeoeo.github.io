@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
 <meta name="theme-color" content="#222">
-<meta name="generator" content="Hexo 4.2.0">
+<meta name="generator" content="Hexo 6.3.0">
   <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
   <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
   <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
@@ -49,13 +49,13 @@
 
   <meta name="description" content="分支 master  #不能直接推送 staging  #开发主流程分支 self_branch #自己的开发分支，从staging 打出">
 <meta property="og:type" content="article">
-<meta property="og:title" content="git&#x2F;基于git_rebase的开发流程">
+<meta property="og:title" content="基于git_rebase的开发流程">
 <meta property="og:url" content="https://phpdi.github.io/2023/01/11/git/%E5%9F%BA%E4%BA%8Egit_rebase%E7%9A%84%E5%BC%80%E5%8F%91%E6%B5%81%E7%A8%8B/index.html">
 <meta property="og:site_name" content="goeoeo">
 <meta property="og:description" content="分支 master  #不能直接推送 staging  #开发主流程分支 self_branch #自己的开发分支，从staging 打出">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2023-01-11T14:59:23.567Z">
-<meta property="article:modified_time" content="2023-01-11T14:59:23.567Z">
+<meta property="article:modified_time" content="2023-09-14T02:37:32.113Z">
 <meta property="article:author" content="Chen Yu">
 <meta property="article:tag" content="git-rebase">
 <meta name="twitter:card" content="summary">
@@ -72,7 +72,7 @@
   };
 </script>
 
-  <title>git/基于git_rebase的开发流程 | goeoeo</title>
+  <title>基于git_rebase的开发流程 | goeoeo</title>
   
 
 
@@ -226,7 +226,7 @@
     </span>
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
-          git/基于git_rebase的开发流程
+          基于git_rebase的开发流程
         </h2>
 
         <div class="post-meta">
@@ -238,6 +238,13 @@
 
               <time title="创建时间：2023-01-11 22:59:23" itemprop="dateCreated datePublished" datetime="2023-01-11T22:59:23+08:00">2023-01-11</time>
             </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2023-09-14 10:37:32" itemprop="dateModified" datetime="2023-09-14T10:37:32+08:00">2023-09-14</time>
+              </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
                 <i class="fa fa-folder-o"></i>
@@ -266,7 +273,7 @@
 <li>staging  #开发主流程分支</li>
 <li>self_branch #自己的开发分支，从staging 打出</li>
 </ul>
-<a id="more"></a>
+<span id="more"></span>
 
 
 
@@ -285,7 +292,7 @@
 </ol>
 <h2 id="线上hotfix"><a href="#线上hotfix" class="headerlink" title="线上hotfix"></a>线上hotfix</h2><h3 id="打出hotfix-分支"><a href="#打出hotfix-分支" class="headerlink" title="打出hotfix 分支"></a>打出hotfix 分支</h3><ol>
 <li>git fetch origin –prune # 拉取远程仓库信息</li>
-<li>git checkout -b hotfix/bugname v0.1.1-release #基于最新发布，打出hotfix 分支</li>
+<li>git checkout -b hotfix&#x2F;bugname v0.1.1-release #基于最新发布，打出hotfix 分支</li>
 </ol>
 <h3 id="进行hotfix"><a href="#进行hotfix" class="headerlink" title="进行hotfix"></a>进行hotfix</h3><ol start="3">
 <li>进行bugfix</li>
@@ -298,12 +305,12 @@
 <li>在staging 验证bug是否修复</li>
 </ol>
 <h3 id="发布-1"><a href="#发布-1" class="headerlink" title="发布"></a>发布</h3><ol start="11">
-<li>基于hotfix/bugname 分支 打出tag v0.1.2-release</li>
+<li>基于hotfix&#x2F;bugname 分支 打出tag v0.1.2-release</li>
 <li>发布 线上验证</li>
-<li>git push origin –delete hotfix/bugname #删除远程分支</li>
-<li>git branch -D hotfix/bugname #删除本地分支</li>
+<li>git push origin –delete hotfix&#x2F;bugname #删除远程分支</li>
+<li>git branch -D hotfix&#x2F;bugname #删除本地分支</li>
 </ol>
-<h2 id="快速rebase-脚本"><a href="#快速rebase-脚本" class="headerlink" title="快速rebase 脚本"></a>快速rebase 脚本</h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash">!/bin/sh</span></span><br><span class="line"></span><br><span class="line">base=staging</span><br><span class="line"></span><br><span class="line">work=`git symbolic-ref --short -q HEAD`</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash">checkout base</span></span><br><span class="line">git checkout staging</span><br><span class="line"><span class="meta">#</span><span class="bash">pull newest</span></span><br><span class="line">git pull</span><br><span class="line"><span class="meta">#</span><span class="bash">checkout work</span></span><br><span class="line">git checkout $work</span><br><span class="line"><span class="meta">#</span><span class="bash">rebase</span></span><br><span class="line">git rebase $base</span><br></pre></td></tr></table></figure>
+<h2 id="快速rebase-脚本"><a href="#快速rebase-脚本" class="headerlink" title="快速rebase 脚本"></a>快速rebase 脚本</h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_">#</span><span class="language-bash">!/bin/sh</span></span><br><span class="line"></span><br><span class="line">base=staging</span><br><span class="line"></span><br><span class="line">work=`git symbolic-ref --short -q HEAD`</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">checkout base</span></span><br><span class="line">git checkout staging</span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">pull newest</span></span><br><span class="line">git pull</span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">checkout work</span></span><br><span class="line">git checkout $work</span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">rebase</span></span><br><span class="line">git rebase $base</span><br><span class="line"></span><br></pre></td></tr></table></figure>
 
     </div>
 
@@ -322,12 +329,12 @@
         
     <div class="post-nav">
       <div class="post-nav-item">
-    <a href="/2023/01/11/git/%E5%BF%AB%E9%80%9F%E8%AE%A4%E8%AF%86Git/" rel="prev" title="git/快速认识Git">
-      <i class="fa fa-chevron-left"></i> git/快速认识Git
+    <a href="/2023/01/11/docker/docker-machine/" rel="prev" title="docker-machine">
+      <i class="fa fa-chevron-left"></i> docker-machine
     </a></div>
       <div class="post-nav-item">
-    <a href="/2023/01/11/git/gitlab%E9%85%8D%E7%BD%AE%E4%BB%A3%E7%A0%81%E8%A6%86%E7%9B%96%E7%8E%87/" rel="next" title="git/gitlab配置代码覆盖率">
-      git/gitlab配置代码覆盖率 <i class="fa fa-chevron-right"></i>
+    <a href="/2023/01/11/git/%E5%BF%AB%E9%80%9F%E8%AE%A4%E8%AF%86Git/" rel="next" title="快速认识Git">
+      快速认识Git <i class="fa fa-chevron-right"></i>
     </a></div>
     </div>
       </footer>
@@ -388,7 +395,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#分支"><span class="nav-number">1.</span> <span class="nav-text">分支</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#开发与代码合并"><span class="nav-number">2.</span> <span class="nav-text">开发与代码合并</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#发布"><span class="nav-number">3.</span> <span class="nav-text">发布</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#线上hotfix"><span class="nav-number">4.</span> <span class="nav-text">线上hotfix</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#打出hotfix-分支"><span class="nav-number">4.1.</span> <span class="nav-text">打出hotfix 分支</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#进行hotfix"><span class="nav-number">4.2.</span> <span class="nav-text">进行hotfix</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#发布-1"><span class="nav-number">4.3.</span> <span class="nav-text">发布</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#快速rebase-脚本"><span class="nav-number">5.</span> <span class="nav-text">快速rebase 脚本</span></a></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%88%86%E6%94%AF"><span class="nav-number">1.</span> <span class="nav-text">分支</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%BC%80%E5%8F%91%E4%B8%8E%E4%BB%A3%E7%A0%81%E5%90%88%E5%B9%B6"><span class="nav-number">2.</span> <span class="nav-text">开发与代码合并</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8F%91%E5%B8%83"><span class="nav-number">3.</span> <span class="nav-text">发布</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%BA%BF%E4%B8%8Ahotfix"><span class="nav-number">4.</span> <span class="nav-text">线上hotfix</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%89%93%E5%87%BAhotfix-%E5%88%86%E6%94%AF"><span class="nav-number">4.1.</span> <span class="nav-text">打出hotfix 分支</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%BF%9B%E8%A1%8Chotfix"><span class="nav-number">4.2.</span> <span class="nav-text">进行hotfix</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8F%91%E5%B8%83-1"><span class="nav-number">4.3.</span> <span class="nav-text">发布</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%BF%AB%E9%80%9Frebase-%E8%84%9A%E6%9C%AC"><span class="nav-number">5.</span> <span class="nav-text">快速rebase 脚本</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 
@@ -404,14 +411,14 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">101</span>
+          <span class="site-state-item-count">96</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
             <a href="/categories/">
           
-        <span class="site-state-item-count">18</span>
+        <span class="site-state-item-count">19</span>
         <span class="site-state-item-name">分类</span></a>
       </div>
       <div class="site-state-item site-state-tags">
@@ -448,7 +455,7 @@
   </span>
   <span class="author" itemprop="copyrightHolder">Chen Yu</span>
 </div>
-  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v4.2.0
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v6.3.0
   </div>
   <span class="post-meta-divider">|</span>
   <div class="theme-info">主题 – <a href="https://theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a> v7.7.0

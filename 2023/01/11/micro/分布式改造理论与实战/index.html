@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
 <meta name="theme-color" content="#222">
-<meta name="generator" content="Hexo 4.2.0">
+<meta name="generator" content="Hexo 6.3.0">
   <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
   <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
   <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
@@ -49,7 +49,7 @@
 
   <meta name="description" content="微服务与分布式什么是分布式？首先，我们对上图提到的部分关键词进行讲解。   单体，是指一个进程完成全部的后端处理；水平拆分，是同一个后端多环境部署，他们都处理相同的内容，使用反向代理来均衡负载，这种也叫集群；垂直拆分，则是把不同业务拆分为各个节点，反向代理通过路由将请求分发给每个业务节点上 分布式，就是不同的组件或者同一个组件在多个机器节点上部署，关键在于是否通过交换信息的方式进行协作，也就是说，">
 <meta property="og:type" content="article">
-<meta property="og:title" content="micro&#x2F;分布式改造理论与实战">
+<meta property="og:title" content="分布式改造理论与实战">
 <meta property="og:url" content="https://phpdi.github.io/2023/01/11/micro/%E5%88%86%E5%B8%83%E5%BC%8F%E6%94%B9%E9%80%A0%E7%90%86%E8%AE%BA%E4%B8%8E%E5%AE%9E%E6%88%98/index.html">
 <meta property="og:site_name" content="goeoeo">
 <meta property="og:description" content="微服务与分布式什么是分布式？首先，我们对上图提到的部分关键词进行讲解。   单体，是指一个进程完成全部的后端处理；水平拆分，是同一个后端多环境部署，他们都处理相同的内容，使用反向代理来均衡负载，这种也叫集群；垂直拆分，则是把不同业务拆分为各个节点，反向代理通过路由将请求分发给每个业务节点上 分布式，就是不同的组件或者同一个组件在多个机器节点上部署，关键在于是否通过交换信息的方式进行协作，也就是说，">
@@ -68,8 +68,9 @@
 <meta property="og:image" content="https://phpdi.github.io/2023/01/11/micro/%E5%88%86%E5%B8%83%E5%BC%8F%E6%94%B9%E9%80%A0%E7%90%86%E8%AE%BA%E4%B8%8E%E5%AE%9E%E6%88%98/img_12.png">
 <meta property="og:image" content="https://phpdi.github.io/2023/01/11/micro/%E5%88%86%E5%B8%83%E5%BC%8F%E6%94%B9%E9%80%A0%E7%90%86%E8%AE%BA%E4%B8%8E%E5%AE%9E%E6%88%98/img_12.jpeg">
 <meta property="article:published_time" content="2023-01-11T14:59:23.607Z">
-<meta property="article:modified_time" content="2023-01-11T14:59:23.607Z">
+<meta property="article:modified_time" content="2023-09-14T03:12:43.945Z">
 <meta property="article:author" content="Chen Yu">
+<meta property="article:tag" content="Grpc">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="https://phpdi.github.io/2023/01/11/micro/%E5%88%86%E5%B8%83%E5%BC%8F%E6%94%B9%E9%80%A0%E7%90%86%E8%AE%BA%E4%B8%8E%E5%AE%9E%E6%88%98/img_1.png">
 
@@ -85,7 +86,7 @@
   };
 </script>
 
-  <title>micro/分布式改造理论与实战 | goeoeo</title>
+  <title>分布式改造理论与实战 | goeoeo</title>
   
 
 
@@ -239,7 +240,7 @@
     </span>
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
-          micro/分布式改造理论与实战
+          分布式改造理论与实战
         </h2>
 
         <div class="post-meta">
@@ -250,6 +251,24 @@
               <span class="post-meta-item-text">发表于</span>
 
               <time title="创建时间：2023-01-11 22:59:23" itemprop="dateCreated datePublished" datetime="2023-01-11T22:59:23+08:00">2023-01-11</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2023-09-14 11:12:43" itemprop="dateModified" datetime="2023-09-14T11:12:43+08:00">2023-09-14</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/micro/" itemprop="url" rel="index">
+                    <span itemprop="name">micro</span>
+                  </a>
+                </span>
             </span>
 
           
@@ -263,7 +282,7 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <h1 id="微服务与分布式"><a href="#微服务与分布式" class="headerlink" title="微服务与分布式"></a>微服务与分布式</h1><h2 id="什么是分布式？"><a href="#什么是分布式？" class="headerlink" title="什么是分布式？"></a>什么是分布式？</h2><p><img src="/2023/01/11/micro/%E5%88%86%E5%B8%83%E5%BC%8F%E6%94%B9%E9%80%A0%E7%90%86%E8%AE%BA%E4%B8%8E%E5%AE%9E%E6%88%98/img_1.png" alt><br>首先，我们对上图提到的部分关键词进行讲解。  </p>
+        <h1 id="微服务与分布式"><a href="#微服务与分布式" class="headerlink" title="微服务与分布式"></a>微服务与分布式</h1><h2 id="什么是分布式？"><a href="#什么是分布式？" class="headerlink" title="什么是分布式？"></a>什么是分布式？</h2><p><img src="/2023/01/11/micro/%E5%88%86%E5%B8%83%E5%BC%8F%E6%94%B9%E9%80%A0%E7%90%86%E8%AE%BA%E4%B8%8E%E5%AE%9E%E6%88%98/img_1.png"><br>首先，我们对上图提到的部分关键词进行讲解。  </p>
 <p>单体，是指一个进程完成全部的后端处理；水平拆分，是同一个后端多环境部署，他们都处理相同的内容，使用反向代理来均衡负载，这种也叫集群；垂直拆分，<br>则是把不同业务拆分为各个节点，反向代理通过路由将请求分发给每个业务节点上</p>
 <p>分布式，就是不同的组件或者同一个组件在多个机器节点上部署，关键在于是否通过交换信息的方式进行协作，也就是说，分布式是指通过网络连接的多个组件，<br>通过交换信息协作而形成的系统。而集群，是指同一种组件的多个实例，形成的逻辑上的整体，它们之间不会互相通信。  </p>
 <h2 id="分布式和微服务有何不同？"><a href="#分布式和微服务有何不同？" class="headerlink" title="分布式和微服务有何不同？"></a>分布式和微服务有何不同？</h2><p>简单来说，微服务是很小的服务，一个服务可能负责几个功能或者一个业务，是一种面向SOA(Service Oriented Architecture)架构的，服务之间也是<br>通过RPC来交互或者是webservice来交互的，这个服务可以单独部署运行，每个微服务都是由独立的小团队开发，测试，部署，上线，负责它的整个生命周期</p>
@@ -287,7 +306,7 @@
 <li>可用性（A）：可用性指服务一直可用，而且是正常响应时间，不会出现响应错误。</li>
 <li>分区容忍性（P）：分区容错性指在遇到某节点或网络分区故障的时候，仍然能够对外提供服务，保证整个系统的运行。</li>
 </ul>
-<p><img src="/2023/01/11/micro/%E5%88%86%E5%B8%83%E5%BC%8F%E6%94%B9%E9%80%A0%E7%90%86%E8%AE%BA%E4%B8%8E%E5%AE%9E%E6%88%98/img_2.png" alt></p>
+<p><img src="/2023/01/11/micro/%E5%88%86%E5%B8%83%E5%BC%8F%E6%94%B9%E9%80%A0%E7%90%86%E8%AE%BA%E4%B8%8E%E5%AE%9E%E6%88%98/img_2.png"></p>
 <p>为什么在分布式系统的设计中，没有一种设计可以同时满足一致性，可用性，分区容错性 3个特性？  </p>
 <ol>
 <li>分布式系统中P是必须要存在的，否则其中一台机器挂掉了，整个系统都不可使用了。</li>
@@ -301,7 +320,7 @@
 <li>Observer：可以接收客户端连接，将写请求转发给 Leader 节点，但不会参与 Leader 发起的投票，也不会被选举为 Leader，Observer 的目的是 为了扩展系统，提高读取速度。</li>
 </ul>
 <p>当Follower发现Leader节点挂了之后，Follower会拒绝现有的客户端连接，参与主从选举，在成功选举出leader之前，zk将不可用；这个时候如果ZK作为注册中心，注册中心将不可用。</p>
-<h3 id="分布式系统AP案例-保证高可用性"><a href="#分布式系统AP案例-保证高可用性" class="headerlink" title="分布式系统AP案例 (保证高可用性)"></a>分布式系统AP案例 (保证高可用性)</h3><p><img src="/2023/01/11/micro/%E5%88%86%E5%B8%83%E5%BC%8F%E6%94%B9%E9%80%A0%E7%90%86%E8%AE%BA%E4%B8%8E%E5%AE%9E%E6%88%98/img_3.png" alt></p>
+<h3 id="分布式系统AP案例-保证高可用性"><a href="#分布式系统AP案例-保证高可用性" class="headerlink" title="分布式系统AP案例 (保证高可用性)"></a>分布式系统AP案例 (保证高可用性)</h3><p><img src="/2023/01/11/micro/%E5%88%86%E5%B8%83%E5%BC%8F%E6%94%B9%E9%80%A0%E7%90%86%E8%AE%BA%E4%B8%8E%E5%AE%9E%E6%88%98/img_3.png"></p>
 <p>从上图中可看出，Eureka注册中心采用集群部署，满足高可用的特性，当订单服务在扩容的时候，新增订单服务实例4，数据注册到Eureka A节点，在其余的<br>两个节点没有订单服务4这个实例信息。这种情况下，用户服务获取服务列表，可能获取不到订单实例4，这就是最简单的数据不一致情况。但是对于Eureka集群本身，<br>各个节点都处于平等的地位，完全是为了冗余，这时有其中一个节点挂掉并不影响Eureka的使用，从这个角度来说保证了分布式的高可用。</p>
 <h3 id="分布式系统BASE理论"><a href="#分布式系统BASE理论" class="headerlink" title="分布式系统BASE理论"></a>分布式系统BASE理论</h3><p>BASE 理论中的最终一致性，是指分布式系统中所有的数据副本在经过一段时间的同步后，最终都会达到一个一致的状态。也就是说，在数据副本在达到一致之前，会存在一段延迟。</p>
 <ul>
@@ -312,39 +331,39 @@
 <ol>
 <li>在Spring所集成的WebSocket里面，每个ws连接都有一个对应的session，每台服务器都存有各自的session。 </li>
 <li>目前没websocket session共享的方案，因此走redis websocket session共享这条路是行不通的。  </li>
-<li>因此在集群中，我们无法将所有WebSocketSession都缓存到redis进行session共享 </li>
+<li>因此在集群中，我们无法将所有WebSocketSession都缓存到redis进行session共享</li>
 </ol>
-<p>业务场景：前端发起流水线执行的HTTP请求，点击执行日志与后端建立WS链接，后端能够实时的把日志主动推送到前端页面。<br><img src="/2023/01/11/micro/%E5%88%86%E5%B8%83%E5%BC%8F%E6%94%B9%E9%80%A0%E7%90%86%E8%AE%BA%E4%B8%8E%E5%AE%9E%E6%88%98/img_4.png" alt><br>问题描述：websocket分布式会遇到的问题<br>当后端服务器有多台时，用户A发起流水线执行的HTTP请求发送到B服务器，点击查看实时日志与服务器A建立WS长链接，无法接收到实时日志的推送，而B用户刷新当前流水线可以看到实时日志。</p>
-<p>期待效果：<br>用户A发起流水线执行的HTTP请求发送到B服务器。用户A、用户B点击实时日志查看，均可以查看到流水线执行的情况。<br><img src="/2023/01/11/micro/%E5%88%86%E5%B8%83%E5%BC%8F%E6%94%B9%E9%80%A0%E7%90%86%E8%AE%BA%E4%B8%8E%E5%AE%9E%E6%88%98/img_5.png" alt></p>
-<p>解决方案:<br><img src="/2023/01/11/micro/%E5%88%86%E5%B8%83%E5%BC%8F%E6%94%B9%E9%80%A0%E7%90%86%E8%AE%BA%E4%B8%8E%E5%AE%9E%E6%88%98/img_6.png" alt><br>用户A发起流水线执行的HTTP请求发送到B服务器。B服务器把流水线执行日志实时推送到Redis中，服务器A和B监听订阅Redis的日志数据，一旦监听到数据，<br>服务器A、B通过WS长链接把日志推送给与当前服务器建立长链接的用户A、用户B。这样就起到了解耦的作用，无论用户的请求发送到哪一台服务器上，无论用<br>户的长链接是与哪一台服务器建立连接，都可以查看实时日志。</p>
-<h2 id="定时线程池分布式问题"><a href="#定时线程池分布式问题" class="headerlink" title="定时线程池分布式问题"></a>定时线程池分布式问题</h2><p>问题描述 :<br>在项目中我们经常会使用定时线程池来实现一个定时的异步任务，线程池的创建和销毁也是JVM层面的，如果分布式多机器部署的场景使用到定时线程池又会<br>遇到什么问题，又要怎么去解决？<br><img src="/2023/01/11/micro/%E5%88%86%E5%B8%83%E5%BC%8F%E6%94%B9%E9%80%A0%E7%90%86%E8%AE%BA%E4%B8%8E%E5%AE%9E%E6%88%98/img_7.png" alt></p>
+<p>业务场景：前端发起流水线执行的HTTP请求，点击执行日志与后端建立WS链接，后端能够实时的把日志主动推送到前端页面。<br><img src="/2023/01/11/micro/%E5%88%86%E5%B8%83%E5%BC%8F%E6%94%B9%E9%80%A0%E7%90%86%E8%AE%BA%E4%B8%8E%E5%AE%9E%E6%88%98/img_4.png"><br>问题描述：websocket分布式会遇到的问题<br>当后端服务器有多台时，用户A发起流水线执行的HTTP请求发送到B服务器，点击查看实时日志与服务器A建立WS长链接，无法接收到实时日志的推送，而B用户刷新当前流水线可以看到实时日志。</p>
+<p>期待效果：<br>用户A发起流水线执行的HTTP请求发送到B服务器。用户A、用户B点击实时日志查看，均可以查看到流水线执行的情况。<br><img src="/2023/01/11/micro/%E5%88%86%E5%B8%83%E5%BC%8F%E6%94%B9%E9%80%A0%E7%90%86%E8%AE%BA%E4%B8%8E%E5%AE%9E%E6%88%98/img_5.png"></p>
+<p>解决方案:<br><img src="/2023/01/11/micro/%E5%88%86%E5%B8%83%E5%BC%8F%E6%94%B9%E9%80%A0%E7%90%86%E8%AE%BA%E4%B8%8E%E5%AE%9E%E6%88%98/img_6.png"><br>用户A发起流水线执行的HTTP请求发送到B服务器。B服务器把流水线执行日志实时推送到Redis中，服务器A和B监听订阅Redis的日志数据，一旦监听到数据，<br>服务器A、B通过WS长链接把日志推送给与当前服务器建立长链接的用户A、用户B。这样就起到了解耦的作用，无论用户的请求发送到哪一台服务器上，无论用<br>户的长链接是与哪一台服务器建立连接，都可以查看实时日志。</p>
+<h2 id="定时线程池分布式问题"><a href="#定时线程池分布式问题" class="headerlink" title="定时线程池分布式问题"></a>定时线程池分布式问题</h2><p>问题描述 :<br>在项目中我们经常会使用定时线程池来实现一个定时的异步任务，线程池的创建和销毁也是JVM层面的，如果分布式多机器部署的场景使用到定时线程池又会<br>遇到什么问题，又要怎么去解决？<br><img src="/2023/01/11/micro/%E5%88%86%E5%B8%83%E5%BC%8F%E6%94%B9%E9%80%A0%E7%90%86%E8%AE%BA%E4%B8%8E%E5%AE%9E%E6%88%98/img_7.png"></p>
 <p>问题一：用户在A服务器创建了一个任务加入到A服务器的线程池中，然后用户B负载到B服务器上去取消这个定时任务？无法取消？  </p>
 <p>思考：是不是可以对创建的任务做一个Hash，有关某个任务的所有的操作都负载到同一个服务器上  </p>
-<p>结合问题及思考进行如下改造：<br><img src="/2023/01/11/micro/%E5%88%86%E5%B8%83%E5%BC%8F%E6%94%B9%E9%80%A0%E7%90%86%E8%AE%BA%E4%B8%8E%E5%AE%9E%E6%88%98/img_8.png" alt></p>
+<p>结合问题及思考进行如下改造：<br><img src="/2023/01/11/micro/%E5%88%86%E5%B8%83%E5%BC%8F%E6%94%B9%E9%80%A0%E7%90%86%E8%AE%BA%E4%B8%8E%E5%AE%9E%E6%88%98/img_8.png"></p>
 <p>问题二：如果突然A服务器挂了，这时候A服务器上面定时线程池中所存的任务就会消失？该怎么办？  </p>
 <p>思考：这里和上面websocket场景还不一样，上面实时查看日志，如果服务器挂掉用户刷新一下页面，用户可以重新负载到其他服务器继续查看日志。这里<br>我创建完成一个任务之后，就完全交给JVM线程池了，服务器挂掉之后任务用户自己创建的任务就消失了。怎么解决？</p>
-<p>结合问题及思考进行如下改造：<br><img src="/2023/01/11/micro/%E5%88%86%E5%B8%83%E5%BC%8F%E6%94%B9%E9%80%A0%E7%90%86%E8%AE%BA%E4%B8%8E%E5%AE%9E%E6%88%98/img_9.png" alt></p>
+<p>结合问题及思考进行如下改造：<br><img src="/2023/01/11/micro/%E5%88%86%E5%B8%83%E5%BC%8F%E6%94%B9%E9%80%A0%E7%90%86%E8%AE%BA%E4%B8%8E%E5%AE%9E%E6%88%98/img_9.png"></p>
 <p>方案：我们把任务放在线程池中，并且缓存在Redis中做缓存备份，借鉴微服务注册中心的概念，我们把服务注册到注册中心，当注册中心检测到B服务器挂掉了，<br>就通知A服务器就把挂掉的B服务器线程池中的任务同步到A服务器中同步创建一份继续执行。 </p>
 <p>细节考虑：如果有一台C服务器挂掉了，A和B同时监听到，会不会A和B分别在本地都创建了C的任务，那同一时刻A和B分别会执行C的任务，同一时刻任务会执行两遍？</p>
 <p>深度思考：分布式带来了什么问题？系统的复杂度是不是大大的增加了。维护起来变得更复杂了。  </p>
 <h2 id="案例总结"><a href="#案例总结" class="headerlink" title="案例总结"></a>案例总结</h2><ul>
-<li>以上的两个案例都有一个问题，就是他们的数据/或者是执行都过度依赖服务器节点，没有好的办法把数据抽离出来</li>
+<li>以上的两个案例都有一个问题，就是他们的数据&#x2F;或者是执行都过度依赖服务器节点，没有好的办法把数据抽离出来</li>
 <li>分布式部署，需要考虑到服务器单点故障的问题，如果服务器挂了，数据怎么转移到其他的服务器继续执行。  </li>
 <li>结合我们的CAP+Base的理论来看，websocket是属于数据不一致的问题。我们引入redis的发布订阅使每个服务器的数据最终达成一致。</li>
-<li>定时线程池属于高可用的问题，当一个节点挂了，其他服务器的节点无法感知。我们引入服务注册的概念，由注册节点来对任务进行调度。  </li>
+<li>定时线程池属于高可用的问题，当一个节点挂了，其他服务器的节点无法感知。我们引入服务注册的概念，由注册节点来对任务进行调度。</li>
 </ul>
-<h1 id="分布式常见方案"><a href="#分布式常见方案" class="headerlink" title="分布式常见方案"></a>分布式常见方案</h1><h2 id="分布式事物"><a href="#分布式事物" class="headerlink" title="分布式事物"></a>分布式事物</h2><p>本地事物的ACID：<br><img src="/2023/01/11/micro/%E5%88%86%E5%B8%83%E5%BC%8F%E6%94%B9%E9%80%A0%E7%90%86%E8%AE%BA%E4%B8%8E%E5%AE%9E%E6%88%98/img_10.png" alt><br>分布式事务，就是指不是在单个服务或单个数据库架构下，产生的事务，例如：在数据库水平拆分、服务垂直拆分之后，一个业务操作通常要跨多个数据库、<br>服务才能完成。例如电商行业中比较常见的下单付款案例，包括下面几个行为：</p>
+<h1 id="分布式常见方案"><a href="#分布式常见方案" class="headerlink" title="分布式常见方案"></a>分布式常见方案</h1><h2 id="分布式事物"><a href="#分布式事物" class="headerlink" title="分布式事物"></a>分布式事物</h2><p>本地事物的ACID：<br><img src="/2023/01/11/micro/%E5%88%86%E5%B8%83%E5%BC%8F%E6%94%B9%E9%80%A0%E7%90%86%E8%AE%BA%E4%B8%8E%E5%AE%9E%E6%88%98/img_10.png"><br>分布式事务，就是指不是在单个服务或单个数据库架构下，产生的事务，例如：在数据库水平拆分、服务垂直拆分之后，一个业务操作通常要跨多个数据库、<br>服务才能完成。例如电商行业中比较常见的下单付款案例，包括下面几个行为：</p>
 <ol>
 <li>创建新订单</li>
 <li>扣减商品库存</li>
 <li>从用户账户余额扣除金额</li>
 </ol>
-<p>完成上面的操作需要访问三个不同的微服务和三个不同的数据库。订单的创建、库存的扣减、账户扣款在每一个服务和数据库内是一个本地事务，可以保证ACID原则。<br>但是当我们把三件事情看做一个”业务”，要满足保证“业务”的原子性，要么所有操作全部成功，要么全部失败，不允许出现部分成功部分失败的现象，这就是分布式系统下的事务。<br><img src="/2023/01/11/micro/%E5%88%86%E5%B8%83%E5%BC%8F%E6%94%B9%E9%80%A0%E7%90%86%E8%AE%BA%E4%B8%8E%E5%AE%9E%E6%88%98/img_11.png" alt></p>
+<p>完成上面的操作需要访问三个不同的微服务和三个不同的数据库。订单的创建、库存的扣减、账户扣款在每一个服务和数据库内是一个本地事务，可以保证ACID原则。<br>但是当我们把三件事情看做一个”业务”，要满足保证“业务”的原子性，要么所有操作全部成功，要么全部失败，不允许出现部分成功部分失败的现象，这就是分布式系统下的事务。<br><img src="/2023/01/11/micro/%E5%88%86%E5%B8%83%E5%BC%8F%E6%94%B9%E9%80%A0%E7%90%86%E8%AE%BA%E4%B8%8E%E5%AE%9E%E6%88%98/img_11.png"></p>
 <h3 id="分布式事物解决方案-Seata"><a href="#分布式事物解决方案-Seata" class="headerlink" title="分布式事物解决方案 Seata"></a>分布式事物解决方案 Seata</h3><p>Seata事务管理中有三个重要的角色：  </p>
 <ul>
 <li>TC (Transaction Coordinator) - <strong>事务协调者：</strong>维护全局和分支事务的状态，协调全局事务提交或回滚。</li>
 <li>TM (Transaction Manager) - <strong>事务管理器：</strong>定义全局事务的范围、开始全局事务、提交或回滚全局事务。</li>
-<li>RM (Resource Manager) - <strong>资源管理器：</strong>管理分支事务处理的资源，与TC交谈以注册分支事务和报告分支事务的状态，并驱动分支事务提交或回滚。<br><img src="/2023/01/11/micro/%E5%88%86%E5%B8%83%E5%BC%8F%E6%94%B9%E9%80%A0%E7%90%86%E8%AE%BA%E4%B8%8E%E5%AE%9E%E6%88%98/img_12.png" alt></li>
+<li>RM (Resource Manager) - <strong>资源管理器：</strong>管理分支事务处理的资源，与TC交谈以注册分支事务和报告分支事务的状态，并驱动分支事务提交或回滚。<br><img src="/2023/01/11/micro/%E5%88%86%E5%B8%83%E5%BC%8F%E6%94%B9%E9%80%A0%E7%90%86%E8%AE%BA%E4%B8%8E%E5%AE%9E%E6%88%98/img_12.png"></li>
 </ul>
 <h2 id="分布式锁"><a href="#分布式锁" class="headerlink" title="分布式锁"></a>分布式锁</h2><p>什么情况下需要使用锁？  </p>
 <ol>
@@ -385,8 +404,8 @@
 <ul>
 <li>第 0 位：符号位（标识正负），始终为 0，没有用，不用管。</li>
 <li>第 1~41 位 ：一共 41 位，用来表示时间戳，单位是毫秒，可以支撑 2 ^41 毫秒（约 69 年）</li>
-<li>第 42~52 位 ：一共 10 位，一般来说，前 5 位表示机房 ID，后 5 位表示机器 ID（实际项目中可以根据实际情况调整）。这样就可以区分不同集群/机房的节点。</li>
-<li>第 53~64 位 ：一共 12 位，用来表示序列号。序列号为自增值，代表单台机器每毫秒能够产生的最大 ID 数(2^12 = 4096),也就是说单台机器每毫秒最多可以生成 4096 个 唯一 ID。</li>
+<li>第 42~52 位 ：一共 10 位，一般来说，前 5 位表示机房 ID，后 5 位表示机器 ID（实际项目中可以根据实际情况调整）。这样就可以区分不同集群&#x2F;机房的节点。</li>
+<li>第 53~64 位 ：一共 12 位，用来表示序列号。序列号为自增值，代表单台机器每毫秒能够产生的最大 ID 数(2^12 &#x3D; 4096),也就是说单台机器每毫秒最多可以生成 4096 个 唯一 ID。</li>
 <li>优点 ：生成速度比较快、生成的 ID 有序递增、比较灵活（可以对 Snowflake 算法进行简单的改造比如加入业务 ID）</li>
 <li>缺点 ：需要解决重复 ID 问题（依赖时间，当机器时间不对的情况下，可能导致会产生重复 ID）</li>
 </ul>
@@ -399,12 +418,12 @@
 <h3 id="XXL-JOB"><a href="#XXL-JOB" class="headerlink" title="XXL-JOB"></a>XXL-JOB</h3><p>XXL-JOB是一个轻量级分布式任务调度平台，有以下特性：  </p>
 <ul>
 <li>简单：支持通过Web页面对任务进行CRUD操作，操作简单，一分钟上手；</li>
-<li>动态：支持动态修改任务状态、启动/停止任务，以及终止运行中任务，即时生效</li>
+<li>动态：支持动态修改任务状态、启动&#x2F;停止任务，以及终止运行中任务，即时生效</li>
 <li>注册中心: 执行器会周期性自动注册任务, 调度中心将会自动发现注册的任务并触发执行，每30秒清理一次注册表中的无效机器。同时，也支持手动录入执行器地址；</li>
 <li>失败处理策略：每10秒检测失败任务，报警和重试；</li>
-<li>一致性：“调度中心”通过DB锁保证集群分布式调度的一致性, 一次任务调度只会触发一次执行<br><img src="/2023/01/11/micro/%E5%88%86%E5%B8%83%E5%BC%8F%E6%94%B9%E9%80%A0%E7%90%86%E8%AE%BA%E4%B8%8E%E5%AE%9E%E6%88%98/img_12.jpeg" alt>  </li>
+<li>一致性：“调度中心”通过DB锁保证集群分布式调度的一致性, 一次任务调度只会触发一次执行<br><img src="/2023/01/11/micro/%E5%88%86%E5%B8%83%E5%BC%8F%E6%94%B9%E9%80%A0%E7%90%86%E8%AE%BA%E4%B8%8E%E5%AE%9E%E6%88%98/img_12.jpeg"></li>
 </ul>
-<h1 id="转载"><a href="#转载" class="headerlink" title="转载"></a>转载</h1><p><a href="https://www.toutiao.com/article/7156486159370158628/?app=news_article&timestamp=1668158533&use_new_style=1&req_id=202211111722130101330280501311EB97&group_id=7156486159370158628&wxshare_count=1&tt_from=weixin&utm_source=weixin&utm_medium=toutiao_android&utm_campaign=client_share&share_token=ef9f327c-0cd6-4bd0-a13f-906654210231&source=m_redirect&wid=1668158574046" target="_blank" rel="noopener">谐云课堂 | 一文详解分布式改造理论与实战</a></p>
+<h1 id="转载"><a href="#转载" class="headerlink" title="转载"></a>转载</h1><p><a target="_blank" rel="noopener" href="https://www.toutiao.com/article/7156486159370158628/?app=news_article&timestamp=1668158533&use_new_style=1&req_id=202211111722130101330280501311EB97&group_id=7156486159370158628&wxshare_count=1&tt_from=weixin&utm_source=weixin&utm_medium=toutiao_android&utm_campaign=client_share&share_token=ef9f327c-0cd6-4bd0-a13f-906654210231&source=m_redirect&wid=1668158574046">谐云课堂 | 一文详解分布式改造理论与实战</a></p>
 
     </div>
 
@@ -413,6 +432,9 @@
     
 
       <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Grpc/" rel="tag"># Grpc</a>
+          </div>
 
         
 
@@ -420,12 +442,12 @@
         
     <div class="post-nav">
       <div class="post-nav-item">
-    <a href="/2023/01/11/linux/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%8E%9F%E7%90%86+%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E5%9F%BA%E7%A1%80+%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C(%E6%85%95%E8%AF%BE%E7%BD%91)/" rel="prev" title="linux/计算机原理+操作系统基础+计算机网络(慕课网)">
-      <i class="fa fa-chevron-left"></i> linux/计算机原理+操作系统基础+计算机网络(慕课网)
+    <a href="/2023/01/11/linux/%E8%BF%9B%E7%A8%8B%E5%92%8C%E7%BA%BF%E7%A8%8B%E7%9A%84%E5%8C%BA%E5%88%AB/" rel="prev" title="进程和线程的区别">
+      <i class="fa fa-chevron-left"></i> 进程和线程的区别
     </a></div>
       <div class="post-nav-item">
-    <a href="/2023/01/11/linux/%E8%BF%9B%E7%A8%8B%E5%92%8C%E7%BA%BF%E7%A8%8B%E7%9A%84%E5%8C%BA%E5%88%AB/" rel="next" title="linux/进程和线程的区别">
-      linux/进程和线程的区别 <i class="fa fa-chevron-right"></i>
+    <a href="/2023/01/11/micro/%E9%A2%86%E5%9F%9F%E9%A9%B1%E5%8A%A8%E8%AE%BE%E8%AE%A1%E4%BB%A3%E7%A0%81%E5%AE%9E%E8%B7%B5/" rel="next" title="领域驱动设计代码实践">
+      领域驱动设计代码实践 <i class="fa fa-chevron-right"></i>
     </a></div>
     </div>
       </footer>
@@ -486,7 +508,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#微服务与分布式"><span class="nav-number">1.</span> <span class="nav-text">微服务与分布式</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#什么是分布式？"><span class="nav-number">1.1.</span> <span class="nav-text">什么是分布式？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#分布式和微服务有何不同？"><span class="nav-number">1.2.</span> <span class="nav-text">分布式和微服务有何不同？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#为什么要分布式部署？"><span class="nav-number">1.3.</span> <span class="nav-text">为什么要分布式部署？</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#分布式部署优点"><span class="nav-number">1.3.1.</span> <span class="nav-text">分布式部署优点</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#高性能"><span class="nav-number">1.3.1.1.</span> <span class="nav-text">高性能</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#高可扩展性"><span class="nav-number">1.3.1.2.</span> <span class="nav-text">高可扩展性</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#高可靠性-容错性"><span class="nav-number">1.3.1.3.</span> <span class="nav-text">高可靠性(容错性)</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#分布式部署缺点"><span class="nav-number">1.4.</span> <span class="nav-text">分布式部署缺点</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#故障诊断和调试"><span class="nav-number">1.4.1.</span> <span class="nav-text">故障诊断和调试</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#网络开销"><span class="nav-number">1.4.2.</span> <span class="nav-text">网络开销</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#增加开发难度"><span class="nav-number">1.4.3.</span> <span class="nav-text">增加开发难度</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#分布式系统挑战"><span class="nav-number">2.</span> <span class="nav-text">分布式系统挑战</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#挑战"><span class="nav-number">2.1.</span> <span class="nav-text">挑战</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#异构的机器与网络"><span class="nav-number">2.1.1.</span> <span class="nav-text">异构的机器与网络</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#普遍的节点故障"><span class="nav-number">2.1.2.</span> <span class="nav-text">普遍的节点故障</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#不可靠的网络"><span class="nav-number">2.1.3.</span> <span class="nav-text">不可靠的网络</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#分布式系统CAP-Base"><span class="nav-number">2.2.</span> <span class="nav-text">分布式系统CAP+Base</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#分布式系统CP案例-保证强一致性zookeeper"><span class="nav-number">2.2.1.</span> <span class="nav-text">分布式系统CP案例 (保证强一致性zookeeper)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#分布式系统AP案例-保证高可用性"><span class="nav-number">2.2.2.</span> <span class="nav-text">分布式系统AP案例 (保证高可用性)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#分布式系统BASE理论"><span class="nav-number">2.2.3.</span> <span class="nav-text">分布式系统BASE理论</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#实战案例"><span class="nav-number">3.</span> <span class="nav-text">实战案例</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#websocket实现分布式方案"><span class="nav-number">3.1.</span> <span class="nav-text">websocket实现分布式方案</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#定时线程池分布式问题"><span class="nav-number">3.2.</span> <span class="nav-text">定时线程池分布式问题</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#案例总结"><span class="nav-number">3.3.</span> <span class="nav-text">案例总结</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#分布式常见方案"><span class="nav-number">4.</span> <span class="nav-text">分布式常见方案</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#分布式事物"><span class="nav-number">4.1.</span> <span class="nav-text">分布式事物</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#分布式事物解决方案-Seata"><span class="nav-number">4.1.1.</span> <span class="nav-text">分布式事物解决方案 Seata</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#分布式锁"><span class="nav-number">4.2.</span> <span class="nav-text">分布式锁</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#分布式锁解决方案：Redis"><span class="nav-number">4.2.1.</span> <span class="nav-text">分布式锁解决方案：Redis</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#基于数据库实现的分布式锁。"><span class="nav-number">4.2.2.</span> <span class="nav-text">基于数据库实现的分布式锁。</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#基于redis实现的分布式锁"><span class="nav-number">4.2.3.</span> <span class="nav-text">基于redis实现的分布式锁</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Redission基于redis实现的分布式锁RedLock。"><span class="nav-number">4.2.3.1.</span> <span class="nav-text">Redission基于redis实现的分布式锁RedLock。</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#基于ETCD-事务操作实现分布式锁"><span class="nav-number">4.2.4.</span> <span class="nav-text">基于ETCD 事务操作实现分布式锁</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#分布式ID"><span class="nav-number">4.3.</span> <span class="nav-text">分布式ID</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Redis的Incr"><span class="nav-number">4.3.1.</span> <span class="nav-text">Redis的Incr</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#UUID"><span class="nav-number">4.3.2.</span> <span class="nav-text">UUID</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#雪花算法"><span class="nav-number">4.3.3.</span> <span class="nav-text">雪花算法</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#分布式调度"><span class="nav-number">4.4.</span> <span class="nav-text">分布式调度</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Elastic-Job"><span class="nav-number">4.4.1.</span> <span class="nav-text">Elastic-Job</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#XXL-JOB"><span class="nav-number">4.4.2.</span> <span class="nav-text">XXL-JOB</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#转载"><span class="nav-number">5.</span> <span class="nav-text">转载</span></a></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%BE%AE%E6%9C%8D%E5%8A%A1%E4%B8%8E%E5%88%86%E5%B8%83%E5%BC%8F"><span class="nav-number">1.</span> <span class="nav-text">微服务与分布式</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BB%80%E4%B9%88%E6%98%AF%E5%88%86%E5%B8%83%E5%BC%8F%EF%BC%9F"><span class="nav-number">1.1.</span> <span class="nav-text">什么是分布式？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%88%86%E5%B8%83%E5%BC%8F%E5%92%8C%E5%BE%AE%E6%9C%8D%E5%8A%A1%E6%9C%89%E4%BD%95%E4%B8%8D%E5%90%8C%EF%BC%9F"><span class="nav-number">1.2.</span> <span class="nav-text">分布式和微服务有何不同？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%BA%E4%BB%80%E4%B9%88%E8%A6%81%E5%88%86%E5%B8%83%E5%BC%8F%E9%83%A8%E7%BD%B2%EF%BC%9F"><span class="nav-number">1.3.</span> <span class="nav-text">为什么要分布式部署？</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%88%86%E5%B8%83%E5%BC%8F%E9%83%A8%E7%BD%B2%E4%BC%98%E7%82%B9"><span class="nav-number">1.3.1.</span> <span class="nav-text">分布式部署优点</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%AB%98%E6%80%A7%E8%83%BD"><span class="nav-number">1.3.1.1.</span> <span class="nav-text">高性能</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%AB%98%E5%8F%AF%E6%89%A9%E5%B1%95%E6%80%A7"><span class="nav-number">1.3.1.2.</span> <span class="nav-text">高可扩展性</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%AB%98%E5%8F%AF%E9%9D%A0%E6%80%A7-%E5%AE%B9%E9%94%99%E6%80%A7"><span class="nav-number">1.3.1.3.</span> <span class="nav-text">高可靠性(容错性)</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%88%86%E5%B8%83%E5%BC%8F%E9%83%A8%E7%BD%B2%E7%BC%BA%E7%82%B9"><span class="nav-number">1.4.</span> <span class="nav-text">分布式部署缺点</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%95%85%E9%9A%9C%E8%AF%8A%E6%96%AD%E5%92%8C%E8%B0%83%E8%AF%95"><span class="nav-number">1.4.1.</span> <span class="nav-text">故障诊断和调试</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%BD%91%E7%BB%9C%E5%BC%80%E9%94%80"><span class="nav-number">1.4.2.</span> <span class="nav-text">网络开销</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%A2%9E%E5%8A%A0%E5%BC%80%E5%8F%91%E9%9A%BE%E5%BA%A6"><span class="nav-number">1.4.3.</span> <span class="nav-text">增加开发难度</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%88%86%E5%B8%83%E5%BC%8F%E7%B3%BB%E7%BB%9F%E6%8C%91%E6%88%98"><span class="nav-number">2.</span> <span class="nav-text">分布式系统挑战</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%8C%91%E6%88%98"><span class="nav-number">2.1.</span> <span class="nav-text">挑战</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%BC%82%E6%9E%84%E7%9A%84%E6%9C%BA%E5%99%A8%E4%B8%8E%E7%BD%91%E7%BB%9C"><span class="nav-number">2.1.1.</span> <span class="nav-text">异构的机器与网络</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%99%AE%E9%81%8D%E7%9A%84%E8%8A%82%E7%82%B9%E6%95%85%E9%9A%9C"><span class="nav-number">2.1.2.</span> <span class="nav-text">普遍的节点故障</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%8D%E5%8F%AF%E9%9D%A0%E7%9A%84%E7%BD%91%E7%BB%9C"><span class="nav-number">2.1.3.</span> <span class="nav-text">不可靠的网络</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%88%86%E5%B8%83%E5%BC%8F%E7%B3%BB%E7%BB%9FCAP-Base"><span class="nav-number">2.2.</span> <span class="nav-text">分布式系统CAP+Base</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%88%86%E5%B8%83%E5%BC%8F%E7%B3%BB%E7%BB%9FCP%E6%A1%88%E4%BE%8B-%E4%BF%9D%E8%AF%81%E5%BC%BA%E4%B8%80%E8%87%B4%E6%80%A7zookeeper"><span class="nav-number">2.2.1.</span> <span class="nav-text">分布式系统CP案例 (保证强一致性zookeeper)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%88%86%E5%B8%83%E5%BC%8F%E7%B3%BB%E7%BB%9FAP%E6%A1%88%E4%BE%8B-%E4%BF%9D%E8%AF%81%E9%AB%98%E5%8F%AF%E7%94%A8%E6%80%A7"><span class="nav-number">2.2.2.</span> <span class="nav-text">分布式系统AP案例 (保证高可用性)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%88%86%E5%B8%83%E5%BC%8F%E7%B3%BB%E7%BB%9FBASE%E7%90%86%E8%AE%BA"><span class="nav-number">2.2.3.</span> <span class="nav-text">分布式系统BASE理论</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%AE%9E%E6%88%98%E6%A1%88%E4%BE%8B"><span class="nav-number">3.</span> <span class="nav-text">实战案例</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#websocket%E5%AE%9E%E7%8E%B0%E5%88%86%E5%B8%83%E5%BC%8F%E6%96%B9%E6%A1%88"><span class="nav-number">3.1.</span> <span class="nav-text">websocket实现分布式方案</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%9A%E6%97%B6%E7%BA%BF%E7%A8%8B%E6%B1%A0%E5%88%86%E5%B8%83%E5%BC%8F%E9%97%AE%E9%A2%98"><span class="nav-number">3.2.</span> <span class="nav-text">定时线程池分布式问题</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%A1%88%E4%BE%8B%E6%80%BB%E7%BB%93"><span class="nav-number">3.3.</span> <span class="nav-text">案例总结</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%88%86%E5%B8%83%E5%BC%8F%E5%B8%B8%E8%A7%81%E6%96%B9%E6%A1%88"><span class="nav-number">4.</span> <span class="nav-text">分布式常见方案</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%88%86%E5%B8%83%E5%BC%8F%E4%BA%8B%E7%89%A9"><span class="nav-number">4.1.</span> <span class="nav-text">分布式事物</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%88%86%E5%B8%83%E5%BC%8F%E4%BA%8B%E7%89%A9%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88-Seata"><span class="nav-number">4.1.1.</span> <span class="nav-text">分布式事物解决方案 Seata</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%88%86%E5%B8%83%E5%BC%8F%E9%94%81"><span class="nav-number">4.2.</span> <span class="nav-text">分布式锁</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%88%86%E5%B8%83%E5%BC%8F%E9%94%81%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88%EF%BC%9ARedis"><span class="nav-number">4.2.1.</span> <span class="nav-text">分布式锁解决方案：Redis</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%9F%BA%E4%BA%8E%E6%95%B0%E6%8D%AE%E5%BA%93%E5%AE%9E%E7%8E%B0%E7%9A%84%E5%88%86%E5%B8%83%E5%BC%8F%E9%94%81%E3%80%82"><span class="nav-number">4.2.2.</span> <span class="nav-text">基于数据库实现的分布式锁。</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%9F%BA%E4%BA%8Eredis%E5%AE%9E%E7%8E%B0%E7%9A%84%E5%88%86%E5%B8%83%E5%BC%8F%E9%94%81"><span class="nav-number">4.2.3.</span> <span class="nav-text">基于redis实现的分布式锁</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Redission%E5%9F%BA%E4%BA%8Eredis%E5%AE%9E%E7%8E%B0%E7%9A%84%E5%88%86%E5%B8%83%E5%BC%8F%E9%94%81RedLock%E3%80%82"><span class="nav-number">4.2.3.1.</span> <span class="nav-text">Redission基于redis实现的分布式锁RedLock。</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%9F%BA%E4%BA%8EETCD-%E4%BA%8B%E5%8A%A1%E6%93%8D%E4%BD%9C%E5%AE%9E%E7%8E%B0%E5%88%86%E5%B8%83%E5%BC%8F%E9%94%81"><span class="nav-number">4.2.4.</span> <span class="nav-text">基于ETCD 事务操作实现分布式锁</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%88%86%E5%B8%83%E5%BC%8FID"><span class="nav-number">4.3.</span> <span class="nav-text">分布式ID</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Redis%E7%9A%84Incr"><span class="nav-number">4.3.1.</span> <span class="nav-text">Redis的Incr</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#UUID"><span class="nav-number">4.3.2.</span> <span class="nav-text">UUID</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%9B%AA%E8%8A%B1%E7%AE%97%E6%B3%95"><span class="nav-number">4.3.3.</span> <span class="nav-text">雪花算法</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%88%86%E5%B8%83%E5%BC%8F%E8%B0%83%E5%BA%A6"><span class="nav-number">4.4.</span> <span class="nav-text">分布式调度</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Elastic-Job"><span class="nav-number">4.4.1.</span> <span class="nav-text">Elastic-Job</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#XXL-JOB"><span class="nav-number">4.4.2.</span> <span class="nav-text">XXL-JOB</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E8%BD%AC%E8%BD%BD"><span class="nav-number">5.</span> <span class="nav-text">转载</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 
@@ -502,14 +524,14 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">101</span>
+          <span class="site-state-item-count">96</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
             <a href="/categories/">
           
-        <span class="site-state-item-count">18</span>
+        <span class="site-state-item-count">19</span>
         <span class="site-state-item-name">分类</span></a>
       </div>
       <div class="site-state-item site-state-tags">
@@ -546,7 +568,7 @@
   </span>
   <span class="author" itemprop="copyrightHolder">Chen Yu</span>
 </div>
-  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v4.2.0
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v6.3.0
   </div>
   <span class="post-meta-divider">|</span>
   <div class="theme-info">主题 – <a href="https://theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a> v7.7.0

@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
 <meta name="theme-color" content="#222">
-<meta name="generator" content="Hexo 4.2.0">
+<meta name="generator" content="Hexo 6.3.0">
   <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
   <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
   <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
@@ -49,14 +49,14 @@
 
   <meta name="description" content="TiDB基础入门TiDB 是一个分布式 NewSQL SQL 、 NoSQL 和 NewSQL 的优缺点比较 数据库。它支持水平弹性扩展、ACID 事务、标准 SQL、MySQL 语法和 MySQL 协议，具有数据强一致的高可用特性，是一个不仅适合 OLTP 场景还适合 OLAP 场景的混合数据库。">
 <meta property="og:type" content="article">
-<meta property="og:title" content="db&#x2F;TIDB基础">
+<meta property="og:title" content="TIDB基础">
 <meta property="og:url" content="https://phpdi.github.io/2023/01/11/db/TIDB%E5%9F%BA%E7%A1%80/index.html">
 <meta property="og:site_name" content="goeoeo">
 <meta property="og:description" content="TiDB基础入门TiDB 是一个分布式 NewSQL SQL 、 NoSQL 和 NewSQL 的优缺点比较 数据库。它支持水平弹性扩展、ACID 事务、标准 SQL、MySQL 语法和 MySQL 协议，具有数据强一致的高可用特性，是一个不仅适合 OLTP 场景还适合 OLAP 场景的混合数据库。">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://phpdi.github.io/2023/01/11/db/TIDB%E5%9F%BA%E7%A1%80/1766027-20190909160918250-1390331381.png">
 <meta property="article:published_time" content="2023-01-11T14:59:23.562Z">
-<meta property="article:modified_time" content="2023-01-11T14:59:23.562Z">
+<meta property="article:modified_time" content="2023-09-14T02:29:23.316Z">
 <meta property="article:author" content="Chen Yu">
 <meta property="article:tag" content="tidb">
 <meta name="twitter:card" content="summary">
@@ -74,7 +74,7 @@
   };
 </script>
 
-  <title>db/TIDB基础 | goeoeo</title>
+  <title>TIDB基础 | goeoeo</title>
   
 
 
@@ -228,7 +228,7 @@
     </span>
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
-          db/TIDB基础
+          TIDB基础
         </h2>
 
         <div class="post-meta">
@@ -240,6 +240,13 @@
 
               <time title="创建时间：2023-01-11 22:59:23" itemprop="dateCreated datePublished" datetime="2023-01-11T22:59:23+08:00">2023-01-11</time>
             </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2023-09-14 10:29:23" itemprop="dateModified" datetime="2023-09-14T10:29:23+08:00">2023-09-14</time>
+              </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
                 <i class="fa fa-folder-o"></i>
@@ -263,15 +270,16 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <h1 id="TiDB基础入门"><a href="#TiDB基础入门" class="headerlink" title="TiDB基础入门"></a>TiDB基础入门</h1><p>TiDB 是一个分布式 NewSQL <a href="https://www.jianshu.com/p/ed55f20e736a" target="_blank" rel="noopener">SQL 、 NoSQL 和 NewSQL 的优缺点比较 </a>数据库。它支持水平弹性扩展、ACID 事务、标准 SQL、MySQL 语法和 MySQL 协议，具有数据强一致的高可用特性，是一个不仅适合 OLTP 场景还适合 OLAP 场景的混合数据库。</p>
-<a id="more"></a>
+        <h1 id="TiDB基础入门"><a href="#TiDB基础入门" class="headerlink" title="TiDB基础入门"></a>TiDB基础入门</h1><p>TiDB 是一个分布式 NewSQL <a target="_blank" rel="noopener" href="https://www.jianshu.com/p/ed55f20e736a">SQL 、 NoSQL 和 NewSQL 的优缺点比较 </a>数据库。它支持水平弹性扩展、ACID 事务、标准 SQL、MySQL 语法和 MySQL 协议，具有数据强一致的高可用特性，是一个不仅适合 OLTP 场景还适合 OLAP 场景的混合数据库。</p>
+<span id="more"></span>
 
 
 
 <h2 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h2><ul>
-<li><p>高度兼容 MySQL </p>
-<p>大多数情况下，无需修改代码即可从 MySQL 轻松迁移至 TiDB，分库分表后的 MySQL 集群亦可通过 TiDB 工具进行实时迁移。</p>
-</li>
+<li>高度兼容 MySQL</li>
+</ul>
+<p>  大多数情况下，无需修改代码即可从 MySQL 轻松迁移至 TiDB，分库分表后的 MySQL 集群亦可通过 TiDB 工具进行实时迁移。</p>
+<ul>
 <li><p>水平弹性扩展 </p>
 <p>通过简单地增加新节点即可实现 TiDB 的水平扩展，按需扩展吞吐或存储，轻松应对高并发、海量数据场景。</p>
 </li>
@@ -282,15 +290,15 @@
 <p>相比于传统主从 (M-S) 复制方案，基于 Raft 的多数派选举协议可以提供金融级的 100% 数据强一致性保证，且在不丢失大多数副本的前提下，可以实现故障的自动恢复 (auto-failover)，无需人工介入</p>
 </li>
 <li><p>一站式 HTAP 解决方案 </p>
-<p> TiDB 作为典型的 OLTP 行存数据库，同时兼具强大的 OLAP 性能，配合 TiSpark，可提供一站式 HTAP解决方案，一份存储同时处理OLTP &amp; OLAP<a href="https://www.jianshu.com/p/b1d7ca178691" target="_blank" rel="noopener">OLAP、OLTP的介绍和比较</a>无需传统繁琐的 ETL 过程。</p>
+<p> TiDB 作为典型的 OLTP 行存数据库，同时兼具强大的 OLAP 性能，配合 TiSpark，可提供一站式 HTAP解决方案，一份存储同时处理OLTP &amp; OLAP<a target="_blank" rel="noopener" href="https://www.jianshu.com/p/b1d7ca178691">OLAP、OLTP的介绍和比较</a>无需传统繁琐的 ETL 过程。</p>
 </li>
 <li><p>云原生 SQL 数据库  </p>
 <p>TiDB 是为云而设计的数据库 </p>
-<p>同 Kubernetes （<a href="https://www.jianshu.com/p/6326c7b4bc63" target="_blank" rel="noopener">Kubernetes核心概念</a> ）深度耦合，支持公有云、私有云和混合云，使部署、配置和维护变得十分简单。   </p>
-<p>TiDB 的设计目标是 100% 的 OLTP 场景和 80% 的 OLAP 场景，更复杂的 OLAP 分析可以通过 TiSpark 项目来完成。 TiDB 对业务没有任何侵入性，能优雅的替换传统的数据库中间件、数据库分库分表等 Sharding 方案。同时它也让开发运维人员不用关注数据库 Scale 的细节问题，专注于业务开发，极大的提升研发的生产力.    </p>
+<p>同 Kubernetes （<a target="_blank" rel="noopener" href="https://www.jianshu.com/p/6326c7b4bc63">Kubernetes核心概念</a> ）深度耦合，支持公有云、私有云和混合云，使部署、配置和维护变得十分简单。   </p>
+<p>TiDB 的设计目标是 100% 的 OLTP 场景和 80% 的 OLAP 场景，更复杂的 OLAP 分析可以通过 TiSpark 项目来完成。 TiDB 对业务没有任何侵入性，能优雅的替换传统的数据库中间件、数据库分库分表等 Sharding 方案。同时它也让开发运维人员不用关注数据库 Scale 的细节问题，专注于业务开发，极大的提升研发的生产力.</p>
 </li>
 </ul>
-<h2 id="TiDB整体架构"><a href="#TiDB整体架构" class="headerlink" title="TiDB整体架构"></a>TiDB整体架构</h2><p><img src="/2023/01/11/db/TIDB%E5%9F%BA%E7%A1%80/1766027-20190909160918250-1390331381.png" alt></p>
+<h2 id="TiDB整体架构"><a href="#TiDB整体架构" class="headerlink" title="TiDB整体架构"></a>TiDB整体架构</h2><p><img src="/2023/01/11/db/TIDB%E5%9F%BA%E7%A1%80/1766027-20190909160918250-1390331381.png"></p>
 <h3 id="三大组件"><a href="#三大组件" class="headerlink" title="三大组件"></a>三大组件</h3><h4 id="TIDB-Server"><a href="#TIDB-Server" class="headerlink" title="TIDB Server"></a>TIDB Server</h4><p>TiDB Server 负责接收 SQL 请求，处理 SQL 相关的逻辑，并通过 PD 找到存储计算所需数据的 TiKV 地址，与 TiKV 交互获取数据，最终返回结果。 TiDB Server 是无状态的，其本身并不存储数据，只负责计算，可以无限水平扩展，可以通过负载均衡组件（如LVS、HAProxy 或 F5）对外提供统一的接入地址。</p>
 <h3 id="PD-Server"><a href="#PD-Server" class="headerlink" title="PD Server"></a>PD Server</h3><p>Placement Driver (简称 PD) 是整个集群的管理模块，其主要工作有三个： 一是存储集群的元信息（某个 Key 存储在哪个 TiKV 节点）；二是对 TiKV 集群进行调度和负载均衡（如数据的迁移、Raft group leader 的迁移等）；三是分配全局唯一且递增的事务 ID。</p>
 <p>PD 是一个集群，需要部署奇数个节点，一般线上推荐至少部署 3 个节点。</p>
@@ -300,7 +308,7 @@
 <p>无限水平扩展是 TiDB 的一大特点，这里说的水平扩展包括两方面：计算能力和存储能力。TiDB Server 负责处理 SQL 请求，随着业务的增长，可以简单的添加 TiDB Server 节点，提高整体的处理能力，提供更高的吞吐。TiKV 负责存储数据，随着数据量的增长，可以部署更多的 TiKV Server 节点解决数据 Scale 的问题。PD 会在 TiKV 节点之间以 Region 为单位做调度，将部分数据迁移到新加的节点上。所以在业务的早期，可以只部署少量的服务实例，随着业务量的增长，按照需求添加 TiKV 或者 TiDB 实例。</p>
 </li>
 <li><p>高可用</p>
-<p>高可用是 TiDB 的另一大特点，TiDB/TiKV/PD 这三个组件都能容忍部分实例失效，不影响整个集群的可用性。</p>
+<p>高可用是 TiDB 的另一大特点，TiDB&#x2F;TiKV&#x2F;PD 这三个组件都能容忍部分实例失效，不影响整个集群的可用性。</p>
 </li>
 </ul>
 <h2 id="TiDB原理与实现"><a href="#TiDB原理与实现" class="headerlink" title="TiDB原理与实现"></a>TiDB原理与实现</h2><p>TiDB 架构是 SQL 层和 KV 存储层分离，相当于 InnoDB 插件存储引擎与 MySQL 的关系。从下图可以看出整个系统是高度分层的，最底层选用了当前比较流行的存储引擎 RocksDB，RockDB 性能很好但是是单机的，为了保证高可用所以写多份，上层使用 Raft 协议来保证单机失效后数据不丢失不出错。保证有了比较安全的 KV 存储的基础上再去构建多版本，再去构建分布式事务，这样就构成了存储层 TiKV。有了TiKV，TiDB 层只需要实现 SQL 层，再加上 MySQL 协议的支持，应用程序就能像访问 MySQL 那样去访问 TiDB 了。</p>
@@ -335,12 +343,12 @@
         
     <div class="post-nav">
       <div class="post-nav-item">
-    <a href="/2023/01/11/algo/%E5%8A%9B%E6%89%A3-%E5%88%9D%E7%BA%A7%E7%AE%97%E6%B3%95/" rel="prev" title="algo/力扣-初级算法">
-      <i class="fa fa-chevron-left"></i> algo/力扣-初级算法
+    <a href="/2023/01/11/db/MySQL%E6%9F%A5%E7%9C%8B%E8%BF%9E%E6%8E%A5%E6%95%B0(%E8%BF%9E%E6%8E%A5%E6%80%BB%E6%95%B0%E3%80%81%E6%B4%BB%E8%B7%83%E6%95%B0%E3%80%81%E6%9C%80%E5%A4%A7%E5%B9%B6%E5%8F%91%E6%95%B0)/" rel="prev" title="MySQL查看连接数(连接总数、活跃数、最大并发数)">
+      <i class="fa fa-chevron-left"></i> MySQL查看连接数(连接总数、活跃数、最大并发数)
     </a></div>
       <div class="post-nav-item">
-    <a href="/2023/01/11/db/MySQL%E9%97%AE%E9%A2%98%E9%9B%86/" rel="next" title="db/MySQL问题集">
-      db/MySQL问题集 <i class="fa fa-chevron-right"></i>
+    <a href="/2023/01/11/db/MySQL%E9%97%AE%E9%A2%98%E9%9B%86/" rel="next" title="MySQL问题集">
+      MySQL问题集 <i class="fa fa-chevron-right"></i>
     </a></div>
     </div>
       </footer>
@@ -401,7 +409,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#TiDB基础入门"><span class="nav-number">1.</span> <span class="nav-text">TiDB基础入门</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#简介"><span class="nav-number">1.1.</span> <span class="nav-text">简介</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#TiDB整体架构"><span class="nav-number">1.2.</span> <span class="nav-text">TiDB整体架构</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#三大组件"><span class="nav-number">1.2.1.</span> <span class="nav-text">三大组件</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#TIDB-Server"><span class="nav-number">1.2.1.1.</span> <span class="nav-text">TIDB Server</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#PD-Server"><span class="nav-number">1.2.2.</span> <span class="nav-text">PD Server</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#TIKV-Server"><span class="nav-number">1.2.2.1.</span> <span class="nav-text">TIKV Server</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#核心特性"><span class="nav-number">1.3.</span> <span class="nav-text">核心特性</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#TiDB原理与实现"><span class="nav-number">1.4.</span> <span class="nav-text">TiDB原理与实现</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#TIDB-vs-Mysql"><span class="nav-number">1.5.</span> <span class="nav-text">TIDB vs Mysql</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#总结"><span class="nav-number">1.6.</span> <span class="nav-text">总结</span></a></li></ol></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#TiDB%E5%9F%BA%E7%A1%80%E5%85%A5%E9%97%A8"><span class="nav-number">1.</span> <span class="nav-text">TiDB基础入门</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%AE%80%E4%BB%8B"><span class="nav-number">1.1.</span> <span class="nav-text">简介</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#TiDB%E6%95%B4%E4%BD%93%E6%9E%B6%E6%9E%84"><span class="nav-number">1.2.</span> <span class="nav-text">TiDB整体架构</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%89%E5%A4%A7%E7%BB%84%E4%BB%B6"><span class="nav-number">1.2.1.</span> <span class="nav-text">三大组件</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#TIDB-Server"><span class="nav-number">1.2.1.1.</span> <span class="nav-text">TIDB Server</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#PD-Server"><span class="nav-number">1.2.2.</span> <span class="nav-text">PD Server</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#TIKV-Server"><span class="nav-number">1.2.2.1.</span> <span class="nav-text">TIKV Server</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%A0%B8%E5%BF%83%E7%89%B9%E6%80%A7"><span class="nav-number">1.3.</span> <span class="nav-text">核心特性</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#TiDB%E5%8E%9F%E7%90%86%E4%B8%8E%E5%AE%9E%E7%8E%B0"><span class="nav-number">1.4.</span> <span class="nav-text">TiDB原理与实现</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#TIDB-vs-Mysql"><span class="nav-number">1.5.</span> <span class="nav-text">TIDB vs Mysql</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%80%BB%E7%BB%93"><span class="nav-number">1.6.</span> <span class="nav-text">总结</span></a></li></ol></li></ol></div>
       </div>
       <!--/noindex-->
 
@@ -417,14 +425,14 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">101</span>
+          <span class="site-state-item-count">96</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
             <a href="/categories/">
           
-        <span class="site-state-item-count">18</span>
+        <span class="site-state-item-count">19</span>
         <span class="site-state-item-name">分类</span></a>
       </div>
       <div class="site-state-item site-state-tags">
@@ -461,7 +469,7 @@
   </span>
   <span class="author" itemprop="copyrightHolder">Chen Yu</span>
 </div>
-  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v4.2.0
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v6.3.0
   </div>
   <span class="post-meta-divider">|</span>
   <div class="theme-info">主题 – <a href="https://theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a> v7.7.0

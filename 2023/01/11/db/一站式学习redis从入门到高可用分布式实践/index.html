@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
 <meta name="theme-color" content="#222">
-<meta name="generator" content="Hexo 4.2.0">
+<meta name="generator" content="Hexo 6.3.0">
   <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
   <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
   <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
@@ -49,14 +49,15 @@
 
   <meta name="description" content="第1章到第3章redis 特性 速度快 持久化 多种数据结构 支持多种编程语言 功能丰富 简单 主从复制 高可用,分布式">
 <meta property="og:type" content="article">
-<meta property="og:title" content="db&#x2F;一站式学习redis从入门到高可用分布式实践">
+<meta property="og:title" content="一站式学习redis从入门到高可用分布式实践">
 <meta property="og:url" content="https://phpdi.github.io/2023/01/11/db/%E4%B8%80%E7%AB%99%E5%BC%8F%E5%AD%A6%E4%B9%A0redis%E4%BB%8E%E5%85%A5%E9%97%A8%E5%88%B0%E9%AB%98%E5%8F%AF%E7%94%A8%E5%88%86%E5%B8%83%E5%BC%8F%E5%AE%9E%E8%B7%B5/index.html">
 <meta property="og:site_name" content="goeoeo">
 <meta property="og:description" content="第1章到第3章redis 特性 速度快 持久化 多种数据结构 支持多种编程语言 功能丰富 简单 主从复制 高可用,分布式">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2023-01-11T14:59:23.564Z">
-<meta property="article:modified_time" content="2023-01-11T14:59:23.564Z">
+<meta property="article:modified_time" content="2023-09-14T02:30:53.449Z">
 <meta property="article:author" content="Chen Yu">
+<meta property="article:tag" content="redis">
 <meta name="twitter:card" content="summary">
 
 <link rel="canonical" href="https://phpdi.github.io/2023/01/11/db/%E4%B8%80%E7%AB%99%E5%BC%8F%E5%AD%A6%E4%B9%A0redis%E4%BB%8E%E5%85%A5%E9%97%A8%E5%88%B0%E9%AB%98%E5%8F%AF%E7%94%A8%E5%88%86%E5%B8%83%E5%BC%8F%E5%AE%9E%E8%B7%B5/">
@@ -71,7 +72,7 @@
   };
 </script>
 
-  <title>db/一站式学习redis从入门到高可用分布式实践 | goeoeo</title>
+  <title>一站式学习redis从入门到高可用分布式实践 | goeoeo</title>
   
 
 
@@ -225,7 +226,7 @@
     </span>
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
-          db/一站式学习redis从入门到高可用分布式实践
+          一站式学习redis从入门到高可用分布式实践
         </h2>
 
         <div class="post-meta">
@@ -237,6 +238,13 @@
 
               <time title="创建时间：2023-01-11 22:59:23" itemprop="dateCreated datePublished" datetime="2023-01-11T22:59:23+08:00">2023-01-11</time>
             </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2023-09-14 10:30:53" itemprop="dateModified" datetime="2023-09-14T10:30:53+08:00">2023-09-14</time>
+              </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
                 <i class="fa fa-folder-o"></i>
@@ -268,9 +276,7 @@
 <li>功能丰富</li>
 <li>简单</li>
 <li>主从复制</li>
-<li>高可用,分布式<a id="more"></a>
-
-</li>
+<li>高可用,分布式<span id="more"></span></li>
 </ul>
 <h2 id="通用命令"><a href="#通用命令" class="headerlink" title="通用命令"></a>通用命令</h2><ul>
 <li>keys *: 列出所有的key ,不建议线上使用</li>
@@ -305,7 +311,7 @@
 <li>二进制文件</li>
 <li>复制媒介</li>
 </ul>
-<h3 id="触发机制"><a href="#触发机制" class="headerlink" title="触发机制"></a>触发机制</h3><h4 id="主要三种触发方式"><a href="#主要三种触发方式" class="headerlink" title="主要三种触发方式"></a>主要三种触发方式</h4><h5 id="save-同步"><a href="#save-同步" class="headerlink" title="save (同步)　"></a>save (同步)　</h5><ul>
+<h3 id="触发机制"><a href="#触发机制" class="headerlink" title="触发机制"></a>触发机制</h3><h4 id="主要三种触发方式"><a href="#主要三种触发方式" class="headerlink" title="主要三种触发方式"></a>主要三种触发方式</h4><h5 id="save-同步"><a href="#save-同步" class="headerlink" title="save (同步)"></a>save (同步)</h5><ul>
 <li>命令执行过程中redis处于阻塞状态</li>
 <li>文件策略，如存在老的RDB文件，新替换老</li>
 <li>O(N)</li>
@@ -382,14 +388,14 @@
 </tr>
 </tbody></table>
 <p>1.redis默认配置文件 </p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">save 900 1</span><br><span class="line">save 300 10</span><br><span class="line">save 60 10000</span><br><span class="line">dbfilename dump.rdb</span><br><span class="line">dir .&#x2F;</span><br><span class="line">stop-writes-on-bgsave-error yes</span><br><span class="line">rdbcompression yes</span><br><span class="line">rdbchecksum yes</span><br></pre></td></tr></table></figure>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">save 900 1</span><br><span class="line">save 300 10</span><br><span class="line">save 60 10000</span><br><span class="line">dbfilename dump.rdb</span><br><span class="line">dir ./</span><br><span class="line">stop-writes-on-bgsave-error yes</span><br><span class="line">rdbcompression yes</span><br><span class="line">rdbchecksum yes</span><br><span class="line"></span><br></pre></td></tr></table></figure>
 <p>2.redis推荐配置  </p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">dbfilename dump-$&#123;port&#125;.rdb</span><br><span class="line">dir &#x2F;bigdiskpath </span><br><span class="line">stop-writes-on-bgsave-error yes</span><br><span class="line">rdbcompression yes</span><br><span class="line">rdbchecksum yes</span><br></pre></td></tr></table></figure>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">dbfilename dump-$&#123;port&#125;.rdb</span><br><span class="line">dir /bigdiskpath </span><br><span class="line">stop-writes-on-bgsave-error yes</span><br><span class="line">rdbcompression yes</span><br><span class="line">rdbchecksum yes</span><br></pre></td></tr></table></figure>
 
 <h4 id="不容忽视的方式"><a href="#不容忽视的方式" class="headerlink" title="不容忽视的方式"></a>不容忽视的方式</h4><ul>
 <li>全量复制</li>
 <li>debug reload</li>
-<li>shutdown </li>
+<li>shutdown</li>
 </ul>
 <h3 id="RDB-总结"><a href="#RDB-总结" class="headerlink" title="RDB 总结"></a>RDB 总结</h3><ul>
 <li>RDB是Redis内存到硬盘的快照，用于持久化</li>
@@ -405,7 +411,7 @@
 <h3 id="什么是AOF"><a href="#什么是AOF" class="headerlink" title="什么是AOF"></a>什么是AOF</h3><p>日志原理，每执行一条命令，都会写入到aof文件中<br>具体过程：  </p>
 <ol>
 <li>写命令刷新到缓冲区</li>
-<li>缓冲区的命令会根据一定的策略fsync到硬盘的AOF文件中    </li>
+<li>缓冲区的命令会根据一定的策略fsync到硬盘的AOF文件中</li>
 </ol>
 <h3 id="AOF三种策略"><a href="#AOF三种策略" class="headerlink" title="AOF三种策略"></a>AOF三种策略</h3><ul>
 <li>always : 每执行一条命令就会执行fsync</li>
@@ -452,7 +458,7 @@
 </tr>
 <tr>
 <td align="left">auto-aof-rewrite-percentage</td>
-<td align="left">AOF文件增长率（(aof_current_size-aof_base_size)/aof_base_size）</td>
+<td align="left">AOF文件增长率（(aof_current_size-aof_base_size)&#x2F;aof_base_size）</td>
 </tr>
 </tbody></table>
 <p>以上两个条件同时满足才会触发aof自动重写</p>
@@ -472,7 +478,7 @@
 <td align="left">AOF上次启动和重写的尺寸（单位：字节）</td>
 </tr>
 </tbody></table>
-<h3 id="AOF-配置"><a href="#AOF-配置" class="headerlink" title="AOF 配置"></a>AOF 配置</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">appendonly yes</span><br><span class="line">appendfilename &quot;appendonly-$&#123;port&#125;.aof&quot;</span><br><span class="line">appendfsync everysec</span><br><span class="line">dir &#x2F;bigdiskpath</span><br><span class="line">no-appendfsync-on-rewrite yes  # 在进行aof重写的时候，不进行aof操作</span><br><span class="line">auto-aof-rewrite-min-size 100</span><br><span class="line">auto-aof-rewrite-percentage 64mb</span><br></pre></td></tr></table></figure>
+<h3 id="AOF-配置"><a href="#AOF-配置" class="headerlink" title="AOF 配置"></a>AOF 配置</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">appendonly yes</span><br><span class="line">appendfilename &quot;appendonly-$&#123;port&#125;.aof&quot;</span><br><span class="line">appendfsync everysec</span><br><span class="line">dir /bigdiskpath</span><br><span class="line">no-appendfsync-on-rewrite yes  # 在进行aof重写的时候，不进行aof操作</span><br><span class="line">auto-aof-rewrite-min-size 100</span><br><span class="line">auto-aof-rewrite-percentage 64mb</span><br><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure>
 
 <h2 id="RDB和AOF的选择"><a href="#RDB和AOF的选择" class="headerlink" title="RDB和AOF的选择"></a>RDB和AOF的选择</h2><h3 id="RDB与AOF比较"><a href="#RDB与AOF比较" class="headerlink" title="RDB与AOF比较"></a>RDB与AOF比较</h3><table>
 <thead>
@@ -538,7 +544,7 @@
 <h3 id="改善fork"><a href="#改善fork" class="headerlink" title="改善fork"></a>改善fork</h3><ul>
 <li>优先使用物理机或者高效支持fork操作的虚拟化技术</li>
 <li>控制Redis实例最大可用内存：maxmemory</li>
-<li>合理配置Linux内存分配策略：vm.overcommit_memory=1</li>
+<li>合理配置Linux内存分配策略：vm.overcommit_memory&#x3D;1</li>
 <li>降低fork频率：例如放宽AOF重写自动触发机制，不必要的全量复制</li>
 </ul>
 <h2 id="进程外开销"><a href="#进程外开销" class="headerlink" title="进程外开销"></a>进程外开销</h2><h3 id="CPU"><a href="#CPU" class="headerlink" title="CPU"></a>CPU</h3><ul>
@@ -547,16 +553,16 @@
 </ul>
 <h3 id="内存"><a href="#内存" class="headerlink" title="内存"></a>内存</h3><ul>
 <li>开销 fork内存开销，copy-on-write</li>
-<li>优化 echo never &gt; /sys/kernel/mm/transparent_hugepage/enabled</li>
+<li>优化 echo never &gt; &#x2F;sys&#x2F;kernel&#x2F;mm&#x2F;transparent_hugepage&#x2F;enabled</li>
 </ul>
 <h3 id="硬盘"><a href="#硬盘" class="headerlink" title="硬盘"></a>硬盘</h3><ul>
 <li>开销： AOF和RDB文件写入，可以结合iostat,iotop分析</li>
-<li>优化<br>不要和高硬盘负载服务器部署一起，存储服务、消息队列等<br>no-appendfsync-on-rewrite=yes<br>根据写入量决定磁盘类型 例如ssd<br>单机多实例持久化文件目录可以考虑分盘</li>
+<li>优化<br>不要和高硬盘负载服务器部署一起，存储服务、消息队列等<br>no-appendfsync-on-rewrite&#x3D;yes<br>根据写入量决定磁盘类型 例如ssd<br>单机多实例持久化文件目录可以考虑分盘</li>
 </ul>
 <h2 id="AOF追加阻塞"><a href="#AOF追加阻塞" class="headerlink" title="AOF追加阻塞"></a>AOF追加阻塞</h2><h2 id="单机多部署实例"><a href="#单机多部署实例" class="headerlink" title="单机多部署实例"></a>单机多部署实例</h2><h1 id="第6章-Redis主从复制原理以及优化"><a href="#第6章-Redis主从复制原理以及优化" class="headerlink" title="第6章 Redis主从复制原理以及优化"></a>第6章 Redis主从复制原理以及优化</h1><h2 id="什么是主从复制"><a href="#什么是主从复制" class="headerlink" title="什么是主从复制"></a>什么是主从复制</h2><h3 id="单机有什么问题？"><a href="#单机有什么问题？" class="headerlink" title="单机有什么问题？"></a>单机有什么问题？</h3><ul>
 <li>机器故障</li>
 <li>容量瓶颈</li>
-<li>QPS瓶颈 </li>
+<li>QPS瓶颈</li>
 </ul>
 <h3 id="主从复制的作用"><a href="#主从复制的作用" class="headerlink" title="主从复制的作用"></a>主从复制的作用</h3><ul>
 <li>数据副本</li>
@@ -574,7 +580,7 @@
 </blockquote>
 </li>
 </ul>
-<h3 id="配置"><a href="#配置" class="headerlink" title="配置"></a>配置</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">replicaof ip port</span><br><span class="line">replica-read-only yes</span><br></pre></td></tr></table></figure>
+<h3 id="配置"><a href="#配置" class="headerlink" title="配置"></a>配置</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">replicaof ip port</span><br><span class="line">replica-read-only yes</span><br></pre></td></tr></table></figure>
 <h3 id="比较"><a href="#比较" class="headerlink" title="比较"></a>比较</h3><table>
 <thead>
 <tr>
@@ -613,7 +619,7 @@
 <h3 id="部分复制"><a href="#部分复制" class="headerlink" title="部分复制"></a>部分复制</h3><p>部分复制主要是Redis针对全量复制的过高开销做出的一种优化措施；<br>如果出现网络闪断或者命令丢失等异常情况时，从节点会向主节点要求补发丢失的命令数据，如果主节点的复制积压缓冲区内存在这部分数据则直接发送给从节点</p>
 <h2 id="故障处理"><a href="#故障处理" class="headerlink" title="故障处理"></a>故障处理</h2><h3 id="slave-故障"><a href="#slave-故障" class="headerlink" title="slave 故障"></a>slave 故障</h3><h3 id="master-故障"><a href="#master-故障" class="headerlink" title="master 故障"></a>master 故障</h3><h2 id="开发运维常见问题"><a href="#开发运维常见问题" class="headerlink" title="开发运维常见问题"></a>开发运维常见问题</h2><h3 id="读写分离"><a href="#读写分离" class="headerlink" title="读写分离"></a>读写分离</h3><ol>
 <li>读流量分摊到节点</li>
-<li>可能遇到的问题  </li>
+<li>可能遇到的问题</li>
 </ol>
 <ul>
 <li>复制数据延迟</li>
@@ -621,8 +627,10 @@
 <li>从节点故障</li>
 </ul>
 <h3 id="配置不一致"><a href="#配置不一致" class="headerlink" title="配置不一致"></a>配置不一致</h3><ol>
-<li>例如maxmemory不一致：丢失数据<h3 id="主从配置不一致"><a href="#主从配置不一致" class="headerlink" title="主从配置不一致"></a>主从配置不一致</h3><h3 id="规避全量复制"><a href="#规避全量复制" class="headerlink" title="规避全量复制"></a>规避全量复制</h3></li>
-<li>第一次全量复制  </li>
+<li>例如maxmemory不一致：丢失数据</li>
+</ol>
+<h3 id="主从配置不一致"><a href="#主从配置不一致" class="headerlink" title="主从配置不一致"></a>主从配置不一致</h3><h3 id="规避全量复制"><a href="#规避全量复制" class="headerlink" title="规避全量复制"></a>规避全量复制</h3><ol>
+<li>第一次全量复制</li>
 </ol>
 <ul>
 <li>第一次不可避免</li>
@@ -643,7 +651,7 @@
 <li>增大复制缓冲区配置rel_backlog_size, 网络“增强”，默认为1M,可以配置成10M</li>
 </ul>
 <h3 id="规避复制风暴"><a href="#规避复制风暴" class="headerlink" title="规避复制风暴"></a>规避复制风暴</h3><ol>
-<li>单节点复制风暴  </li>
+<li>单节点复制风暴</li>
 </ol>
 <ul>
 <li>问题： 主节点重启，多从节点复制</li>
@@ -684,15 +692,15 @@
 <li>实际应该是多台机器</li>
 <li>详细配置节点</li>
 </ol>
-<h3 id="redis-master节点配置"><a href="#redis-master节点配置" class="headerlink" title="redis master节点配置"></a>redis master节点配置</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">port 7000</span><br><span class="line">pidfile &#x2F;var&#x2F;run&#x2F;redis-7000.pid</span><br><span class="line">logfile &quot;7000.log&quot;</span><br><span class="line">dir &quot;&#x2F;data&quot;</span><br></pre></td></tr></table></figure>
-<h3 id="redis-slave1节点配置"><a href="#redis-slave1节点配置" class="headerlink" title="redis slave1节点配置"></a>redis slave1节点配置</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">port 7001</span><br><span class="line">pidfile &#x2F;var&#x2F;run&#x2F;redis-7001.pid</span><br><span class="line">logfile &quot;7001.log&quot;</span><br><span class="line">dir &quot;&#x2F;data&quot;</span><br><span class="line">replicaof 127.0.0.1 7000</span><br></pre></td></tr></table></figure>
+<h3 id="redis-master节点配置"><a href="#redis-master节点配置" class="headerlink" title="redis master节点配置"></a>redis master节点配置</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">port 7000</span><br><span class="line">pidfile /var/run/redis-7000.pid</span><br><span class="line">logfile &quot;7000.log&quot;</span><br><span class="line">dir &quot;/data&quot;</span><br></pre></td></tr></table></figure>
+<h3 id="redis-slave1节点配置"><a href="#redis-slave1节点配置" class="headerlink" title="redis slave1节点配置"></a>redis slave1节点配置</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">port 7001</span><br><span class="line">pidfile /var/run/redis-7001.pid</span><br><span class="line">logfile &quot;7001.log&quot;</span><br><span class="line">dir &quot;/data&quot;</span><br><span class="line">replicaof 127.0.0.1 7000</span><br><span class="line"></span><br></pre></td></tr></table></figure>
 
-<h3 id="redis-sentinel主要配置"><a href="#redis-sentinel主要配置" class="headerlink" title="redis sentinel主要配置"></a>redis sentinel主要配置</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">port $&#123;port&#125;</span><br><span class="line">dir &quot;&#x2F;data&quot;</span><br><span class="line">logfile &quot;$&#123;port&#125;.log&quot;</span><br><span class="line"># 设置判定mymaster 失效的monitor 个数 </span><br><span class="line">sentinel monitor mymaster 127.0.0.1 7000 2 </span><br><span class="line">sentinel down-after-millseconds mymaster 30000</span><br><span class="line">sentinel parallel-syncs mymaster 1</span><br><span class="line">sentinel failover-timeout mymaster 180000</span><br></pre></td></tr></table></figure>
+<h3 id="redis-sentinel主要配置"><a href="#redis-sentinel主要配置" class="headerlink" title="redis sentinel主要配置"></a>redis sentinel主要配置</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">port $&#123;port&#125;</span><br><span class="line">dir &quot;/data&quot;</span><br><span class="line">logfile &quot;$&#123;port&#125;.log&quot;</span><br><span class="line"># 设置判定mymaster 失效的monitor 个数 </span><br><span class="line">sentinel monitor mymaster 127.0.0.1 7000 2 </span><br><span class="line">sentinel down-after-millseconds mymaster 30000</span><br><span class="line">sentinel parallel-syncs mymaster 1</span><br><span class="line">sentinel failover-timeout mymaster 180000</span><br></pre></td></tr></table></figure>
 <h2 id="sentinel中的3个定时任务"><a href="#sentinel中的3个定时任务" class="headerlink" title="sentinel中的3个定时任务"></a>sentinel中的3个定时任务</h2><h3 id="每10秒每个sentinel对master和slave-执行info"><a href="#每10秒每个sentinel对master和slave-执行info" class="headerlink" title="每10秒每个sentinel对master和slave 执行info"></a>每10秒每个sentinel对master和slave 执行info</h3><ul>
 <li>发现slave节点</li>
 <li>确认主从关系</li>
 </ul>
-<h3 id="每两秒每个sentinel通过master节点的channel交换信息（pub-sub）"><a href="#每两秒每个sentinel通过master节点的channel交换信息（pub-sub）" class="headerlink" title="每两秒每个sentinel通过master节点的channel交换信息（pub/sub）"></a>每两秒每个sentinel通过master节点的channel交换信息（pub/sub）</h3><ul>
+<h3 id="每两秒每个sentinel通过master节点的channel交换信息（pub-sub）"><a href="#每两秒每个sentinel通过master节点的channel交换信息（pub-sub）" class="headerlink" title="每两秒每个sentinel通过master节点的channel交换信息（pub&#x2F;sub）"></a>每两秒每个sentinel通过master节点的channel交换信息（pub&#x2F;sub）</h3><ul>
 <li>通过 <em>sentinel</em>:hello 频道交换信息</li>
 <li>交换对节点的“看法”和自身信息</li>
 </ul>
@@ -732,7 +740,9 @@
 <h3 id="哈希分布方式"><a href="#哈希分布方式" class="headerlink" title="哈希分布方式"></a>哈希分布方式</h3><h4 id="节点取余分区"><a href="#节点取余分区" class="headerlink" title="节点取余分区"></a>节点取余分区</h4><ul>
 <li>客户端分片：哈希+取余</li>
 <li>节点伸缩： 数据节点变化，导致数据迁移</li>
-<li>迁移数量和添加节点数量有关：建议翻倍扩容<h4 id="一致性哈希分区"><a href="#一致性哈希分区" class="headerlink" title="一致性哈希分区"></a>一致性哈希分区</h4></li>
+<li>迁移数量和添加节点数量有关：建议翻倍扩容</li>
+</ul>
+<h4 id="一致性哈希分区"><a href="#一致性哈希分区" class="headerlink" title="一致性哈希分区"></a>一致性哈希分区</h4><ul>
 <li>客户端分片：哈希+顺时针（优化取余）</li>
 <li>节点伸缩： 只影响临近节点，但是还是有数据迁移</li>
 <li>翻倍伸缩： 保证最小迁移数据和负载均衡</li>
@@ -742,7 +752,7 @@
 <li>良好的哈希函数：例如CRC16</li>
 <li>服务端管理节点、槽、数据 例如：Redis Cluster</li>
 </ul>
-<h2 id="Cluster节点主要配置"><a href="#Cluster节点主要配置" class="headerlink" title="Cluster节点主要配置"></a>Cluster节点主要配置</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">cluster-enabled yes</span><br><span class="line">cluster-node-timeout 15000</span><br><span class="line">cluster-config-file &quot;nodes.conf&quot;</span><br><span class="line">cluster-require-full-coverage yes</span><br></pre></td></tr></table></figure>
+<h2 id="Cluster节点主要配置"><a href="#Cluster节点主要配置" class="headerlink" title="Cluster节点主要配置"></a>Cluster节点主要配置</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">cluster-enabled yes</span><br><span class="line">cluster-node-timeout 15000</span><br><span class="line">cluster-config-file &quot;nodes.conf&quot;</span><br><span class="line">cluster-require-full-coverage yes</span><br></pre></td></tr></table></figure>
     </div>
 
     
@@ -750,6 +760,9 @@
     
 
       <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/redis/" rel="tag"># redis</a>
+          </div>
 
         
 
@@ -757,12 +770,12 @@
         
     <div class="post-nav">
       <div class="post-nav-item">
-    <a href="/2023/01/11/db/%E9%94%81%E7%9B%B8%E5%85%B3%E9%97%AE%E9%A2%98%E6%8E%92%E6%9F%A5/" rel="prev" title="db/锁相关问题排查">
-      <i class="fa fa-chevron-left"></i> db/锁相关问题排查
+    <a href="/2023/01/11/db/%E9%94%81%E7%9B%B8%E5%85%B3%E9%97%AE%E9%A2%98%E6%8E%92%E6%9F%A5/" rel="prev" title="锁相关问题排查">
+      <i class="fa fa-chevron-left"></i> 锁相关问题排查
     </a></div>
       <div class="post-nav-item">
-    <a href="/2023/01/11/db/%E9%80%9A%E8%BF%87Docker%E5%AE%89%E8%A3%85%E9%85%8D%E7%BD%AEMySQL%E4%B8%BB%E4%BB%8E%E8%8A%82%E7%82%B9/" rel="next" title="db/通过Docker安装配置MySQL主从节点">
-      db/通过Docker安装配置MySQL主从节点 <i class="fa fa-chevron-right"></i>
+    <a href="/2023/01/11/db/%E9%80%9A%E8%BF%87Docker%E5%AE%89%E8%A3%85%E9%85%8D%E7%BD%AEMySQL%E4%B8%BB%E4%BB%8E%E8%8A%82%E7%82%B9/" rel="next" title="通过Docker安装配置MySQL主从节点">
+      通过Docker安装配置MySQL主从节点 <i class="fa fa-chevron-right"></i>
     </a></div>
     </div>
       </footer>
@@ -823,7 +836,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#第1章到第3章"><span class="nav-number">1.</span> <span class="nav-text">第1章到第3章</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#redis-特性"><span class="nav-number">1.1.</span> <span class="nav-text">redis 特性</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#通用命令"><span class="nav-number">1.2.</span> <span class="nav-text">通用命令</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#单线程"><span class="nav-number">1.3.</span> <span class="nav-text">单线程</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#第4章-Redis持久化的取舍与选择"><span class="nav-number">2.</span> <span class="nav-text">第4章 Redis持久化的取舍与选择</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#持久化的作用"><span class="nav-number">2.1.</span> <span class="nav-text">持久化的作用</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#什么是持久化"><span class="nav-number">2.1.1.</span> <span class="nav-text">什么是持久化</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#持久化的实现方式"><span class="nav-number">2.1.2.</span> <span class="nav-text">持久化的实现方式</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#快照"><span class="nav-number">2.1.2.1.</span> <span class="nav-text">快照</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#写日志"><span class="nav-number">2.1.2.2.</span> <span class="nav-text">写日志</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#RDB"><span class="nav-number">2.2.</span> <span class="nav-text">RDB</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#什么是RDB"><span class="nav-number">2.2.1.</span> <span class="nav-text">什么是RDB</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#触发机制"><span class="nav-number">2.2.2.</span> <span class="nav-text">触发机制</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#主要三种触发方式"><span class="nav-number">2.2.2.1.</span> <span class="nav-text">主要三种触发方式</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#save-同步"><span class="nav-number">2.2.2.1.1.</span> <span class="nav-text">save (同步)　</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#bgsave-异步"><span class="nav-number">2.2.2.1.2.</span> <span class="nav-text">bgsave (异步)</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#自动"><span class="nav-number">2.2.2.1.3.</span> <span class="nav-text">自动</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#不容忽视的方式"><span class="nav-number">2.2.2.2.</span> <span class="nav-text">不容忽视的方式</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#RDB-总结"><span class="nav-number">2.2.3.</span> <span class="nav-text">RDB 总结</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#AOF"><span class="nav-number">2.3.</span> <span class="nav-text">AOF</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#RDB的问题"><span class="nav-number">2.3.1.</span> <span class="nav-text">RDB的问题</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#什么是AOF"><span class="nav-number">2.3.2.</span> <span class="nav-text">什么是AOF</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#AOF三种策略"><span class="nav-number">2.3.3.</span> <span class="nav-text">AOF三种策略</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#AOF重写"><span class="nav-number">2.3.4.</span> <span class="nav-text">AOF重写</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#为什么要进行AOF重写"><span class="nav-number">2.3.4.1.</span> <span class="nav-text">为什么要进行AOF重写</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#AOF重写实现的两种方式"><span class="nav-number">2.3.4.2.</span> <span class="nav-text">AOF重写实现的两种方式</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#bgrewriteaof"><span class="nav-number">2.3.4.2.1.</span> <span class="nav-text">bgrewriteaof</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#AOF重写配置"><span class="nav-number">2.3.4.2.2.</span> <span class="nav-text">AOF重写配置</span></a></li></ol></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#AOF-配置"><span class="nav-number">2.3.5.</span> <span class="nav-text">AOF 配置</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#RDB和AOF的选择"><span class="nav-number">2.4.</span> <span class="nav-text">RDB和AOF的选择</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#RDB与AOF比较"><span class="nav-number">2.4.1.</span> <span class="nav-text">RDB与AOF比较</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#RDB最佳策略"><span class="nav-number">2.4.2.</span> <span class="nav-text">RDB最佳策略</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#AOF最佳策略"><span class="nav-number">2.4.3.</span> <span class="nav-text">AOF最佳策略</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#最佳策略"><span class="nav-number">2.4.4.</span> <span class="nav-text">最佳策略</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#第5章-常见持久化开发运维问题"><span class="nav-number">3.</span> <span class="nav-text">第5章 常见持久化开发运维问题</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#fork操作"><span class="nav-number">3.1.</span> <span class="nav-text">fork操作</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#改善fork"><span class="nav-number">3.1.1.</span> <span class="nav-text">改善fork</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#进程外开销"><span class="nav-number">3.2.</span> <span class="nav-text">进程外开销</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#CPU"><span class="nav-number">3.2.1.</span> <span class="nav-text">CPU</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#内存"><span class="nav-number">3.2.2.</span> <span class="nav-text">内存</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#硬盘"><span class="nav-number">3.2.3.</span> <span class="nav-text">硬盘</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#AOF追加阻塞"><span class="nav-number">3.3.</span> <span class="nav-text">AOF追加阻塞</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#单机多部署实例"><span class="nav-number">3.4.</span> <span class="nav-text">单机多部署实例</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#第6章-Redis主从复制原理以及优化"><span class="nav-number">4.</span> <span class="nav-text">第6章 Redis主从复制原理以及优化</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#什么是主从复制"><span class="nav-number">4.1.</span> <span class="nav-text">什么是主从复制</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#单机有什么问题？"><span class="nav-number">4.1.1.</span> <span class="nav-text">单机有什么问题？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#主从复制的作用"><span class="nav-number">4.1.2.</span> <span class="nav-text">主从复制的作用</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#简单总结"><span class="nav-number">4.1.3.</span> <span class="nav-text">简单总结</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#复制的配置"><span class="nav-number">4.2.</span> <span class="nav-text">复制的配置</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#replicaof-命令"><span class="nav-number">4.2.1.</span> <span class="nav-text">replicaof 命令</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#配置"><span class="nav-number">4.2.2.</span> <span class="nav-text">配置</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#比较"><span class="nav-number">4.2.3.</span> <span class="nav-text">比较</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#全量复制和部分复制"><span class="nav-number">4.3.</span> <span class="nav-text">全量复制和部分复制</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#全量复制过程"><span class="nav-number">4.3.1.</span> <span class="nav-text">全量复制过程</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#全量复制开销"><span class="nav-number">4.3.2.</span> <span class="nav-text">全量复制开销</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#部分复制"><span class="nav-number">4.3.3.</span> <span class="nav-text">部分复制</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#故障处理"><span class="nav-number">4.4.</span> <span class="nav-text">故障处理</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#slave-故障"><span class="nav-number">4.4.1.</span> <span class="nav-text">slave 故障</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#master-故障"><span class="nav-number">4.4.2.</span> <span class="nav-text">master 故障</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#开发运维常见问题"><span class="nav-number">4.5.</span> <span class="nav-text">开发运维常见问题</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#读写分离"><span class="nav-number">4.5.1.</span> <span class="nav-text">读写分离</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#配置不一致"><span class="nav-number">4.5.2.</span> <span class="nav-text">配置不一致</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#主从配置不一致"><span class="nav-number">4.5.3.</span> <span class="nav-text">主从配置不一致</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#规避全量复制"><span class="nav-number">4.5.4.</span> <span class="nav-text">规避全量复制</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#规避复制风暴"><span class="nav-number">4.5.5.</span> <span class="nav-text">规避复制风暴</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#第7章-Redis-sentine-哨兵"><span class="nav-number">5.</span> <span class="nav-text">第7章 Redis sentine (哨兵)</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#简介"><span class="nav-number">5.1.</span> <span class="nav-text">简介</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#主从复制高可用的问题"><span class="nav-number">5.2.</span> <span class="nav-text">主从复制高可用的问题</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#架构说明"><span class="nav-number">5.3.</span> <span class="nav-text">架构说明</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Redis-Sentinel故障转移"><span class="nav-number">5.3.1.</span> <span class="nav-text">Redis Sentinel故障转移</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#安装配置"><span class="nav-number">5.4.</span> <span class="nav-text">安装配置</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#redis-master节点配置"><span class="nav-number">5.4.1.</span> <span class="nav-text">redis master节点配置</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#redis-slave1节点配置"><span class="nav-number">5.4.2.</span> <span class="nav-text">redis slave1节点配置</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#redis-sentinel主要配置"><span class="nav-number">5.4.3.</span> <span class="nav-text">redis sentinel主要配置</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#sentinel中的3个定时任务"><span class="nav-number">5.5.</span> <span class="nav-text">sentinel中的3个定时任务</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#每10秒每个sentinel对master和slave-执行info"><span class="nav-number">5.5.1.</span> <span class="nav-text">每10秒每个sentinel对master和slave 执行info</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#每两秒每个sentinel通过master节点的channel交换信息（pub-sub）"><span class="nav-number">5.5.2.</span> <span class="nav-text">每两秒每个sentinel通过master节点的channel交换信息（pub&#x2F;sub）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#每1秒每个sentinel对其他sentinel和redis进ping"><span class="nav-number">5.5.3.</span> <span class="nav-text">每1秒每个sentinel对其他sentinel和redis进ping</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#主观下线和客观下线"><span class="nav-number">5.6.</span> <span class="nav-text">主观下线和客观下线</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#主观下线"><span class="nav-number">5.6.1.</span> <span class="nav-text">主观下线</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#客观下线"><span class="nav-number">5.6.2.</span> <span class="nav-text">客观下线</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#客户端连接"><span class="nav-number">5.7.</span> <span class="nav-text">客户端连接</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#实现原理"><span class="nav-number">5.8.</span> <span class="nav-text">实现原理</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#常见开发运维问题"><span class="nav-number">5.9.</span> <span class="nav-text">常见开发运维问题</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#总结"><span class="nav-number">5.10.</span> <span class="nav-text">总结</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#第8章-Redis-Cluster"><span class="nav-number">6.</span> <span class="nav-text">第8章 Redis Cluster</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#数据分布概论"><span class="nav-number">6.1.</span> <span class="nav-text">数据分布概论</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#数据分布对比"><span class="nav-number">6.1.1.</span> <span class="nav-text">数据分布对比</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#哈希分布方式"><span class="nav-number">6.1.2.</span> <span class="nav-text">哈希分布方式</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#节点取余分区"><span class="nav-number">6.1.2.1.</span> <span class="nav-text">节点取余分区</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#一致性哈希分区"><span class="nav-number">6.1.2.2.</span> <span class="nav-text">一致性哈希分区</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#虚拟槽分区"><span class="nav-number">6.1.2.3.</span> <span class="nav-text">虚拟槽分区</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Cluster节点主要配置"><span class="nav-number">6.2.</span> <span class="nav-text">Cluster节点主要配置</span></a></li></ol></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%AC%AC1%E7%AB%A0%E5%88%B0%E7%AC%AC3%E7%AB%A0"><span class="nav-number">1.</span> <span class="nav-text">第1章到第3章</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#redis-%E7%89%B9%E6%80%A7"><span class="nav-number">1.1.</span> <span class="nav-text">redis 特性</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%80%9A%E7%94%A8%E5%91%BD%E4%BB%A4"><span class="nav-number">1.2.</span> <span class="nav-text">通用命令</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8D%95%E7%BA%BF%E7%A8%8B"><span class="nav-number">1.3.</span> <span class="nav-text">单线程</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%AC%AC4%E7%AB%A0-Redis%E6%8C%81%E4%B9%85%E5%8C%96%E7%9A%84%E5%8F%96%E8%88%8D%E4%B8%8E%E9%80%89%E6%8B%A9"><span class="nav-number">2.</span> <span class="nav-text">第4章 Redis持久化的取舍与选择</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%8C%81%E4%B9%85%E5%8C%96%E7%9A%84%E4%BD%9C%E7%94%A8"><span class="nav-number">2.1.</span> <span class="nav-text">持久化的作用</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BB%80%E4%B9%88%E6%98%AF%E6%8C%81%E4%B9%85%E5%8C%96"><span class="nav-number">2.1.1.</span> <span class="nav-text">什么是持久化</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%8C%81%E4%B9%85%E5%8C%96%E7%9A%84%E5%AE%9E%E7%8E%B0%E6%96%B9%E5%BC%8F"><span class="nav-number">2.1.2.</span> <span class="nav-text">持久化的实现方式</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%BF%AB%E7%85%A7"><span class="nav-number">2.1.2.1.</span> <span class="nav-text">快照</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%86%99%E6%97%A5%E5%BF%97"><span class="nav-number">2.1.2.2.</span> <span class="nav-text">写日志</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#RDB"><span class="nav-number">2.2.</span> <span class="nav-text">RDB</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BB%80%E4%B9%88%E6%98%AFRDB"><span class="nav-number">2.2.1.</span> <span class="nav-text">什么是RDB</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%A7%A6%E5%8F%91%E6%9C%BA%E5%88%B6"><span class="nav-number">2.2.2.</span> <span class="nav-text">触发机制</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%B8%BB%E8%A6%81%E4%B8%89%E7%A7%8D%E8%A7%A6%E5%8F%91%E6%96%B9%E5%BC%8F"><span class="nav-number">2.2.2.1.</span> <span class="nav-text">主要三种触发方式</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#save-%E5%90%8C%E6%AD%A5"><span class="nav-number">2.2.2.1.1.</span> <span class="nav-text">save (同步)</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#bgsave-%E5%BC%82%E6%AD%A5"><span class="nav-number">2.2.2.1.2.</span> <span class="nav-text">bgsave (异步)</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E8%87%AA%E5%8A%A8"><span class="nav-number">2.2.2.1.3.</span> <span class="nav-text">自动</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%B8%8D%E5%AE%B9%E5%BF%BD%E8%A7%86%E7%9A%84%E6%96%B9%E5%BC%8F"><span class="nav-number">2.2.2.2.</span> <span class="nav-text">不容忽视的方式</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#RDB-%E6%80%BB%E7%BB%93"><span class="nav-number">2.2.3.</span> <span class="nav-text">RDB 总结</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#AOF"><span class="nav-number">2.3.</span> <span class="nav-text">AOF</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#RDB%E7%9A%84%E9%97%AE%E9%A2%98"><span class="nav-number">2.3.1.</span> <span class="nav-text">RDB的问题</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BB%80%E4%B9%88%E6%98%AFAOF"><span class="nav-number">2.3.2.</span> <span class="nav-text">什么是AOF</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#AOF%E4%B8%89%E7%A7%8D%E7%AD%96%E7%95%A5"><span class="nav-number">2.3.3.</span> <span class="nav-text">AOF三种策略</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#AOF%E9%87%8D%E5%86%99"><span class="nav-number">2.3.4.</span> <span class="nav-text">AOF重写</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%B8%BA%E4%BB%80%E4%B9%88%E8%A6%81%E8%BF%9B%E8%A1%8CAOF%E9%87%8D%E5%86%99"><span class="nav-number">2.3.4.1.</span> <span class="nav-text">为什么要进行AOF重写</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#AOF%E9%87%8D%E5%86%99%E5%AE%9E%E7%8E%B0%E7%9A%84%E4%B8%A4%E7%A7%8D%E6%96%B9%E5%BC%8F"><span class="nav-number">2.3.4.2.</span> <span class="nav-text">AOF重写实现的两种方式</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#bgrewriteaof"><span class="nav-number">2.3.4.2.1.</span> <span class="nav-text">bgrewriteaof</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#AOF%E9%87%8D%E5%86%99%E9%85%8D%E7%BD%AE"><span class="nav-number">2.3.4.2.2.</span> <span class="nav-text">AOF重写配置</span></a></li></ol></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#AOF-%E9%85%8D%E7%BD%AE"><span class="nav-number">2.3.5.</span> <span class="nav-text">AOF 配置</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#RDB%E5%92%8CAOF%E7%9A%84%E9%80%89%E6%8B%A9"><span class="nav-number">2.4.</span> <span class="nav-text">RDB和AOF的选择</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#RDB%E4%B8%8EAOF%E6%AF%94%E8%BE%83"><span class="nav-number">2.4.1.</span> <span class="nav-text">RDB与AOF比较</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#RDB%E6%9C%80%E4%BD%B3%E7%AD%96%E7%95%A5"><span class="nav-number">2.4.2.</span> <span class="nav-text">RDB最佳策略</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#AOF%E6%9C%80%E4%BD%B3%E7%AD%96%E7%95%A5"><span class="nav-number">2.4.3.</span> <span class="nav-text">AOF最佳策略</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%9C%80%E4%BD%B3%E7%AD%96%E7%95%A5"><span class="nav-number">2.4.4.</span> <span class="nav-text">最佳策略</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%AC%AC5%E7%AB%A0-%E5%B8%B8%E8%A7%81%E6%8C%81%E4%B9%85%E5%8C%96%E5%BC%80%E5%8F%91%E8%BF%90%E7%BB%B4%E9%97%AE%E9%A2%98"><span class="nav-number">3.</span> <span class="nav-text">第5章 常见持久化开发运维问题</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#fork%E6%93%8D%E4%BD%9C"><span class="nav-number">3.1.</span> <span class="nav-text">fork操作</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%94%B9%E5%96%84fork"><span class="nav-number">3.1.1.</span> <span class="nav-text">改善fork</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%BF%9B%E7%A8%8B%E5%A4%96%E5%BC%80%E9%94%80"><span class="nav-number">3.2.</span> <span class="nav-text">进程外开销</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#CPU"><span class="nav-number">3.2.1.</span> <span class="nav-text">CPU</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%86%85%E5%AD%98"><span class="nav-number">3.2.2.</span> <span class="nav-text">内存</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%A1%AC%E7%9B%98"><span class="nav-number">3.2.3.</span> <span class="nav-text">硬盘</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#AOF%E8%BF%BD%E5%8A%A0%E9%98%BB%E5%A1%9E"><span class="nav-number">3.3.</span> <span class="nav-text">AOF追加阻塞</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8D%95%E6%9C%BA%E5%A4%9A%E9%83%A8%E7%BD%B2%E5%AE%9E%E4%BE%8B"><span class="nav-number">3.4.</span> <span class="nav-text">单机多部署实例</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%AC%AC6%E7%AB%A0-Redis%E4%B8%BB%E4%BB%8E%E5%A4%8D%E5%88%B6%E5%8E%9F%E7%90%86%E4%BB%A5%E5%8F%8A%E4%BC%98%E5%8C%96"><span class="nav-number">4.</span> <span class="nav-text">第6章 Redis主从复制原理以及优化</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BB%80%E4%B9%88%E6%98%AF%E4%B8%BB%E4%BB%8E%E5%A4%8D%E5%88%B6"><span class="nav-number">4.1.</span> <span class="nav-text">什么是主从复制</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8D%95%E6%9C%BA%E6%9C%89%E4%BB%80%E4%B9%88%E9%97%AE%E9%A2%98%EF%BC%9F"><span class="nav-number">4.1.1.</span> <span class="nav-text">单机有什么问题？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%BB%E4%BB%8E%E5%A4%8D%E5%88%B6%E7%9A%84%E4%BD%9C%E7%94%A8"><span class="nav-number">4.1.2.</span> <span class="nav-text">主从复制的作用</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%AE%80%E5%8D%95%E6%80%BB%E7%BB%93"><span class="nav-number">4.1.3.</span> <span class="nav-text">简单总结</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%A4%8D%E5%88%B6%E7%9A%84%E9%85%8D%E7%BD%AE"><span class="nav-number">4.2.</span> <span class="nav-text">复制的配置</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#replicaof-%E5%91%BD%E4%BB%A4"><span class="nav-number">4.2.1.</span> <span class="nav-text">replicaof 命令</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%85%8D%E7%BD%AE"><span class="nav-number">4.2.2.</span> <span class="nav-text">配置</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%AF%94%E8%BE%83"><span class="nav-number">4.2.3.</span> <span class="nav-text">比较</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%85%A8%E9%87%8F%E5%A4%8D%E5%88%B6%E5%92%8C%E9%83%A8%E5%88%86%E5%A4%8D%E5%88%B6"><span class="nav-number">4.3.</span> <span class="nav-text">全量复制和部分复制</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%85%A8%E9%87%8F%E5%A4%8D%E5%88%B6%E8%BF%87%E7%A8%8B"><span class="nav-number">4.3.1.</span> <span class="nav-text">全量复制过程</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%85%A8%E9%87%8F%E5%A4%8D%E5%88%B6%E5%BC%80%E9%94%80"><span class="nav-number">4.3.2.</span> <span class="nav-text">全量复制开销</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%83%A8%E5%88%86%E5%A4%8D%E5%88%B6"><span class="nav-number">4.3.3.</span> <span class="nav-text">部分复制</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%95%85%E9%9A%9C%E5%A4%84%E7%90%86"><span class="nav-number">4.4.</span> <span class="nav-text">故障处理</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#slave-%E6%95%85%E9%9A%9C"><span class="nav-number">4.4.1.</span> <span class="nav-text">slave 故障</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#master-%E6%95%85%E9%9A%9C"><span class="nav-number">4.4.2.</span> <span class="nav-text">master 故障</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%BC%80%E5%8F%91%E8%BF%90%E7%BB%B4%E5%B8%B8%E8%A7%81%E9%97%AE%E9%A2%98"><span class="nav-number">4.5.</span> <span class="nav-text">开发运维常见问题</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%AF%BB%E5%86%99%E5%88%86%E7%A6%BB"><span class="nav-number">4.5.1.</span> <span class="nav-text">读写分离</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%85%8D%E7%BD%AE%E4%B8%8D%E4%B8%80%E8%87%B4"><span class="nav-number">4.5.2.</span> <span class="nav-text">配置不一致</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%BB%E4%BB%8E%E9%85%8D%E7%BD%AE%E4%B8%8D%E4%B8%80%E8%87%B4"><span class="nav-number">4.5.3.</span> <span class="nav-text">主从配置不一致</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%A7%84%E9%81%BF%E5%85%A8%E9%87%8F%E5%A4%8D%E5%88%B6"><span class="nav-number">4.5.4.</span> <span class="nav-text">规避全量复制</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%A7%84%E9%81%BF%E5%A4%8D%E5%88%B6%E9%A3%8E%E6%9A%B4"><span class="nav-number">4.5.5.</span> <span class="nav-text">规避复制风暴</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%AC%AC7%E7%AB%A0-Redis-sentine-%E5%93%A8%E5%85%B5"><span class="nav-number">5.</span> <span class="nav-text">第7章 Redis sentine (哨兵)</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%AE%80%E4%BB%8B"><span class="nav-number">5.1.</span> <span class="nav-text">简介</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%BB%E4%BB%8E%E5%A4%8D%E5%88%B6%E9%AB%98%E5%8F%AF%E7%94%A8%E7%9A%84%E9%97%AE%E9%A2%98"><span class="nav-number">5.2.</span> <span class="nav-text">主从复制高可用的问题</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%9E%B6%E6%9E%84%E8%AF%B4%E6%98%8E"><span class="nav-number">5.3.</span> <span class="nav-text">架构说明</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Redis-Sentinel%E6%95%85%E9%9A%9C%E8%BD%AC%E7%A7%BB"><span class="nav-number">5.3.1.</span> <span class="nav-text">Redis Sentinel故障转移</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%89%E8%A3%85%E9%85%8D%E7%BD%AE"><span class="nav-number">5.4.</span> <span class="nav-text">安装配置</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#redis-master%E8%8A%82%E7%82%B9%E9%85%8D%E7%BD%AE"><span class="nav-number">5.4.1.</span> <span class="nav-text">redis master节点配置</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#redis-slave1%E8%8A%82%E7%82%B9%E9%85%8D%E7%BD%AE"><span class="nav-number">5.4.2.</span> <span class="nav-text">redis slave1节点配置</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#redis-sentinel%E4%B8%BB%E8%A6%81%E9%85%8D%E7%BD%AE"><span class="nav-number">5.4.3.</span> <span class="nav-text">redis sentinel主要配置</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#sentinel%E4%B8%AD%E7%9A%843%E4%B8%AA%E5%AE%9A%E6%97%B6%E4%BB%BB%E5%8A%A1"><span class="nav-number">5.5.</span> <span class="nav-text">sentinel中的3个定时任务</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%AF%8F10%E7%A7%92%E6%AF%8F%E4%B8%AAsentinel%E5%AF%B9master%E5%92%8Cslave-%E6%89%A7%E8%A1%8Cinfo"><span class="nav-number">5.5.1.</span> <span class="nav-text">每10秒每个sentinel对master和slave 执行info</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%AF%8F%E4%B8%A4%E7%A7%92%E6%AF%8F%E4%B8%AAsentinel%E9%80%9A%E8%BF%87master%E8%8A%82%E7%82%B9%E7%9A%84channel%E4%BA%A4%E6%8D%A2%E4%BF%A1%E6%81%AF%EF%BC%88pub-sub%EF%BC%89"><span class="nav-number">5.5.2.</span> <span class="nav-text">每两秒每个sentinel通过master节点的channel交换信息（pub&#x2F;sub）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%AF%8F1%E7%A7%92%E6%AF%8F%E4%B8%AAsentinel%E5%AF%B9%E5%85%B6%E4%BB%96sentinel%E5%92%8Credis%E8%BF%9Bping"><span class="nav-number">5.5.3.</span> <span class="nav-text">每1秒每个sentinel对其他sentinel和redis进ping</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%BB%E8%A7%82%E4%B8%8B%E7%BA%BF%E5%92%8C%E5%AE%A2%E8%A7%82%E4%B8%8B%E7%BA%BF"><span class="nav-number">5.6.</span> <span class="nav-text">主观下线和客观下线</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%BB%E8%A7%82%E4%B8%8B%E7%BA%BF"><span class="nav-number">5.6.1.</span> <span class="nav-text">主观下线</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%A2%E8%A7%82%E4%B8%8B%E7%BA%BF"><span class="nav-number">5.6.2.</span> <span class="nav-text">客观下线</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%A2%E6%88%B7%E7%AB%AF%E8%BF%9E%E6%8E%A5"><span class="nav-number">5.7.</span> <span class="nav-text">客户端连接</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%9E%E7%8E%B0%E5%8E%9F%E7%90%86"><span class="nav-number">5.8.</span> <span class="nav-text">实现原理</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%B8%B8%E8%A7%81%E5%BC%80%E5%8F%91%E8%BF%90%E7%BB%B4%E9%97%AE%E9%A2%98"><span class="nav-number">5.9.</span> <span class="nav-text">常见开发运维问题</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%80%BB%E7%BB%93"><span class="nav-number">5.10.</span> <span class="nav-text">总结</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%AC%AC8%E7%AB%A0-Redis-Cluster"><span class="nav-number">6.</span> <span class="nav-text">第8章 Redis Cluster</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%95%B0%E6%8D%AE%E5%88%86%E5%B8%83%E6%A6%82%E8%AE%BA"><span class="nav-number">6.1.</span> <span class="nav-text">数据分布概论</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%95%B0%E6%8D%AE%E5%88%86%E5%B8%83%E5%AF%B9%E6%AF%94"><span class="nav-number">6.1.1.</span> <span class="nav-text">数据分布对比</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%93%88%E5%B8%8C%E5%88%86%E5%B8%83%E6%96%B9%E5%BC%8F"><span class="nav-number">6.1.2.</span> <span class="nav-text">哈希分布方式</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%8A%82%E7%82%B9%E5%8F%96%E4%BD%99%E5%88%86%E5%8C%BA"><span class="nav-number">6.1.2.1.</span> <span class="nav-text">节点取余分区</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%B8%80%E8%87%B4%E6%80%A7%E5%93%88%E5%B8%8C%E5%88%86%E5%8C%BA"><span class="nav-number">6.1.2.2.</span> <span class="nav-text">一致性哈希分区</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%99%9A%E6%8B%9F%E6%A7%BD%E5%88%86%E5%8C%BA"><span class="nav-number">6.1.2.3.</span> <span class="nav-text">虚拟槽分区</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Cluster%E8%8A%82%E7%82%B9%E4%B8%BB%E8%A6%81%E9%85%8D%E7%BD%AE"><span class="nav-number">6.2.</span> <span class="nav-text">Cluster节点主要配置</span></a></li></ol></li></ol></div>
       </div>
       <!--/noindex-->
 
@@ -839,14 +852,14 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">101</span>
+          <span class="site-state-item-count">96</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
             <a href="/categories/">
           
-        <span class="site-state-item-count">18</span>
+        <span class="site-state-item-count">19</span>
         <span class="site-state-item-name">分类</span></a>
       </div>
       <div class="site-state-item site-state-tags">
@@ -883,7 +896,7 @@
   </span>
   <span class="author" itemprop="copyrightHolder">Chen Yu</span>
 </div>
-  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v4.2.0
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v6.3.0
   </div>
   <span class="post-meta-divider">|</span>
   <div class="theme-info">主题 – <a href="https://theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a> v7.7.0

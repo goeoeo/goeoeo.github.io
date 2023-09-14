@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
 <meta name="theme-color" content="#222">
-<meta name="generator" content="Hexo 4.2.0">
+<meta name="generator" content="Hexo 6.3.0">
   <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
   <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
   <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
@@ -47,15 +47,15 @@
   };
 </script>
 
-  <meta name="description" content="minikubeminikube 可以搭建一个在单节点运行的k8s集群   使用minikube 构建k8s本地化开发环境   Minikube安装首先我们需要下载Minikube的二进制安装包并安装: 12curl -LO https:&#x2F;&#x2F;storage.googleapis.com&#x2F;minikube&#x2F;releases&#x2F;latest&amp;#x2">
+  <meta name="description" content="minikubeminikube 可以搭建一个在单节点运行的k8s集群   使用minikube 构建k8s本地化开发环境   Minikube安装首先我们需要下载Minikube的二进制安装包并安装: 12curl -LO https:&#x2F;&#x2F;storage.googleapis.com&#x2F;minikube&#x2F;releases&#x2F;latest&#x2F;minikube-linux-amd64sudo ins">
 <meta property="og:type" content="article">
-<meta property="og:title" content="k8s&#x2F;minikube">
+<meta property="og:title" content="minikube">
 <meta property="og:url" content="https://phpdi.github.io/2023/01/11/k8s/minikube/index.html">
 <meta property="og:site_name" content="goeoeo">
-<meta property="og:description" content="minikubeminikube 可以搭建一个在单节点运行的k8s集群   使用minikube 构建k8s本地化开发环境   Minikube安装首先我们需要下载Minikube的二进制安装包并安装: 12curl -LO https:&#x2F;&#x2F;storage.googleapis.com&#x2F;minikube&#x2F;releases&#x2F;latest&amp;#x2">
+<meta property="og:description" content="minikubeminikube 可以搭建一个在单节点运行的k8s集群   使用minikube 构建k8s本地化开发环境   Minikube安装首先我们需要下载Minikube的二进制安装包并安装: 12curl -LO https:&#x2F;&#x2F;storage.googleapis.com&#x2F;minikube&#x2F;releases&#x2F;latest&#x2F;minikube-linux-amd64sudo ins">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2023-01-11T14:59:23.597Z">
-<meta property="article:modified_time" content="2023-01-11T14:59:23.597Z">
+<meta property="article:modified_time" content="2023-09-14T02:53:52.925Z">
 <meta property="article:author" content="Chen Yu">
 <meta property="article:tag" content="minikube">
 <meta name="twitter:card" content="summary">
@@ -72,7 +72,7 @@
   };
 </script>
 
-  <title>k8s/minikube | goeoeo</title>
+  <title>minikube | goeoeo</title>
   
 
 
@@ -226,7 +226,7 @@
     </span>
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
-          k8s/minikube
+          minikube
         </h2>
 
         <div class="post-meta">
@@ -238,6 +238,13 @@
 
               <time title="创建时间：2023-01-11 22:59:23" itemprop="dateCreated datePublished" datetime="2023-01-11T22:59:23+08:00">2023-01-11</time>
             </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2023-09-14 10:53:52" itemprop="dateModified" datetime="2023-09-14T10:53:52+08:00">2023-09-14</time>
+              </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
                 <i class="fa fa-folder-o"></i>
@@ -261,7 +268,7 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <a id="more"></a>
+        <span id="more"></span>
 
 
 <h1 id="minikube"><a href="#minikube" class="headerlink" title="minikube"></a>minikube</h1><p>minikube 可以搭建一个在单节点运行的k8s集群  </p>
@@ -269,32 +276,32 @@
 <!--more-->
 
 <h2 id="Minikube安装"><a href="#Minikube安装" class="headerlink" title="Minikube安装"></a>Minikube安装</h2><p>首先我们需要下载Minikube的二进制安装包并安装:</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">curl -LO https:&#x2F;&#x2F;storage.googleapis.com&#x2F;minikube&#x2F;releases&#x2F;latest&#x2F;minikube-linux-amd64</span><br><span class="line">sudo install minikube-linux-amd64 &#x2F;usr&#x2F;local&#x2F;bin&#x2F;minikube</span><br></pre></td></tr></table></figure>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">curl -LO https://storage.googleapis.com/minikube/releases/latest/minikube-linux-amd64</span><br><span class="line">sudo install minikube-linux-amd64 /usr/local/bin/minikube</span><br></pre></td></tr></table></figure>
 <h2 id="Minikube启动"><a href="#Minikube启动" class="headerlink" title="Minikube启动"></a>Minikube启动</h2><p>需要使用非root 启动</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">minikube start</span><br><span class="line"></span><br><span class="line"># 信任私有仓库 注意如果已经 minikube start 过了，那么需要删除集群重新启动 minikube delete ,这个参数才会生效</span><br><span class="line">minikube start --insecure-registry&#x3D;repo.goeoeo.com:8100</span><br></pre></td></tr></table></figure>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">minikube start</span><br><span class="line"></span><br><span class="line"># 信任私有仓库 注意如果已经 minikube start 过了，那么需要删除集群重新启动 minikube delete ,这个参数才会生效</span><br><span class="line">minikube start --insecure-registry=repo.goeoeo.com:8100</span><br></pre></td></tr></table></figure>
 
 <h2 id="安装kubectl"><a href="#安装kubectl" class="headerlink" title="安装kubectl"></a>安装kubectl</h2><p>查看kubectl的版本号，第一次使用会直接安装kubectl</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">minikube kubectl version</span><br></pre></td></tr></table></figure>
-<p>想直接使用kubectl命令的话，可以将其复制到/bin目录下去：  </p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"># 查找kubectl命令的位置</span><br><span class="line">find &#x2F; -name kubectl</span><br><span class="line"># 找到之后复制到&#x2F;bin目录下</span><br><span class="line">cp &#x2F;mydata&#x2F;docker&#x2F;volumes&#x2F;minikube&#x2F;_data&#x2F;lib&#x2F;minikube&#x2F;binaries&#x2F;v1.20.0&#x2F;kubectl &#x2F;usr&#x2F;local&#x2F;bin&#x2F;</span><br><span class="line"># 直接使用kubectl命令</span><br><span class="line">kubectl version</span><br></pre></td></tr></table></figure>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">minikube kubectl version</span><br></pre></td></tr></table></figure>
+<p>想直接使用kubectl命令的话，可以将其复制到&#x2F;bin目录下去：  </p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"># 查找kubectl命令的位置</span><br><span class="line">find / -name kubectl</span><br><span class="line"># 找到之后复制到/bin目录下</span><br><span class="line">cp /mydata/docker/volumes/minikube/_data/lib/minikube/binaries/v1.20.0/kubectl /usr/local/bin/</span><br><span class="line"># 直接使用kubectl命令</span><br><span class="line">kubectl version</span><br><span class="line"></span><br></pre></td></tr></table></figure>
 
 <h2 id="构建本地镜像"><a href="#构建本地镜像" class="headerlink" title="构建本地镜像"></a>构建本地镜像</h2><p>使用与Minikube VM相同的Docker主机构建镜像，以使镜像自动存在。为此，请确保使用Minikube Docker守护进程：  </p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">eval $(minikube docker-env)</span><br></pre></td></tr></table></figure>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">eval $(minikube docker-env)</span><br></pre></td></tr></table></figure>
 <blockquote>
 <p>注意：如果不在使用Minikube主机时，可以通过运行eval $(minikube docker-env -u)来撤消此更改。</p>
 </blockquote>
 <p>使用Minikube Docker守护进程build Docker镜像：  </p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker build -t hello-node:v1 .</span><br></pre></td></tr></table></figure>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker build -t hello-node:v1 .</span><br></pre></td></tr></table></figure>
 
-<h2 id="Deployment"><a href="#Deployment" class="headerlink" title="Deployment"></a>Deployment</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">kubectl run hello-node --image&#x3D;hello-node:v1 --port&#x3D;8080</span><br></pre></td></tr></table></figure>
+<h2 id="Deployment"><a href="#Deployment" class="headerlink" title="Deployment"></a>Deployment</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">kubectl run hello-node --image=hello-node:v1 --port=8080</span><br></pre></td></tr></table></figure>
 
 <p>这里有个坑 ,我打tag的时候打成的latest，一直报找不到镜像，原因是如果省略imagePullPolicy 镜像tag为 :latest 策略为always ，否则 策略为 IfNotPresent</p>
 <h2 id="minikube-端口转发至本地"><a href="#minikube-端口转发至本地" class="headerlink" title="minikube 端口转发至本地"></a>minikube 端口转发至本地</h2><p>这实际上是k8s的功能  </p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">kubectl port-forward svc&#x2F;mysql 32316:3306 -n beatflow-data --address 0.0.0.0  </span><br><span class="line"></span><br><span class="line">#端口转发要注意，helm install重新安装后，要kill掉当前的端口转发进程，再重新的进行转发一次才能生效，但是helm upgrade是无影响的</span><br></pre></td></tr></table></figure>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">kubectl port-forward svc/mysql 32316:3306 -n beatflow-data --address 0.0.0.0  </span><br><span class="line"></span><br><span class="line">#端口转发要注意，helm install重新安装后，要kill掉当前的端口转发进程，再重新的进行转发一次才能生效，但是helm upgrade是无影响的</span><br></pre></td></tr></table></figure>
 <blockquote>
 <p>kubectl proxy 只能转发http请求</p>
 </blockquote>
-<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p><a href="https://www.toutiao.com/i6918983713418166788/?tt_from=weixin&amp;utm_campaign=client_share&amp;wxshare_count=1&amp;timestamp=1622183070&amp;app=news_article&amp;utm_source=weixin&amp;utm_medium=toutiao_android&amp;use_new_style=1&amp;req_id=202105281424300101350990833D07A87F&amp;share_token=c2146953-602c-452f-9329-67054429477a&amp;group_id=6918983713418166788" target="_blank" rel="noopener">https://www.toutiao.com/i6918983713418166788/?tt_from=weixin&amp;utm_campaign=client_share&amp;wxshare_count=1&amp;timestamp=1622183070&amp;app=news_article&amp;utm_source=weixin&amp;utm_medium=toutiao_android&amp;use_new_style=1&amp;req_id=202105281424300101350990833D07A87F&amp;share_token=c2146953-602c-452f-9329-67054429477a&amp;group_id=6918983713418166788</a></p>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p><a target="_blank" rel="noopener" href="https://www.toutiao.com/i6918983713418166788/?tt_from=weixin&utm_campaign=client_share&wxshare_count=1&timestamp=1622183070&app=news_article&utm_source=weixin&utm_medium=toutiao_android&use_new_style=1&req_id=202105281424300101350990833D07A87F&share_token=c2146953-602c-452f-9329-67054429477a&group_id=6918983713418166788">https://www.toutiao.com/i6918983713418166788/?tt_from=weixin&amp;utm_campaign=client_share&amp;wxshare_count=1&amp;timestamp=1622183070&amp;app=news_article&amp;utm_source=weixin&amp;utm_medium=toutiao_android&amp;use_new_style=1&amp;req_id=202105281424300101350990833D07A87F&amp;share_token=c2146953-602c-452f-9329-67054429477a&amp;group_id=6918983713418166788</a></p>
 
     </div>
 
@@ -313,12 +320,12 @@
         
     <div class="post-nav">
       <div class="post-nav-item">
-    <a href="/2023/01/11/k8s/k8s/" rel="prev" title="k8s/k8s">
-      <i class="fa fa-chevron-left"></i> k8s/k8s
+    <a href="/2023/01/11/k8s/%E4%BA%91%E5%8E%9F%E7%94%9F%E5%AE%9E%E6%88%98/" rel="prev" title="云原生实战">
+      <i class="fa fa-chevron-left"></i> 云原生实战
     </a></div>
       <div class="post-nav-item">
-    <a href="/2023/01/11/k8s/k8s%E8%B8%A9%E5%9D%91%E6%97%A5%E5%BF%97/" rel="next" title="k8s/k8s踩坑日志">
-      k8s/k8s踩坑日志 <i class="fa fa-chevron-right"></i>
+    <a href="/2023/01/11/k8s/k8s%E8%B8%A9%E5%9D%91%E6%97%A5%E5%BF%97/" rel="next" title="k8s踩坑日志">
+      k8s踩坑日志 <i class="fa fa-chevron-right"></i>
     </a></div>
     </div>
       </footer>
@@ -379,7 +386,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#minikube"><span class="nav-number">1.</span> <span class="nav-text">minikube</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Minikube安装"><span class="nav-number">1.1.</span> <span class="nav-text">Minikube安装</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Minikube启动"><span class="nav-number">1.2.</span> <span class="nav-text">Minikube启动</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#安装kubectl"><span class="nav-number">1.3.</span> <span class="nav-text">安装kubectl</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#构建本地镜像"><span class="nav-number">1.4.</span> <span class="nav-text">构建本地镜像</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Deployment"><span class="nav-number">1.5.</span> <span class="nav-text">Deployment</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#minikube-端口转发至本地"><span class="nav-number">1.6.</span> <span class="nav-text">minikube 端口转发至本地</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#参考"><span class="nav-number">1.7.</span> <span class="nav-text">参考</span></a></li></ol></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#minikube"><span class="nav-number">1.</span> <span class="nav-text">minikube</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Minikube%E5%AE%89%E8%A3%85"><span class="nav-number">1.1.</span> <span class="nav-text">Minikube安装</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Minikube%E5%90%AF%E5%8A%A8"><span class="nav-number">1.2.</span> <span class="nav-text">Minikube启动</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%89%E8%A3%85kubectl"><span class="nav-number">1.3.</span> <span class="nav-text">安装kubectl</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%9E%84%E5%BB%BA%E6%9C%AC%E5%9C%B0%E9%95%9C%E5%83%8F"><span class="nav-number">1.4.</span> <span class="nav-text">构建本地镜像</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Deployment"><span class="nav-number">1.5.</span> <span class="nav-text">Deployment</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#minikube-%E7%AB%AF%E5%8F%A3%E8%BD%AC%E5%8F%91%E8%87%B3%E6%9C%AC%E5%9C%B0"><span class="nav-number">1.6.</span> <span class="nav-text">minikube 端口转发至本地</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8F%82%E8%80%83"><span class="nav-number">1.7.</span> <span class="nav-text">参考</span></a></li></ol></li></ol></div>
       </div>
       <!--/noindex-->
 
@@ -395,14 +402,14 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">101</span>
+          <span class="site-state-item-count">96</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
             <a href="/categories/">
           
-        <span class="site-state-item-count">18</span>
+        <span class="site-state-item-count">19</span>
         <span class="site-state-item-name">分类</span></a>
       </div>
       <div class="site-state-item site-state-tags">
@@ -439,7 +446,7 @@
   </span>
   <span class="author" itemprop="copyrightHolder">Chen Yu</span>
 </div>
-  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v4.2.0
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v6.3.0
   </div>
   <span class="post-meta-divider">|</span>
   <div class="theme-info">主题 – <a href="https://theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a> v7.7.0

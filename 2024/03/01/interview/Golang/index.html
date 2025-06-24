@@ -1,0 +1,776 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 6.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+  <meta name="baidu-site-verification" content="D033aiBRFi">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+
+
+<script id="hexo-configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    hostname: new URL('https://phpdi.github.io').hostname,
+    root: '/',
+    scheme: 'Gemini',
+    version: '7.7.0',
+    exturl: false,
+    sidebar: {"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},
+    copycode: {"enable":false,"show_result":false,"style":null},
+    back2top: {"enable":true,"sidebar":false,"scrollpercent":false},
+    bookmark: {"enable":false,"color":"#222","save":"auto"},
+    fancybox: false,
+    mediumzoom: false,
+    lazyload: false,
+    pangu: false,
+    comments: {"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},
+    algolia: {
+      appID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    },
+    localsearch: {"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},
+    path: 'search.xml',
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}
+  };
+</script>
+
+  <meta name="description" content="字符串 字符串的结构 ptr+len utf8字符集 (0一个字节，10两个字节，110三个字节) 字符串的内容在只读内存区，就算用unsafe包转成数组byte，也不可以更改  Slice 结构： data+len+cap,data为底层数组指针 切片操作出来的slice 会共用底层数组  slice扩容规则：  预估容量  len&lt;1024, 2倍扩容,二者取大 len&gt;&amp;#x3D">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Golang">
+<meta property="og:url" content="https://phpdi.github.io/2024/03/01/interview/Golang/index.html">
+<meta property="og:site_name" content="goeoeo">
+<meta property="og:description" content="字符串 字符串的结构 ptr+len utf8字符集 (0一个字节，10两个字节，110三个字节) 字符串的内容在只读内存区，就算用unsafe包转成数组byte，也不可以更改  Slice 结构： data+len+cap,data为底层数组指针 切片操作出来的slice 会共用底层数组  slice扩容规则：  预估容量  len&lt;1024, 2倍扩容,二者取大 len&gt;&amp;#x3D">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://phpdi.github.io/2024/03/01/interview/Golang/img.png">
+<meta property="og:image" content="https://phpdi.github.io/2024/03/01/interview/Golang/img_1.png">
+<meta property="article:published_time" content="2024-03-01T05:36:19.764Z">
+<meta property="article:modified_time" content="2024-04-02T05:33:02.698Z">
+<meta property="article:author" content="Chen Yu">
+<meta property="article:tag" content="面试题">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://phpdi.github.io/2024/03/01/interview/Golang/img.png">
+
+<link rel="canonical" href="https://phpdi.github.io/2024/03/01/interview/Golang/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome: false,
+    isPost: true
+  };
+</script>
+
+  <title>Golang | goeoeo</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-meta">
+
+    <div>
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">goeoeo</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+        <h1 class="site-subtitle" itemprop="description">会吃鱼</h1>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+</div>
+
+
+<nav class="site-nav">
+  
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>归档</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-fw fa-th"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-fw fa-user"></i>关于</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+
+</nav>
+  <div class="site-search">
+    <div class="popup search-popup">
+    <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocorrect="off" autocapitalize="none"
+           placeholder="搜索..." spellcheck="false"
+           type="text" id="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result"></div>
+
+</div>
+<div class="search-pop-overlay"></div>
+
+  </div>
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content">
+            
+
+  <div class="posts-expand">
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://phpdi.github.io/2024/03/01/interview/Golang/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/head.jpeg">
+      <meta itemprop="name" content="Chen Yu">
+      <meta itemprop="description" content="自律给我自由">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="goeoeo">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          Golang
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2024-03-01 13:36:19" itemprop="dateCreated datePublished" datetime="2024-03-01T13:36:19+08:00">2024-03-01</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2024-04-02 13:33:02" itemprop="dateModified" datetime="2024-04-02T13:33:02+08:00">2024-04-02</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/interview/" itemprop="url" rel="index">
+                    <span itemprop="name">interview</span>
+                  </a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="字符串"><a href="#字符串" class="headerlink" title="字符串"></a>字符串</h1><ul>
+<li>字符串的结构 ptr+len</li>
+<li>utf8字符集 (0一个字节，10两个字节，110三个字节)</li>
+<li>字符串的内容在只读内存区，就算用unsafe包转成数组byte，也不可以更改</li>
+</ul>
+<h1 id="Slice"><a href="#Slice" class="headerlink" title="Slice"></a>Slice</h1><ul>
+<li>结构： data+len+cap,data为底层数组指针</li>
+<li>切片操作出来的slice 会共用底层数组</li>
+</ul>
+<p>slice扩容规则：</p>
+<ol>
+<li>预估容量 <ul>
+<li>len&lt;1024, 2倍扩容,二者取大</li>
+<li>len&gt;&#x3D;1024, 1.25扩容,二者取大</li>
+</ul>
+</li>
+<li>计算内存大小，容量*单元素内存大小</li>
+<li>通过内存管理模块匹配合适内存规格（8，16，32,48,64,80,96,112…），拿到真实的容量</li>
+</ol>
+<h1 id="内存对齐"><a href="#内存对齐" class="headerlink" title="内存对齐"></a>内存对齐</h1><p>内存对齐可以提高内存访问效率，不对齐可能需要多次扫描才能获取到数据</p>
+<ul>
+<li>对齐边界：平台对齐边界和数据类型的最小值  </li>
+<li>结构体所占用的内存为，最大对齐边界的倍数(要保证数组情况下每个元素都能内存对齐)</li>
+<li>组织结构体的时候，小数据类型放前面，可以让内存排列的更加紧凑，节约内存</li>
+</ul>
+<h1 id="Map"><a href="#Map" class="headerlink" title="Map"></a>Map</h1><p>Golang使用的哈希表来实现map ,用桶来存储键值对，每个桶存储8个元素  </p>
+<ol>
+<li>选桶算法：%，&amp;，golang使用的&amp;，为保证不会出现空桶，桶的个数是2的倍数</li>
+<li>哈希冲突：开放地址法，拉链法，golang使用的拉链法</li>
+<li>渐进式扩容：将一次扩容的时间分摊到多个读写上，redis，rehash也是用的这种方式。</li>
+</ol>
+<p>扩容规则：</p>
+<ol>
+<li>翻倍扩容,count&#x2F;2^B &gt; 6.5(负载因子)， 每个桶里面的元素个数达到6.5个，表示比较满了，如果hash表的负载<br>因子过高会导致大量的hash冲突，从而导致效率下降，所以需要扩容</li>
+<li>等量扩容,当map中有大量key删除的情况，为了将溢出桶的元素迁移到普通桶中，触发条件<ul>
+<li>普通桶数量&lt;2^15,且溢出桶的数量&gt;普通桶</li>
+<li>普通桶数量&gt;2^15,且溢出桶的数量&gt;2^15</li>
+</ul>
+</li>
+</ol>
+<h1 id="GMP"><a href="#GMP" class="headerlink" title="GMP"></a>GMP</h1><p>内核态和用户态:<br>要讲GMP，得先从Linux内核说起，内核向下管理硬件设备，向上提供API给用户程序调用。 CPU运行的时候包含两种模式，实模式（执行任何指令，访问任何内存）和保护模式（执行部分指令，访问部分内存）<br>内核作为第一个程序被加载进内存时，运行在实模式下，通过GDT（全局描述表）声明全局空间（Linux Kernel程序所占用的空间），从这个空间读取到的指令可 以完全访问内存，此外空间的指令，不允许访问GDT声明的内存空间<br>实模式和保护模式所能操作的空间，就是内核空间和用户空间，对应着内核态和用户态。线程也被细分为内核态线程和用户态线程  </p>
+<p>GMP调度过程：<br>GMP中G为协程，M代表一个线程,P为抽象的处理器。GO运行是维护了一个全局的G队列，每个P也有自己的本地队列,每个P绑定一个M,通过M的G0程序，来从本地P中获取待执行的G<br>如果本地队列为空从全局队列获取G,如果全局队列为空，就从其它的P的本地队列偷取来执行，当M阻塞时，例如陷入系统调用进入到内核态，P会绑定其它可用的M继续执行它队列<br>里面的G。</p>
+<p>抢占式调度:<br>每个G默认情况下最多只能执行10ms,就会被调度器抢占，重新执行其它的G,这个切换因为是用户态之间的切换，代价很小(不用陷入内核态)  </p>
+<p>Go调度本质是把大量的goroutine分配到少量线程上去执行，并利用多核并行，实现更强大的并发 </p>
+<h1 id="抢占式调度"><a href="#抢占式调度" class="headerlink" title="抢占式调度"></a>抢占式调度</h1><p>go1.14 基于信号的协程调度抢占。</p>
+<p>runtime在启动时会创建一个线程来执行sysmon,sysmon启动后会间隔性的进行监控，最长间隔10ms，最短间隔20us。如果某协程独占P超过10ms，那么就会被抢占！整体过程：</p>
+<ol>
+<li>发送抢占信号</li>
+<li>M收到抢占信号，休眠当前的G,重新进行调度</li>
+</ol>
+<blockquote>
+<p>go1.13前依赖栈增长检测来实现抢占式调度</p>
+</blockquote>
+<h1 id="GC"><a href="#GC" class="headerlink" title="GC"></a>GC</h1><p>用于回收在程序运行过程中不再使用的内存<br>Golang 使用标记清扫+主体并发式增量垃圾回收</p>
+<ul>
+<li>标记清扫：从栈，数据段 上的对象作为root对象，基于它们进一步追踪，把能追踪到的数据进行标记，追踪不到的数据，则视为垃圾，进行清理</li>
+<li>主体并发式增量垃圾回收: 短暂的stw确保所有线程开启写屏障，与用户程序并行执行，且将垃圾回收的时间分散到不同的线程上执行。<ul>
+<li>主体并发：只有在开启写屏障的短暂时间stw，整个gc绝大部分时间是和用户程序并发进行的</li>
+<li>增量：利用cpu多核与用户程序交替进行，最大程度减少对用户程序的影响</li>
+</ul>
+</li>
+</ul>
+<h2 id="三色标记过程"><a href="#三色标记过程" class="headerlink" title="三色标记过程"></a>三色标记过程</h2><p>三色标记法将对象分为三种状态：白色、灰色和黑色。白色表示该对象未被标记过，灰色表示该对象已被标记，但其子对象可能还未被标记，黑色表示该对象及其子对象都已被标记。通过不断将灰色对象标记为黑色，并将黑色对象的子对象标记为灰色，最终将所有可达对象标记为黑色，然后清除所有白色对象，完成垃圾回收。</p>
+<p>三色标记法无STW，会出现有效数据被回收的场景，同时满足：</p>
+<ul>
+<li>黑色对象下面引用了白色对象</li>
+<li>灰色对象与它们之间的可达性关系遭到破坏</li>
+</ul>
+<p>解决这个问题的方案有两个：</p>
+<ol>
+<li>强三色不变式： 强制性不允许黑色对象引用白色对象</li>
+<li>弱三色不变式： 黑色对象可以引用白色对象，但要求白色对象必须存在其它灰色对象对它的引用或者可达它的链路上有灰色对象</li>
+</ol>
+<p>使用屏障机制（可以理解为“钩子”函数，在执行插入&#x2F;删除时，先执行“钩子”函数）来实现强弱三色不变式：</p>
+<ol>
+<li>插入写屏障：对象引用时触发,对象A引用对象B,对象B会被标记为灰色，由于栈上的对象不会触发写屏障（性能考虑），所以在标记结束时，需要STW(大约需要10~100ms)来重新扫描栈，来确保没有黑色对象到白色对象的引用</li>
+<li>删除写屏障：对象删除时触发，自身会被标记为灰色，来保证灰色对象到白色对象的路径不会断，因此一个对象即使被删除了最后一个指向它的指针，也依旧可以活过这一轮，在下一轮GC中被删除掉（延迟GC）</li>
+</ol>
+<blockquote>
+<p>只用删除写屏障无法解决，黑色节点下新增白色节点的情况，</p>
+</blockquote>
+<p>go1.8版本引入混合写屏障，其过程如下：</p>
+<ol>
+<li>GC刚开始的时候，会将栈上的可达对象全部标记为黑色。</li>
+<li>GC期间，任何在栈上新创建的对象，均为黑色。</li>
+<li>堆上被删除的对象标记为灰色</li>
+<li>堆上新添加的对象标记为灰色</li>
+</ol>
+<p>栈上由于性能保证，未开启写屏障，其中1.2两点的目的有一个：强三色不变，2.保证栈对象只有黑色和白色，标记结束时不用再stw去检查白色对象。<br>堆上操作对象会被标记为灰色，保证灰色对象及其下游对象不会被错误GC</p>
+<h2 id="GC过程"><a href="#GC过程" class="headerlink" title="GC过程"></a>GC过程</h2><ol>
+<li><p>GC准备阶段,为每个p创建MarkWorker协程（很快会休眠，_Gwaiting）</p>
+</li>
+<li><p>第一次STW,记录GC阶段为_GCMark,同时开启写屏障</p>
+<ul>
+<li>gcBlackenEnable&#x3D;1  是否允许gc扫描</li>
+<li>writeBarrier.enabled&#x3D;true 开启写屏障</li>
+<li>gcphrase&#x3D;_GCMark 标识GC阶段为 标记阶段</li>
+</ul>
+</li>
+<li><p>MarkWorker开始根据p的调度进行标记工作，直到标记完成</p>
+</li>
+<li><p>第二次STW，停止标记，关闭写屏障</p>
+<ul>
+<li>gcBlackenEnable&#x3D;0 停止标记</li>
+<li>writeBarrier.enabled&#x3D;false 关闭写屏障</li>
+<li>gcphrase&#x3D;_GCMarkTermination</li>
+</ul>
+</li>
+<li><p>开始清扫（清扫也是增量进行，每轮gc开始之前，需要保证上一次清扫已经完成</p>
+</li>
+</ol>
+<p><img src="/2024/03/01/interview/Golang/img.png"></p>
+<h2 id="GC标记过程实现-gcw-wbBuf"><a href="#GC标记过程实现-gcw-wbBuf" class="headerlink" title="GC标记过程实现 gcw&amp;wbBuf"></a>GC标记过程实现 gcw&amp;wbBuf</h2><p>GC标记需要扫描的对象会加入到工作队列中，由后台MarkWorker来消费队列：</p>
+<ol>
+<li>全局工作队列</li>
+<li>本地工作队列，包含wbuf1,wbuf2。 先加入wbuf1,再加入wbuf2,当wbuf2满了，就加入全局工作队列</li>
+</ol>
+<p>每个P有一个写屏障缓冲区 wbBuf,写屏障触发时，会加入到这个缓存区中，通过flush 刷入工作队列中</p>
+<h2 id="GC-CPU使用用率（决定MarkWork-可以启动的个数）"><a href="#GC-CPU使用用率（决定MarkWork-可以启动的个数）" class="headerlink" title="GC CPU使用用率（决定MarkWork 可以启动的个数）"></a>GC CPU使用用率（决定MarkWork 可以启动的个数）</h2><p>GC 默认cpu使用率为25%<br>workCount&#x3D;gomaxprocs* 25%，如果计算出来不是整数，需要向上取整，例如取出来的值时1.5，则会取2，如果这个向上取整的数值与原目标比较超过0.3（0.5&#x2F;1.5&gt;0.3）,那多出来的这个worker就会<br>进入fraction模式，加入cpu核数时6，那每个cpu再fraction模式下的工作目标就是 0.5&#x2F;6&#x3D;1&#x2F;12，GC Worker有两种模式：</p>
+<ul>
+<li>Dedicated 完全占用模式，直到调度器调度</li>
+<li>Fraction 非完全占用模式，Mark时间会均摊到每个p上以合计到达 1&#x2F;12这个目标（p的work时间&#x3D;Fraction模式的时间&#x2F;总的Mark的时间），如果当前P到了目标就会让出cpu</li>
+</ul>
+<h2 id="GC-过程中GC内存分配"><a href="#GC-过程中GC内存分配" class="headerlink" title="GC 过程中GC内存分配"></a>GC 过程中GC内存分配</h2><p>为避免GC过程的内存分配压力过大，GO语言有 GC Assist(辅助GC)，如果GC过程中协程要分配内存，它需要负担一部分GC标记工作，要申请的内存越大，那对应要<br>负担的标记任务也多（借贷偿还机制，你申请了内存，那就得你去释放内存），有负债的G在成功申请内存前，需要辅助gc完成一些标记工作，来偿还债务</p>
+<p>后台的MarkWorker 每完成一定量的标记任务就会在全局gcController中存一笔信用，有债务需要偿还的G可以在gcController这里偷取信用来偿还债务</p>
+<p>gc标记阶段，每次分配内存，都会检查当G是否需要辅助GC，到GC清扫阶段，内存分配也会触发辅助清扫</p>
+<p>辅助标记和辅助清扫，可以避免因过大的内存分配压力，导致GC来不及回收的情况（GC标记的速度没有分配的速度快，就永远标记不完）</p>
+<h2 id="GC-触发方式"><a href="#GC-触发方式" class="headerlink" title="GC 触发方式"></a>GC 触发方式</h2><ul>
+<li>手动触发 runtime.GC</li>
+<li>分配内存，每次GC都会在标记结束后设置下一次触发gc的内存分配量，分配大对象或者从mcentral获取空闲内存时，会判断是否达到了这个值</li>
+<li>sysmon 系统监控，达到一定的时间间隔，强制执行gc,默认是2分钟</li>
+</ul>
+<h1 id="Mutex"><a href="#Mutex" class="headerlink" title="Mutex"></a>Mutex</h1><p>Mutex加锁解锁利用atomic包实现，其结构体包含两个字段： </p>
+<ol>
+<li>state int32 存储互斥锁的状态，0号位标识是否上锁，1号位标识是否有goroutine被唤醒，2号位标识锁的模式（正常模式，饥饿模式）,其它位记录等待锁的Goroutine的数量</li>
+<li>sema uint32 信号量，用于阻塞或者唤醒协程</li>
+</ol>
+<p>加锁过程：  </p>
+<ol>
+<li>尝试获得锁，获取不到进入自旋，最大自旋次数为4</li>
+<li>插入排队等待队列尾部</li>
+<li>当队列头部G等待时间超过1ms，它会将锁标置为饥饿模式，此时其它想要获取锁的G，不会自旋，而是直接插队队列尾部，防止尾端延迟</li>
+<li>当获得锁的G，如果它的等待时间小与1ms或者它是最后一个等待者，会将锁置为正常模式</li>
+</ol>
+<p>解锁过程：</p>
+<ol>
+<li>解锁</li>
+<li>唤醒等待队列头部G,这个G会继承当前解锁G的时间片，立刻执行</li>
+</ol>
+<h2 id="自旋需要满足的条件"><a href="#自旋需要满足的条件" class="headerlink" title="自旋需要满足的条件"></a>自旋需要满足的条件</h2><ul>
+<li>锁为正常模式</li>
+<li>多核，GOMAXPROCS&gt;1</li>
+<li>当前P的等待队列为空</li>
+<li>当前有一个P正在执行</li>
+</ul>
+<h2 id="为什么要自旋？"><a href="#为什么要自旋？" class="headerlink" title="为什么要自旋？"></a>为什么要自旋？</h2><p>如果是多核情况，且持有锁的时间比较短，往往自旋几次就能拿到锁，比系统调用开销小  </p>
+<h1 id="Channel"><a href="#Channel" class="headerlink" title="Channel"></a>Channel</h1><p>Channel是一个指针指向堆上的数据hchan:   </p>
+<ul>
+<li>mutex 互斥锁支持协程并发访问</li>
+<li>缓冲区数组</li>
+<li>缓冲区类型元数据 *_type</li>
+<li>缓冲区读写下标</li>
+<li>缓冲区读写G队列</li>
+</ul>
+<p>某协程g1 执行select过程：  </p>
+<ol>
+<li>按序加锁 所有的channel</li>
+<li>乱序轮询 channel</li>
+<li>不可读写，加入到channel读写等待队列中，挂起等待 </li>
+<li>按序解锁 所有channel</li>
+<li>可读写，g1会被channel唤醒执行</li>
+<li>执行case分之后，按序加锁</li>
+<li>离开等待队列</li>
+<li>返回</li>
+</ol>
+<h1 id="堆内存管理"><a href="#堆内存管理" class="headerlink" title="堆内存管理"></a>堆内存管理</h1><p>Go内存分配器的设计思想来源于TCMalloc，把内存分为多级管理，利用缓存的思想 ,提升内存使用效率，降低锁的粒度。</p>
+<p>程序启动的时会预申请堆内存：<br><img src="/2024/03/01/interview/Golang/img_1.png"></p>
+<ul>
+<li>堆区（area,page,span,内存块）： 512G,最小粒度为page（8KB）,8192个page组成一个area(64MB), 8192个area组成堆区512G ，每个area会被切分为不同的span,span包含一组连续的page,span内部会划分为等大的内存块</li>
+<li>bitmaps: 16G,一个字节标记4个指针大小的位置，低4位标记是否位指针，高4位标记是否需要gc扫描，512G&#x2F;(4*8)&#x3D;16G</li>
+<li>spans: 512M,存放span指针，数组大小为8192,用于定位area中8192个page分别被哪些span使用了</li>
+</ul>
+<h2 id="堆内存的管理结构："><a href="#堆内存的管理结构：" class="headerlink" title="堆内存的管理结构："></a>堆内存的管理结构：</h2><ul>
+<li><p>mheap: 整个堆内存对象</p>
+<ul>
+<li>mheap.central 全局mspan管理中心，一个mcentral管一种类型的mspan,总共有136种mentral<ul>
+<li>spanclass  spanclass 是一个字节，编号0号表示&gt;32KB的规格，1-67 表示[8B~32KB]的规格，最低位标识是否需要gc扫描,总共136种</li>
+<li>partial [2]spanSet &#x2F;&#x2F; 未用尽的span(已清扫，未清扫)</li>
+<li>full [2]spanSet &#x2F;&#x2F;已用尽的span(已清扫，未清扫)</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>p.mecache: 每个P都有一个本地缓存,分配内存时先从alloc里面找，找不到就去mcentral.partial中获取，同时吧用尽的*mspan放到mcentral.full中</p>
+<ul>
+<li>tiny 分配小于16B的小对象</li>
+<li>alloc 136个用于存储不同规格的*mspan</li>
+</ul>
+</li>
+<li><p>heapArena: 对应一个area</p>
+<ul>
+<li>bitmap 一个字节标记4个指针大小的位置，低4位标记是否位指针，高4位标记是否需要gc扫描,由此可见gc的扫描粒度是一个指针(8byte)的大小</li>
+<li>spans [8192]*span ,用于定位一个page对应的mspan在哪儿</li>
+<li>pageInuse 标记每个span的第一个page的位置</li>
+<li>pageMarks 标记存gc过程中标记的页，结合pageInuse来清扫那些没有标记的sapn</li>
+</ul>
+</li>
+<li><p>mspan: 对应一个span，管理span中一组连续的page</p>
+<ul>
+<li>spanclass 表示当前span内存储的内存规格</li>
+<li>nelem 标识存储了多少个内存块</li>
+<li>freeIndex 记录下个内存空闲块的索引</li>
+<li>allocBits 标记已经分配的内存块</li>
+<li>gcmarkBits 标记span的内存块，清扫完成后会将此位图赋值给allocBits</li>
+</ul>
+</li>
+<li><p>线程缓存（MCache）：作为线程独立的内存池，与线程的第一交互内存，访问无需加锁；</p>
+</li>
+<li><p>中心缓存（MCentral）：作为线程缓存的下一级，是多个线程共享的，所以访问时需要加锁；</p>
+</li>
+<li><p>页堆（MHeap）：中心缓存的下一级，在遇到32KB以上的对象时，会直接选择页堆分配大内存，而当页堆内存不够时，则会通过系统调用向系统申请内存。</p>
+</li>
+</ul>
+<h2 id="堆内存分配-mallocgc"><a href="#堆内存分配-mallocgc" class="headerlink" title="堆内存分配 mallocgc"></a>堆内存分配 mallocgc</h2><ol>
+<li>辅助GC：为保证GC标记的速度快于内存分配的速度，每次辅助GC至少扫描64KB的空间<ul>
+<li>存储信用 如果当前G申请的内存小于64KB，多出来的部分会作为信用存储，下次来，可以消耗这个信用</li>
+<li>窃取信用 后台的MarkWork在gcController里面积累信用，可以供协程窃取</li>
+</ul>
+</li>
+<li>空间分配,分配策略如下：<ul>
+<li>tiny allocator: &lt;16B &amp;&amp; noscan的内存分配,节约内存空间</li>
+<li>mcache.alloc: &lt;32KB &amp;&amp; (scan || &gt;16B), 利用本地的mcahe,与全局的mcentral配合来找匹配的内存规格</li>
+<li>large span: 直接从area中划分目标page组成一个span</li>
+</ul>
+</li>
+<li>位图标记<ul>
+<li>area编号：通过内存块的地址计算其所在的area编号</li>
+<li>heapArea地址：通过area编号，从mheap.arenas 二维数组中找到*heapArena （二维数组是用于减少寻找连续空间的压力）</li>
+<li>page编号： (p&#x2F;pageSize)%pagesPerArena</li>
+<li>mspan地址： 通过heapArea.spans数组下表找到 mspan地址</li>
+<li>标记mspan.allocBits</li>
+</ul>
+</li>
+<li>最后收尾<ul>
+<li>如果当前处于GC标记阶段，需要对新分配的对象进行GC标记（灰色）</li>
+<li>如果内存分配达到了GC的触发条件，那就需要触发GC (每次GC都会在标记结束后设置下一次触发gc的内存分配量，分配大对象或者从mcentral获取空闲内存时，会判断是否达到了这个值)</li>
+</ul>
+</li>
+</ol>
+<h1 id="栈内存管理"><a href="#栈内存管理" class="headerlink" title="栈内存管理"></a>栈内存管理</h1><p>栈内存也是用mspan管理的，mspan分为2类：</p>
+<ul>
+<li>mSpanInUse 用于堆内存</li>
+<li>mSpanManual 用于栈内存</li>
+</ul>
+<p>调度器初始化的时候会初始化两个用于栈分配的全局对象 ：</p>
+<ul>
+<li>stackpool：&lt;32KB，栈大小必须是2的幂，最小2KB,linux环境下stackpool提供了 2KB,4KB,8KB,16KB 4种规格的mspan链表</li>
+<li>stackLarge &gt;&#x3D;32KB，这是一个长度为25的msapn链表，从8KB开始，每个mspan的大小都是前一个2倍</li>
+<li>mcache.stackcache 栈分配的本地缓存，存放不同规格的栈内存链表</li>
+</ul>
+<h2 id="分配过程："><a href="#分配过程：" class="headerlink" title="分配过程："></a>分配过程：</h2><p>初始栈大小为2KB   </p>
+<ul>
+<li>&lt;32KB的分配过程<ol>
+<li>先找本地缓存对应规格的内存块</li>
+<li>本地缓存没有，则从stackpool中获取可用内存</li>
+<li>如果stackpool中也没有，就直接堆内存找32KB的span,放到stackpool中</li>
+</ol>
+</li>
+<li>大于32KB的分配<ol>
+<li>以log2n 计算出stackLarge的索引</li>
+<li>链表不为空直接使用，为空则直接从堆内存获取</li>
+</ol>
+</li>
+</ul>
+<h2 id="栈增长"><a href="#栈增长" class="headerlink" title="栈增长"></a>栈增长</h2><p>编译器会在函数头部安插检测代码，检查当前剩余的栈空间是否够用,不够用，就把当前的栈空间大小乘以2，然后拷贝到新的栈上</p>
+<h2 id="栈收缩"><a href="#栈收缩" class="headerlink" title="栈收缩"></a>栈收缩</h2><ul>
+<li>gc寻找标记root节点时，如果发现可以安全的收缩栈，就会执行栈收缩  </li>
+<li>不能马上执行时，就设置栈收缩标识（g.preemptShrink&#x3D;true），等到协程检测到抢占标识（stackPreempt）,在让出cpu之前，会检查这个栈收缩标识,为true 的话会进行栈收缩，再让出cpu</li>
+</ul>
+<h2 id="栈释放"><a href="#栈释放" class="headerlink" title="栈释放"></a>栈释放</h2><ul>
+<li><p>小于32KB的栈在释放时会先放回到本地缓存中，如果本地缓存对应链表中栈空间总和大于32KB，就把一部分放回到stackpool中，如果本地缓存不可用也会直接 返回到stackpool中，如果发现stackpool的mspan所有的内存块都被释放了，就会把它归还给堆内存</p>
+</li>
+<li><p>大于等于32KB的栈释放，如果当前处于gc清理阶段，就直接释放到堆内存，否则就把它释放到stackLarge这里</p>
+</li>
+</ul>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E9%9D%A2%E8%AF%95%E9%A2%98/" rel="tag"># 面试题</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2024/02/29/interview/%E5%88%86%E5%B8%83%E5%BC%8F%E9%9D%A2%E8%AF%95%E9%A2%98/" rel="prev" title="分布式面试题">
+      <i class="fa fa-chevron-left"></i> 分布式面试题
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2024/03/06/interview/oppo%E9%9D%A2%E8%AF%95%E9%A2%98/" rel="next" title="oppo面试题">
+      oppo面试题 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+  </div>
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let activeClass = CONFIG.comments.activeClass;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%AD%97%E7%AC%A6%E4%B8%B2"><span class="nav-number">1.</span> <span class="nav-text">字符串</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Slice"><span class="nav-number">2.</span> <span class="nav-text">Slice</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%86%85%E5%AD%98%E5%AF%B9%E9%BD%90"><span class="nav-number">3.</span> <span class="nav-text">内存对齐</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Map"><span class="nav-number">4.</span> <span class="nav-text">Map</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#GMP"><span class="nav-number">5.</span> <span class="nav-text">GMP</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%8A%A2%E5%8D%A0%E5%BC%8F%E8%B0%83%E5%BA%A6"><span class="nav-number">6.</span> <span class="nav-text">抢占式调度</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#GC"><span class="nav-number">7.</span> <span class="nav-text">GC</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%89%E8%89%B2%E6%A0%87%E8%AE%B0%E8%BF%87%E7%A8%8B"><span class="nav-number">7.1.</span> <span class="nav-text">三色标记过程</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#GC%E8%BF%87%E7%A8%8B"><span class="nav-number">7.2.</span> <span class="nav-text">GC过程</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#GC%E6%A0%87%E8%AE%B0%E8%BF%87%E7%A8%8B%E5%AE%9E%E7%8E%B0-gcw-wbBuf"><span class="nav-number">7.3.</span> <span class="nav-text">GC标记过程实现 gcw&amp;wbBuf</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#GC-CPU%E4%BD%BF%E7%94%A8%E7%94%A8%E7%8E%87%EF%BC%88%E5%86%B3%E5%AE%9AMarkWork-%E5%8F%AF%E4%BB%A5%E5%90%AF%E5%8A%A8%E7%9A%84%E4%B8%AA%E6%95%B0%EF%BC%89"><span class="nav-number">7.4.</span> <span class="nav-text">GC CPU使用用率（决定MarkWork 可以启动的个数）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#GC-%E8%BF%87%E7%A8%8B%E4%B8%ADGC%E5%86%85%E5%AD%98%E5%88%86%E9%85%8D"><span class="nav-number">7.5.</span> <span class="nav-text">GC 过程中GC内存分配</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#GC-%E8%A7%A6%E5%8F%91%E6%96%B9%E5%BC%8F"><span class="nav-number">7.6.</span> <span class="nav-text">GC 触发方式</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Mutex"><span class="nav-number">8.</span> <span class="nav-text">Mutex</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%87%AA%E6%97%8B%E9%9C%80%E8%A6%81%E6%BB%A1%E8%B6%B3%E7%9A%84%E6%9D%A1%E4%BB%B6"><span class="nav-number">8.1.</span> <span class="nav-text">自旋需要满足的条件</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%BA%E4%BB%80%E4%B9%88%E8%A6%81%E8%87%AA%E6%97%8B%EF%BC%9F"><span class="nav-number">8.2.</span> <span class="nav-text">为什么要自旋？</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Channel"><span class="nav-number">9.</span> <span class="nav-text">Channel</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%A0%86%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86"><span class="nav-number">10.</span> <span class="nav-text">堆内存管理</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%A0%86%E5%86%85%E5%AD%98%E7%9A%84%E7%AE%A1%E7%90%86%E7%BB%93%E6%9E%84%EF%BC%9A"><span class="nav-number">10.1.</span> <span class="nav-text">堆内存的管理结构：</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%A0%86%E5%86%85%E5%AD%98%E5%88%86%E9%85%8D-mallocgc"><span class="nav-number">10.2.</span> <span class="nav-text">堆内存分配 mallocgc</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%A0%88%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86"><span class="nav-number">11.</span> <span class="nav-text">栈内存管理</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%88%86%E9%85%8D%E8%BF%87%E7%A8%8B%EF%BC%9A"><span class="nav-number">11.1.</span> <span class="nav-text">分配过程：</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%A0%88%E5%A2%9E%E9%95%BF"><span class="nav-number">11.2.</span> <span class="nav-text">栈增长</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%A0%88%E6%94%B6%E7%BC%A9"><span class="nav-number">11.3.</span> <span class="nav-text">栈收缩</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%A0%88%E9%87%8A%E6%94%BE"><span class="nav-number">11.4.</span> <span class="nav-text">栈释放</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Chen Yu"
+      src="/images/head.jpeg">
+  <p class="site-author-name" itemprop="name">Chen Yu</p>
+  <div class="site-description" itemprop="description">自律给我自由</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">123</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">20</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">84</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2025</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Chen Yu</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v6.3.0
+  </div>
+  <span class="post-meta-divider">|</span>
+  <div class="theme-info">主题 – <a href="https://theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a> v7.7.0
+  </div>
+
+<div>
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<span id="busuanzi_container_site_pv" style='display:none'>
+    本站总访问量 <span id="busuanzi_value_site_pv"></span> 次
+    <span class="post-meta-divider">|</span>
+</span>
+<span id="busuanzi_container_site_uv" style='display:none'>
+    有<span id="busuanzi_value_site_uv"></span>人看过我的博客啦
+</span>
+</div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>

@@ -210,7 +210,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://phpdi.github.io/2023/01/11/go/go%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86/">
+    <link itemprop="mainEntityOfPage" href="https://phpdi.github.io/2023/01/11/k8s/harbor/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/head.jpeg">
@@ -224,7 +224,7 @@
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
           
-            <a href="/2023/01/11/go/go%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86/" class="post-title-link" itemprop="url">go内存管理</a>
+            <a href="/2023/01/11/k8s/harbor/" class="post-title-link" itemprop="url">harbor</a>
         </h2>
 
         <div class="post-meta">
@@ -241,7 +241,7 @@
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2023-09-14 10:40:47" itemprop="dateModified" datetime="2023-09-14T10:40:47+08:00">2023-09-14</time>
+                <time title="修改时间：2023-09-14 10:52:31" itemprop="dateModified" datetime="2023-09-14T10:52:31+08:00">2023-09-14</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -249,8 +249,8 @@
               </span>
               <span class="post-meta-item-text">分类于</span>
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/go/" itemprop="url" rel="index">
-                    <span itemprop="name">go</span>
+                  <a href="/categories/k8s/" itemprop="url" rel="index">
+                    <span itemprop="name">k8s</span>
                   </a>
                 </span>
             </span>
@@ -266,688 +266,70 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <p>Go语言内置运行时（就是runtime），抛弃了传统的内存分配方式，改为自主管理。这样可以自主地实现更好的内存使用模式，比如内存池、预分配等等。这样，不会每次内存分配都需要进行系统调用。</p>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2023/01/11/go/go%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-        
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://phpdi.github.io/2023/01/11/go/goland%E6%BF%80%E6%B4%BB%E6%95%99%E7%A8%8B/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/head.jpeg">
-      <meta itemprop="name" content="Chen Yu">
-      <meta itemprop="description" content="自律给我自由">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="goeoeo">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2023/01/11/go/goland%E6%BF%80%E6%B4%BB%E6%95%99%E7%A8%8B/" class="post-title-link" itemprop="url">goland激活教程</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2023-01-11 22:59:23" itemprop="dateCreated datePublished" datetime="2023-01-11T22:59:23+08:00">2023-01-11</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2023-09-14 10:38:14" itemprop="dateModified" datetime="2023-09-14T10:38:14+08:00">2023-09-14</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/go/" itemprop="url" rel="index">
-                    <span itemprop="name">go</span>
-                  </a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <p>提供三种方式进行激活</p>
-<h2 id="申请使用License（推荐）"><a href="#申请使用License（推荐）" class="headerlink" title="申请使用License（推荐）"></a>申请使用License（推荐）</h2><p>转载自<a target="_blank" rel="noopener" href="https://www.toutiao.com/a6744540170936123916/">免费获取 JetBrains 全系产品正版 License</a></p>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2023/01/11/go/goland%E6%BF%80%E6%B4%BB%E6%95%99%E7%A8%8B/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-        
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://phpdi.github.io/2023/01/11/go/Mastering_Go/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/head.jpeg">
-      <meta itemprop="name" content="Chen Yu">
-      <meta itemprop="description" content="自律给我自由">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="goeoeo">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2023/01/11/go/Mastering_Go/" class="post-title-link" itemprop="url">Mastering_Go</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2023-01-11 22:59:23" itemprop="dateCreated datePublished" datetime="2023-01-11T22:59:23+08:00">2023-01-11</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2023-09-14 10:46:36" itemprop="dateModified" datetime="2023-09-14T10:46:36+08:00">2023-09-14</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/go/" itemprop="url" rel="index">
-                    <span itemprop="name">go</span>
-                  </a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h1 id="第2章-Go内部机制"><a href="#第2章-Go内部机制" class="headerlink" title="第2章 Go内部机制"></a>第2章 Go内部机制</h1><h2 id="垃圾回收"><a href="#垃圾回收" class="headerlink" title="垃圾回收"></a>垃圾回收</h2><p>垃圾回收是释放掉那些不再使用的内存空间的过程.</p>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2023/01/11/go/Mastering_Go/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-        
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://phpdi.github.io/2023/01/11/git/gitlab_runner/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/head.jpeg">
-      <meta itemprop="name" content="Chen Yu">
-      <meta itemprop="description" content="自律给我自由">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="goeoeo">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2023/01/11/git/gitlab_runner/" class="post-title-link" itemprop="url">gitlab_runner</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2023-01-11 22:59:23" itemprop="dateCreated datePublished" datetime="2023-01-11T22:59:23+08:00">2023-01-11</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2023-09-14 10:36:19" itemprop="dateModified" datetime="2023-09-14T10:36:19+08:00">2023-09-14</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/git/" itemprop="url" rel="index">
-                    <span itemprop="name">git</span>
-                  </a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h1 id="Gitlab-Runner"><a href="#Gitlab-Runner" class="headerlink" title="Gitlab Runner"></a>Gitlab Runner</h1><h3 id="GitLab-CI"><a href="#GitLab-CI" class="headerlink" title="GitLab-CI"></a>GitLab-CI</h3><p>GitLab-CI就是一套配合GitLab使用的持续集成系统（当然，还有其它的持续集成系统，同样可以配合GitLab使用，比如Jenkins）。而且GitLab8.0以后的版本是默认集成了GitLab-CI并且默认启用的。.gitlab-ci.yml的脚本解析就由它来负责。</p>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2023/01/11/git/gitlab_runner/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-        
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://phpdi.github.io/2023/01/11/git/gitlab%E9%85%8D%E7%BD%AE%E4%BB%A3%E7%A0%81%E8%A6%86%E7%9B%96%E7%8E%87/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/head.jpeg">
-      <meta itemprop="name" content="Chen Yu">
-      <meta itemprop="description" content="自律给我自由">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="goeoeo">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2023/01/11/git/gitlab%E9%85%8D%E7%BD%AE%E4%BB%A3%E7%A0%81%E8%A6%86%E7%9B%96%E7%8E%87/" class="post-title-link" itemprop="url">gitlab配置代码覆盖率</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2023-01-11 22:59:23" itemprop="dateCreated datePublished" datetime="2023-01-11T22:59:23+08:00">2023-01-11</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2023-09-14 10:37:09" itemprop="dateModified" datetime="2023-09-14T10:37:09+08:00">2023-09-14</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/git/" itemprop="url" rel="index">
-                    <span itemprop="name">git</span>
-                  </a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <p>gitlab 中配置golang单元测试已经代码覆盖率</p>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2023/01/11/git/gitlab%E9%85%8D%E7%BD%AE%E4%BB%A3%E7%A0%81%E8%A6%86%E7%9B%96%E7%8E%87/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-        
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://phpdi.github.io/2023/01/11/git/git%E7%9B%B8%E5%85%B3%E9%97%AE%E9%A2%98/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/head.jpeg">
-      <meta itemprop="name" content="Chen Yu">
-      <meta itemprop="description" content="自律给我自由">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="goeoeo">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2023/01/11/git/git%E7%9B%B8%E5%85%B3%E9%97%AE%E9%A2%98/" class="post-title-link" itemprop="url">git相关问题</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2023-01-11 22:59:23" itemprop="dateCreated datePublished" datetime="2023-01-11T22:59:23+08:00">2023-01-11</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2023-09-14 10:37:09" itemprop="dateModified" datetime="2023-09-14T10:37:09+08:00">2023-09-14</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/git/" itemprop="url" rel="index">
-                    <span itemprop="name">git</span>
-                  </a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h1 id="ssh-connect-to-host-github-com-port-22-Connection-refused"><a href="#ssh-connect-to-host-github-com-port-22-Connection-refused" class="headerlink" title="ssh: connect to host github.com port 22: Connection refused"></a>ssh: connect to host github.com port 22: Connection refused</h1><p>检查</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ssh -vT git@github.com</span><br></pre></td></tr></table></figure>
-<p>发现连接的是本地 </p>
-<h2 id="解决"><a href="#解决" class="headerlink" title="解决"></a>解决</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">nslookup github.com 8.8.8.8</span><br><span class="line"></span><br><span class="line"># 加DNS 域名解析</span><br><span class="line">sudo vim /etc/hosts </span><br></pre></td></tr></table></figure>
-
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-        
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://phpdi.github.io/2023/01/11/git/%E5%BF%AB%E9%80%9F%E8%AE%A4%E8%AF%86Git/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/head.jpeg">
-      <meta itemprop="name" content="Chen Yu">
-      <meta itemprop="description" content="自律给我自由">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="goeoeo">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2023/01/11/git/%E5%BF%AB%E9%80%9F%E8%AE%A4%E8%AF%86Git/" class="post-title-link" itemprop="url">快速认识Git</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2023-01-11 22:59:23" itemprop="dateCreated datePublished" datetime="2023-01-11T22:59:23+08:00">2023-01-11</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2023-09-14 10:37:33" itemprop="dateModified" datetime="2023-09-14T10:37:33+08:00">2023-09-14</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/git/" itemprop="url" rel="index">
-                    <span itemprop="name">git</span>
-                  </a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h2 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h2><p>分布式版本控制系统，由Linux创始人Linus使用C语言实现</p>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2023/01/11/git/%E5%BF%AB%E9%80%9F%E8%AE%A4%E8%AF%86Git/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-        
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://phpdi.github.io/2023/01/11/git/%E5%9F%BA%E4%BA%8Egit_rebase%E7%9A%84%E5%BC%80%E5%8F%91%E6%B5%81%E7%A8%8B/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/head.jpeg">
-      <meta itemprop="name" content="Chen Yu">
-      <meta itemprop="description" content="自律给我自由">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="goeoeo">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2023/01/11/git/%E5%9F%BA%E4%BA%8Egit_rebase%E7%9A%84%E5%BC%80%E5%8F%91%E6%B5%81%E7%A8%8B/" class="post-title-link" itemprop="url">基于git_rebase的开发流程</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2023-01-11 22:59:23" itemprop="dateCreated datePublished" datetime="2023-01-11T22:59:23+08:00">2023-01-11</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2023-09-14 10:37:32" itemprop="dateModified" datetime="2023-09-14T10:37:32+08:00">2023-09-14</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/git/" itemprop="url" rel="index">
-                    <span itemprop="name">git</span>
-                  </a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h2 id="分支"><a href="#分支" class="headerlink" title="分支"></a>分支</h2><ul>
-<li>master  #不能直接推送</li>
-<li>staging  #开发主流程分支</li>
-<li>self_branch #自己的开发分支，从staging 打出</li>
-</ul>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2023/01/11/git/%E5%9F%BA%E4%BA%8Egit_rebase%E7%9A%84%E5%BC%80%E5%8F%91%E6%B5%81%E7%A8%8B/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-        
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://phpdi.github.io/2023/01/11/docker/docker-machine/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/head.jpeg">
-      <meta itemprop="name" content="Chen Yu">
-      <meta itemprop="description" content="自律给我自由">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="goeoeo">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2023/01/11/docker/docker-machine/" class="post-title-link" itemprop="url">docker-machine</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2023-01-11 22:59:23" itemprop="dateCreated datePublished" datetime="2023-01-11T22:59:23+08:00">2023-01-11</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2023-09-14 10:33:47" itemprop="dateModified" datetime="2023-09-14T10:33:47+08:00">2023-09-14</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/docker/" itemprop="url" rel="index">
-                    <span itemprop="name">docker</span>
-                  </a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h2 id="下载"><a href="#下载" class="headerlink" title="下载"></a>下载</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">base=https://github.com/docker/machine/releases/download/v0.16.0 &amp;&amp;</span><br><span class="line">  curl -L $base/docker-machine-$(uname -s)-$(uname -m) &gt;/tmp/docker-machine &amp;&amp;</span><br><span class="line">  sudo mv /tmp/docker-machine /usr/local/bin/docker-machine &amp;&amp;</span><br><span class="line">  chmod +x /usr/local/bin/docker-mach</span><br></pre></td></tr></table></figure>
-
-<h3 id="网速慢"><a href="#网速慢" class="headerlink" title="网速慢"></a>网速慢</h3><p>使用xx_net代理</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">sudo  apt install privoxy</span><br><span class="line">export https_proxy=127.0.0.1:8087</span><br><span class="line">export http_proxy=127.0.0.1:8087 </span><br></pre></td></tr></table></figure>
-
-<h3 id="x509问题"><a href="#x509问题" class="headerlink" title="x509问题"></a>x509问题</h3><p>curl -k 参数跳过证书验证</p>
-<h2 id="使用"><a href="#使用" class="headerlink" title="使用"></a>使用</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">docker-machine create -d  virtualbox manager1</span><br><span class="line"></span><br><span class="line">输出：</span><br><span class="line">Running pre-create checks...</span><br><span class="line">(manager1) No default Boot2Docker ISO found locally, downloading the latest release...</span><br><span class="line">Error with pre-create check: &quot;Get https://api.github.com/repos/boot2docker/boot2docker/releases/latest: x509: certificate signed by unknown authority&quot;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-<h3 id="直接去下载默认的iso文件"><a href="#直接去下载默认的iso文件" class="headerlink" title="直接去下载默认的iso文件"></a>直接去下载默认的iso文件</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">curl -Lo ~/.docker/machine/cache/boot2docker.iso https://github.com/boot2docker/boot2docker/releases/download/v19.03.5/boot2docker.iso</span><br><span class="line"></span><br><span class="line">输出：</span><br><span class="line">curl: (60) SSL certificate problem: unable to get local issuer certificate</span><br><span class="line">More details here: https://curl.haxx.se/docs/sslcerts.html</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-
-<h3 id="curl-60-SSL-certificate-problem-unable-to-get-local-issuer-certificate问题"><a href="#curl-60-SSL-certificate-problem-unable-to-get-local-issuer-certificate问题" class="headerlink" title="curl: (60) SSL certificate problem: unable to get local issuer certificate问题"></a>curl: (60) SSL certificate problem: unable to get local issuer certificate问题</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">curl -k --remote-name --time-cond cacert.pem https://curl.haxx.se/ca/cacert.pem</span><br><span class="line"># 注意执行此命令后需要重新开终端</span><br></pre></td></tr></table></figure>
-
-<h3 id="终端下载实在太慢问题"><a href="#终端下载实在太慢问题" class="headerlink" title="终端下载实在太慢问题"></a>终端下载实在太慢问题</h3><ol>
-<li><a target="_blank" rel="noopener" href="https://github.com/boot2docker/boot2docker/releases/download/v19.03.5/boot2docker.iso">浏览器下载</a></li>
-<li>将iso文件移动到　 ~&#x2F;.docker&#x2F;machine&#x2F;cache&#x2F;boot2docker.iso</li>
+          <span id="more"></span>
+
+<h1 id="harbor"><a href="#harbor" class="headerlink" title="harbor"></a>harbor</h1><p>VMware开源的企业级Registry项目Harbor，以Docker公司开源的registry 为基础，提供了管理UI, 基于角色的访问控制(Role Based Access Control)，AD&#x2F;LDAP集成、以及审计日志(Audit logging) 等企业用户需求的功能，同时还原生支持中文，主要特点：</p>
+<p>基于角色的访问控制 - 用户与 Docker 镜像仓库通过“项目”进行组织管理，一个用户可以对多个镜像仓库在同一命名空间（project）里有不同的权限。</p>
+<p>镜像复制 - 镜像可以在多个 Registry 实例中复制（同步）。尤其适合于负载均衡，高可用，混合云和多云的场景。</p>
+<p>图形化用户界面 - 用户可以通过浏览器来浏览，检索当前 Docker 镜像仓库，管理项目和命名空间。</p>
+<p>AD&#x2F;LDAP 支持 - Harbor 可以集成企业内部已有的 AD&#x2F;LDAP，用于鉴权认证管理。</p>
+<p>审计管理 - 所有针对镜像仓库的操作都可以被记录追溯，用于审计管理。</p>
+<p>国际化 - 已拥有英文、中文、德文、日文和俄文的本地化版本。更多的语言将会添加进来。</p>
+<p>RESTful API - RESTful API 提供给管理员对于 Harbor 更多的操控, 使得与其它管理软件集成变得更容易。</p>
+<p>部署简单 - 提供在线和离线两种安装工具， 也可以安装到 vSphere 平台(OVA 方式)虚拟设备</p>
+<!--more-->
+
+<h1 id="harbor架构"><a href="#harbor架构" class="headerlink" title="harbor架构"></a>harbor架构</h1><p>默认情况下，Harbor运行起来后有如下容器：<br><img src="/2023/01/11/k8s/harbor/2021-06-04_14-05.png"></p>
+<p>名称分别为：nginx、harbor-jobservice、harbor-ui、harbor-db、harbor-adminserver、registry以及harbor-log。<br><img src="/2023/01/11/k8s/harbor/1201528-20200712102731871-1271938765.png"></p>
+<p>如上图所描述，Harbor由6个大的模块所组成：  </p>
+<ul>
+<li>Proxy: Harbor的registry、UI、token services等组件，都处在一个反向代理后边。该代理将来自浏览器、docker clients的请求转发到后端服务上。</li>
+<li>Registry: 负责存储Docker镜像，以及处理Docker push&#x2F;pull请求。因为Harbor强制要求对镜像的访问做权限控制， 在每一次push&#x2F;pull请求时，Registry会强制要求客户端从token service那里获得一个有效的token。</li>
+<li>Core services: Harbor的核心功能，主要包括如下3个服务:<br>1）UI: 作为Registry Webhook, 以图像用户界面的方式辅助用户管理镜像。 <ol start="2">
+<li>WebHook：WebHook是在registry中配置的一种机制， 当registry中镜像发生改变时，就可以通知到Harbor的webhook endpoint。Harbor使用webhook来更新日志、初始化同步job等。  </li>
+<li>Token 服务：负责根据用户权限给每个docker push&#x2F;pull命令签发token. Docker 客户端向Regiøstry服务发起的请求,如果不包含token，会被重定向到这里，获得token后再重新向Registry进行请求。</li>
 </ol>
+</li>
+<li>Database：为core services提供数据库服务，负责储存用户权限、审计日志、Docker image分组信息等数据。</li>
+<li>Job services: 主要用于镜像复制，本地镜像可以被同步到远程Harbor实例上。</li>
+<li>Log collector: 负责收集其他组件的日志到一个地方</li>
+</ul>
+<p>这里我们与上面运行的7个容器对比，对harbor-adminserver感觉有些疑虑。其实这里harbor-adminserver主要是作为一个后端的配置数据管理，并没有太多的其他功能。harbor-ui所要操作的所有数据都通过harbor-adminserver这样一个数据配置管理中心来完成。  </p>
+<h1 id="Harbor实现"><a href="#Harbor实现" class="headerlink" title="Harbor实现"></a>Harbor实现</h1><p>Harbor的每一个组件都被包装成一个docker容器。自然，Harbor是通过docker compose来部署的。在Harbor源代码的make目录下的docker-compose模板会被用于部署Harbor。打开该模板文件，可以看到Harbor由7个容器组件所组成：  </p>
+<ul>
+<li>proxy: 通过nginx服务器来做反向代理</li>
+<li>registry: docker官方发布的一个仓库镜像组件</li>
+<li>ui: 整个架构的核心服务。该容器是Harbor工程的主要部分</li>
+<li>adminserver: 作为Harbor工程的配置数据管理器使用</li>
+<li>mysql: 通过官方Mysql镜像创建的数据库容器</li>
+<li>job services: 通过状态机的形式将镜像复制到远程Harbor实例。镜像删除同样也可以被同步到远程Harbor实例中。</li>
+<li>log: 运行rsyslogd的容器，主要用于收集其他容器的日志</li>
+</ul>
+<p>这些容器之间都通过Docker内的DNS服务发现来连接通信。通过这种方式，每一个容器都可以通过相应的容器来进行访问。对于终端用户来说，只有反向代理(Nginx)服务的端口需要对外暴露。</p>
+<h1 id="harbor部署"><a href="#harbor部署" class="headerlink" title="harbor部署"></a>harbor部署</h1><p>依赖docker  docker-compose</p>
+<h2 id="安装包"><a href="#安装包" class="headerlink" title="安装包"></a>安装包</h2><p><a target="_blank" rel="noopener" href="https://github.com/goharbor/harbor/releases">https://github.com/goharbor/harbor/releases</a> </p>
+<h2 id="解压harbor离线版安装包"><a href="#解压harbor离线版安装包" class="headerlink" title="解压harbor离线版安装包"></a>解压harbor离线版安装包</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">tar xf harbor-offline-installer-v2.2.2.tgz </span><br><span class="line"></span><br><span class="line">mv harbor ~/harbor</span><br><span class="line">cd ~/harbor</span><br></pre></td></tr></table></figure>
+
+<h2 id="修改harbor安装的配置文件"><a href="#修改harbor安装的配置文件" class="headerlink" title="修改harbor安装的配置文件"></a>修改harbor安装的配置文件</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line">cp harbor.yml.tmpl  harbor.yml</span><br><span class="line"># 挂载地址</span><br><span class="line">mkdir data </span><br><span class="line"># 域名</span><br><span class="line">echo 172.16.4.171 repo.goeoeo.com &gt;&gt; /etc/hosts</span><br><span class="line"></span><br><span class="line">harbor.yml配置文件主要修改参数如下：</span><br><span class="line">hostname: repo.goeoeo.com          //需要写IP地址或者域名</span><br><span class="line">#http配置</span><br><span class="line">http:</span><br><span class="line"># port for http, default is 80. If https enabled, this port will redirect to https port</span><br><span class="line">port: 80                       </span><br><span class="line"></span><br><span class="line">#https配置（如不需要可不配置,本地开发我全部注释了）</span><br><span class="line"></span><br><span class="line"># https related config</span><br><span class="line">#https:</span><br><span class="line"># https port for harbor, default is 443</span><br><span class="line"># port: 443</span><br><span class="line"># The path of cert and key files for nginx</span><br><span class="line"># certificate: /your/certificate/path</span><br><span class="line"># private_key: /your/private/key/path</span><br><span class="line"></span><br><span class="line">harbor_admin_password: Harbor12345         //admin密码</span><br><span class="line"></span><br><span class="line"> </span><br><span class="line"></span><br><span class="line">#数据库配置</span><br><span class="line">database:</span><br><span class="line"># The password for the root user of Harbor DB. Change this before any production use.</span><br><span class="line">password: root123</span><br><span class="line"># The maximum number of connections in the idle connection pool. If it &lt;=0, no idle connections are retained.</span><br><span class="line">max_idle_conns: 50</span><br><span class="line"># The maximum number of open connections to the database. If it &lt;= 0, then there is no limit on the number of open connections.</span><br><span class="line"># Note: the default number of connections is 100 for postgres.</span><br><span class="line">max_open_conns: 100</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">#持久化数据目录</span><br><span class="line">data_volume: /home/yu/harbor/data</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h2 id="安装并启动Harbor"><a href="#安装并启动Harbor" class="headerlink" title="安装并启动Harbor"></a>安装并启动Harbor</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">./install.sh</span><br></pre></td></tr></table></figure>
+
+<h2 id="访问harbor-WEB界面"><a href="#访问harbor-WEB界面" class="headerlink" title="访问harbor WEB界面"></a>访问harbor WEB界面</h2><p><a target="_blank" rel="noopener" href="http://repo.goeoeo.com/">http://repo.goeoeo.com</a>     admin    Harbor12345</p>
+<h1 id="Harbor的使用（上传下载镜像）"><a href="#Harbor的使用（上传下载镜像）" class="headerlink" title="Harbor的使用（上传下载镜像）"></a>Harbor的使用（上传下载镜像）</h1><h2 id="登录harbor"><a href="#登录harbor" class="headerlink" title="登录harbor"></a>登录harbor</h2><p>防止登录失败，我没开https,修改&#x2F;etc&#x2F;docker&#x2F;daemon.json </p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">sudo echo /etc/docker/daemon.json&lt;&lt;DATA</span><br><span class="line">&#123;</span><br><span class="line">  &quot;registry-mirrors&quot;: [&quot;https://9lrfffi7.mirror.aliyuncs.com&quot;],</span><br><span class="line">  &quot;insecure-registries&quot;:[&quot;repo.goeoeo.com&quot;,&quot;10.245.20.7:1888&quot;]</span><br><span class="line">&#125;</span><br><span class="line">DATA</span><br><span class="line"></span><br><span class="line">sudo systemctl restart docker.service</span><br><span class="line"></span><br><span class="line"># 登录</span><br><span class="line">docker login -u admin -p Harbor12345 repo.goeoeo.com:8100</span><br><span class="line">docker login -u admin -p Harbor12345 172.31.164.128</span><br><span class="line">docker login -u admin -p Harbor12345 10.245.20.7:1888</span><br><span class="line">docker login -u admin -p Harbor12345 dockerhub.qingcloud.com:1880</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<h2 id="在Harbor上创建新项目供上传使用"><a href="#在Harbor上创建新项目供上传使用" class="headerlink" title="在Harbor上创建新项目供上传使用"></a>在Harbor上创建新项目供上传使用</h2><p>我创建了新项目 newbilling<br><img src="/2023/01/11/k8s/harbor/2021-06-04_14-59.png"></p>
+<h2 id="构建镜像推送"><a href="#构建镜像推送" class="headerlink" title="构建镜像推送"></a>构建镜像推送</h2><p>镜像名称需要注意 为 repo.goeoeo.com&#x2F;newbilling&#x2F;&lt;镜像名&gt; 的这种格式</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"># 构建</span><br><span class="line">docker build -t repo.goeoeo.com/newbilling/api-gateway:v1 .</span><br><span class="line"></span><br><span class="line"># 推送</span><br><span class="line">docker push repo.goeoeo.com/newbilling/api-gateway:v1</span><br></pre></td></tr></table></figure>
+<h2 id="下载镜像"><a href="#下载镜像" class="headerlink" title="下载镜像"></a>下载镜像</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">docker rmi repo.goeoeo.com/newbilling/api-gateway:v1</span><br><span class="line"></span><br><span class="line">docker pull repo.goeoeo.com/newbilling/api-gateway:v1</span><br></pre></td></tr></table></figure>
+
+<h2 id="Harbor如何停止与启动"><a href="#Harbor如何停止与启动" class="headerlink" title="Harbor如何停止与启动"></a>Harbor如何停止与启动</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">cd /home/yu/harbor</span><br><span class="line">./install.sh    //停止Harbor</span><br><span class="line">docker-compose up -d   //启动Harbor</span><br></pre></td></tr></table></figure>
+
+
+<h2 id="helm-添加harbor仓库。"><a href="#helm-添加harbor仓库。" class="headerlink" title="helm 添加harbor仓库。"></a>helm 添加harbor仓库。</h2><p>arbor安装的时候默认没有helm charts的仓库，启用 harbor 的 chart repository 服务  </p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">docker-compose stop</span><br><span class="line">./install.sh  --with-chartmuseum</span><br></pre></td></tr></table></figure>
+<p>helm 添加仓库  </p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">helm repo add goeoeo --username admin --password=Harbor12345  http://repo.goeoeo.com:8100/chartrepo</span><br></pre></td></tr></table></figure>
+
 
       
     </div>
@@ -967,7 +349,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://phpdi.github.io/2023/01/11/docker/docker%E9%97%AE%E9%A2%98/">
+    <link itemprop="mainEntityOfPage" href="https://phpdi.github.io/2023/01/11/interview/Rabbitmq%E9%9D%A2%E8%AF%95%E9%A2%98/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/head.jpeg">
@@ -981,7 +363,7 @@
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
           
-            <a href="/2023/01/11/docker/docker%E9%97%AE%E9%A2%98/" class="post-title-link" itemprop="url">docker问题</a>
+            <a href="/2023/01/11/interview/Rabbitmq%E9%9D%A2%E8%AF%95%E9%A2%98/" class="post-title-link" itemprop="url">Rabbitmq面试题</a>
         </h2>
 
         <div class="post-meta">
@@ -998,7 +380,7 @@
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2023-09-14 10:34:13" itemprop="dateModified" datetime="2023-09-14T10:34:13+08:00">2023-09-14</time>
+                <time title="修改时间：2024-02-29 17:21:23" itemprop="dateModified" datetime="2024-02-29T17:21:23+08:00">2024-02-29</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -1006,8 +388,8 @@
               </span>
               <span class="post-meta-item-text">分类于</span>
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/docker/" itemprop="url" rel="index">
-                    <span itemprop="name">docker</span>
+                  <a href="/categories/interview/" itemprop="url" rel="index">
+                    <span itemprop="name">interview</span>
                   </a>
                 </span>
             </span>
@@ -1023,11 +405,777 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <h1 id="docker本地空间足够，但容器日志提示空间不足"><a href="#docker本地空间足够，但容器日志提示空间不足" class="headerlink" title="docker本地空间足够，但容器日志提示空间不足"></a>docker本地空间足够，但容器日志提示空间不足</h1><h2 id="情况描述"><a href="#情况描述" class="headerlink" title="情况描述"></a>情况描述</h2><p>项目中，es报空间不足，es容器 已使用30G左右的空间<br>默认情况下docker 对每个容器使用空间有限制  </p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Elasticsearch：high disk watermark [90%] exceeded</span><br></pre></td></tr></table></figure>
+          <h1 id="简单RabbitMQ架构设计"><a href="#简单RabbitMQ架构设计" class="headerlink" title="简单RabbitMQ架构设计"></a>简单RabbitMQ架构设计</h1><p><img src="/2023/01/11/interview/Rabbitmq%E9%9D%A2%E8%AF%95%E9%A2%98/img.png"></p>
+<ol>
+<li>Broker: rabbitmq的物理服务节点</li>
+<li>Vhost: rabbitmq的虚拟物理节点</li>
+<li>Queue: 队列，rabbitmq的内部对象，用于存储消息。生产者投递消息到队列，消费者从队列中获取消息并消费，多个消费者订阅同一个队列的时候，消费会被均摊给多个消费者。<br>（rabbitmq不支持队列层面的广播消费，如果需要广播消费，可以采用一个交换器通过路由key绑定多个队列，由多个消费者来订阅队列的方式实现）</li>
+<li>Exchange: 交换器，生产者将消息发送到Exchange,由交换器将消息路由到一个或对个队列中。如果路由不到，或返回给消费者，或直接丢弃，或做其它处理。</li>
+<li>RoutingKey: 路由Key，生产者将消息发送给交换器的时候，一般会指定一个RoutingKey，用来指定这个消息的路由规则。这个路由Key需要与交换器类型和<br>绑定键（BindingKey）联合使用才会生效。在交换器类型和绑定键固定的情况下，生产者可以在发送消息给交换器时通过指定RoutingKey来决定消息流向那里</li>
+<li>Connection: rabbitmq使用一个TCP连接，通过定义虚拟连接（channel）的方式，来复用TCP。这个方式和HTTP2中的Stream很类似。</li>
+</ol>
           <!--noindex-->
             <div class="post-button">
-              <a class="btn" href="/2023/01/11/docker/docker%E9%97%AE%E9%A2%98/#more" rel="contents">
+              <a class="btn" href="/2023/01/11/interview/Rabbitmq%E9%9D%A2%E8%AF%95%E9%A2%98/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+        
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://phpdi.github.io/2023/01/11/interview/Redis%E9%9D%A2%E8%AF%95%E9%A2%98/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/head.jpeg">
+      <meta itemprop="name" content="Chen Yu">
+      <meta itemprop="description" content="自律给我自由">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="goeoeo">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2023/01/11/interview/Redis%E9%9D%A2%E8%AF%95%E9%A2%98/" class="post-title-link" itemprop="url">Redis面试题</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2023-01-11 22:59:23" itemprop="dateCreated datePublished" datetime="2023-01-11T22:59:23+08:00">2023-01-11</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2024-03-07 10:19:12" itemprop="dateModified" datetime="2024-03-07T10:19:12+08:00">2024-03-07</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/interview/" itemprop="url" rel="index">
+                    <span itemprop="name">interview</span>
+                  </a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="redis为什么快？"><a href="#redis为什么快？" class="headerlink" title="redis为什么快？"></a>redis为什么快？</h1><ol>
+<li>纯内存访问</li>
+<li>单线程避免上下文切换</li>
+<li>渐进式ReHash,缓存时间戳<ul>
+<li>渐进式ReHash,通过分摊数据拷贝的开销，避免阻塞IO</li>
+<li>缓存时间戳避免频繁获取时间的系统调用</li>
+</ul>
+</li>
+</ol>
+<h1 id="使用Redis有哪些好处（为什么要用redis）"><a href="#使用Redis有哪些好处（为什么要用redis）" class="headerlink" title="使用Redis有哪些好处（为什么要用redis）"></a>使用Redis有哪些好处（为什么要用redis）</h1><ul>
+<li>速度快，因为数据存在内存中，类似于HashMap，HashMap的优势就是查找和操作的时间复杂度都是O(1)</li>
+<li>支持丰富数据类型，支持string，list，set，sorted set，hash</li>
+<li>支持事务，操作都是原子性，所谓的原子性就是对数据的更改要么全部执行，要么全部不执行</li>
+<li>丰富的特性：可用于缓存，消息，按key设置过期时间，过期后将会自动删除</li></ul>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2023/01/11/interview/Redis%E9%9D%A2%E8%AF%95%E9%A2%98/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+        
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://phpdi.github.io/2023/01/11/interview/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E9%9D%A2%E8%AF%95%E9%A2%98/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/head.jpeg">
+      <meta itemprop="name" content="Chen Yu">
+      <meta itemprop="description" content="自律给我自由">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="goeoeo">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2023/01/11/interview/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E9%9D%A2%E8%AF%95%E9%A2%98/" class="post-title-link" itemprop="url">微服务面试题</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2023-01-11 22:59:23" itemprop="dateCreated datePublished" datetime="2023-01-11T22:59:23+08:00">2023-01-11</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2025-06-24 14:20:27" itemprop="dateModified" datetime="2025-06-24T14:20:27+08:00">2025-06-24</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/interview/" itemprop="url" rel="index">
+                    <span itemprop="name">interview</span>
+                  </a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h2 id="说说微服务架构的优势。"><a href="#说说微服务架构的优势。" class="headerlink" title="说说微服务架构的优势。"></a>说说微服务架构的优势。</h2><table>
+<thead>
+<tr>
+<th align="center">优势</th>
+<th align="center">说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">独立开发</td>
+<td align="center">所有微服务都可以根据各自的功能轻松开发</td>
+</tr>
+<tr>
+<td align="center">独立部署</td>
+<td align="center">根据他们所提供的服务，可以在任何应用中单独部署</td>
+</tr>
+<tr>
+<td align="center">故障隔离</td>
+<td align="center">即使应用中的一个服务不起作用，系统仍然继续运行</td>
+</tr>
+<tr>
+<td align="center">混合技术栈</td>
+<td align="center">可以用不同的语言和技术来构建同一应用程序的不同服务</td>
+</tr>
+<tr>
+<td align="center">粒度缩放</td>
+<td align="center">各个组件可根据需要进行扩展，无需将所有组件融合到一起</td>
+</tr>
+</tbody></table>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2023/01/11/interview/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E9%9D%A2%E8%AF%95%E9%A2%98/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+        
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://phpdi.github.io/2023/01/11/interview/Mysql%E9%9D%A2%E8%AF%95%E9%A2%98/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/head.jpeg">
+      <meta itemprop="name" content="Chen Yu">
+      <meta itemprop="description" content="自律给我自由">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="goeoeo">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2023/01/11/interview/Mysql%E9%9D%A2%E8%AF%95%E9%A2%98/" class="post-title-link" itemprop="url">Mysql面试题</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2023-01-11 22:59:23" itemprop="dateCreated datePublished" datetime="2023-01-11T22:59:23+08:00">2023-01-11</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2025-06-23 10:20:05" itemprop="dateModified" datetime="2025-06-23T10:20:05+08:00">2025-06-23</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/interview/" itemprop="url" rel="index">
+                    <span itemprop="name">interview</span>
+                  </a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="B树和B-树的区别是什么"><a href="#B树和B-树的区别是什么" class="headerlink" title="B树和B+树的区别是什么"></a>B树和B+树的区别是什么</h1><p>B树是一种自平衡的树，能够保持数据有序，可以拥有多个子节点（节点个数为B树的阶）:</p>
+<ol>
+<li>一个节点里面有多个元素</li>
+<li>有序性</li>
+</ol>
+<p>B+树在B树的基础之上多了几个特点： </p>
+<ol>
+<li>非叶子节点的数据都冗余一份数据在叶子节点上</li>
+<li>叶子节点之间有指针</li>
+</ol>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2023/01/11/interview/Mysql%E9%9D%A2%E8%AF%95%E9%A2%98/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+        
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://phpdi.github.io/2023/01/11/interview/Kafka%E9%9D%A2%E8%AF%95%E9%A2%98/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/head.jpeg">
+      <meta itemprop="name" content="Chen Yu">
+      <meta itemprop="description" content="自律给我自由">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="goeoeo">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2023/01/11/interview/Kafka%E9%9D%A2%E8%AF%95%E9%A2%98/" class="post-title-link" itemprop="url">Kafka面试题</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2023-01-11 22:59:23" itemprop="dateCreated datePublished" datetime="2023-01-11T22:59:23+08:00">2023-01-11</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2023-09-14 10:52:09" itemprop="dateModified" datetime="2023-09-14T10:52:09+08:00">2023-09-14</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/interview/" itemprop="url" rel="index">
+                    <span itemprop="name">interview</span>
+                  </a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h2 id="Kafka的用途有哪些？使用场景如何？"><a href="#Kafka的用途有哪些？使用场景如何？" class="headerlink" title="Kafka的用途有哪些？使用场景如何？"></a>Kafka的用途有哪些？使用场景如何？</h2><ol>
+<li>日志收集：一个公司可以用Kafka可以收集各种服务的log，通过kafka以统一接口服务的方式开放给各种consumer，例如Hadoop、Hbase、Solr等  </li>
+<li>消息系统：解耦和生产者和消费者、缓存消息等</li>
+<li>用户活动跟踪：Kafka经常被用来记录web用户或者app用户的各种活动，如浏览网页、搜索、点击等活动，这些活动信息被各个服务器发布到kafka的topic中，然后订阅者通过订阅这些topic来做实时的监控分析，或者装载到Hadoop、数据仓库中做离线分析和挖掘  </li>
+<li>运营指标：Kafka也经常用来记录运营监控数据。包括收集各种分布式应用的数据，生产各种操作的集中反馈，比如报警和报告  </li>
+<li>流式处理：比如spark streaming和storm</li>
+<li>事件源</li>
+</ol>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2023/01/11/interview/Kafka%E9%9D%A2%E8%AF%95%E9%A2%98/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+        
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://phpdi.github.io/2023/01/11/interview/%E7%BD%91%E7%BB%9C%E5%8D%8F%E8%AE%AE%E9%9D%A2%E8%AF%95%E9%A2%98/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/head.jpeg">
+      <meta itemprop="name" content="Chen Yu">
+      <meta itemprop="description" content="自律给我自由">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="goeoeo">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2023/01/11/interview/%E7%BD%91%E7%BB%9C%E5%8D%8F%E8%AE%AE%E9%9D%A2%E8%AF%95%E9%A2%98/" class="post-title-link" itemprop="url">网络协议面试题</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2023-01-11 22:59:23" itemprop="dateCreated datePublished" datetime="2023-01-11T22:59:23+08:00">2023-01-11</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2024-03-09 08:43:50" itemprop="dateModified" datetime="2024-03-09T08:43:50+08:00">2024-03-09</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/interview/" itemprop="url" rel="index">
+                    <span itemprop="name">interview</span>
+                  </a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="从URL在浏览器输入到页面展现的过程中发生了什么"><a href="#从URL在浏览器输入到页面展现的过程中发生了什么" class="headerlink" title="从URL在浏览器输入到页面展现的过程中发生了什么"></a>从URL在浏览器输入到页面展现的过程中发生了什么</h1><ol>
+<li>DNS解析：首先，浏览器会解析输入的URL，将其中的域名转换为对应的IP地址。这个过程涉及到DNS（Domain Name System）解析。浏览器首先会查看本地缓存中是否有该域名的IP地址记录，如果有则直接使用。如果没有，浏览器会向DNS服务器发送查询请求。DNS服务器会递归查询域名，最终找到对应的IP地址并返回给浏览器。</li>
+<li>建立TCP连接：拿到服务器的IP地址后，浏览器会与服务器建立TCP（Transmission Control Protocol）连接。这个过程包括三次握手：<ul>
+<li>客户端发送SYN（同步）报文，并置发送序号为X。</li>
+<li>服务端回复SYN+ACK（同步&#x2F;应答）报文，并置发送序号为Y，再确认序号为X+1。</li>
+<li>客户端发送ACK（应答）报文，并置发送序号为Z，再确认序号为Y+1。这样，TCP连接就建立起来了。</li>
+</ul>
+</li>
+<li>发送HTTP请求：建立TCP连接后，浏览器会向服务器发送HTTP请求。HTTP请求报文包括了请求方法（如GET、POST等）、请求路径、协议版本以及请求头部信息等。这些信息封装在TCP报文段中发送给服务器。</li>
+<li>服务器处理HTTP请求：服务器接收到HTTP请求后，会根据请求路径和方法来定位并处理相应的资源。这可能涉及到文件读取、数据库查询等操作。处理完成后，服务器会生成HTTP响应报文，其中包括状态码、响应头部信息以及响应体等。</li>
+<li>返回HTTP响应：服务器将HTTP响应报文通过之前建立的TCP连接发送回浏览器。浏览器接收到响应报文后，会解析HTTP响应，提取出状态码、响应头部以及响应体等信息。</li>
+<li>渲染页面：浏览器根据解析得到的HTML文档构建DOM（Document Object Model）树，并下载并解析CSS样式表、JavaScript脚本等资源。然后，浏览器会进行页面渲染，将HTML、CSS和JavaScript等组合起来生成最终的页面展示给用户。</li>
+<li>关闭TCP连接：当浏览器从服务器接收到所有需要的数据后，会关闭TCP连接。这个过程包括四次挥手：<ul>
+<li>客户端发送FIN（结束）报文，通知服务器要关闭连接。</li>
+<li>服务器回复ACK报文，确认收到关闭连接的请求。</li>
+<li>服务器发送FIN报文，通知客户端已经关闭连接。</li>
+<li>客户端回复ACK报文，确认收到服务器关闭连接的通知。这样，TCP连接就被关闭了。</li>
+</ul>
+</li>
+</ol>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2023/01/11/interview/%E7%BD%91%E7%BB%9C%E5%8D%8F%E8%AE%AE%E9%9D%A2%E8%AF%95%E9%A2%98/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+        
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://phpdi.github.io/2023/01/11/algo/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/head.jpeg">
+      <meta itemprop="name" content="Chen Yu">
+      <meta itemprop="description" content="自律给我自由">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="goeoeo">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2023/01/11/algo/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/" class="post-title-link" itemprop="url">设计模式</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2023-01-11 22:59:23" itemprop="dateCreated datePublished" datetime="2023-01-11T22:59:23+08:00">2023-01-11</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2023-09-14 10:20:29" itemprop="dateModified" datetime="2023-09-14T10:20:29+08:00">2023-09-14</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/algo/" itemprop="url" rel="index">
+                    <span itemprop="name">algo</span>
+                  </a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="设计模式概述"><a href="#设计模式概述" class="headerlink" title="设计模式概述"></a>设计模式概述</h1><p><img src="/2023/01/11/algo/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/img.png" alt="img.png"></p>
+<p>如果把修习软件开发当做武功修炼的话，那么可以分为招式和内功。  </p>
+<h2 id="招式"><a href="#招式" class="headerlink" title="招式"></a>招式</h2><ul>
+<li>Java、C#、C++、Golang、Rust等编程语言；</li>
+<li>Eclipse、Visual Studio、Goland、Vim等开发工具；</li>
+<li>Struts、Hibernate、JBPM、Gin、Istio、gRPC等框架技术；</li>
+</ul>
+<h2 id="内功"><a href="#内功" class="headerlink" title="内功"></a>内功</h2><ul>
+<li>数据结构</li>
+<li>算法</li>
+<li>设计模式</li>
+<li>架构设计</li>
+<li>软件工程</li>
+</ul>
+<blockquote>
+<p>注意：招式可以很快学会，但是内功的修炼需要更长的时间</p>
+</blockquote>
+<p>软件设计模式(Design Pattern)是一套被反复使用、多数人知晓的、经过分类编目的、代码设计经验的总结，使用设计模式是为了可重用代码、让代码更容易被他人理解并且保证代码可靠性。</p>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2023/01/11/algo/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+        
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://phpdi.github.io/2023/01/11/http/Http%E6%9D%83%E5%A8%81%E6%8C%87%E5%8D%97/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/head.jpeg">
+      <meta itemprop="name" content="Chen Yu">
+      <meta itemprop="description" content="自律给我自由">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="goeoeo">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2023/01/11/http/Http%E6%9D%83%E5%A8%81%E6%8C%87%E5%8D%97/" class="post-title-link" itemprop="url">Http权威指南</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2023-01-11 22:59:23" itemprop="dateCreated datePublished" datetime="2023-01-11T22:59:23+08:00">2023-01-11</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2023-09-14 10:49:50" itemprop="dateModified" datetime="2023-09-14T10:49:50+08:00">2023-09-14</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/http/" itemprop="url" rel="index">
+                    <span itemprop="name">http</span>
+                  </a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="第1章-HTTP概述"><a href="#第1章-HTTP概述" class="headerlink" title="第1章 HTTP概述"></a>第1章 HTTP概述</h1><h2 id="资源"><a href="#资源" class="headerlink" title="资源"></a>资源</h2><h3 id="媒体类型"><a href="#媒体类型" class="headerlink" title="媒体类型"></a>媒体类型</h3><ul>
+<li>MIME(Multipurpose Internet Mail Extension,多用途英特网邮件扩展)</li>
+<li>Web服务器回味所有的HTTP对象数据附加一个MIME类型，以告知Web浏览器该如何处理该对象</li>
+<li>Content-Type:image&#x2F;jpeg ,“image&#x2F;jpeg”为MIME类型</li></ul>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2023/01/11/http/Http%E6%9D%83%E5%A8%81%E6%8C%87%E5%8D%97/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+        
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://phpdi.github.io/2023/01/11/http/%E5%A6%82%E4%BD%95%E5%88%A9%E7%94%A8nginx%E8%BF%9B%E8%A1%8C%E8%87%AA%E5%8A%A8%E5%8C%96%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/head.jpeg">
+      <meta itemprop="name" content="Chen Yu">
+      <meta itemprop="description" content="自律给我自由">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="goeoeo">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2023/01/11/http/%E5%A6%82%E4%BD%95%E5%88%A9%E7%94%A8nginx%E8%BF%9B%E8%A1%8C%E8%87%AA%E5%8A%A8%E5%8C%96%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1/" class="post-title-link" itemprop="url">如何利用nginx进行自动化负载均衡</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2023-01-11 22:59:23" itemprop="dateCreated datePublished" datetime="2023-01-11T22:59:23+08:00">2023-01-11</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2023-09-14 10:50:03" itemprop="dateModified" datetime="2023-09-14T10:50:03+08:00">2023-09-14</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/nginx/" itemprop="url" rel="index">
+                    <span itemprop="name">nginx</span>
+                  </a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <p>基于Docker + Consul + Nginx + Consul-Template + Registrator的服务自动负载均衡实现 </p>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2023/01/11/http/%E5%A6%82%E4%BD%95%E5%88%A9%E7%94%A8nginx%E8%BF%9B%E8%A1%8C%E8%87%AA%E5%8A%A8%E5%8C%96%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1/#more" rel="contents">
                 阅读全文 &raquo;
               </a>
             </div>
@@ -1051,7 +1199,7 @@
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/page/6/"><i class="fa fa-angle-left" aria-label="上一页"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/6/">6</a><span class="page-number current">7</span><a class="page-number" href="/page/8/">8</a><span class="space">&hellip;</span><a class="page-number" href="/page/10/">10</a><a class="extend next" rel="next" href="/page/8/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
+    <a class="extend prev" rel="prev" href="/page/6/"><i class="fa fa-angle-left" aria-label="上一页"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/6/">6</a><span class="page-number current">7</span><a class="page-number" href="/page/8/">8</a><span class="space">&hellip;</span><a class="page-number" href="/page/13/">13</a><a class="extend next" rel="next" href="/page/8/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
   </nav>
 
 
@@ -1119,20 +1267,20 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">96</span>
+          <span class="site-state-item-count">123</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
             <a href="/categories/">
           
-        <span class="site-state-item-count">19</span>
+        <span class="site-state-item-count">20</span>
         <span class="site-state-item-name">分类</span></a>
       </div>
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">73</span>
+        <span class="site-state-item-count">84</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
@@ -1157,7 +1305,7 @@
 <div class="copyright">
   
   &copy; 
-  <span itemprop="copyrightYear">2023</span>
+  <span itemprop="copyrightYear">2025</span>
   <span class="with-love">
     <i class="fa fa-user"></i>
   </span>

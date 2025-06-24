@@ -210,7 +210,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://phpdi.github.io/2023/01/11/db/mysql%E6%93%8D%E4%BD%9C/">
+    <link itemprop="mainEntityOfPage" href="https://phpdi.github.io/2023/01/11/go/golangci-lint/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/head.jpeg">
@@ -224,7 +224,7 @@
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
           
-            <a href="/2023/01/11/db/mysql%E6%93%8D%E4%BD%9C/" class="post-title-link" itemprop="url">mysql操作</a>
+            <a href="/2023/01/11/go/golangci-lint/" class="post-title-link" itemprop="url">golangci-lint</a>
         </h2>
 
         <div class="post-meta">
@@ -241,7 +241,7 @@
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2023-09-14 10:27:06" itemprop="dateModified" datetime="2023-09-14T10:27:06+08:00">2023-09-14</time>
+                <time title="修改时间：2023-09-14 10:38:27" itemprop="dateModified" datetime="2023-09-14T10:38:27+08:00">2023-09-14</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -249,8 +249,8 @@
               </span>
               <span class="post-meta-item-text">分类于</span>
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/mysql/" itemprop="url" rel="index">
-                    <span itemprop="name">mysql</span>
+                  <a href="/categories/go/" itemprop="url" rel="index">
+                    <span itemprop="name">go</span>
                   </a>
                 </span>
             </span>
@@ -266,16 +266,10 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <h1 id="查询所有账号信息"><a href="#查询所有账号信息" class="headerlink" title="查询所有账号信息"></a>查询所有账号信息</h1><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">SELECT DISTINCT a.`User`,a.`Host`,a.password_expired,a.password_last_changed,a.password_lifetime,a.* FROM mysql.user a;</span><br></pre></td></tr></table></figure>
-
-
-
-<h1 id="mysql8-创建帐号"><a href="#mysql8-创建帐号" class="headerlink" title="mysql8 创建帐号"></a>mysql8 创建帐号</h1><ol>
-<li><p>创建用户  </p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">create user &#x27;slave&#x27;@&#x27;%&#x27; identified by &#x27;密码&#x27;;</span><br><span class="line"># 刷新权限</span><br><span class="line">flush privileges;</span><br></pre></td></tr></table></figure></li></ol>
+          <h1 id="静态代码检查"><a href="#静态代码检查" class="headerlink" title="静态代码检查"></a>静态代码检查</h1><p>静态代码检查是一个老生常态的问题，它能很大程度上保证代码质量。Go 语言自带套件为我们提供了静态代码分析工具 vet，它能用于检查 go 项目中<br>可以通过编译但仍可能存在错误的代码。静态代码检查是一个老生常态的问题，它能很大程度上保证代码质量。Go 语言自带套件为我们提供了静态代码分<br>析工具 vet，它能用于检查 go 项目中可以通过编译但仍可能存在错误的代码。</p>
           <!--noindex-->
             <div class="post-button">
-              <a class="btn" href="/2023/01/11/db/mysql%E6%93%8D%E4%BD%9C/#more" rel="contents">
+              <a class="btn" href="/2023/01/11/go/golangci-lint/#more" rel="contents">
                 阅读全文 &raquo;
               </a>
             </div>
@@ -299,7 +293,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://phpdi.github.io/2023/01/11/db/tidb%E6%95%B0%E6%8D%AE%E5%AF%B9%E6%AF%94/">
+    <link itemprop="mainEntityOfPage" href="https://phpdi.github.io/2023/01/11/go/golang%E4%BB%A3%E7%A0%81%E9%A3%8E%E6%A0%BC/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/head.jpeg">
@@ -313,7 +307,7 @@
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
           
-            <a href="/2023/01/11/db/tidb%E6%95%B0%E6%8D%AE%E5%AF%B9%E6%AF%94/" class="post-title-link" itemprop="url">tidb数据对比</a>
+            <a href="/2023/01/11/go/golang%E4%BB%A3%E7%A0%81%E9%A3%8E%E6%A0%BC/" class="post-title-link" itemprop="url">golang代码风格</a>
         </h2>
 
         <div class="post-meta">
@@ -330,7 +324,7 @@
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2023-09-14 10:30:53" itemprop="dateModified" datetime="2023-09-14T10:30:53+08:00">2023-09-14</time>
+                <time title="修改时间：2023-09-14 10:38:42" itemprop="dateModified" datetime="2023-09-14T10:38:42+08:00">2023-09-14</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -338,8 +332,8 @@
               </span>
               <span class="post-meta-item-text">分类于</span>
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/tidb/" itemprop="url" rel="index">
-                    <span itemprop="name">tidb</span>
+                  <a href="/categories/go/" itemprop="url" rel="index">
+                    <span itemprop="name">go</span>
                   </a>
                 </span>
             </span>
@@ -355,14 +349,17 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <h2 id="配置文件"><a href="#配置文件" class="headerlink" title="配置文件"></a>配置文件</h2><figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Diff Configuration.</span></span><br><span class="line"></span><br><span class="line"><span class="comment">######################### Global config #########################</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 日志级别，可以设置为 info、debug</span></span><br><span class="line"><span class="string">log-level</span> <span class="string">=</span> <span class="string">&quot;info&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># sync-diff-inspector 根据主键／唯一键／索引将数据划分为多个 chunk，</span></span><br><span class="line"><span class="comment"># 对每一个 chunk 的数据进行对比。使用 chunk-size 设置 chunk 的大小</span></span><br><span class="line"><span class="string">chunk-size</span> <span class="string">=</span> <span class="number">1000</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 检查数据的线程数量</span></span><br><span class="line"><span class="string">check-thread-count</span> <span class="string">=</span> <span class="number">4</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 抽样检查的比例，如果设置为 100 则检查全部数据</span></span><br><span class="line"><span class="string">sample-percent</span> <span class="string">=</span> <span class="number">100</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 通过计算 chunk 的 checksum 来对比数据，如果不开启则逐行对比数据</span></span><br><span class="line"><span class="string">use-checksum</span> <span class="string">=</span> <span class="literal">true</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 如果设置为 true 则只会通过计算 checksum 来校验数据，如果上下游的 checksum 不一致也不会查出数据再进行校验</span></span><br><span class="line"><span class="string">only-use-checksum</span> <span class="string">=</span> <span class="literal">false</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 是否使用上次校验的 checkpoint，如果开启，则只校验上次未校验以及校验失败的 chunk</span></span><br><span class="line"><span class="string">use-checkpoint</span> <span class="string">=</span> <span class="literal">true</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 不对比数据</span></span><br><span class="line"><span class="string">ignore-data-check</span> <span class="string">=</span> <span class="literal">false</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 不对比表结构</span></span><br><span class="line"><span class="string">ignore-struct-check</span> <span class="string">=</span> <span class="literal">false</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 保存用于修复数据的 sql 的文件名称</span></span><br><span class="line"><span class="string">fix-sql-file</span> <span class="string">=</span> <span class="string">&quot;fix.sql&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">######################### Tables config #########################</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 如果需要对比大量的不同库名或者表名的表的数据，或者用于校验上游多个分表与下游总表的数据，可以通过 table-rule 来设置映射关系</span></span><br><span class="line"><span class="comment"># 可以只配置 schema 或者 table 的映射关系，也可以都配置</span></span><br><span class="line"><span class="comment">#[[table-rules]]</span></span><br><span class="line">    <span class="comment"># schema-pattern 和 table-pattern 支持通配符 *?</span></span><br><span class="line">    <span class="comment">#schema-pattern = &quot;test_*&quot;</span></span><br><span class="line">    <span class="comment">#table-pattern = &quot;t_*&quot;</span></span><br><span class="line">    <span class="comment">#target-schema = &quot;test&quot;</span></span><br><span class="line">    <span class="comment">#target-table = &quot;t&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 配置需要对比的*目标数据库*中的表</span></span><br><span class="line">[[<span class="string">check-tables</span>]]</span><br><span class="line">    <span class="comment"># 目标库中数据库的名称</span></span><br><span class="line">    <span class="string">schema</span> <span class="string">=</span> <span class="string">&quot;pricing&quot;</span></span><br><span class="line"></span><br><span class="line">    <span class="comment"># 需要检查的表</span></span><br><span class="line">    <span class="string">tables</span> <span class="string">=</span> [<span class="string">&quot;filter&quot;</span>]</span><br><span class="line"></span><br><span class="line">    <span class="comment"># 支持使用正则表达式配置检查的表，需要以‘~’开始，</span></span><br><span class="line">    <span class="comment"># 下面的配置会检查所有表名以‘test’为前缀的表</span></span><br><span class="line">    <span class="comment"># tables = [&quot;~^test.*&quot;]</span></span><br><span class="line">    <span class="comment"># 下面的配置会检查配置库中所有的表</span></span><br><span class="line">    <span class="comment"># tables = [&quot;~^&quot;]</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 对部分表进行特殊的配置，配置的表必须包含在 check-tables 中</span></span><br><span class="line"></span><br><span class="line"><span class="comment">######################### Databases config #########################</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 源数据库实例的配置</span></span><br><span class="line">[[<span class="string">source-db</span>]]</span><br><span class="line">    <span class="string">host</span> <span class="string">=</span> <span class="string">&quot;192.168.49.2&quot;</span></span><br><span class="line">    <span class="string">port</span> <span class="string">=</span> <span class="number">32316</span></span><br><span class="line">    <span class="string">user</span> <span class="string">=</span> <span class="string">&quot;root&quot;</span></span><br><span class="line">    <span class="string">password</span> <span class="string">=</span> <span class="string">&quot;p@ss52Dnb&quot;</span></span><br><span class="line">    <span class="comment"># 源数据库实例的 id，唯一标识一个数据库实例</span></span><br><span class="line">    <span class="string">instance-id</span> <span class="string">=</span> <span class="string">&quot;source-1&quot;</span></span><br><span class="line">    <span class="comment"># 使用 TiDB 的 snapshot 功能，如果开启的话会使用历史数据进行对比</span></span><br><span class="line">    <span class="comment"># snapshot = &quot;2016-10-08 16:45:26&quot;</span></span><br><span class="line">    <span class="comment"># 设置数据库的 sql-mode，用于解析表结构</span></span><br><span class="line">    <span class="comment"># sql-mode = &quot;&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 目标数据库实例的配置</span></span><br><span class="line">[<span class="string">target-db</span>]</span><br><span class="line">    <span class="string">host</span> <span class="string">=</span> <span class="string">&quot;192.168.49.2&quot;</span></span><br><span class="line">    <span class="string">port</span> <span class="string">=</span> <span class="number">30492</span></span><br><span class="line">    <span class="string">user</span> <span class="string">=</span> <span class="string">&quot;root&quot;</span></span><br><span class="line">    <span class="string">password</span> <span class="string">=</span> <span class="string">&quot;&quot;</span></span><br><span class="line">    <span class="comment"># 使用 TiDB 的 snapshot 功能，如果开启的话会使用历史数据进行对比</span></span><br><span class="line">    <span class="comment"># snapshot = &quot;2016-10-08 16:45:26&quot;</span></span><br><span class="line">    <span class="comment"># 设置数据库的 sql-mode，用于解析表结构</span></span><br><span class="line">    <span class="comment"># sql-mode = &quot;&quot;</span></span><br></pre></td></tr></table></figure>
-
-
-
-
-
-<h2 id="命令"><a href="#命令" class="headerlink" title="命令"></a>命令</h2><p>docker run –network&#x3D;host    -v <code>pwd</code>:&#x2F;home&#x2F;tidb pingcap&#x2F;tidb-enterprise-tools  .&#x2F;sync_diff_inspector –config&#x3D;&#x2F;home&#x2F;tidb&#x2F;diff.yaml</p>
-
+          <h1 id="Go-Code-Review-Comments-翻译-编写优雅golang代码"><a href="#Go-Code-Review-Comments-翻译-编写优雅golang代码" class="headerlink" title="Go Code Review Comments 翻译 编写优雅golang代码"></a>Go Code Review Comments 翻译 编写优雅golang代码</h1><p>官方代码规范指南  </p>
+<h2 id="Gofmt"><a href="#Gofmt" class="headerlink" title="Gofmt"></a>Gofmt</h2><p>在 Go 代码上运行 gofmt 以自动修复大多数的机械性风格问题。几乎所有不正规的 Go 代码都在使用gofmt。本文档的剩余部分涉及非机械性风格问题。</p>
+<p>另一种方法是使用 goimports，这是gofmt的超集，gofmt可根据需要额外添加（和删除）导入行。</p>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2023/01/11/go/golang%E4%BB%A3%E7%A0%81%E9%A3%8E%E6%A0%BC/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
       
     </div>
 
@@ -381,7 +378,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://phpdi.github.io/2023/01/11/db/tidb%E5%AE%89%E8%A3%85/">
+    <link itemprop="mainEntityOfPage" href="https://phpdi.github.io/2023/01/11/go/golang%E7%BC%96%E7%A8%8B%E8%A7%84%E8%8C%83/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/head.jpeg">
@@ -395,7 +392,7 @@
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
           
-            <a href="/2023/01/11/db/tidb%E5%AE%89%E8%A3%85/" class="post-title-link" itemprop="url">tidb安装</a>
+            <a href="/2023/01/11/go/golang%E7%BC%96%E7%A8%8B%E8%A7%84%E8%8C%83/" class="post-title-link" itemprop="url">golang编程规范</a>
         </h2>
 
         <div class="post-meta">
@@ -412,7 +409,7 @@
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2023-09-14 10:30:53" itemprop="dateModified" datetime="2023-09-14T10:30:53+08:00">2023-09-14</time>
+                <time title="修改时间：2023-09-14 10:39:45" itemprop="dateModified" datetime="2023-09-14T10:39:45+08:00">2023-09-14</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -420,8 +417,8 @@
               </span>
               <span class="post-meta-item-text">分类于</span>
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/tidb/" itemprop="url" rel="index">
-                    <span itemprop="name">tidb</span>
+                  <a href="/categories/go/" itemprop="url" rel="index">
+                    <span itemprop="name">go</span>
                   </a>
                 </span>
             </span>
@@ -437,22 +434,16 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <h1 id="TiDB-安装"><a href="#TiDB-安装" class="headerlink" title="TiDB 安装"></a>TiDB 安装</h1><p><a target="_blank" rel="noopener" href="https://docs.pingcap.com/zh/tidb-in-kubernetes/stable">k8s官网安装地址</a></p>
-<h2 id="1-安装-TiDB-Operator-CRDs"><a href="#1-安装-TiDB-Operator-CRDs" class="headerlink" title="1.安装 TiDB Operator CRDs"></a>1.安装 TiDB Operator CRDs</h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">kubectl apply -f https://raw.githubusercontent.com/pingcap/tidb-operator/master/manifests/crd.yaml -n beatflow-data</span><br></pre></td></tr></table></figure>
-
-
-
-<h2 id="2-安装-TiDB-Operator"><a href="#2-安装-TiDB-Operator" class="headerlink" title="2.安装 TiDB Operator"></a>2.安装 TiDB Operator</h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">helm repo add pingcap https://charts.pingcap.org/</span><br></pre></td></tr></table></figure>
-
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">helm install --namespace beatflow-data tidb-operator pingcap/tidb-operator --version v1.2.3</span><br></pre></td></tr></table></figure>
-
-<h2 id="3-安装-TiDB-集群"><a href="#3-安装-TiDB-集群" class="headerlink" title="3.安装 TiDB 集群"></a>3.安装 TiDB 集群</h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">kubectl -n tidb-cluster apply -f https://raw.githubusercontent.com/pingcap/tidb-operator/master/examples/basic/tidb-cluster.yaml -n beatflow-data</span><br></pre></td></tr></table></figure>
-
-<h2 id="4-安装-TiDB-集群监控"><a href="#4-安装-TiDB-集群监控" class="headerlink" title="4. 安装 TiDB 集群监控"></a>4. 安装 TiDB 集群监控</h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">kubectl -n tidb-cluster apply -f https://raw.githubusercontent.com/pingcap/tidb-operator/master/examples/basic/tidb-monitor.yaml -n beatflow-data</span><br></pre></td></tr></table></figure>
-
-<h2 id="5-期望输出"><a href="#5-期望输出" class="headerlink" title="5. 期望输出"></a>5. 期望输出</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">NAME                              READY   STATUS    RESTARTS   AGE</span><br><span class="line">basic-discovery-6bb656bfd-xl5pb   1/1     Running   0          9m9s</span><br><span class="line">basic-monitor-5fc8589c89-gvgjj    3/3     Running   0          8m58s</span><br><span class="line">basic-pd-0                        1/1     Running   0          9m8s</span><br><span class="line">basic-tidb-0                      2/2     Running   0          7m14s</span><br><span class="line">basic-tikv-0                      1/1     Running   0          8m13s</span><br></pre></td></tr></table></figure>
-
-
+          <h1 id="go-fmt"><a href="#go-fmt" class="headerlink" title="go fmt"></a>go fmt</h1><p>大部分的格式问题可以通过 gofmt 解决，gofmt 自动格式化代码，保证所有的Go代码与官方推荐的格式保持一致，于是所有格式有关问题，都以 gofmt 的结果为准。<br>代码提交前，必须执行gofmt进行格式化。</p>
+<h1 id="go-vet"><a href="#go-vet" class="headerlink" title="go vet"></a>go vet</h1><p>vet工具可以帮我们静态分析我们的源码存在的各种问题，例如多余的代码，提前return的逻辑，struct的tag是否符合标准等。 代码提交前，必须执行go ver进行静态检查。</p>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2023/01/11/go/golang%E7%BC%96%E7%A8%8B%E8%A7%84%E8%8C%83/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
       
     </div>
 
@@ -471,7 +462,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://phpdi.github.io/2023/01/11/db/tidb%E6%95%B0%E6%8D%AE%E8%BF%81%E7%A7%BB/">
+    <link itemprop="mainEntityOfPage" href="https://phpdi.github.io/2023/01/11/go/golang%E9%9D%A2%E8%AF%95%E9%A2%98/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/head.jpeg">
@@ -485,7 +476,7 @@
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
           
-            <a href="/2023/01/11/db/tidb%E6%95%B0%E6%8D%AE%E8%BF%81%E7%A7%BB/" class="post-title-link" itemprop="url">tidb数据迁移</a>
+            <a href="/2023/01/11/go/golang%E9%9D%A2%E8%AF%95%E9%A2%98/" class="post-title-link" itemprop="url">golang面试题</a>
         </h2>
 
         <div class="post-meta">
@@ -502,7 +493,7 @@
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2023-09-14 10:30:53" itemprop="dateModified" datetime="2023-09-14T10:30:53+08:00">2023-09-14</time>
+                <time title="修改时间：2023-09-14 10:39:45" itemprop="dateModified" datetime="2023-09-14T10:39:45+08:00">2023-09-14</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -510,8 +501,8 @@
               </span>
               <span class="post-meta-item-text">分类于</span>
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/tidb/" itemprop="url" rel="index">
-                    <span itemprop="name">tidb</span>
+                  <a href="/categories/go/" itemprop="url" rel="index">
+                    <span itemprop="name">go</span>
                   </a>
                 </span>
             </span>
@@ -527,139 +518,196 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <h1 id="tidb-数据迁移"><a href="#tidb-数据迁移" class="headerlink" title="tidb 数据迁移"></a>tidb 数据迁移</h1><p>k8s上部署 tidb 数据迁移工具dm  </p>
-<p>方案: 全量迁移+增量迁移</p>
-<p>前置条件:  </p>
-<ul>
-<li><p>TiDB Operator <a target="_blank" rel="noopener" href="https://docs.pingcap.com/zh/tidb-in-kubernetes/dev/deploy-tidb-operator">部署</a>完成。</p>
+          <h2 id="golang-调度"><a href="#golang-调度" class="headerlink" title="golang 调度"></a>golang 调度</h2><ul>
+<li>CSP(通信顺序进程)</li>
+<li>顺序一致性模型 <blockquote>
+<p>1.Go语言中，同一个Goroutine线程内部，顺序一致性内存模型是得到保证的;<br>  2.不同的Goroutine之间，并不满足顺序一致性内存模型，需要通过明确定义的同步事件来作为同步的参考</p>
+</blockquote></li></ul>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2023/01/11/go/golang%E9%9D%A2%E8%AF%95%E9%A2%98/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+        
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://phpdi.github.io/2023/01/11/go/golang%E9%A1%B9%E7%9B%AE%E7%BB%93%E6%9E%84%E8%A7%84%E8%8C%83/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/head.jpeg">
+      <meta itemprop="name" content="Chen Yu">
+      <meta itemprop="description" content="自律给我自由">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="goeoeo">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2023/01/11/go/golang%E9%A1%B9%E7%9B%AE%E7%BB%93%E6%9E%84%E8%A7%84%E8%8C%83/" class="post-title-link" itemprop="url">golang项目结构规范</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2023-01-11 22:59:23" itemprop="dateCreated datePublished" datetime="2023-01-11T22:59:23+08:00">2023-01-11</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2023-09-14 10:39:45" itemprop="dateModified" datetime="2023-09-14T10:39:45+08:00">2023-09-14</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/go/" itemprop="url" rel="index">
+                    <span itemprop="name">go</span>
+                  </a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="golang项目结构规范"><a href="#golang项目结构规范" class="headerlink" title="golang项目结构规范"></a>golang项目结构规范</h1><p><a target="_blank" rel="noopener" href="https://github.com/golang-standards/project-layout">https://github.com/golang-standards/project-layout</a> 项目总结了 Go 项目的布局，这是Go应用程序项目的基本布局，并不是Go核心开发团队<br>定义的官方标准；但是，这是Go生态系统中的一种常见的项目布局模式。</p>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2023/01/11/go/golang%E9%A1%B9%E7%9B%AE%E7%BB%93%E6%9E%84%E8%A7%84%E8%8C%83/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+        
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://phpdi.github.io/2023/01/11/go/gomod/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/head.jpeg">
+      <meta itemprop="name" content="Chen Yu">
+      <meta itemprop="description" content="自律给我自由">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="goeoeo">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2023/01/11/go/gomod/" class="post-title-link" itemprop="url">gomod</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2023-01-11 22:59:23" itemprop="dateCreated datePublished" datetime="2023-01-11T22:59:23+08:00">2023-01-11</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2023-09-14 10:40:47" itemprop="dateModified" datetime="2023-09-14T10:40:47+08:00">2023-09-14</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/go/" itemprop="url" rel="index">
+                    <span itemprop="name">go</span>
+                  </a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h2 id="环境变量GO111MODULE"><a href="#环境变量GO111MODULE" class="headerlink" title="环境变量GO111MODULE"></a>环境变量GO111MODULE</h2><ul>
+<li><p>GO111MODULE&#x3D;off </p>
+<blockquote>
+<p>go命令从不使用新模块支持。使用GOPATH模式(查找vendor目录和GOPATH路径下的依赖)</p>
+</blockquote>
 </li>
-<li><p>要求 TiDB Operator 版本 &gt;&#x3D; 1.2.0。</p>
+<li><p>GO111MODULE&#x3D;on </p>
+<blockquote>
+<p>go命令开启模块支持,此时执行go get 命令,所有依赖都会下到$GOPATH&#x2F;pkg&#x2F;mod ,go依赖查找也只会到$GOPATH&#x2F;pkg&#x2F;mod进行查找</p>
+</blockquote>
+</li>
+<li><p>GO111MODULE&#x3D;auto </p>
+<blockquote>
+<p>默认值,go命令根据当前目录启用或禁用模块支持。仅当当前目录位于$GOPATH&#x2F;src之外并且其本身包含go.mod文件或位于包含go.mod文件的目录下时，才启用模块支持。简而言之,就是项目包含go.mod文件时会开启模块支持</p>
+</blockquote>
 </li>
 </ul>
-<h2 id="1-dm-cluster-yaml"><a href="#1-dm-cluster-yaml" class="headerlink" title="1.dm-cluster.yaml"></a>1.dm-cluster.yaml</h2><p>参考 DMCluster <a target="_blank" rel="noopener" href="https://github.com/pingcap/tidb-operator/blob/master/examples/dm/dm-cluster.yaml">示例</a></p>
-<p>创建文件: dm-cluster.yaml 内容:</p>
-<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">apiVersion:</span> <span class="string">pingcap.com/v1alpha1</span></span><br><span class="line"><span class="attr">kind:</span> <span class="string">DMCluster</span></span><br><span class="line"><span class="attr">metadata:</span></span><br><span class="line">  <span class="attr">name:</span> <span class="string">basic</span></span><br><span class="line"><span class="attr">spec:</span></span><br><span class="line">  <span class="attr">version:</span> <span class="string">v2.0.6</span></span><br><span class="line">  <span class="attr">pvReclaimPolicy:</span> <span class="string">Retain</span></span><br><span class="line">  <span class="attr">discovery:</span> &#123;&#125;</span><br><span class="line">  <span class="attr">master:</span></span><br><span class="line">    <span class="attr">baseImage:</span> <span class="string">pingcap/dm</span></span><br><span class="line">    <span class="attr">replicas:</span> <span class="number">1</span></span><br><span class="line">    <span class="comment"># if storageClassName is not set, the default Storage Class of the Kubernetes cluster will be used</span></span><br><span class="line">    <span class="comment"># storageClassName: local-storage</span></span><br><span class="line">    <span class="attr">storageSize:</span> <span class="string">&quot;1Gi&quot;</span></span><br><span class="line">    <span class="attr">requests:</span> &#123;&#125;</span><br><span class="line">    <span class="attr">config:</span> &#123;&#125;</span><br><span class="line">  <span class="attr">worker:</span></span><br><span class="line">    <span class="attr">baseImage:</span> <span class="string">pingcap/dm</span></span><br><span class="line">    <span class="attr">replicas:</span> <span class="number">1</span></span><br><span class="line">    <span class="comment"># if storageClassName is not set, the default Storage Class of the Kubernetes cluster will be used</span></span><br><span class="line">    <span class="comment"># storageClassName: local-storage</span></span><br><span class="line">    <span class="attr">storageSize:</span> <span class="string">&quot;1Gi&quot;</span></span><br><span class="line">    <span class="attr">requests:</span> &#123;&#125;</span><br><span class="line">    <span class="attr">config:</span> &#123;&#125;</span><br></pre></td></tr></table></figure>
-
-
-
-<h2 id="2-部署-DM-集群"><a href="#2-部署-DM-集群" class="headerlink" title="2.部署 DM 集群"></a>2.部署 DM 集群</h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">kubectl apply -f dm_cluster.yaml -n beatflow-data</span><br></pre></td></tr></table></figure>
-
-<h2 id="3-期望输出"><a href="#3-期望输出" class="headerlink" title="3.期望输出"></a>3.期望输出</h2><p> kubectl get pods -n beatflow-data</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">NAME                                      READY   STATUS    RESTARTS   AGE</span><br><span class="line">basic-dm-discovery-6b99d57d5c-w9qr7       1/1     Running   0          18h</span><br><span class="line">basic-dm-master-0                         1/1     Running   0          18h</span><br><span class="line">basic-dm-worker-0                         1/1     Running   0          18h</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<h2 id="4-启动-DM-同步任务"><a href="#4-启动-DM-同步任务" class="headerlink" title="4.启动 DM 同步任务"></a>4.启动 DM 同步任务</h2><p>通过进入 DM-master 或 DM-worker pod 使用 image 内置 dmctl 进行操作。  </p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">kubectl exec -it basic-dm-master-0 -n beatflow-data -- sh</span><br></pre></td></tr></table></figure>
-
-<h3 id="1-创建数据源（mysql）"><a href="#1-创建数据源（mysql）" class="headerlink" title="1.创建数据源（mysql）"></a>1.创建数据源（mysql）</h3><p> vi source1.yaml  </p>
-<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># MySQL1 Configuration.</span></span><br><span class="line"></span><br><span class="line"><span class="attr">source-id:</span> <span class="string">&quot;mysql-replica-01&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># DM-worker 是否使用全局事务标识符 (GTID) 拉取 binlog。使用前提是在上游 MySQL 已开启 GTID 模式。</span></span><br><span class="line"><span class="attr">enable-gtid:</span> <span class="literal">false</span></span><br><span class="line"></span><br><span class="line"><span class="attr">from:</span></span><br><span class="line">  <span class="attr">host:</span> <span class="string">&quot;mysql.beatflow-data.svc&quot;</span></span><br><span class="line">  <span class="attr">user:</span> <span class="string">&quot;root&quot;</span></span><br><span class="line">  <span class="attr">password:</span> <span class="string">&quot;p@ss52Dnb&quot;</span></span><br><span class="line">  <span class="attr">port:</span> <span class="number">3306</span></span><br></pre></td></tr></table></figure>
-
-
-
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">./dmctl --master-addr 127.0.0.1:8261 operate-source create source1.yaml</span><br></pre></td></tr></table></figure>
-
-
-
-<h3 id="2-配置同步任务"><a href="#2-配置同步任务" class="headerlink" title="2.配置同步任务"></a>2.配置同步任务</h3><p>vi task.yaml</p>
-<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 任务名，多个同时运行的任务不能重名。</span></span><br><span class="line"><span class="attr">name:</span> <span class="string">&quot;test&quot;</span></span><br><span class="line"><span class="comment"># 全量+增量 (all) 迁移模式。</span></span><br><span class="line"><span class="attr">task-mode:</span> <span class="string">&quot;all&quot;</span></span><br><span class="line"><span class="comment"># 下游 TiDB 配置信息。</span></span><br><span class="line"><span class="attr">target-database:</span></span><br><span class="line">  <span class="attr">host:</span> <span class="string">&quot;basic-tidb.beatflow-data.svc&quot;</span></span><br><span class="line">  <span class="attr">port:</span> <span class="number">4000</span></span><br><span class="line">  <span class="attr">user:</span> <span class="string">&quot;root&quot;</span></span><br><span class="line">  <span class="attr">password:</span> <span class="string">&quot;&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 当前数据迁移任务需要的全部上游 MySQL 实例配置。</span></span><br><span class="line"><span class="attr">mysql-instances:</span></span><br><span class="line"><span class="bullet">-</span></span><br><span class="line">  <span class="comment"># 上游实例或者复制组 ID，参考 `inventory.ini` 的 `source_id` 或者 `dm-master.toml` 的 `source-id 配置`。</span></span><br><span class="line">  <span class="attr">source-id:</span> <span class="string">&quot;mysql-replica-01&quot;</span></span><br><span class="line">  <span class="comment"># 需要迁移的库名或表名的黑白名单的配置项名称，用于引用全局的黑白名单配置，全局配置见下面的 `block-allow-list` 的配置。</span></span><br><span class="line">  <span class="attr">block-allow-list:</span> <span class="string">&quot;global&quot;</span>          <span class="comment"># 如果 DM 版本早于 v2.0.0-beta.2 则使用 black-white-list。</span></span><br><span class="line">  <span class="comment"># dump 处理单元的配置项名称，用于引用全局的 dump 处理单元配置。</span></span><br><span class="line">  <span class="attr">mydumper-config-name:</span> <span class="string">&quot;global&quot;</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment"># 黑白名单全局配置，各实例通过配置项名引用。</span></span><br><span class="line"><span class="attr">block-allow-list:</span>                     <span class="comment"># 如果 DM 版本早于 v2.0.0-beta.2 则使用 black-white-list。</span></span><br><span class="line">  <span class="attr">global:</span></span><br><span class="line">    <span class="attr">do-dbs:</span> [<span class="string">&quot;*&quot;</span>]</span><br><span class="line">    <span class="attr">ignore-tables:</span> </span><br><span class="line">    <span class="bullet">-</span> <span class="attr">db-name:</span> <span class="string">&quot;*&quot;</span></span><br><span class="line">      <span class="attr">tbl-name:</span> <span class="string">&quot;PDMAN_DB_VERSION&quot;</span></span><br><span class="line"><span class="comment"># dump 处理单元全局配置，各实例通过配置项名引用。</span></span><br><span class="line"><span class="attr">mydumpers:</span></span><br><span class="line">  <span class="attr">global:</span></span><br><span class="line">    <span class="attr">extra-args:</span> <span class="string">&quot;&quot;</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<p>启动任务: </p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">./dmctl --master-addr 127.0.0.1:8261 start-task task.yaml</span><br></pre></td></tr></table></figure>
-
-<p>查询任务:</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">./dmctl --master-addr 127.0.0.1:8261 query-status test</span><br></pre></td></tr></table></figure>
-
-
-
-
-
-<h2 id="遇到的问题"><a href="#遇到的问题" class="headerlink" title="遇到的问题"></a>遇到的问题</h2><ul>
-<li><p>block-allow-list 变更后需要重新命名任务名称，否则任务不会生效</p>
-</li>
-<li><p>由于包含全量复制，任务中途退出需要清空相关表，否则会遇到主键重复，task can’t auto resume 的错误</p>
-</li>
-<li><p>查看同步日志 </p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">kubectl logs -f basic-dm-worker-0 -n beatflow-data</span><br></pre></td></tr></table></figure></li>
-</ul>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-        
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://phpdi.github.io/2023/01/11/db/%E9%80%9A%E8%BF%87Docker%E5%AE%89%E8%A3%85%E9%85%8D%E7%BD%AEMySQL%E4%B8%BB%E4%BB%8E%E8%8A%82%E7%82%B9/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/head.jpeg">
-      <meta itemprop="name" content="Chen Yu">
-      <meta itemprop="description" content="自律给我自由">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="goeoeo">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2023/01/11/db/%E9%80%9A%E8%BF%87Docker%E5%AE%89%E8%A3%85%E9%85%8D%E7%BD%AEMySQL%E4%B8%BB%E4%BB%8E%E8%8A%82%E7%82%B9/" class="post-title-link" itemprop="url">通过Docker安装配置MySQL主从节点</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2023-01-11 22:59:23" itemprop="dateCreated datePublished" datetime="2023-01-11T22:59:23+08:00">2023-01-11</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2023-09-14 10:31:06" itemprop="dateModified" datetime="2023-09-14T10:31:06+08:00">2023-09-14</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/mysql/" itemprop="url" rel="index">
-                    <span itemprop="name">mysql</span>
-                  </a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h2 id="拉取最新版mysql镜像"><a href="#拉取最新版mysql镜像" class="headerlink" title="拉取最新版mysql镜像"></a>拉取最新版mysql镜像</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker pull mysql </span><br></pre></td></tr></table></figure>
-<h2 id="mysql主服务器"><a href="#mysql主服务器" class="headerlink" title="mysql主服务器"></a>mysql主服务器</h2><h3 id="启动容器"><a href="#启动容器" class="headerlink" title="启动容器"></a>启动容器</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker run -p 3307:3306 --name mysql_master -e MYSQL_ROOT_PASSWORD=123456 -d mysql:latest</span><br></pre></td></tr></table></figure>
           <!--noindex-->
             <div class="post-button">
-              <a class="btn" href="/2023/01/11/db/%E9%80%9A%E8%BF%87Docker%E5%AE%89%E8%A3%85%E9%85%8D%E7%BD%AEMySQL%E4%B8%BB%E4%BB%8E%E8%8A%82%E7%82%B9/#more" rel="contents">
+              <a class="btn" href="/2023/01/11/go/gomod/#more" rel="contents">
                 阅读全文 &raquo;
               </a>
             </div>
@@ -683,7 +731,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://phpdi.github.io/2023/01/11/db/%E4%B8%80%E7%AB%99%E5%BC%8F%E5%AD%A6%E4%B9%A0redis%E4%BB%8E%E5%85%A5%E9%97%A8%E5%88%B0%E9%AB%98%E5%8F%AF%E7%94%A8%E5%88%86%E5%B8%83%E5%BC%8F%E5%AE%9E%E8%B7%B5/">
+    <link itemprop="mainEntityOfPage" href="https://phpdi.github.io/2023/01/11/go/go%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/head.jpeg">
@@ -697,7 +745,7 @@
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
           
-            <a href="/2023/01/11/db/%E4%B8%80%E7%AB%99%E5%BC%8F%E5%AD%A6%E4%B9%A0redis%E4%BB%8E%E5%85%A5%E9%97%A8%E5%88%B0%E9%AB%98%E5%8F%AF%E7%94%A8%E5%88%86%E5%B8%83%E5%BC%8F%E5%AE%9E%E8%B7%B5/" class="post-title-link" itemprop="url">一站式学习redis从入门到高可用分布式实践</a>
+            <a href="/2023/01/11/go/go%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86/" class="post-title-link" itemprop="url">go内存管理</a>
         </h2>
 
         <div class="post-meta">
@@ -714,7 +762,7 @@
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2023-09-14 10:30:53" itemprop="dateModified" datetime="2023-09-14T10:30:53+08:00">2023-09-14</time>
+                <time title="修改时间：2023-09-14 10:40:47" itemprop="dateModified" datetime="2023-09-14T10:40:47+08:00">2023-09-14</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -722,8 +770,8 @@
               </span>
               <span class="post-meta-item-text">分类于</span>
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/redis/" itemprop="url" rel="index">
-                    <span itemprop="name">redis</span>
+                  <a href="/categories/go/" itemprop="url" rel="index">
+                    <span itemprop="name">go</span>
                   </a>
                 </span>
             </span>
@@ -739,18 +787,10 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <h1 id="第1章到第3章"><a href="#第1章到第3章" class="headerlink" title="第1章到第3章"></a>第1章到第3章</h1><h2 id="redis-特性"><a href="#redis-特性" class="headerlink" title="redis 特性"></a>redis 特性</h2><ul>
-<li>速度快</li>
-<li>持久化</li>
-<li>多种数据结构</li>
-<li>支持多种编程语言</li>
-<li>功能丰富</li>
-<li>简单</li>
-<li>主从复制</li>
-<li>高可用,分布式</li></ul>
+          <p>Go语言内置运行时（就是runtime），抛弃了传统的内存分配方式，改为自主管理。这样可以自主地实现更好的内存使用模式，比如内存池、预分配等等。这样，不会每次内存分配都需要进行系统调用。</p>
           <!--noindex-->
             <div class="post-button">
-              <a class="btn" href="/2023/01/11/db/%E4%B8%80%E7%AB%99%E5%BC%8F%E5%AD%A6%E4%B9%A0redis%E4%BB%8E%E5%85%A5%E9%97%A8%E5%88%B0%E9%AB%98%E5%8F%AF%E7%94%A8%E5%88%86%E5%B8%83%E5%BC%8F%E5%AE%9E%E8%B7%B5/#more" rel="contents">
+              <a class="btn" href="/2023/01/11/go/go%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86/#more" rel="contents">
                 阅读全文 &raquo;
               </a>
             </div>
@@ -774,7 +814,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://phpdi.github.io/2023/01/11/db/%E9%94%81%E7%9B%B8%E5%85%B3%E9%97%AE%E9%A2%98%E6%8E%92%E6%9F%A5/">
+    <link itemprop="mainEntityOfPage" href="https://phpdi.github.io/2023/01/11/go/go%E4%BC%98%E7%BC%BA%E7%82%B9/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/head.jpeg">
@@ -788,7 +828,7 @@
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
           
-            <a href="/2023/01/11/db/%E9%94%81%E7%9B%B8%E5%85%B3%E9%97%AE%E9%A2%98%E6%8E%92%E6%9F%A5/" class="post-title-link" itemprop="url">锁相关问题排查</a>
+            <a href="/2023/01/11/go/go%E4%BC%98%E7%BC%BA%E7%82%B9/" class="post-title-link" itemprop="url">go优缺点</a>
         </h2>
 
         <div class="post-meta">
@@ -805,7 +845,7 @@
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2023-09-14 10:31:27" itemprop="dateModified" datetime="2023-09-14T10:31:27+08:00">2023-09-14</time>
+                <time title="修改时间：2023-09-14 10:40:47" itemprop="dateModified" datetime="2023-09-14T10:40:47+08:00">2023-09-14</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -813,8 +853,8 @@
               </span>
               <span class="post-meta-item-text">分类于</span>
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/mysql/" itemprop="url" rel="index">
-                    <span itemprop="name">mysql</span>
+                  <a href="/categories/go/" itemprop="url" rel="index">
+                    <span itemprop="name">go</span>
                   </a>
                 </span>
             </span>
@@ -830,10 +870,10 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <h1 id="mysql8-锁相关问题"><a href="#mysql8-锁相关问题" class="headerlink" title="mysql8 锁相关问题"></a>mysql8 锁相关问题</h1><h1 id="事务"><a href="#事务" class="headerlink" title="事务"></a>事务</h1><p>golang事务中不能并发执行sql 否则会出现bad connection 的错误，导致事务不能提交</p>
+          <p>为什么要单独记录这篇文章？<br>用来吹牛！</p>
           <!--noindex-->
             <div class="post-button">
-              <a class="btn" href="/2023/01/11/db/%E9%94%81%E7%9B%B8%E5%85%B3%E9%97%AE%E9%A2%98%E6%8E%92%E6%9F%A5/#more" rel="contents">
+              <a class="btn" href="/2023/01/11/go/go%E4%BC%98%E7%BC%BA%E7%82%B9/#more" rel="contents">
                 阅读全文 &raquo;
               </a>
             </div>
@@ -857,7 +897,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://phpdi.github.io/2023/01/11/db/etcd%E6%A6%82%E5%BF%B5%E4%BB%A5%E5%8F%8A%E5%8E%9F%E7%90%86/">
+    <link itemprop="mainEntityOfPage" href="https://phpdi.github.io/2023/01/11/go/goland%E6%BF%80%E6%B4%BB%E6%95%99%E7%A8%8B/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/head.jpeg">
@@ -871,7 +911,7 @@
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
           
-            <a href="/2023/01/11/db/etcd%E6%A6%82%E5%BF%B5%E4%BB%A5%E5%8F%8A%E5%8E%9F%E7%90%86/" class="post-title-link" itemprop="url">etcd概念以及原理</a>
+            <a href="/2023/01/11/go/goland%E6%BF%80%E6%B4%BB%E6%95%99%E7%A8%8B/" class="post-title-link" itemprop="url">goland激活教程</a>
         </h2>
 
         <div class="post-meta">
@@ -888,7 +928,7 @@
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2023-09-14 10:25:57" itemprop="dateModified" datetime="2023-09-14T10:25:57+08:00">2023-09-14</time>
+                <time title="修改时间：2024-01-22 10:01:29" itemprop="dateModified" datetime="2024-01-22T10:01:29+08:00">2024-01-22</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -896,8 +936,8 @@
               </span>
               <span class="post-meta-item-text">分类于</span>
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/etcd/" itemprop="url" rel="index">
-                    <span itemprop="name">etcd</span>
+                  <a href="/categories/go/" itemprop="url" rel="index">
+                    <span itemprop="name">go</span>
                   </a>
                 </span>
             </span>
@@ -913,10 +953,11 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <h2 id="什么是Etcd"><a href="#什么是Etcd" class="headerlink" title="什么是Etcd"></a>什么是Etcd</h2><h3 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h3><p>etcd是CoreOS团队于2013年6月发起的开源项目，它的目标是构建一个高可用的分布式键值(key-value)数据库。etcd内部采用raft协议作为一致性算法，etcd基于Go语言实现。</p>
+          <p>提供三种方式进行激活</p>
+<h2 id="申请使用License（推荐）"><a href="#申请使用License（推荐）" class="headerlink" title="申请使用License（推荐）"></a>申请使用License（推荐）</h2><p>转载自<a target="_blank" rel="noopener" href="https://www.toutiao.com/a6744540170936123916/">免费获取 JetBrains 全系产品正版 License</a></p>
           <!--noindex-->
             <div class="post-button">
-              <a class="btn" href="/2023/01/11/db/etcd%E6%A6%82%E5%BF%B5%E4%BB%A5%E5%8F%8A%E5%8E%9F%E7%90%86/#more" rel="contents">
+              <a class="btn" href="/2023/01/11/go/goland%E6%BF%80%E6%B4%BB%E6%95%99%E7%A8%8B/#more" rel="contents">
                 阅读全文 &raquo;
               </a>
             </div>
@@ -940,7 +981,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://phpdi.github.io/2023/01/11/db/MySQL%E5%9C%A8%E4%BB%80%E4%B9%88%E6%83%85%E5%86%B5%E4%B8%8B%E4%BC%9A%E4%BD%BF%E7%94%A8%E5%88%B0%E4%B8%B4%E6%97%B6%E8%A1%A8/">
+    <link itemprop="mainEntityOfPage" href="https://phpdi.github.io/2023/01/11/go/Mastering_Go/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/head.jpeg">
@@ -954,7 +995,7 @@
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
           
-            <a href="/2023/01/11/db/MySQL%E5%9C%A8%E4%BB%80%E4%B9%88%E6%83%85%E5%86%B5%E4%B8%8B%E4%BC%9A%E4%BD%BF%E7%94%A8%E5%88%B0%E4%B8%B4%E6%97%B6%E8%A1%A8/" class="post-title-link" itemprop="url">MySQL在什么情况下会使用到临时表</a>
+            <a href="/2023/01/11/go/Mastering_Go/" class="post-title-link" itemprop="url">Mastering_Go</a>
         </h2>
 
         <div class="post-meta">
@@ -971,7 +1012,7 @@
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2023-09-14 10:26:19" itemprop="dateModified" datetime="2023-09-14T10:26:19+08:00">2023-09-14</time>
+                <time title="修改时间：2023-09-14 10:46:36" itemprop="dateModified" datetime="2023-09-14T10:46:36+08:00">2023-09-14</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -979,8 +1020,8 @@
               </span>
               <span class="post-meta-item-text">分类于</span>
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/mysql/" itemprop="url" rel="index">
-                    <span itemprop="name">mysql</span>
+                  <a href="/categories/go/" itemprop="url" rel="index">
+                    <span itemprop="name">go</span>
                   </a>
                 </span>
             </span>
@@ -996,97 +1037,10 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <p>MySQL在执行SQL查询时可能会用到临时表，一般情况下，用到临时表就意味着性能较低。临时表存储，MySQL临时表分为“内存临时表”和“磁盘临时表”，<br>其中内存临时表使用MySQL的MEMORY存储引擎，磁盘临时表使用MySQL的MyISAM存储引擎；</p>
+          <h1 id="第2章-Go内部机制"><a href="#第2章-Go内部机制" class="headerlink" title="第2章 Go内部机制"></a>第2章 Go内部机制</h1><h2 id="垃圾回收"><a href="#垃圾回收" class="headerlink" title="垃圾回收"></a>垃圾回收</h2><p>垃圾回收是释放掉那些不再使用的内存空间的过程.</p>
           <!--noindex-->
             <div class="post-button">
-              <a class="btn" href="/2023/01/11/db/MySQL%E5%9C%A8%E4%BB%80%E4%B9%88%E6%83%85%E5%86%B5%E4%B8%8B%E4%BC%9A%E4%BD%BF%E7%94%A8%E5%88%B0%E4%B8%B4%E6%97%B6%E8%A1%A8/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-        
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://phpdi.github.io/2023/01/11/db/MySQL%E6%8F%90%E5%8D%87%E8%AF%BE%E7%A8%8B%E5%85%A8%E9%9D%A2%E8%AE%B2%E8%A7%A3MySQL%E6%9E%B6%E6%9E%84%E8%AE%BE%E8%AE%A1/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/head.jpeg">
-      <meta itemprop="name" content="Chen Yu">
-      <meta itemprop="description" content="自律给我自由">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="goeoeo">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2023/01/11/db/MySQL%E6%8F%90%E5%8D%87%E8%AF%BE%E7%A8%8B%E5%85%A8%E9%9D%A2%E8%AE%B2%E8%A7%A3MySQL%E6%9E%B6%E6%9E%84%E8%AE%BE%E8%AE%A1/" class="post-title-link" itemprop="url">MySQL提升课程全面讲解MySQL架构设计</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2023-01-11 22:59:23" itemprop="dateCreated datePublished" datetime="2023-01-11T22:59:23+08:00">2023-01-11</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2023-09-14 10:26:33" itemprop="dateModified" datetime="2023-09-14T10:26:33+08:00">2023-09-14</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/mysql/" itemprop="url" rel="index">
-                    <span itemprop="name">mysql</span>
-                  </a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h1 id="第一章-实例和故事"><a href="#第一章-实例和故事" class="headerlink" title="第一章 实例和故事"></a>第一章 实例和故事</h1><h2 id="什么决定了电商双11大促的成败"><a href="#什么决定了电商双11大促的成败" class="headerlink" title="什么决定了电商双11大促的成败"></a>什么决定了电商双11大促的成败</h2><h2 id="在双11大促的数据库服务器"><a href="#在双11大促的数据库服务器" class="headerlink" title="在双11大促的数据库服务器"></a>在双11大促的数据库服务器</h2><h2 id="在大促中什么影响了数据库性能"><a href="#在大促中什么影响了数据库性能" class="headerlink" title="在大促中什么影响了数据库性能"></a>在大促中什么影响了数据库性能</h2><ul>
-<li>sql查询数据</li>
-<li>服务器硬件</li>
-<li>网卡流量</li>
-<li>磁盘IO</li></ul>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2023/01/11/db/MySQL%E6%8F%90%E5%8D%87%E8%AF%BE%E7%A8%8B%E5%85%A8%E9%9D%A2%E8%AE%B2%E8%A7%A3MySQL%E6%9E%B6%E6%9E%84%E8%AE%BE%E8%AE%A1/#more" rel="contents">
+              <a class="btn" href="/2023/01/11/go/Mastering_Go/#more" rel="contents">
                 阅读全文 &raquo;
               </a>
             </div>
@@ -1110,7 +1064,7 @@
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/page/8/"><i class="fa fa-angle-left" aria-label="上一页"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/8/">8</a><span class="page-number current">9</span><a class="page-number" href="/page/10/">10</a><a class="extend next" rel="next" href="/page/10/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
+    <a class="extend prev" rel="prev" href="/page/8/"><i class="fa fa-angle-left" aria-label="上一页"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/8/">8</a><span class="page-number current">9</span><a class="page-number" href="/page/10/">10</a><span class="space">&hellip;</span><a class="page-number" href="/page/13/">13</a><a class="extend next" rel="next" href="/page/10/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
   </nav>
 
 
@@ -1178,20 +1132,20 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">96</span>
+          <span class="site-state-item-count">123</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
             <a href="/categories/">
           
-        <span class="site-state-item-count">19</span>
+        <span class="site-state-item-count">20</span>
         <span class="site-state-item-name">分类</span></a>
       </div>
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">73</span>
+        <span class="site-state-item-count">84</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
@@ -1216,7 +1170,7 @@
 <div class="copyright">
   
   &copy; 
-  <span itemprop="copyrightYear">2023</span>
+  <span itemprop="copyrightYear">2025</span>
   <span class="with-love">
     <i class="fa fa-user"></i>
   </span>

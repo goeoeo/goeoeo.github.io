@@ -1,0 +1,616 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 6.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+  <meta name="baidu-site-verification" content="D033aiBRFi">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+
+
+<script id="hexo-configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    hostname: new URL('https://phpdi.github.io').hostname,
+    root: '/',
+    scheme: 'Gemini',
+    version: '7.7.0',
+    exturl: false,
+    sidebar: {"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},
+    copycode: {"enable":false,"show_result":false,"style":null},
+    back2top: {"enable":true,"sidebar":false,"scrollpercent":false},
+    bookmark: {"enable":false,"color":"#222","save":"auto"},
+    fancybox: false,
+    mediumzoom: false,
+    lazyload: false,
+    pangu: false,
+    comments: {"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},
+    algolia: {
+      appID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    },
+    localsearch: {"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},
+    path: 'search.xml',
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}
+  };
+</script>
+
+  <meta name="description" content="基础Spark解决的问题基于内存式的计算的分布式计算引擎。海量数据的计算，可以进行离线以及流处理主要用来做离线数仓。  Spark模块 SparkCore SparkSQL  集成Hive实现数据分析。 SparkStreaming 流计算 Graphx 图计算 MLlib 机器学习  Spark 特点速度快，使用简单，通用性强，多种运行模式由Scala 实现。Scala是基于java语言写的，底">
+<meta property="og:type" content="article">
+<meta property="og:title" content="goeoeo">
+<meta property="og:url" content="https://phpdi.github.io/2024/06/22/python/spark%E8%8F%9C%E9%B8%9F%E6%95%99%E7%A8%8B/index.html">
+<meta property="og:site_name" content="goeoeo">
+<meta property="og:description" content="基础Spark解决的问题基于内存式的计算的分布式计算引擎。海量数据的计算，可以进行离线以及流处理主要用来做离线数仓。  Spark模块 SparkCore SparkSQL  集成Hive实现数据分析。 SparkStreaming 流计算 Graphx 图计算 MLlib 机器学习  Spark 特点速度快，使用简单，通用性强，多种运行模式由Scala 实现。Scala是基于java语言写的，底">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://phpdi.github.io/2024/06/22/python/spark%E8%8F%9C%E9%B8%9F%E6%95%99%E7%A8%8B/img.png">
+<meta property="og:image" content="https://phpdi.github.io/2024/06/22/python/spark%E8%8F%9C%E9%B8%9F%E6%95%99%E7%A8%8B/img_1.png">
+<meta property="og:image" content="https://phpdi.github.io/2024/06/22/python/spark%E8%8F%9C%E9%B8%9F%E6%95%99%E7%A8%8B/img_2.png">
+<meta property="og:image" content="https://phpdi.github.io/2024/06/22/python/spark%E8%8F%9C%E9%B8%9F%E6%95%99%E7%A8%8B/img_3.png">
+<meta property="og:image" content="https://phpdi.github.io/2024/06/22/python/spark%E8%8F%9C%E9%B8%9F%E6%95%99%E7%A8%8B/img_4.png">
+<meta property="og:image" content="https://phpdi.github.io/2024/06/22/python/spark%E8%8F%9C%E9%B8%9F%E6%95%99%E7%A8%8B/img_5.png">
+<meta property="og:image" content="https://phpdi.github.io/2024/06/22/python/spark%E8%8F%9C%E9%B8%9F%E6%95%99%E7%A8%8B/img_6.png">
+<meta property="og:image" content="https://phpdi.github.io/2024/06/22/python/spark%E8%8F%9C%E9%B8%9F%E6%95%99%E7%A8%8B/img_7.png">
+<meta property="article:published_time" content="2024-06-22T07:35:22.355Z">
+<meta property="article:modified_time" content="2024-09-13T15:19:54.607Z">
+<meta property="article:author" content="Chen Yu">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://phpdi.github.io/2024/06/22/python/spark%E8%8F%9C%E9%B8%9F%E6%95%99%E7%A8%8B/img.png">
+
+<link rel="canonical" href="https://phpdi.github.io/2024/06/22/python/spark%E8%8F%9C%E9%B8%9F%E6%95%99%E7%A8%8B/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome: false,
+    isPost: true
+  };
+</script>
+
+  <title> | goeoeo</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-meta">
+
+    <div>
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">goeoeo</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+        <h1 class="site-subtitle" itemprop="description">会吃鱼</h1>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+</div>
+
+
+<nav class="site-nav">
+  
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>归档</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-fw fa-th"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-fw fa-user"></i>关于</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+
+</nav>
+  <div class="site-search">
+    <div class="popup search-popup">
+    <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocorrect="off" autocapitalize="none"
+           placeholder="搜索..." spellcheck="false"
+           type="text" id="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result"></div>
+
+</div>
+<div class="search-pop-overlay"></div>
+
+  </div>
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content">
+            
+
+  <div class="posts-expand">
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://phpdi.github.io/2024/06/22/python/spark%E8%8F%9C%E9%B8%9F%E6%95%99%E7%A8%8B/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/head.jpeg">
+      <meta itemprop="name" content="Chen Yu">
+      <meta itemprop="description" content="自律给我自由">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="goeoeo">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2024-06-22 15:35:22" itemprop="dateCreated datePublished" datetime="2024-06-22T15:35:22+08:00">2024-06-22</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2024-09-13 23:19:54" itemprop="dateModified" datetime="2024-09-13T23:19:54+08:00">2024-09-13</time>
+              </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="基础"><a href="#基础" class="headerlink" title="基础"></a>基础</h1><h2 id="Spark解决的问题"><a href="#Spark解决的问题" class="headerlink" title="Spark解决的问题"></a>Spark解决的问题</h2><p>基于内存式的计算的分布式计算引擎。<br>海量数据的计算，可以进行离线以及流处理<br>主要用来做离线数仓。 </p>
+<h2 id="Spark模块"><a href="#Spark模块" class="headerlink" title="Spark模块"></a>Spark模块</h2><ul>
+<li>SparkCore</li>
+<li>SparkSQL  集成Hive实现数据分析。</li>
+<li>SparkStreaming 流计算</li>
+<li>Graphx 图计算</li>
+<li>MLlib 机器学习</li>
+</ul>
+<h2 id="Spark-特点"><a href="#Spark-特点" class="headerlink" title="Spark 特点"></a>Spark 特点</h2><p>速度快，使用简单，通用性强，多种运行模式<br>由Scala 实现。<br>Scala是基于java语言写的，底层也需要虚拟机</p>
+<h2 id="spark运行模式"><a href="#spark运行模式" class="headerlink" title="spark运行模式"></a>spark运行模式</h2><h3 id="本地模式"><a href="#本地模式" class="headerlink" title="本地模式"></a>本地模式</h3><p>一个独立的进程，通过内部多线程来模拟整个spark运行时环境 一般用于测试</p>
+<h3 id="集群模式"><a href="#集群模式" class="headerlink" title="集群模式"></a>集群模式</h3><p>Standalone(集群)<br>Spark自带的分布式资源平台，功能类似于yarn。Spark中的各个角色以独立进程的形式存在，并组成Spark集群环境</p>
+<p>Hadoop YARN(集群)<br>Spark各个角色运行在YARN容器内部，组成Spark集群环境 工作中主要使用的模式。</p>
+<p>Spark是一个分布式计算引擎，所以它的部署是分布式的，有主节点，从节点这些。  </p>
+<h3 id="K8s模式"><a href="#K8s模式" class="headerlink" title="K8s模式"></a>K8s模式</h3><p>各个角色运行在k8s容器中，组成spark集群环境</p>
+<p>云服务模式</p>
+<h2 id="spark架构"><a href="#spark架构" class="headerlink" title="spark架构"></a>spark架构</h2><ul>
+<li>Master,管理整个集群资源</li>
+<li>Worker,管理单个服务器的资源</li>
+<li>Driver,管理单个Spark在运行的时候的工作</li>
+<li>Executor,工作者</li>
+</ul>
+<h2 id="Python-on-Spark-执行原理"><a href="#Python-on-Spark-执行原理" class="headerlink" title="Python on Spark 执行原理"></a>Python on Spark 执行原理</h2><p>PySpark宗旨在不破坏已有的运行架构，在Spark架构外层包装一层Python API,借助Py4j实现Python和java交互，进而实现Python编写Spark应用程序，其<br>运行时架构如下：<br><img src="/2024/06/22/python/spark%E8%8F%9C%E9%B8%9F%E6%95%99%E7%A8%8B/img.png"></p>
+<p>Python On Spark Driver端由JVM执行，Executor端由JVM命令转发，底层由Python解释器进行工作。  </p>
+<h2 id="分布式代码执行的流程"><a href="#分布式代码执行的流程" class="headerlink" title="分布式代码执行的流程"></a>分布式代码执行的流程</h2><p>代码在集群上运行，是被分布式执行的。<br>在Spark中，非任务处理部分由Driver执行（非RDD代码）。<br>任务处理部分由Executor执行（RDD代码）<br>Executor的数量可以很多，所以任务的计算是分布式运行的。  </p>
+<h1 id="spark使用遇到的问题问题"><a href="#spark使用遇到的问题问题" class="headerlink" title="spark使用遇到的问题问题"></a>spark使用遇到的问题问题</h1><h2 id="java账号"><a href="#java账号" class="headerlink" title="java账号"></a>java账号</h2><p><a href="mailto:&#111;&#x72;&#97;&#99;&#x6c;&#101;&#x5f;&#116;&#101;&#115;&#116;&#64;&#102;&#101;&#120;&#x62;&#x6f;&#120;&#x2e;&#x6f;&#x72;&#x67;">&#111;&#x72;&#97;&#99;&#x6c;&#101;&#x5f;&#116;&#101;&#115;&#116;&#64;&#102;&#101;&#120;&#x62;&#x6f;&#120;&#x2e;&#x6f;&#x72;&#x67;</a> Java001@@@</p>
+<h2 id="py4j-protocol-Py4JError-org-apache-spark-api-python-PythonUtils-isEncryptionEnabled-does-not-exist-in-the-JVM"><a href="#py4j-protocol-Py4JError-org-apache-spark-api-python-PythonUtils-isEncryptionEnabled-does-not-exist-in-the-JVM" class="headerlink" title="py4j.protocol.Py4JError: org.apache.spark.api.python.PythonUtils.isEncryptionEnabled does not exist in the JVM"></a>py4j.protocol.Py4JError: org.apache.spark.api.python.PythonUtils.isEncryptionEnabled does not exist in the JVM</h2><p>pyspark版本高了当前是3.0.3 降级为2.3.2 </p>
+<h2 id="java-net-BindException-Can’t-assign-requested-address-Service-‘sparkDriver’-failed-after-16-retries"><a href="#java-net-BindException-Can’t-assign-requested-address-Service-‘sparkDriver’-failed-after-16-retries" class="headerlink" title="java.net.BindException: Can’t assign requested address: Service ‘sparkDriver’ failed after 16 retries"></a>java.net.BindException: Can’t assign requested address: Service ‘sparkDriver’ failed after 16 retries</h2><p>切换vpn后报错。 vim &#x2F;opt&#x2F;spark&#x2F;conf&#x2F;spark-env.sh</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">export SPARK_LOCAL_IP=&quot;127.0.0.1&quot;</span><br></pre></td></tr></table></figure>
+
+<h2 id="py4j-Py4JException-Constructor-org-apache-spark-api-python-PythonRDD-class-org-apache-spark-rdd-MapPartitionsRDD-class-org-apache-spark-api-python-PythonFunction-class-java-lang-Boolean-does-not-exist"><a href="#py4j-Py4JException-Constructor-org-apache-spark-api-python-PythonRDD-class-org-apache-spark-rdd-MapPartitionsRDD-class-org-apache-spark-api-python-PythonFunction-class-java-lang-Boolean-does-not-exist" class="headerlink" title="py4j.Py4JException: Constructor org.apache.spark.api.python.PythonRDD([class org.apache.spark.rdd.MapPartitionsRDD, class org.apache.spark.api.python.PythonFunction, class java.lang.Boolean]) does not exist"></a>py4j.Py4JException: Constructor org.apache.spark.api.python.PythonRDD([class org.apache.spark.rdd.MapPartitionsRDD, class org.apache.spark.api.python.PythonFunction, class java.lang.Boolean]) does not exist</h2><p>pyspark版本与spark版本不匹配。  spark版本为2.4.4， pyspark版本为2.3.2 ，解决方案安装与spark匹配到pypark模块。 </p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pip install pyspark==2.4.4</span><br></pre></td></tr></table></figure>
+
+
+
+<h1 id="SparkSQL-基础入门"><a href="#SparkSQL-基础入门" class="headerlink" title="SparkSQL 基础入门"></a>SparkSQL 基础入门</h1><p>SparkSQL 非常成熟的海量结构化数据处理框架。应用场景包括：</p>
+<ul>
+<li>离线开发</li>
+<li>数仓搭建</li>
+<li>科学计算</li>
+<li>数据分析</li>
+</ul>
+<p>什么是spark sql?<br>sparkSQL 是Spark的一个模块，用于处理海量的结构化数据。  </p>
+<p>Spark SQL 特点  </p>
+<ol>
+<li>融合性 SQL可以无缝集成在代码中，随时用SQL处理数据</li>
+<li>统一数据访问，一套标准API可以读写不同数据源。</li>
+<li>Hive兼容，可以使用SparkSQL 直接计算并生成Hive数据表</li>
+<li>标准化链接，支持标准JDBC&#x2F;ODBC连接，方便和各种数据库进行交互</li>
+</ol>
+<h1 id="Spark-SQL-概述"><a href="#Spark-SQL-概述" class="headerlink" title="Spark SQL 概述"></a>Spark SQL 概述</h1><h2 id="Spark-SQL-和Hive的异同。"><a href="#Spark-SQL-和Hive的异同。" class="headerlink" title="Spark SQL 和Hive的异同。"></a>Spark SQL 和Hive的异同。</h2><p><img src="/2024/06/22/python/spark%E8%8F%9C%E9%B8%9F%E6%95%99%E7%A8%8B/img_1.png"></p>
+<h2 id="SparkSQL-数据抽象"><a href="#SparkSQL-数据抽象" class="headerlink" title="SparkSQL 数据抽象"></a>SparkSQL 数据抽象</h2><p><img src="/2024/06/22/python/spark%E8%8F%9C%E9%B8%9F%E6%95%99%E7%A8%8B/img_2.png"><br><img src="/2024/06/22/python/spark%E8%8F%9C%E9%B8%9F%E6%95%99%E7%A8%8B/img_3.png"></p>
+<h2 id="SparkSession对象"><a href="#SparkSession对象" class="headerlink" title="SparkSession对象"></a>SparkSession对象</h2><p>在RDD阶段，程序的执行入口对象是：SparkContext<br>在Spark2.0后，推出了SparkSession对象，作为Spark编程的统一入口对象。<br>Spark对象可以：  </p>
+<ol>
+<li>用于SparkSQL编程作为入口对象</li>
+<li>用于SparkCore编程，可以通过SparkSession对象中获取到SparkContext<br><img src="/2024/06/22/python/spark%E8%8F%9C%E9%B8%9F%E6%95%99%E7%A8%8B/img_4.png"></li>
+</ol>
+<h1 id="DataFrame入门"><a href="#DataFrame入门" class="headerlink" title="DataFrame入门"></a>DataFrame入门</h1><h2 id="DataFrame组成"><a href="#DataFrame组成" class="headerlink" title="DataFrame组成"></a>DataFrame组成</h2><p>DataFrame是一个二维表结构<br>结构层面：   </p>
+<ol>
+<li>StructType对象描述整个DataFrame的表结构</li>
+<li>StructField对象描述一个列的信息</li>
+</ol>
+<p>数据层面：   </p>
+<ol>
+<li>Row对象记录一行数据</li>
+<li>Column对象记录一列数据并包含列信息</li>
+</ol>
+<h2 id="DataFrame-构建"><a href="#DataFrame-构建" class="headerlink" title="DataFrame 构建"></a>DataFrame 构建</h2><h3 id="将RDD对象转换为DataFrame"><a href="#将RDD对象转换为DataFrame" class="headerlink" title="将RDD对象转换为DataFrame"></a>将RDD对象转换为DataFrame</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"># coding=utf-8</span><br><span class="line">from pyspark.sql import SparkSession</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">if __name__ == &quot;__main__&quot;:</span><br><span class="line">    spark = SparkSession.builder.appName(&quot;create_dataframe&quot;).getOrCreate()</span><br><span class="line"></span><br><span class="line">    #基于RDD转换为DataFrame</span><br><span class="line">    sc=spark.sparkContext</span><br><span class="line">    rdd=sc.textFile(&quot;../data/people.csv&quot;).map(lambda line: line.split(&quot;,&quot;)).map(lambda x: (x[0], x[1]))</span><br><span class="line"></span><br><span class="line">    #创建DataFrame</span><br><span class="line">    df=spark.createDataFrame(rdd,schema=[&quot;name&quot;,&quot;age&quot;])</span><br><span class="line">    df.printSchema()</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    df.show()</span><br><span class="line"></span><br><span class="line">    #注册为临时表可供sql查询</span><br><span class="line">    df.createOrReplaceTempView(&quot;people&quot;)</span><br><span class="line"></span><br><span class="line">    spark.sql(&quot;select * from people where age=&#x27;20&#x27;&quot;).show()</span><br></pre></td></tr></table></figure>
+
+<h3 id="通过定义StructType对象定义DataFrame的“表定义”转换"><a href="#通过定义StructType对象定义DataFrame的“表定义”转换" class="headerlink" title="通过定义StructType对象定义DataFrame的“表定义”转换"></a>通过定义StructType对象定义DataFrame的“表定义”转换</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"># coding=utf-8</span><br><span class="line">from pyspark.sql import SparkSession</span><br><span class="line">from pyspark.sql.types import StructType, StructField, StringType, IntegerType</span><br><span class="line"></span><br><span class="line">if __name__ == &quot;__main__&quot;:</span><br><span class="line">    spark = SparkSession.builder.appName(&quot;create_dataframe&quot;).getOrCreate()</span><br><span class="line"></span><br><span class="line">    #基于RDD转换为DataFrame</span><br><span class="line">    sc=spark.sparkContext</span><br><span class="line">    rdd=sc.textFile(&quot;../data/people.csv&quot;).map(lambda line: line.split(&quot;,&quot;)).map(lambda x: (x[0], int(x[1])))</span><br><span class="line"></span><br><span class="line">    #创建DataFrame</span><br><span class="line">    scheme=StructType().add(&#x27;name&#x27;, StringType(),nullable=True).add(&#x27;age&#x27;, IntegerType(),nullable=False)</span><br><span class="line">    df=spark.createDataFrame(rdd, scheme)</span><br><span class="line"></span><br><span class="line">    df.printSchema()</span><br><span class="line">    df.show()</span><br><span class="line"></span><br><span class="line">    # 注册为临时表可供sql查询</span><br><span class="line">    df.createOrReplaceTempView(&quot;people&quot;)</span><br><span class="line"></span><br><span class="line">    spark.sql(&quot;select * from people where age=&#x27;20&#x27;&quot;).show()</span><br></pre></td></tr></table></figure>
+
+<h3 id="通过RDD对象的toDF方法转换"><a href="#通过RDD对象的toDF方法转换" class="headerlink" title="通过RDD对象的toDF方法转换"></a>通过RDD对象的toDF方法转换</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"># coding=utf-8</span><br><span class="line">from pyspark.sql import SparkSession</span><br><span class="line"></span><br><span class="line">if __name__ == &quot;__main__&quot;:</span><br><span class="line">    spark = SparkSession.builder.appName(&quot;create_dataframe&quot;).getOrCreate()</span><br><span class="line"></span><br><span class="line">    #基于RDD转换为DataFrame</span><br><span class="line">    sc=spark.sparkContext</span><br><span class="line">    rdd=sc.textFile(&quot;../data/people.csv&quot;).map(lambda line: line.split(&quot;,&quot;)).map(lambda x: (x[0], int(x[1])))</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    df=rdd.toDF([&quot;name&quot;,&quot;age&quot;])</span><br><span class="line"></span><br><span class="line">    df.printSchema()</span><br><span class="line">    df.show()</span><br><span class="line"></span><br><span class="line">    # 注册为临时表可供sql查询</span><br><span class="line">    df.createOrReplaceTempView(&quot;people&quot;)</span><br><span class="line"></span><br><span class="line">    spark.sql(&quot;select * from people where age=&#x27;20&#x27;&quot;).show()</span><br></pre></td></tr></table></figure>
+
+
+<h2 id="SQL风格API"><a href="#SQL风格API" class="headerlink" title="SQL风格API"></a>SQL风格API</h2><h3 id="注册DataFrame成为表"><a href="#注册DataFrame成为表" class="headerlink" title="注册DataFrame成为表"></a>注册DataFrame成为表</h3><ol>
+<li>df.createTempView(“score”)  注册一个临时表</li>
+<li>df.createOrReplaceTempView(“score”) 注册一个临时表，如果存在进行替换</li>
+<li>df.createGlobalTempView(“score”) 注册一个全局表</li>
+</ol>
+<p>全局表：跨SparkSession对象使用，在一个程序内的多个SparkSession均可调用，查询需要带上前缀 global_temp.<br>临时表：只能当钱的SparkSession用   </p>
+<h1 id="电影评分数据分析案例"><a href="#电影评分数据分析案例" class="headerlink" title="电影评分数据分析案例"></a>电影评分数据分析案例</h1><ol>
+<li>agg GroupedData对象的API，在里面可以写多个集合</li>
+<li>alias 它是Column对象的API，可以针对一个列进行改名</li>
+<li>withColumnRenamed DataFrameAPI,可以对DF的列进行改名，一次改一个列，支持链式调用</li>
+<li>orderBy DataFrame的API，排序</li>
+<li>first DataFrame的API，取出DF的第一行数据，返回值结果是Row对象</li>
+<li>Row对象，一个数组，可以通过row[‘列名’] 取出当前行中某一列的具体数值</li>
+</ol>
+<h1 id="SparkSQL-Shuffle-分区数目"><a href="#SparkSQL-Shuffle-分区数目" class="headerlink" title="SparkSQL Shuffle 分区数目"></a>SparkSQL Shuffle 分区数目</h1><p>spark.sql.shuffle.partitions 参数指的是，在sql计算中，shuffle算子阶段默认的分区数是200<br>对于集群模式来说，200一般是合适的 ，一般和整个集群的cpu核心数匹配。<br>如果在local模式下运行，200个很多，会带来额外的系统调度消耗，所以在local模式下建议修改比较低，比如2&#x2F;4&#x2F;10等。<br>这个参数和Spark RDD 中设置的并行度参数是相互独立的，互不影响。  </p>
+<h1 id="SparkSQL-数据清洗API"><a href="#SparkSQL-数据清洗API" class="headerlink" title="SparkSQL 数据清洗API"></a>SparkSQL 数据清洗API</h1><ul>
+<li>dropDuplicates 数据去重</li>
+<li>dropna 缺失值丢弃</li>
+<li>fillna 缺失值补充</li>
+</ul>
+<h1 id="DataFrame-数据写出"><a href="#DataFrame-数据写出" class="headerlink" title="DataFrame 数据写出"></a>DataFrame 数据写出</h1><p>SparkSQL 统一API写出DataFrame数据。<br>df.write.mode().format().option(K,V).save(PATH)    </p>
+<ul>
+<li>mode 传入模式可选，append&#x2F;overwrite&#x2F;ignore&#x2F;error(重复就报异常,默认)</li>
+<li>format 传入数据格式，text&#x2F;csv&#x2F;json&#x2F;parquet&#x2F;orc&#x2F;avro&#x2F;jdbc, text只支持单列数据导出</li>
+<li>option 设置属性</li>
+<li>save 写出的路径，支持本地文件和HDFS</li>
+</ul>
+<p><img src="/2024/06/22/python/spark%E8%8F%9C%E9%B8%9F%E6%95%99%E7%A8%8B/img_5.png"></p>
+<h1 id="DataFrame通过JDBC读写数据库"><a href="#DataFrame通过JDBC读写数据库" class="headerlink" title="DataFrame通过JDBC读写数据库"></a>DataFrame通过JDBC读写数据库</h1><p>读取JDBC是需要有驱动的，如果读取的是jdbc:mysql::&#x2F;&#x2F; 这个协议，也就是读取mysql数据，就需要有mysql的驱动jar包给spark程序用。<br>如果不给jar包，会提示：No suitable Driver   </p>
+<p>如何让spark找到驱动： </p>
+<ol>
+<li>jar包的位置需要放到pypark包的jar目录下，才能给spark找到 路径： 虚拟环境&#x2F;lib&#x2F;python2.7&#x2F;site-packages&#x2F;pyspark&#x2F;jars   </li>
+<li>spark 配置文件 cat &#x2F;opt&#x2F;spark&#x2F;conf&#x2F;spark-defaults.conf   <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">spark.jars /pitrix/data/warehouse/package/postgresql-42.2.5.jar</span><br><span class="line">spark.driver.extraClassPath /pitrix/data/warehouse/package/postgresql-42.2.5.jar</span><br></pre></td></tr></table></figure></li>
+</ol>
+<h1 id="SparkSQL定义UDF函数"><a href="#SparkSQL定义UDF函数" class="headerlink" title="SparkSQL定义UDF函数"></a>SparkSQL定义UDF函数</h1><ol>
+<li>UDF(User-Defined-Function) 函数，一对一的关系，输入一个值经过函数后输出一个值</li>
+<li>UDAF(User-Defined-Aggregation-Function)聚合函数，多对一关系，输入多个值，输出一个值，通用与groupBy联合使用</li>
+<li>UDTF(User-Defined Table-Generating Functions)函数，一对多关系，输入一个值输出多个值（一行变多行），有点像flatMap<br><img src="/2024/06/22/python/spark%E8%8F%9C%E9%B8%9F%E6%95%99%E7%A8%8B/img_6.png"></li>
+</ol>
+<p>定义方式有两种： </p>
+<ol>
+<li>sparksession.udf.register() 注册的UDF可以用于DSL和SQL。  </li>
+<li>pyspark.sql.functions.udf 仅能用于DSL风格。</li>
+</ol>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># -*- coding: utf-8 -*-</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">from</span> pyspark.sql <span class="keyword">import</span> SparkSession</span><br><span class="line"><span class="keyword">from</span> pyspark.sql <span class="keyword">import</span> functions <span class="keyword">as</span> F</span><br><span class="line"><span class="keyword">from</span> pyspark.sql.types <span class="keyword">import</span> StructType, StringType, IntegerType</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&quot;__main__&quot;</span>:</span><br><span class="line">    spark = SparkSession.builder.appName(<span class="string">&quot;test&quot;</span>).config(<span class="string">&quot;spark.sql.shuffle.partitions&quot;</span>,<span class="number">2</span>).getOrCreate()</span><br><span class="line">    sc = spark.sparkContext</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="comment">#构建一个RDD</span></span><br><span class="line">    rdd=sc.parallelize([<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>,<span class="number">4</span>,<span class="number">5</span>]).<span class="built_in">map</span>(<span class="keyword">lambda</span> x: [x])</span><br><span class="line">    df=rdd.toDF([<span class="string">&quot;num&quot;</span>])</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">num_ride_10</span>(<span class="params">num</span>):</span><br><span class="line">        <span class="keyword">return</span> num * <span class="number">10</span></span><br><span class="line"></span><br><span class="line">    <span class="comment"># 通过方式1注册</span></span><br><span class="line">    <span class="comment"># 参数1:注册UDF的名称，这个udf名称，仅可用于SQL风格</span></span><br><span class="line">    <span class="comment"># 参数2:UDF处理逻辑，是一个单独的方法</span></span><br><span class="line">    <span class="comment"># 参数3:声明UDF的返回值，UDF注册的时候，必须声明返回值，并且UDF函数的返回值需要和声明的返回值类型一致</span></span><br><span class="line">    <span class="comment"># 返回值对象：这是一个UDF对象，仅可用于DSL语法</span></span><br><span class="line">    udf2=spark.udf.register(<span class="string">&quot;num_ride_10&quot;</span>, num_ride_10,IntegerType())</span><br><span class="line"></span><br><span class="line">    <span class="comment"># SQL风格使用</span></span><br><span class="line">    <span class="comment"># selectExpr 以select表达式执行，表达式SQL风格的表达式</span></span><br><span class="line">    <span class="comment"># selectExpr 接受普通的字符串字段名，或者返回值是Column对象的计算</span></span><br><span class="line">    df.selectExpr(<span class="string">&quot;num_ride_10(num)&quot;</span>).show()</span><br><span class="line"></span><br><span class="line">    <span class="comment"># DSL风格</span></span><br><span class="line">    <span class="comment"># 返回值是UDF对象，如果作为方法使用，传入的参数一定是Column对象</span></span><br><span class="line">    df.select(udf2(df[<span class="string">&#x27;num&#x27;</span>])).show()</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="comment"># 方式二注册</span></span><br><span class="line">    udf3=F.udf(num_ride_10,IntegerType())</span><br><span class="line">    df.select(udf3(df[<span class="string">&#x27;num&#x27;</span>])).show()</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+<h1 id="SparkSQL使用窗口函数"><a href="#SparkSQL使用窗口函数" class="headerlink" title="SparkSQL使用窗口函数"></a>SparkSQL使用窗口函数</h1><p>开窗函数的引入是为了显示聚集前的数据，有显示聚集后的数据，即在每一行的最后一列添加聚合的结果。</p>
+<ul>
+<li>AVG</li>
+<li>RANK</li>
+<li>DENSE_RANK</li>
+<li>ROW_NUMBER</li>
+<li>NTILE</li>
+</ul>
+<h1 id="Catalyst优化器"><a href="#Catalyst优化器" class="headerlink" title="Catalyst优化器"></a>Catalyst优化器</h1><p>RDD执行流程：代码-&gt; DAG调度器逻辑任务-&gt; Task调度器任务分配和管理监控 -&gt; Worker干活。</p>
+<ul>
+<li>断言下推，将Filter这种可以减少数据集的操作下推，放在Scan的位置，这样可以减少操作的数据量</li>
+<li>列值裁剪，在断言下推后执行裁剪，指读取需要的列，减少数据量，对于列式存储例如parquet 非常合适</li>
+</ul>
+<h1 id="SparkSQL执行流程"><a href="#SparkSQL执行流程" class="headerlink" title="SparkSQL执行流程"></a>SparkSQL执行流程</h1><p><img src="/2024/06/22/python/spark%E8%8F%9C%E9%B8%9F%E6%95%99%E7%A8%8B/img_7.png"></p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2024/06/13/python/python%E4%BD%BF%E7%94%A8/" rel="prev" title="">
+      <i class="fa fa-chevron-left"></i> 
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2024/07/25/python/py%E8%B8%A9%E5%9D%91%E6%97%A5%E8%AE%B0/" rel="next" title="">
+       <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+  </div>
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let activeClass = CONFIG.comments.activeClass;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%9F%BA%E7%A1%80"><span class="nav-number">1.</span> <span class="nav-text">基础</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Spark%E8%A7%A3%E5%86%B3%E7%9A%84%E9%97%AE%E9%A2%98"><span class="nav-number">1.1.</span> <span class="nav-text">Spark解决的问题</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Spark%E6%A8%A1%E5%9D%97"><span class="nav-number">1.2.</span> <span class="nav-text">Spark模块</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Spark-%E7%89%B9%E7%82%B9"><span class="nav-number">1.3.</span> <span class="nav-text">Spark 特点</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#spark%E8%BF%90%E8%A1%8C%E6%A8%A1%E5%BC%8F"><span class="nav-number">1.4.</span> <span class="nav-text">spark运行模式</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%9C%AC%E5%9C%B0%E6%A8%A1%E5%BC%8F"><span class="nav-number">1.4.1.</span> <span class="nav-text">本地模式</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%9B%86%E7%BE%A4%E6%A8%A1%E5%BC%8F"><span class="nav-number">1.4.2.</span> <span class="nav-text">集群模式</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#K8s%E6%A8%A1%E5%BC%8F"><span class="nav-number">1.4.3.</span> <span class="nav-text">K8s模式</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#spark%E6%9E%B6%E6%9E%84"><span class="nav-number">1.5.</span> <span class="nav-text">spark架构</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Python-on-Spark-%E6%89%A7%E8%A1%8C%E5%8E%9F%E7%90%86"><span class="nav-number">1.6.</span> <span class="nav-text">Python on Spark 执行原理</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%88%86%E5%B8%83%E5%BC%8F%E4%BB%A3%E7%A0%81%E6%89%A7%E8%A1%8C%E7%9A%84%E6%B5%81%E7%A8%8B"><span class="nav-number">1.7.</span> <span class="nav-text">分布式代码执行的流程</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#spark%E4%BD%BF%E7%94%A8%E9%81%87%E5%88%B0%E7%9A%84%E9%97%AE%E9%A2%98%E9%97%AE%E9%A2%98"><span class="nav-number">2.</span> <span class="nav-text">spark使用遇到的问题问题</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#java%E8%B4%A6%E5%8F%B7"><span class="nav-number">2.1.</span> <span class="nav-text">java账号</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#py4j-protocol-Py4JError-org-apache-spark-api-python-PythonUtils-isEncryptionEnabled-does-not-exist-in-the-JVM"><span class="nav-number">2.2.</span> <span class="nav-text">py4j.protocol.Py4JError: org.apache.spark.api.python.PythonUtils.isEncryptionEnabled does not exist in the JVM</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#java-net-BindException-Can%E2%80%99t-assign-requested-address-Service-%E2%80%98sparkDriver%E2%80%99-failed-after-16-retries"><span class="nav-number">2.3.</span> <span class="nav-text">java.net.BindException: Can’t assign requested address: Service ‘sparkDriver’ failed after 16 retries</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#py4j-Py4JException-Constructor-org-apache-spark-api-python-PythonRDD-class-org-apache-spark-rdd-MapPartitionsRDD-class-org-apache-spark-api-python-PythonFunction-class-java-lang-Boolean-does-not-exist"><span class="nav-number">2.4.</span> <span class="nav-text">py4j.Py4JException: Constructor org.apache.spark.api.python.PythonRDD([class org.apache.spark.rdd.MapPartitionsRDD, class org.apache.spark.api.python.PythonFunction, class java.lang.Boolean]) does not exist</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#SparkSQL-%E5%9F%BA%E7%A1%80%E5%85%A5%E9%97%A8"><span class="nav-number">3.</span> <span class="nav-text">SparkSQL 基础入门</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Spark-SQL-%E6%A6%82%E8%BF%B0"><span class="nav-number">4.</span> <span class="nav-text">Spark SQL 概述</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Spark-SQL-%E5%92%8CHive%E7%9A%84%E5%BC%82%E5%90%8C%E3%80%82"><span class="nav-number">4.1.</span> <span class="nav-text">Spark SQL 和Hive的异同。</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#SparkSQL-%E6%95%B0%E6%8D%AE%E6%8A%BD%E8%B1%A1"><span class="nav-number">4.2.</span> <span class="nav-text">SparkSQL 数据抽象</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#SparkSession%E5%AF%B9%E8%B1%A1"><span class="nav-number">4.3.</span> <span class="nav-text">SparkSession对象</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#DataFrame%E5%85%A5%E9%97%A8"><span class="nav-number">5.</span> <span class="nav-text">DataFrame入门</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#DataFrame%E7%BB%84%E6%88%90"><span class="nav-number">5.1.</span> <span class="nav-text">DataFrame组成</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#DataFrame-%E6%9E%84%E5%BB%BA"><span class="nav-number">5.2.</span> <span class="nav-text">DataFrame 构建</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%B0%86RDD%E5%AF%B9%E8%B1%A1%E8%BD%AC%E6%8D%A2%E4%B8%BADataFrame"><span class="nav-number">5.2.1.</span> <span class="nav-text">将RDD对象转换为DataFrame</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%80%9A%E8%BF%87%E5%AE%9A%E4%B9%89StructType%E5%AF%B9%E8%B1%A1%E5%AE%9A%E4%B9%89DataFrame%E7%9A%84%E2%80%9C%E8%A1%A8%E5%AE%9A%E4%B9%89%E2%80%9D%E8%BD%AC%E6%8D%A2"><span class="nav-number">5.2.2.</span> <span class="nav-text">通过定义StructType对象定义DataFrame的“表定义”转换</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%80%9A%E8%BF%87RDD%E5%AF%B9%E8%B1%A1%E7%9A%84toDF%E6%96%B9%E6%B3%95%E8%BD%AC%E6%8D%A2"><span class="nav-number">5.2.3.</span> <span class="nav-text">通过RDD对象的toDF方法转换</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#SQL%E9%A3%8E%E6%A0%BCAPI"><span class="nav-number">5.3.</span> <span class="nav-text">SQL风格API</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%B3%A8%E5%86%8CDataFrame%E6%88%90%E4%B8%BA%E8%A1%A8"><span class="nav-number">5.3.1.</span> <span class="nav-text">注册DataFrame成为表</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%94%B5%E5%BD%B1%E8%AF%84%E5%88%86%E6%95%B0%E6%8D%AE%E5%88%86%E6%9E%90%E6%A1%88%E4%BE%8B"><span class="nav-number">6.</span> <span class="nav-text">电影评分数据分析案例</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#SparkSQL-Shuffle-%E5%88%86%E5%8C%BA%E6%95%B0%E7%9B%AE"><span class="nav-number">7.</span> <span class="nav-text">SparkSQL Shuffle 分区数目</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#SparkSQL-%E6%95%B0%E6%8D%AE%E6%B8%85%E6%B4%97API"><span class="nav-number">8.</span> <span class="nav-text">SparkSQL 数据清洗API</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#DataFrame-%E6%95%B0%E6%8D%AE%E5%86%99%E5%87%BA"><span class="nav-number">9.</span> <span class="nav-text">DataFrame 数据写出</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#DataFrame%E9%80%9A%E8%BF%87JDBC%E8%AF%BB%E5%86%99%E6%95%B0%E6%8D%AE%E5%BA%93"><span class="nav-number">10.</span> <span class="nav-text">DataFrame通过JDBC读写数据库</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#SparkSQL%E5%AE%9A%E4%B9%89UDF%E5%87%BD%E6%95%B0"><span class="nav-number">11.</span> <span class="nav-text">SparkSQL定义UDF函数</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#SparkSQL%E4%BD%BF%E7%94%A8%E7%AA%97%E5%8F%A3%E5%87%BD%E6%95%B0"><span class="nav-number">12.</span> <span class="nav-text">SparkSQL使用窗口函数</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Catalyst%E4%BC%98%E5%8C%96%E5%99%A8"><span class="nav-number">13.</span> <span class="nav-text">Catalyst优化器</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#SparkSQL%E6%89%A7%E8%A1%8C%E6%B5%81%E7%A8%8B"><span class="nav-number">14.</span> <span class="nav-text">SparkSQL执行流程</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Chen Yu"
+      src="/images/head.jpeg">
+  <p class="site-author-name" itemprop="name">Chen Yu</p>
+  <div class="site-description" itemprop="description">自律给我自由</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">123</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">20</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">84</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2025</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Chen Yu</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v6.3.0
+  </div>
+  <span class="post-meta-divider">|</span>
+  <div class="theme-info">主题 – <a href="https://theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a> v7.7.0
+  </div>
+
+<div>
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<span id="busuanzi_container_site_pv" style='display:none'>
+    本站总访问量 <span id="busuanzi_value_site_pv"></span> 次
+    <span class="post-meta-divider">|</span>
+</span>
+<span id="busuanzi_container_site_uv" style='display:none'>
+    有<span id="busuanzi_value_site_uv"></span>人看过我的博客啦
+</span>
+</div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>

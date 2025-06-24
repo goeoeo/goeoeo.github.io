@@ -54,13 +54,13 @@
 <meta property="og:site_name" content="goeoeo">
 <meta property="og:description" content="Gitlab RunnerGitLab-CIGitLab-CI就是一套配合GitLab使用的持续集成系统（当然，还有其它的持续集成系统，同样可以配合GitLab使用，比如Jenkins）。而且GitLab8.0以后的版本是默认集成了GitLab-CI并且默认启用的。.gitlab-ci.yml的脚本解析就由它来负责。">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="https://phpdi.github.io/2023/01/11/git/gitlab_runner/yu/code/notes/source/_posts/git/gitlab_runner/image-20211119145209526.png">
+<meta property="og:image" content="https://phpdi.github.io/2023/01/11/git/gitlab_runner/image-20211119145209526.png">
 <meta property="article:published_time" content="2023-01-11T14:59:23.567Z">
-<meta property="article:modified_time" content="2023-09-14T02:36:19.817Z">
+<meta property="article:modified_time" content="2024-10-31T06:13:21.564Z">
 <meta property="article:author" content="Chen Yu">
 <meta property="article:tag" content="gitlab_runner">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://phpdi.github.io/2023/01/11/git/gitlab_runner/yu/code/notes/source/_posts/git/gitlab_runner/image-20211119145209526.png">
+<meta name="twitter:image" content="https://phpdi.github.io/2023/01/11/git/gitlab_runner/image-20211119145209526.png">
 
 <link rel="canonical" href="https://phpdi.github.io/2023/01/11/git/gitlab_runner/">
 
@@ -245,7 +245,7 @@
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2023-09-14 10:36:19" itemprop="dateModified" datetime="2023-09-14T10:36:19+08:00">2023-09-14</time>
+                <time title="修改时间：2024-10-31 14:13:21" itemprop="dateModified" datetime="2024-10-31T14:13:21+08:00">2024-10-31</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -291,7 +291,7 @@
 <p>ubuntu 安装</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">curl -L &quot;https://packages.gitlab.com/install/repositories/runner/gitlab-runner/script.deb.sh&quot; | sudo bash</span><br><span class="line">sudo apt-get install gitlab-runner</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">启动</span></span><br><span class="line">sudo gitlab-runner run</span><br></pre></td></tr></table></figure>
 
-<h3 id="在gitlab代码库中注册gitlab-runner"><a href="#在gitlab代码库中注册gitlab-runner" class="headerlink" title="在gitlab代码库中注册gitlab-runner"></a>在gitlab代码库中注册gitlab-runner</h3><p>进入仓库-&gt;settings-&gt;CI&#x2F;CD Pipelines  <img src="/2023/01/11/git/gitlab_runner/yu/code/notes/source/_posts/git/gitlab_runner/image-20211119145209526.png" alt="image-20211119145209526"></p>
+<h3 id="在gitlab代码库中注册gitlab-runner"><a href="#在gitlab代码库中注册gitlab-runner" class="headerlink" title="在gitlab代码库中注册gitlab-runner"></a>在gitlab代码库中注册gitlab-runner</h3><p>进入仓库-&gt;settings-&gt;CI&#x2F;CD Pipelines  <img src="/2023/01/11/git/gitlab_runner/image-20211119145209526.png" alt="image-20211119145209526"></p>
 <ol start="2">
 <li><p>执行注册</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">root@i-2ns2mtbw:~# gitlab-runner register</span><br><span class="line">Runtime platform                                    arch=amd64 os=linux pid=1052553 revision=e95f89a0 version=13.4.1</span><br><span class="line">Running in system-mode.                            </span><br><span class="line">                                                   </span><br><span class="line">Please enter the gitlab-ci coordinator URL (e.g. https://gitlab.com/):</span><br><span class="line">https://git.internal.com/</span><br><span class="line">Please enter the gitlab-ci token for this runner:</span><br><span class="line">u_-sf4e44oq9M5_QTn2x</span><br><span class="line">Please enter the gitlab-ci description for this runner:</span><br><span class="line">[i-2ns2mtbw]: benchmark</span><br><span class="line">Please enter the gitlab-ci tags for this runner (comma separated):</span><br><span class="line">benchmark</span><br><span class="line">Registering runner... succeeded                     runner=u_-sf4e4</span><br><span class="line">Please enter the executor: docker, docker-ssh, parallels, docker-ssh+machine, docker+machine, kubernetes, custom, shell, ssh, virtualbox:</span><br><span class="line">shell</span><br><span class="line">Runner registered successfully. Feel free to start it, but if it&#x27;s running already the config should be automatically reloaded! </span><br><span class="line"></span><br></pre></td></tr></table></figure>
@@ -408,20 +408,20 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">96</span>
+          <span class="site-state-item-count">123</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
             <a href="/categories/">
           
-        <span class="site-state-item-count">19</span>
+        <span class="site-state-item-count">20</span>
         <span class="site-state-item-name">分类</span></a>
       </div>
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">73</span>
+        <span class="site-state-item-count">84</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
@@ -446,7 +446,7 @@
 <div class="copyright">
   
   &copy; 
-  <span itemprop="copyrightYear">2023</span>
+  <span itemprop="copyrightYear">2025</span>
   <span class="with-love">
     <i class="fa fa-user"></i>
   </span>

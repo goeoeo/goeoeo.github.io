@@ -210,7 +210,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://phpdi.github.io/2023/01/11/db/MySQL%E9%97%AE%E9%A2%98%E9%9B%86/">
+    <link itemprop="mainEntityOfPage" href="https://phpdi.github.io/2023/01/11/git/gitlab_runner/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/head.jpeg">
@@ -224,7 +224,7 @@
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
           
-            <a href="/2023/01/11/db/MySQL%E9%97%AE%E9%A2%98%E9%9B%86/" class="post-title-link" itemprop="url">MySQL问题集</a>
+            <a href="/2023/01/11/git/gitlab_runner/" class="post-title-link" itemprop="url">gitlab_runner</a>
         </h2>
 
         <div class="post-meta">
@@ -241,7 +241,7 @@
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2023-09-14 10:28:16" itemprop="dateModified" datetime="2023-09-14T10:28:16+08:00">2023-09-14</time>
+                <time title="修改时间：2024-10-31 14:13:21" itemprop="dateModified" datetime="2024-10-31T14:13:21+08:00">2024-10-31</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -249,8 +249,8 @@
               </span>
               <span class="post-meta-item-text">分类于</span>
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/mysql/" itemprop="url" rel="index">
-                    <span itemprop="name">mysql</span>
+                  <a href="/categories/git/" itemprop="url" rel="index">
+                    <span itemprop="name">git</span>
                   </a>
                 </span>
             </span>
@@ -266,12 +266,10 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <h1 id="解决第一次连接MySQL连不上和连接速度慢"><a href="#解决第一次连接MySQL连不上和连接速度慢" class="headerlink" title="解决第一次连接MySQL连不上和连接速度慢"></a>解决第一次连接MySQL连不上和连接速度慢</h1><p>所谓反向解析是这样的：<br>mysql接收到连接请求后，获得的是客户 端的ip，为了更好的匹配mysql.user里的权限记录（某些是用hostname定义的）。<br>如果mysql服务器设置了dns服务器，并且客户端ip在dns上并没有相应的hostname，那么这个过程很慢，导致连接等待。</p>
-<p>添加skip-name-resolve以后就跳过着一个过程了</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[mysqld]</span><br><span class="line">skip-name-resolve</span><br></pre></td></tr></table></figure>
+          <h1 id="Gitlab-Runner"><a href="#Gitlab-Runner" class="headerlink" title="Gitlab Runner"></a>Gitlab Runner</h1><h3 id="GitLab-CI"><a href="#GitLab-CI" class="headerlink" title="GitLab-CI"></a>GitLab-CI</h3><p>GitLab-CI就是一套配合GitLab使用的持续集成系统（当然，还有其它的持续集成系统，同样可以配合GitLab使用，比如Jenkins）。而且GitLab8.0以后的版本是默认集成了GitLab-CI并且默认启用的。.gitlab-ci.yml的脚本解析就由它来负责。</p>
           <!--noindex-->
             <div class="post-button">
-              <a class="btn" href="/2023/01/11/db/MySQL%E9%97%AE%E9%A2%98%E9%9B%86/#more" rel="contents">
+              <a class="btn" href="/2023/01/11/git/gitlab_runner/#more" rel="contents">
                 阅读全文 &raquo;
               </a>
             </div>
@@ -295,7 +293,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://phpdi.github.io/2023/01/11/db/TIDB%E5%9F%BA%E7%A1%80/">
+    <link itemprop="mainEntityOfPage" href="https://phpdi.github.io/2023/01/11/git/gitlab%E9%85%8D%E7%BD%AE%E4%BB%A3%E7%A0%81%E8%A6%86%E7%9B%96%E7%8E%87/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/head.jpeg">
@@ -309,7 +307,7 @@
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
           
-            <a href="/2023/01/11/db/TIDB%E5%9F%BA%E7%A1%80/" class="post-title-link" itemprop="url">TIDB基础</a>
+            <a href="/2023/01/11/git/gitlab%E9%85%8D%E7%BD%AE%E4%BB%A3%E7%A0%81%E8%A6%86%E7%9B%96%E7%8E%87/" class="post-title-link" itemprop="url">gitlab配置代码覆盖率</a>
         </h2>
 
         <div class="post-meta">
@@ -326,7 +324,7 @@
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2023-09-14 10:29:23" itemprop="dateModified" datetime="2023-09-14T10:29:23+08:00">2023-09-14</time>
+                <time title="修改时间：2023-09-14 10:37:09" itemprop="dateModified" datetime="2023-09-14T10:37:09+08:00">2023-09-14</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -334,8 +332,8 @@
               </span>
               <span class="post-meta-item-text">分类于</span>
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/tidb/" itemprop="url" rel="index">
-                    <span itemprop="name">tidb</span>
+                  <a href="/categories/git/" itemprop="url" rel="index">
+                    <span itemprop="name">git</span>
                   </a>
                 </span>
             </span>
@@ -351,10 +349,10 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <h1 id="TiDB基础入门"><a href="#TiDB基础入门" class="headerlink" title="TiDB基础入门"></a>TiDB基础入门</h1><p>TiDB 是一个分布式 NewSQL <a target="_blank" rel="noopener" href="https://www.jianshu.com/p/ed55f20e736a">SQL 、 NoSQL 和 NewSQL 的优缺点比较 </a>数据库。它支持水平弹性扩展、ACID 事务、标准 SQL、MySQL 语法和 MySQL 协议，具有数据强一致的高可用特性，是一个不仅适合 OLTP 场景还适合 OLAP 场景的混合数据库。</p>
+          <p>gitlab 中配置golang单元测试已经代码覆盖率</p>
           <!--noindex-->
             <div class="post-button">
-              <a class="btn" href="/2023/01/11/db/TIDB%E5%9F%BA%E7%A1%80/#more" rel="contents">
+              <a class="btn" href="/2023/01/11/git/gitlab%E9%85%8D%E7%BD%AE%E4%BB%A3%E7%A0%81%E8%A6%86%E7%9B%96%E7%8E%87/#more" rel="contents">
                 阅读全文 &raquo;
               </a>
             </div>
@@ -378,7 +376,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://phpdi.github.io/2023/01/11/db/MySQL%E6%9F%A5%E7%9C%8B%E8%BF%9E%E6%8E%A5%E6%95%B0(%E8%BF%9E%E6%8E%A5%E6%80%BB%E6%95%B0%E3%80%81%E6%B4%BB%E8%B7%83%E6%95%B0%E3%80%81%E6%9C%80%E5%A4%A7%E5%B9%B6%E5%8F%91%E6%95%B0)/">
+    <link itemprop="mainEntityOfPage" href="https://phpdi.github.io/2023/01/11/git/%E5%9F%BA%E4%BA%8Egit_rebase%E7%9A%84%E5%BC%80%E5%8F%91%E6%B5%81%E7%A8%8B/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/head.jpeg">
@@ -392,7 +390,7 @@
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
           
-            <a href="/2023/01/11/db/MySQL%E6%9F%A5%E7%9C%8B%E8%BF%9E%E6%8E%A5%E6%95%B0(%E8%BF%9E%E6%8E%A5%E6%80%BB%E6%95%B0%E3%80%81%E6%B4%BB%E8%B7%83%E6%95%B0%E3%80%81%E6%9C%80%E5%A4%A7%E5%B9%B6%E5%8F%91%E6%95%B0)/" class="post-title-link" itemprop="url">MySQL查看连接数(连接总数、活跃数、最大并发数)</a>
+            <a href="/2023/01/11/git/%E5%9F%BA%E4%BA%8Egit_rebase%E7%9A%84%E5%BC%80%E5%8F%91%E6%B5%81%E7%A8%8B/" class="post-title-link" itemprop="url">基于git_rebase的开发流程</a>
         </h2>
 
         <div class="post-meta">
@@ -409,7 +407,7 @@
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2023-09-14 10:27:06" itemprop="dateModified" datetime="2023-09-14T10:27:06+08:00">2023-09-14</time>
+                <time title="修改时间：2023-09-14 10:37:32" itemprop="dateModified" datetime="2023-09-14T10:37:32+08:00">2023-09-14</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -417,8 +415,8 @@
               </span>
               <span class="post-meta-item-text">分类于</span>
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/db/" itemprop="url" rel="index">
-                    <span itemprop="name">db</span>
+                  <a href="/categories/git/" itemprop="url" rel="index">
+                    <span itemprop="name">git</span>
                   </a>
                 </span>
             </span>
@@ -434,10 +432,14 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_">mysql&gt; </span><span class="language-bash">show variables like <span class="string">&#x27;%max_connection%&#x27;</span>;		<span class="comment"># 查看最大连接数</span></span></span><br><span class="line"><span class="meta prompt_">mysql&gt; </span><span class="language-bash"><span class="built_in">set</span> global max_connections=1000; 	<span class="comment"># 临时重新设置最大连接数</span></span></span><br><span class="line"><span class="meta prompt_">mysql&gt; </span><span class="language-bash">show status like  <span class="string">&#x27;Threads%&#x27;</span>;</span></span><br><span class="line">+-------------------+-------+</span><br><span class="line">| Variable_name     | Value |</span><br><span class="line">+-------------------+-------+</span><br><span class="line">| Threads_cached    | 4     |</span><br><span class="line">| Threads_connected | 879   |	# 指的是打开的连接数.</span><br><span class="line">| Threads_created   | 2645  |</span><br><span class="line">| Threads_running   | 4     |	# 指的是激活的连接数，这个数值一般远低于connected数值.</span><br><span class="line">+-------------------+-------+</span><br><span class="line">4 rows in set (0.00 sec)</span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">Threads_connected 跟show processlist结果相同，表示当前连接数。准确的来说，Threads_running是代表当前并发数</span></span><br></pre></td></tr></table></figure>
+          <h2 id="分支"><a href="#分支" class="headerlink" title="分支"></a>分支</h2><ul>
+<li>master  #不能直接推送</li>
+<li>staging  #开发主流程分支</li>
+<li>self_branch #自己的开发分支，从staging 打出</li>
+</ul>
           <!--noindex-->
             <div class="post-button">
-              <a class="btn" href="/2023/01/11/db/MySQL%E6%9F%A5%E7%9C%8B%E8%BF%9E%E6%8E%A5%E6%95%B0(%E8%BF%9E%E6%8E%A5%E6%80%BB%E6%95%B0%E3%80%81%E6%B4%BB%E8%B7%83%E6%95%B0%E3%80%81%E6%9C%80%E5%A4%A7%E5%B9%B6%E5%8F%91%E6%95%B0)/#more" rel="contents">
+              <a class="btn" href="/2023/01/11/git/%E5%9F%BA%E4%BA%8Egit_rebase%E7%9A%84%E5%BC%80%E5%8F%91%E6%B5%81%E7%A8%8B/#more" rel="contents">
                 阅读全文 &raquo;
               </a>
             </div>
@@ -461,7 +463,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://phpdi.github.io/2023/01/11/algo/%E5%8A%9B%E6%89%A3-%E5%88%9D%E7%BA%A7%E7%AE%97%E6%B3%95/">
+    <link itemprop="mainEntityOfPage" href="https://phpdi.github.io/2023/01/11/git/git%E7%9B%B8%E5%85%B3%E9%97%AE%E9%A2%98/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/head.jpeg">
@@ -475,7 +477,7 @@
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
           
-            <a href="/2023/01/11/algo/%E5%8A%9B%E6%89%A3-%E5%88%9D%E7%BA%A7%E7%AE%97%E6%B3%95/" class="post-title-link" itemprop="url">力扣-初级算法</a>
+            <a href="/2023/01/11/git/git%E7%9B%B8%E5%85%B3%E9%97%AE%E9%A2%98/" class="post-title-link" itemprop="url">git相关问题</a>
         </h2>
 
         <div class="post-meta">
@@ -492,7 +494,7 @@
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2023-09-14 10:18:47" itemprop="dateModified" datetime="2023-09-14T10:18:47+08:00">2023-09-14</time>
+                <time title="修改时间：2023-09-14 10:37:09" itemprop="dateModified" datetime="2023-09-14T10:37:09+08:00">2023-09-14</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -500,8 +502,8 @@
               </span>
               <span class="post-meta-item-text">分类于</span>
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/algo/" itemprop="url" rel="index">
-                    <span itemprop="name">algo</span>
+                  <a href="/categories/git/" itemprop="url" rel="index">
+                    <span itemprop="name">git</span>
                   </a>
                 </span>
             </span>
@@ -517,12 +519,90 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <h2 id="数组"><a href="#数组" class="headerlink" title="数组"></a>数组</h2><h3 id="删除排序数组中的重复项"><a href="#删除排序数组中的重复项" class="headerlink" title="删除排序数组中的重复项"></a>删除排序数组中的重复项</h3><p>给定一个排序数组，你需要在 原地 删除重复出现的元素，使得每个元素只出现一次，返回移除后数组的新长度。<br>不要使用额外的数组空间，你必须在 原地 修改输入数组 并在使用 O(1) 额外空间的条件下完成。  </p>
-<p>作答：  </p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">func removeDuplicates(nums []int) int &#123;</span><br><span class="line">	if len(nums)&lt;= 1 &#123;</span><br><span class="line">		return len(nums)</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	j:=1</span><br><span class="line">	for i:=1;i&lt;len(nums);i++ &#123;</span><br><span class="line">		if nums[i-1]==nums[i] &#123;</span><br><span class="line">			continue</span><br><span class="line">		&#125;else&#123;</span><br><span class="line">			nums[j]=nums[i]</span><br><span class="line">			j++</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">	return j</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+          <h1 id="ssh-connect-to-host-github-com-port-22-Connection-refused"><a href="#ssh-connect-to-host-github-com-port-22-Connection-refused" class="headerlink" title="ssh: connect to host github.com port 22: Connection refused"></a>ssh: connect to host github.com port 22: Connection refused</h1><p>检查</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ssh -vT git@github.com</span><br></pre></td></tr></table></figure>
+<p>发现连接的是本地 </p>
+<h2 id="解决"><a href="#解决" class="headerlink" title="解决"></a>解决</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">nslookup github.com 8.8.8.8</span><br><span class="line"></span><br><span class="line"># 加DNS 域名解析</span><br><span class="line">sudo vim /etc/hosts </span><br></pre></td></tr></table></figure>
+
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+        
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://phpdi.github.io/2023/01/11/git/%E5%BF%AB%E9%80%9F%E8%AE%A4%E8%AF%86Git/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/head.jpeg">
+      <meta itemprop="name" content="Chen Yu">
+      <meta itemprop="description" content="自律给我自由">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="goeoeo">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2023/01/11/git/%E5%BF%AB%E9%80%9F%E8%AE%A4%E8%AF%86Git/" class="post-title-link" itemprop="url">快速认识Git</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2023-01-11 22:59:23" itemprop="dateCreated datePublished" datetime="2023-01-11T22:59:23+08:00">2023-01-11</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2023-09-14 10:37:33" itemprop="dateModified" datetime="2023-09-14T10:37:33+08:00">2023-09-14</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/git/" itemprop="url" rel="index">
+                    <span itemprop="name">git</span>
+                  </a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h2 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h2><p>分布式版本控制系统，由Linux创始人Linus使用C语言实现</p>
           <!--noindex-->
             <div class="post-button">
-              <a class="btn" href="/2023/01/11/algo/%E5%8A%9B%E6%89%A3-%E5%88%9D%E7%BA%A7%E7%AE%97%E6%B3%95/#more" rel="contents">
+              <a class="btn" href="/2023/01/11/git/%E5%BF%AB%E9%80%9F%E8%AE%A4%E8%AF%86Git/#more" rel="contents">
                 阅读全文 &raquo;
               </a>
             </div>
@@ -546,7 +626,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://phpdi.github.io/2023/01/11/algo/%E5%8A%9B%E6%89%A3-%E6%95%B0%E7%BB%84%E5%92%8C%E5%AD%97%E7%AC%A6%E4%B8%B2/">
+    <link itemprop="mainEntityOfPage" href="https://phpdi.github.io/2023/01/11/docker/docker%E9%97%AE%E9%A2%98/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/head.jpeg">
@@ -560,7 +640,7 @@
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
           
-            <a href="/2023/01/11/algo/%E5%8A%9B%E6%89%A3-%E6%95%B0%E7%BB%84%E5%92%8C%E5%AD%97%E7%AC%A6%E4%B8%B2/" class="post-title-link" itemprop="url">力扣-数组和字符串</a>
+            <a href="/2023/01/11/docker/docker%E9%97%AE%E9%A2%98/" class="post-title-link" itemprop="url">docker问题</a>
         </h2>
 
         <div class="post-meta">
@@ -577,7 +657,7 @@
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2023-09-14 10:20:13" itemprop="dateModified" datetime="2023-09-14T10:20:13+08:00">2023-09-14</time>
+                <time title="修改时间：2024-12-18 16:15:50" itemprop="dateModified" datetime="2024-12-18T16:15:50+08:00">2024-12-18</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -585,8 +665,8 @@
               </span>
               <span class="post-meta-item-text">分类于</span>
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/algo/" itemprop="url" rel="index">
-                    <span itemprop="name">algo</span>
+                  <a href="/categories/docker/" itemprop="url" rel="index">
+                    <span itemprop="name">docker</span>
                   </a>
                 </span>
             </span>
@@ -602,12 +682,11 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <h2 id="集合、列表、数组"><a href="#集合、列表、数组" class="headerlink" title="集合、列表、数组"></a>集合、列表、数组</h2><h3 id="集合"><a href="#集合" class="headerlink" title="集合"></a>集合</h3><p>由一个或多个确定的元素所构成的整体。<br>集合里的元素类型不一定相同<br>集合里的元素没有顺序  </p>
-<h3 id="列表"><a href="#列表" class="headerlink" title="列表"></a>列表</h3><p>是一种数据项构成的有限序列，即按照一定的线性顺序，排列而成的数据项的集合。<br>列表最常见的表现形式有数组和链表，而我们熟悉的栈和队列则是两种特殊类型的列表。  </p>
-<h3 id="数组"><a href="#数组" class="headerlink" title="数组"></a>数组</h3><p>数组是列表的实现方式,数组有索引<br>数组中的元素在内存中是连续存储的，且每个元素占用相同大小的内存。</p>
+          <h1 id="docker本地空间足够，但容器日志提示空间不足"><a href="#docker本地空间足够，但容器日志提示空间不足" class="headerlink" title="docker本地空间足够，但容器日志提示空间不足"></a>docker本地空间足够，但容器日志提示空间不足</h1><h2 id="情况描述"><a href="#情况描述" class="headerlink" title="情况描述"></a>情况描述</h2><p>项目中，es报空间不足，es容器 已使用30G左右的空间<br>默认情况下docker 对每个容器使用空间有限制  </p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Elasticsearch：high disk watermark [90%] exceeded</span><br></pre></td></tr></table></figure>
           <!--noindex-->
             <div class="post-button">
-              <a class="btn" href="/2023/01/11/algo/%E5%8A%9B%E6%89%A3-%E6%95%B0%E7%BB%84%E5%92%8C%E5%AD%97%E7%AC%A6%E4%B8%B2/#more" rel="contents">
+              <a class="btn" href="/2023/01/11/docker/docker%E9%97%AE%E9%A2%98/#more" rel="contents">
                 阅读全文 &raquo;
               </a>
             </div>
@@ -631,7 +710,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://phpdi.github.io/2023/01/11/android/ubuntu%E5%AE%89%E8%A3%85AndroidSDK%E5%92%8CNDK/">
+    <link itemprop="mainEntityOfPage" href="https://phpdi.github.io/2023/01/11/docker/docker-machine/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/head.jpeg">
@@ -645,7 +724,7 @@
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
           
-            <a href="/2023/01/11/android/ubuntu%E5%AE%89%E8%A3%85AndroidSDK%E5%92%8CNDK/" class="post-title-link" itemprop="url">ubuntu安装AndroidSDK和NDK</a>
+            <a href="/2023/01/11/docker/docker-machine/" class="post-title-link" itemprop="url">docker-machine</a>
         </h2>
 
         <div class="post-meta">
@@ -662,7 +741,7 @@
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2023-09-14 10:21:41" itemprop="dateModified" datetime="2023-09-14T10:21:41+08:00">2023-09-14</time>
+                <time title="修改时间：2023-09-14 10:33:47" itemprop="dateModified" datetime="2023-09-14T10:33:47+08:00">2023-09-14</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -670,8 +749,8 @@
               </span>
               <span class="post-meta-item-text">分类于</span>
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/android/" itemprop="url" rel="index">
-                    <span itemprop="name">android</span>
+                  <a href="/categories/docker/" itemprop="url" rel="index">
+                    <span itemprop="name">docker</span>
                   </a>
                 </span>
             </span>
@@ -687,17 +766,279 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <h1 id="安装java"><a href="#安装java" class="headerlink" title="安装java"></a>安装java</h1><p>参考:<br><a target="_blank" rel="noopener" href="https://medium.com/@barcelos.ds/install-openjdk-11-lts-in-the-ubuntu-20-04-lts-2c06f17c990">https://medium.com/@barcelos.ds/install-openjdk-11-lts-in-the-ubuntu-20-04-lts-2c06f17c990</a></p>
-<h2 id="下载"><a href="#下载" class="headerlink" title="下载"></a>下载</h2><p><a target="_blank" rel="noopener" href="https://adoptopenjdk.net/">https://adoptopenjdk.net</a></p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">sudo mkdir ~/DevTools</span><br><span class="line">sudo mkdir ~/DevTools/JDK</span><br><span class="line">sudo tar -zxvf ~/下载/OpenJDK11U-jdk***tar.gz -C ~/DevTools/JDK/</span><br></pre></td></tr></table></figure>
+          <h2 id="下载"><a href="#下载" class="headerlink" title="下载"></a>下载</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">base=https://github.com/docker/machine/releases/download/v0.16.0 &amp;&amp;</span><br><span class="line">  curl -L $base/docker-machine-$(uname -s)-$(uname -m) &gt;/tmp/docker-machine &amp;&amp;</span><br><span class="line">  sudo mv /tmp/docker-machine /usr/local/bin/docker-machine &amp;&amp;</span><br><span class="line">  chmod +x /usr/local/bin/docker-mach</span><br></pre></td></tr></table></figure>
+
+<h3 id="网速慢"><a href="#网速慢" class="headerlink" title="网速慢"></a>网速慢</h3><p>使用xx_net代理</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">sudo  apt install privoxy</span><br><span class="line">export https_proxy=127.0.0.1:8087</span><br><span class="line">export http_proxy=127.0.0.1:8087 </span><br></pre></td></tr></table></figure>
+
+<h3 id="x509问题"><a href="#x509问题" class="headerlink" title="x509问题"></a>x509问题</h3><p>curl -k 参数跳过证书验证</p>
+<h2 id="使用"><a href="#使用" class="headerlink" title="使用"></a>使用</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">docker-machine create -d  virtualbox manager1</span><br><span class="line"></span><br><span class="line">输出：</span><br><span class="line">Running pre-create checks...</span><br><span class="line">(manager1) No default Boot2Docker ISO found locally, downloading the latest release...</span><br><span class="line">Error with pre-create check: &quot;Get https://api.github.com/repos/boot2docker/boot2docker/releases/latest: x509: certificate signed by unknown authority&quot;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<h3 id="直接去下载默认的iso文件"><a href="#直接去下载默认的iso文件" class="headerlink" title="直接去下载默认的iso文件"></a>直接去下载默认的iso文件</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">curl -Lo ~/.docker/machine/cache/boot2docker.iso https://github.com/boot2docker/boot2docker/releases/download/v19.03.5/boot2docker.iso</span><br><span class="line"></span><br><span class="line">输出：</span><br><span class="line">curl: (60) SSL certificate problem: unable to get local issuer certificate</span><br><span class="line">More details here: https://curl.haxx.se/docs/sslcerts.html</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+<h3 id="curl-60-SSL-certificate-problem-unable-to-get-local-issuer-certificate问题"><a href="#curl-60-SSL-certificate-problem-unable-to-get-local-issuer-certificate问题" class="headerlink" title="curl: (60) SSL certificate problem: unable to get local issuer certificate问题"></a>curl: (60) SSL certificate problem: unable to get local issuer certificate问题</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">curl -k --remote-name --time-cond cacert.pem https://curl.haxx.se/ca/cacert.pem</span><br><span class="line"># 注意执行此命令后需要重新开终端</span><br></pre></td></tr></table></figure>
+
+<h3 id="终端下载实在太慢问题"><a href="#终端下载实在太慢问题" class="headerlink" title="终端下载实在太慢问题"></a>终端下载实在太慢问题</h3><ol>
+<li><a target="_blank" rel="noopener" href="https://github.com/boot2docker/boot2docker/releases/download/v19.03.5/boot2docker.iso">浏览器下载</a></li>
+<li>将iso文件移动到　 ~&#x2F;.docker&#x2F;machine&#x2F;cache&#x2F;boot2docker.iso</li>
+</ol>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+        
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://phpdi.github.io/2023/01/11/docker/elasticsearch/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/head.jpeg">
+      <meta itemprop="name" content="Chen Yu">
+      <meta itemprop="description" content="自律给我自由">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="goeoeo">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2023/01/11/docker/elasticsearch/" class="post-title-link" itemprop="url">elasticsearch</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2023-01-11 22:59:23" itemprop="dateCreated datePublished" datetime="2023-01-11T22:59:23+08:00">2023-01-11</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2023-09-14 10:34:33" itemprop="dateModified" datetime="2023-09-14T10:34:33+08:00">2023-09-14</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/docker/" itemprop="url" rel="index">
+                    <span itemprop="name">docker</span>
+                  </a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="docker安装elasticsearch7-7-0"><a href="#docker安装elasticsearch7-7-0" class="headerlink" title="docker安装elasticsearch7.7.0"></a>docker安装elasticsearch7.7.0</h1><h2 id="手动版安装"><a href="#手动版安装" class="headerlink" title="手动版安装"></a>手动版安装</h2><h3 id="获取镜像"><a href="#获取镜像" class="headerlink" title="获取镜像"></a>获取镜像</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker pull docker.elastic.co/elasticsearch/elasticsearch:7.7.0</span><br></pre></td></tr></table></figure>
+
+<h3 id="运行elasticsearch"><a href="#运行elasticsearch" class="headerlink" title="运行elasticsearch"></a>运行elasticsearch</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker run --name=elastic770 -p 9200:9200 -p 9300:9300 -e &quot;discovery.type=single-node&quot; --network=network_172_19 --ip=172.19.0.101 -v /var/docker/elastic/data:/data docker.elastic.co/elasticsearch/elasticsearch:7.7.0</span><br></pre></td></tr></table></figure>
+
+<h3 id="安装ik分词插件"><a href="#安装ik分词插件" class="headerlink" title="安装ik分词插件"></a>安装ik分词插件</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">docker exec -it elastic770 /bin/bash</span><br><span class="line"></span><br><span class="line">./bin/elasticsearch-plugin install https://github.com/medcl/elasticsearch-analysis-ik/releases/download/v7.7.0/elasticsearch-analysis-ik-7.7.0.zip</span><br></pre></td></tr></table></figure>
+
+<h2 id="docker-compose安装"><a href="#docker-compose安装" class="headerlink" title="docker-compose安装"></a>docker-compose安装</h2><h3 id="Dockerfile"><a href="#Dockerfile" class="headerlink" title="Dockerfile"></a>Dockerfile</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">FROM docker.elastic.co/elasticsearch/elasticsearch:7.7.0</span><br><span class="line">ENV VERSION=7.7.0</span><br><span class="line"></span><br><span class="line"># https://github.com/medcl/elasticsearch-analysis-ik/releases</span><br><span class="line">ADD https://github.com/medcl/elasticsearch-analysis-ik/releases/download/v$&#123;VERSION&#125;/elasticsearch-analysis-ik-$VERSION.zip /tmp/</span><br><span class="line"></span><br><span class="line">RUN /usr/share/elasticsearch/bin/elasticsearch-plugin install -b file:///tmp/elasticsearch-analysis-ik-$VERSION.zip</span><br><span class="line">RUN rm -rf /tmp/*</span><br></pre></td></tr></table></figure>
+
+<h3 id="docker-compose-yml"><a href="#docker-compose-yml" class="headerlink" title="docker-compose.yml"></a>docker-compose.yml</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">version: &#x27;3.5&#x27;</span><br><span class="line"></span><br><span class="line">services:</span><br><span class="line">    elastic770:</span><br><span class="line">        build: ./</span><br><span class="line">        container_name: elastic770</span><br><span class="line">        hostname: elastic770</span><br><span class="line">        volumes:</span><br><span class="line">        - ./data:/usr/share/elasticsearch/data　　#这里将elasticsearch的数据文件映射本地，以保证下次如果删除了容器还有数据</span><br><span class="line">        environment:</span><br><span class="line">        - discovery.type=single-node</span><br><span class="line">        ports:</span><br><span class="line">        - &quot;9200:9200&quot;</span><br></pre></td></tr></table></figure>
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+        
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://phpdi.github.io/2023/01/11/docker/etcd/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/head.jpeg">
+      <meta itemprop="name" content="Chen Yu">
+      <meta itemprop="description" content="自律给我自由">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="goeoeo">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2023/01/11/docker/etcd/" class="post-title-link" itemprop="url">etcd</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2023-01-11 22:59:23" itemprop="dateCreated datePublished" datetime="2023-01-11T22:59:23+08:00">2023-01-11</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2024-12-20 16:38:38" itemprop="dateModified" datetime="2024-12-20T16:38:38+08:00">2024-12-20</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/docker/" itemprop="url" rel="index">
+                    <span itemprop="name">docker</span>
+                  </a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="docker安装ectd"><a href="#docker安装ectd" class="headerlink" title="docker安装ectd"></a>docker安装ectd</h1><h2 id="etcd-启动参数说明"><a href="#etcd-启动参数说明" class="headerlink" title="etcd 启动参数说明"></a>etcd 启动参数说明</h2><ul>
+<li>-name：方便理解的节点名称，默认为 default，在集群中应该保持唯一，可以使用 hostname</li>
+<li>-data-dir：服务运行数据保存的路径，默认为 ${name}.etcd</li>
+<li>-snapshot-count：指定有多少事务（transaction）被提交时，触发截取快照保存到磁盘</li>
+<li>-heartbeat-interval：leader 多久发送一次心跳到 followers。默认值是 100ms</li>
+<li>-eletion-timeout：重新投票的超时时间，如果follower在该时间间隔没有收到心跳包，会触发重新投票，默认为 1000 ms</li>
+<li>-listen-peer-urls：和同伴通信的地址，比如 <a href="http://ip:2380，如果有多个，使用逗号分隔。需要所有节点都能够访问，所以不要使用">http://ip:2380，如果有多个，使用逗号分隔。需要所有节点都能够访问，所以不要使用</a> localhost</li>
+<li>-listen-client-urls：对外提供服务的地址：比如 <a href="http://ip:2379,http://127.0.0.1:2379，客户端会连接到这里和etcd交互">http://ip:2379,http://127.0.0.1:2379，客户端会连接到这里和etcd交互</a></li>
+<li>-advertise-client-urls：对外公告的该节点客户端监听地址，这个值会告诉集群中其他节点</li>
+<li>-initial-advertise-peer-urls：该节点同伴监听地址，这个值会告诉集群中其他节点</li>
+<li>-initial-cluster：集群中所有节点的信息，格式为 node1&#x3D;<a href="http://ip1:2380,node2=http://ip2:2380,…。需要注意的是，这里的">http://ip1:2380,node2=http://ip2:2380,…。需要注意的是，这里的</a> node1 是节点的–name指定的名字；后面的ip1:2380 是–initial-advertise-peer-urls 指定的值</li>
+<li>-initial-cluster-state：新建集群的时候，这个值为 new；假如已经存在的集群，这个值为existing</li>
+<li>-initial-cluster-token：创建集群的token，这个值每个集群保持唯一。这样的话，如果你要重新创建集群，即使配置和之前一样，也会再次生成新的集群和节点 uuid；否则会导致多个集群之间的冲突，造成未知的错误</li>
+</ul>
           <!--noindex-->
             <div class="post-button">
-              <a class="btn" href="/2023/01/11/android/ubuntu%E5%AE%89%E8%A3%85AndroidSDK%E5%92%8CNDK/#more" rel="contents">
+              <a class="btn" href="/2023/01/11/docker/etcd/#more" rel="contents">
                 阅读全文 &raquo;
               </a>
             </div>
           <!--/noindex-->
         
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+        
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://phpdi.github.io/2023/01/11/docker/kafak/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/head.jpeg">
+      <meta itemprop="name" content="Chen Yu">
+      <meta itemprop="description" content="自律给我自由">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="goeoeo">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2023/01/11/docker/kafak/" class="post-title-link" itemprop="url">kafak</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2023-01-11 22:59:23" itemprop="dateCreated datePublished" datetime="2023-01-11T22:59:23+08:00">2023-01-11</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2023-09-14 10:35:08" itemprop="dateModified" datetime="2023-09-14T10:35:08+08:00">2023-09-14</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/docker/" itemprop="url" rel="index">
+                    <span itemprop="name">docker</span>
+                  </a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="docker-安装kafak"><a href="#docker-安装kafak" class="headerlink" title="docker 安装kafak"></a>docker 安装kafak</h1><h2 id="单机版"><a href="#单机版" class="headerlink" title="单机版"></a>单机版</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker run -p 2181:2181 -p 9092:9092 --env ADVERTISED_HOST=192.168.11.36 --env ADVERTISED_PORT=9092 -d spotify/kafka</span><br></pre></td></tr></table></figure>
+
+
       
     </div>
 
@@ -716,7 +1057,7 @@
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/page/9/"><i class="fa fa-angle-left" aria-label="上一页"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/9/">9</a><span class="page-number current">10</span>
+    <a class="extend prev" rel="prev" href="/page/9/"><i class="fa fa-angle-left" aria-label="上一页"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/9/">9</a><span class="page-number current">10</span><a class="page-number" href="/page/11/">11</a><span class="space">&hellip;</span><a class="page-number" href="/page/13/">13</a><a class="extend next" rel="next" href="/page/11/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
   </nav>
 
 
@@ -784,20 +1125,20 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">96</span>
+          <span class="site-state-item-count">123</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
             <a href="/categories/">
           
-        <span class="site-state-item-count">19</span>
+        <span class="site-state-item-count">20</span>
         <span class="site-state-item-name">分类</span></a>
       </div>
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">73</span>
+        <span class="site-state-item-count">84</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
@@ -822,7 +1163,7 @@
 <div class="copyright">
   
   &copy; 
-  <span itemprop="copyrightYear">2023</span>
+  <span itemprop="copyrightYear">2025</span>
   <span class="with-love">
     <i class="fa fa-user"></i>
   </span>

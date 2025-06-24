@@ -1,0 +1,659 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 6.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+  <meta name="baidu-site-verification" content="D033aiBRFi">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+
+
+<script id="hexo-configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    hostname: new URL('https://phpdi.github.io').hostname,
+    root: '/',
+    scheme: 'Gemini',
+    version: '7.7.0',
+    exturl: false,
+    sidebar: {"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},
+    copycode: {"enable":false,"show_result":false,"style":null},
+    back2top: {"enable":true,"sidebar":false,"scrollpercent":false},
+    bookmark: {"enable":false,"color":"#222","save":"auto"},
+    fancybox: false,
+    mediumzoom: false,
+    lazyload: false,
+    pangu: false,
+    comments: {"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},
+    algolia: {
+      appID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    },
+    localsearch: {"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},
+    path: 'search.xml',
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}
+  };
+</script>
+
+  <meta name="description" content="从URL在浏览器输入到页面展现的过程中发生了什么 DNS解析：首先，浏览器会解析输入的URL，将其中的域名转换为对应的IP地址。这个过程涉及到DNS（Domain Name System）解析。浏览器首先会查看本地缓存中是否有该域名的IP地址记录，如果有则直接使用。如果没有，浏览器会向DNS服务器发送查询请求。DNS服务器会递归查询域名，最终找到对应的IP地址并返回给浏览器。 建立TCP连接：拿到">
+<meta property="og:type" content="article">
+<meta property="og:title" content="网络协议面试题">
+<meta property="og:url" content="https://phpdi.github.io/2023/01/11/interview/%E7%BD%91%E7%BB%9C%E5%8D%8F%E8%AE%AE%E9%9D%A2%E8%AF%95%E9%A2%98/index.html">
+<meta property="og:site_name" content="goeoeo">
+<meta property="og:description" content="从URL在浏览器输入到页面展现的过程中发生了什么 DNS解析：首先，浏览器会解析输入的URL，将其中的域名转换为对应的IP地址。这个过程涉及到DNS（Domain Name System）解析。浏览器首先会查看本地缓存中是否有该域名的IP地址记录，如果有则直接使用。如果没有，浏览器会向DNS服务器发送查询请求。DNS服务器会递归查询域名，最终找到对应的IP地址并返回给浏览器。 建立TCP连接：拿到">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2023-01-11T14:59:23.590Z">
+<meta property="article:modified_time" content="2024-03-09T00:43:50.300Z">
+<meta property="article:author" content="Chen Yu">
+<meta property="article:tag" content="面试题">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="https://phpdi.github.io/2023/01/11/interview/%E7%BD%91%E7%BB%9C%E5%8D%8F%E8%AE%AE%E9%9D%A2%E8%AF%95%E9%A2%98/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome: false,
+    isPost: true
+  };
+</script>
+
+  <title>网络协议面试题 | goeoeo</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-meta">
+
+    <div>
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">goeoeo</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+        <h1 class="site-subtitle" itemprop="description">会吃鱼</h1>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+</div>
+
+
+<nav class="site-nav">
+  
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>归档</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-fw fa-th"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-fw fa-user"></i>关于</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+
+</nav>
+  <div class="site-search">
+    <div class="popup search-popup">
+    <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocorrect="off" autocapitalize="none"
+           placeholder="搜索..." spellcheck="false"
+           type="text" id="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result"></div>
+
+</div>
+<div class="search-pop-overlay"></div>
+
+  </div>
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content">
+            
+
+  <div class="posts-expand">
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://phpdi.github.io/2023/01/11/interview/%E7%BD%91%E7%BB%9C%E5%8D%8F%E8%AE%AE%E9%9D%A2%E8%AF%95%E9%A2%98/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/head.jpeg">
+      <meta itemprop="name" content="Chen Yu">
+      <meta itemprop="description" content="自律给我自由">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="goeoeo">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          网络协议面试题
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2023-01-11 22:59:23" itemprop="dateCreated datePublished" datetime="2023-01-11T22:59:23+08:00">2023-01-11</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2024-03-09 08:43:50" itemprop="dateModified" datetime="2024-03-09T08:43:50+08:00">2024-03-09</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/interview/" itemprop="url" rel="index">
+                    <span itemprop="name">interview</span>
+                  </a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="从URL在浏览器输入到页面展现的过程中发生了什么"><a href="#从URL在浏览器输入到页面展现的过程中发生了什么" class="headerlink" title="从URL在浏览器输入到页面展现的过程中发生了什么"></a>从URL在浏览器输入到页面展现的过程中发生了什么</h1><ol>
+<li>DNS解析：首先，浏览器会解析输入的URL，将其中的域名转换为对应的IP地址。这个过程涉及到DNS（Domain Name System）解析。浏览器首先会查看本地缓存中是否有该域名的IP地址记录，如果有则直接使用。如果没有，浏览器会向DNS服务器发送查询请求。DNS服务器会递归查询域名，最终找到对应的IP地址并返回给浏览器。</li>
+<li>建立TCP连接：拿到服务器的IP地址后，浏览器会与服务器建立TCP（Transmission Control Protocol）连接。这个过程包括三次握手：<ul>
+<li>客户端发送SYN（同步）报文，并置发送序号为X。</li>
+<li>服务端回复SYN+ACK（同步&#x2F;应答）报文，并置发送序号为Y，再确认序号为X+1。</li>
+<li>客户端发送ACK（应答）报文，并置发送序号为Z，再确认序号为Y+1。这样，TCP连接就建立起来了。</li>
+</ul>
+</li>
+<li>发送HTTP请求：建立TCP连接后，浏览器会向服务器发送HTTP请求。HTTP请求报文包括了请求方法（如GET、POST等）、请求路径、协议版本以及请求头部信息等。这些信息封装在TCP报文段中发送给服务器。</li>
+<li>服务器处理HTTP请求：服务器接收到HTTP请求后，会根据请求路径和方法来定位并处理相应的资源。这可能涉及到文件读取、数据库查询等操作。处理完成后，服务器会生成HTTP响应报文，其中包括状态码、响应头部信息以及响应体等。</li>
+<li>返回HTTP响应：服务器将HTTP响应报文通过之前建立的TCP连接发送回浏览器。浏览器接收到响应报文后，会解析HTTP响应，提取出状态码、响应头部以及响应体等信息。</li>
+<li>渲染页面：浏览器根据解析得到的HTML文档构建DOM（Document Object Model）树，并下载并解析CSS样式表、JavaScript脚本等资源。然后，浏览器会进行页面渲染，将HTML、CSS和JavaScript等组合起来生成最终的页面展示给用户。</li>
+<li>关闭TCP连接：当浏览器从服务器接收到所有需要的数据后，会关闭TCP连接。这个过程包括四次挥手：<ul>
+<li>客户端发送FIN（结束）报文，通知服务器要关闭连接。</li>
+<li>服务器回复ACK报文，确认收到关闭连接的请求。</li>
+<li>服务器发送FIN报文，通知客户端已经关闭连接。</li>
+<li>客户端回复ACK报文，确认收到服务器关闭连接的通知。这样，TCP连接就被关闭了。</li>
+</ul>
+</li>
+</ol>
+<span id="more"></span>
+
+
+<h1 id="HTTP1-1-HTTP2-HTTP3-的区别"><a href="#HTTP1-1-HTTP2-HTTP3-的区别" class="headerlink" title="HTTP1.1&#x2F;HTTP2&#x2F;HTTP3 的区别"></a>HTTP1.1&#x2F;HTTP2&#x2F;HTTP3 的区别</h1><p>HTTP1.1:   </p>
+<ol>
+<li>支持了长连接</li>
+<li>串行请求带来的队头阻塞的问题</li>
+<li>Pipelining技术可以在一个tcp上发送多个请求，但响应还是依次回来的</li>
+</ol>
+<p>HTTP2:  </p>
+<ol>
+<li>引入二进制分帧，实现多路复用，解决http协议层面的队头阻塞问题，但TCP层面的队头阻塞问题，依然存在</li>
+<li>支持头部压缩</li>
+<li>支持服务器主动推送</li>
+</ol>
+<p>HTTP3:  </p>
+<ol>
+<li>QUIC协议，基于UDP</li>
+</ol>
+<blockquote>
+<p>一个浏览器针对每一个域名最大可以建立6个TCP连接</p>
+</blockquote>
+<h1 id="简述HTTP2-0多路复用"><a href="#简述HTTP2-0多路复用" class="headerlink" title="简述HTTP2.0多路复用"></a>简述HTTP2.0多路复用</h1><p>每个请求都被视为一个独立的流，每个流都有一个唯一的标识符,因此服务器无须再顺序返回请求。</p>
+<h1 id="HTTP协议和RPC协议有什么区别"><a href="#HTTP协议和RPC协议有什么区别" class="headerlink" title="HTTP协议和RPC协议有什么区别"></a>HTTP协议和RPC协议有什么区别</h1><ol>
+<li>基于的通信协议：HTTP协议主要基于HTTP，而RPC（远程过程调用）协议则更为灵活，可以基于HTTP、TCP和UDP等协议。</li>
+<li>调用方式：HTTP接口通过URL进行调用，而RPC接口则通过函数调用进行调用。这意味着RPC在调用时具有更直接的特性。</li>
+<li>使用场景：HTTP协议主要用于B&#x2F;S架构，特别是在Web浏览器和服务器之间的数据通信中。而RPC则更多地用于C&#x2F;S架构，如分布式系统内部集群，如云计算、微服务架构、分布式数据库等，以实现不同服务之间的远程调用和分布式系统协作。</li>
+<li>传输效率：RPC使用自定义的TCP协议，使得请求报文体积更小，从而提高了传输效率。而HTTP协议，尤其是基于HTTP1.1的协议，请求中会包含很多无用的内容，从而降低了传输效率。</li>
+<li>性能与效率：RPC协议通常使用二进制编码来传输数据，相对于HTTP协议的文本传输，RPC具有更高的性能和效率。此外，RPC协议还常采用高效的序列化和反序列化技术，进一步减少了数据传输的大小和开销，提高了通信的速度和响应时间。</li>
+<li>安全性：由于RPC常用于内部系统间的通信，通常在内部网络环境下进行，因此其安全性相对更高。</li>
+</ol>
+<h1 id="简述HTTPS加密过程"><a href="#简述HTTPS加密过程" class="headerlink" title="简述HTTPS加密过程"></a>简述HTTPS加密过程</h1><p>HTTPS的加密过程实际上是一个混合加密过程，涉及建立连接前的连接阶段和建立连接后的通信阶段  </p>
+<ol>
+<li>客户端发起HTTPS请求：首先，客户端（通常是浏览器）向服务器发送一个HTTPS请求。这个请求中包含了客户端支持的加密算法种类、SSL&#x2F;TLS协议版本号以及一个随机数等信息。</li>
+<li>服务器的响应：服务器收到请求后，会向客户端回传SSL&#x2F;TLS协议版本号、选择的加密算法和HASH算法、服务器的证书（包含了网站的地址、加密公钥以及证书的颁发机构等信息）以及一个随机数。</li>
+<li>客户端验证服务器的合法性：客户端利用收到的服务器证书中的信息验证服务器的合法性。验证包括检查证书是否过期、发行证书的CA是否可靠、证书的公钥能否正确解开证书的数字签名以及证书上的域名是否与实际的服务器域名匹配等。如果验证通过，则继续通信，否则断开连接。</li>
+<li>生成对称加密密钥：在验证服务器合法性后，客户端会生成一个随机数作为对称加密的密钥。</li>
+<li>密钥的加密传输：客户端使用服务器证书中的公钥对这个对称加密密钥进行加密，得到加密后的密钥。</li>
+<li>加密密钥的传输与解密：客户端将加密后的密钥发送给服务器。服务器使用自己的私钥对接收到的加密密钥进行解密，得到对称加密的密钥。</li>
+<li>使用对称加密密钥进行通信：至此，客户端和服务器之间共享了一个对称加密密钥。之后的消息传递都会使用这个对称加密密钥进行加密和解密，确保通信内容的安全性。</li>
+</ol>
+<p>在整个过程中，HTTPS采用了非对称加密和对称加密相结合的方式，既保证了数据传输的安全性，又提高了加密和解密的效率。同时，通过摘要算法和数字签名等技术，保证了数据的完整性和服务器的身份认证。</p>
+<h1 id="TCP"><a href="#TCP" class="headerlink" title="TCP"></a>TCP</h1><p>面向<strong>连接</strong>，<strong>可靠</strong>的,基于字节流的传输层通信协议</p>
+<h1 id="SOCKET"><a href="#SOCKET" class="headerlink" title="SOCKET"></a>SOCKET</h1><ul>
+<li>套接字</li>
+<li>四元组  ip:port + ip:port</li>
+<li>操作系统最多有65535个端口</li>
+</ul>
+<p>一个客户端与服务器最多建立多少个TCP？<br>由于客户端端口是65535个，所以客户端最多建立65535个连接 ，服务端只监听了一个端口，服务端可以建立无数个，取决于硬件资源（内存）</p>
+<p>一个客户端已经和服务器建立建立的情况下，是否可以和这个服务器的其它端口建立连接（端口是否可以重用）？<br>可以，四元组的唯一性</p>
+<p>既然一个客户端和服务器最多建立65535个连接，那如果想实现十万&#x2F;百万连接如何处理？<br>增加ip地址，一个网卡可以增加多个ip地址，（还是四元组的唯一性）</p>
+<h1 id="TCP面向连接的，怎么理解这个连接"><a href="#TCP面向连接的，怎么理解这个连接" class="headerlink" title="TCP面向连接的，怎么理解这个连接"></a>TCP面向连接的，怎么理解这个连接</h1><p>连接本质的数据结构，资源的开辟</p>
+<p>TCP 建立连接的本质是在客户端和服务端各自维护一定的数据结构（一种状态机），来记录和维护这个“连接”的状态</p>
+<p>发送数据之前，双方需要先进行一系列的握手操作，以初始化并建立连接状态。这个过程被称为三次握手。</p>
+<h1 id="TCP是可靠的，怎么理解这个可靠"><a href="#TCP是可靠的，怎么理解这个可靠" class="headerlink" title="TCP是可靠的，怎么理解这个可靠"></a>TCP是可靠的，怎么理解这个可靠</h1><ol>
+<li><strong>数据完整性</strong>：TCP协议通过校验、序号、确认和重传等机制确保数据的完整性。每个TCP报文段都包含校验和，用于检查数据在传输过程中是否发生了错误。同时，每个报文段都有一个序号，接收方会按照序号顺序接收数据，确保数据的顺序性。如果接收方发现数据有误或丢失，会要求发送方重新发送，这就是重传机制。</li>
+<li><strong>面向连接</strong>：TCP是面向连接的协议，这意味着在通信开始之前，必须建立连接。这种连接状态确保了通信的可靠性，因为只有在连接建立成功后，数据才会开始传输。这种连接状态还使得发送方和接收方都可以确认对方的存在和接收能力，从而进一步增强了通信的可靠性。</li>
+<li><strong>确认应答机制</strong>：TCP使用确认应答机制来确保数据的可靠传输。当接收方收到数据后，它会向发送方发送一个确认报文，告知发送方数据已成功接收。如果发送方在一段时间内未收到确认报文，它会认为数据丢失并重新发送数据。</li>
+<li><strong>流量控制和拥塞控制</strong>：TCP还使用流量控制和拥塞控制机制来确保数据的可靠传输。流量控制允许接收方控制发送方的发送速率，以防止接收方缓冲区溢出。拥塞控制则用于避免网络拥塞，当网络出现拥塞时，TCP会降低发送速率，以减轻网络负担。</li>
+</ol>
+<h1 id="三次握手"><a href="#三次握手" class="headerlink" title="三次握手"></a>三次握手</h1><ol>
+<li>A &gt; SYN  &gt; B  请求建立连接</li>
+<li>A &lt; SYN+ACK &lt; B  告诉客户端可以创建</li>
+<li>A &gt; ACK &gt; B 客户端创建完成，响应给ACK给服务端，完成连接建立</li>
+</ol>
+<h1 id="四次挥手"><a href="#四次挥手" class="headerlink" title="四次挥手"></a>四次挥手</h1><p>客户端和服务端断开连接（释放资源）</p>
+<ol>
+<li>A &gt; FIN &gt; B</li>
+<li>A &lt; FIN+ ACK &lt; B  收到断开请求，做清理工作</li>
+<li>A &lt; FIN &lt; B 服务端做完清理工作，确认断开</li>
+<li>A &gt; ACK &gt; B 客户端处理完清理工作，确认断开</li>
+</ol>
+<h1 id="TCP流量控制"><a href="#TCP流量控制" class="headerlink" title="TCP流量控制"></a>TCP流量控制</h1><p>TCP流量控制的主要目的是确保发送方的发送速率不会过快，以便接收方能够来得及接收数据，从而避免数据的丢失。</p>
+<p>TCP流量控制通过滑动窗口机制来实现。在建立连接时，发送的报文段中会包含接收窗口的单位值。发送方的窗口大小不能超过接收方给出的接收窗口的数值。滑动窗<br>口的大小是动态调整的，每一次接收方回复给发送方的确认报文段里会更新新的接收窗口值。当接收窗口为0时，代表暂时不接收数据，直到接收方重新给发送方发出一个新的窗口值为止。</p>
+<h1 id="TCP拥塞控制"><a href="#TCP拥塞控制" class="headerlink" title="TCP拥塞控制"></a>TCP拥塞控制</h1><p>当网络中的某一资源（如带宽、交换机中的缓存和处理机等）的需求超过其所能提供的可用部分时，网络的性能会变差，这种现象称为拥塞。TCP拥塞控制的目的就是防止这种情况的发生。</p>
+<p>TCP主要使用四个算法来进行拥塞控制：慢开始、拥塞避免、快重传和快恢复。  </p>
+<ol>
+<li>慢开始：在建立连接和开始发送数据时，发送方会先发送少量的数据，并观察网络的反馈。如果网络状况良好，没有出现丢包或超时，那么发送方会逐渐增加发送窗口的大小，即逐步增加发送数据的速率。</li>
+<li>拥塞避免： 当网络资源接近其容量限制时，拥塞避免算法会主动调整发送方的发送速率，以防止网络拥塞的发生。</li>
+<li>快重传算法：是针对丢包情况的一种优化策略。当接收方收到一个失序的报文段时，它会立即发送一个重复确认，告诉发送方哪些报文段已经收到，哪些还没有收到。如果发送方连续收到三个或更多的重复确认，那么它会认为某个报文段已经丢失，并立即重传那个报文段，而不是等待超时定时器超时后再重传。</li>
+<li>快恢复：快恢复算法是与快重传算法配合使用的。当发送方收到三个或更多的重复确认时，它会认为网络只是出现了暂时的拥塞，而不是出现了严重的拥塞。因此，发送方不会立即将拥塞窗口cwnd减小到最小值，而是将其减半，并执行拥塞避免算法。这样可以更快地恢复数据的传输速率，同时避免网络拥塞的进一步加剧。</li>
+</ol>
+<h1 id="rpc微服务框架"><a href="#rpc微服务框架" class="headerlink" title="rpc微服务框架"></a>rpc微服务框架</h1><h2 id="微服务之间如何进行通信？"><a href="#微服务之间如何进行通信？" class="headerlink" title="微服务之间如何进行通信？"></a>微服务之间如何进行通信？</h2><ul>
+<li>单体项目时：一次服务调用发生在同一台机器上的同一个进程内部，也就是说调用发生在本机内部，因此也被叫作本地方法调用。</li>
+<li>微服务项目时：服务提供者和服务消费者运行在两台不同物理机上的不同进程内，它们之间的调用相比于本地方法调用，可称之为远程方法调用，简称 RPC</li>
+</ul>
+<h2 id="RPC了解多少？都有哪些？"><a href="#RPC了解多少？都有哪些？" class="headerlink" title="RPC了解多少？都有哪些？"></a>RPC了解多少？都有哪些？</h2><ul>
+<li>GRPC：Google 2015 年开源，支持多种语言</li>
+<li>Thrift：最初Facebook 开发的内部框架，2007 年贡献给了 Apache 基金，成为 Apache 开源项目之一，支持多种语言。</li>
+<li>RPCX</li>
+</ul>
+<h2 id="RPC包含哪些部分？"><a href="#RPC包含哪些部分？" class="headerlink" title="RPC包含哪些部分？"></a>RPC包含哪些部分？</h2><ul>
+<li>客户端和服务端建立网络连接模块( server模块、client模块 )</li>
+<li>服务端处理请求模块</li>
+<li>协议模块</li>
+<li>序列化和反序列模块</li>
+</ul>
+<h2 id="设计一个RPC会考虑哪些问题"><a href="#设计一个RPC会考虑哪些问题" class="headerlink" title="设计一个RPC会考虑哪些问题?"></a>设计一个RPC会考虑哪些问题?</h2><ul>
+<li>客户端和服务端如何建立网络连接？</li>
+<li>服务端如何处理请求？</li>
+<li>数据传输采用什么协议？</li>
+<li>数据该如何序列化和反序列化？</li>
+</ul>
+<h2 id="服务端如何处理请求？有哪些方式？"><a href="#服务端如何处理请求？有哪些方式？" class="headerlink" title="服务端如何处理请求？有哪些方式？"></a>服务端如何处理请求？有哪些方式？</h2><p>服务端接收到客户端的请求后，常见的处理方式有三种，分别是BIO、NIO和AIO。</p>
+<ul>
+<li><strong>同步阻塞方式（BIO）</strong> 客户端发一次请求，服务端生成一个对应线程去处理。当客户端同时发起的请求很多时，服务端需要创建多个线程去处理每一个请求，当达到了系统最大的线程数时，新来的请求就无法处理了。</li>
+<li><strong>同步非阻塞方式 (NIO)</strong>  客户端发一次请求，服务端并不是每次都创建一个新线程来处理，而是通过 I&#x2F;O 多路复用技术进行处理。就是把多个 I&#x2F;O 的阻塞复用到同一个 select 的阻塞上，从而使系统在单线程的情况下可以同时处理多个客户端请求。这种方式的优势是开销小，不用为每个请求创建一个线程，可以节省系统开销。</li>
+<li><strong>异步非阻塞方式（AIO）</strong>  客户端发起一个 I&#x2F;O 操作然后立即返回，等 I&#x2F;O 操作真正完成以后，客户端会得到 I&#x2F;O 操作完成的通知，此时客户端只需要对数据进行处理就好了，不需要进行实际的 I&#x2F;O 读写操作，因为真正的 I&#x2F;O 读取或者写入操作已经由内核完成了。这种方式的优势是客户端无需等待，不存在阻塞等待问题。</li>
+</ul>
+<blockquote>
+<p>BIO 适用于连接数比较小的业务场景，这样的话不至于系统中没有可用线程去处理请求。这种方式写的程序也比较简单直观，易于理解。<br>NIO 适用于连接数比较多并且请求消耗比较轻的业务场景，比如聊天服务器。这种方式相比 BIO，相对来说编程比较复杂。<br>AIO 适用于连接数比较多而且请求消耗比较重的业务场景，比如涉及 I&#x2F;O 操作的相册服务器。这种方式相比另外两种，编程难度最大，程序也不易于理解。 【来自网络】</p>
+</blockquote>
+<h2 id="IO多路复用"><a href="#IO多路复用" class="headerlink" title="IO多路复用"></a>IO多路复用</h2><p>多个的进程的IO可以注册到一个复用器（select）上，然后用一个进程调用该select， select会监听所有注册进来的IO；<br>如果select没有监听的IO在内核缓冲区都没有可读数据，select调用进程会被阻塞；而当任一IO在内核缓冲区中有可数据时，select调用就会返回；<br>而后select调用进程可以自己或通知另外的进程（注册进程）来再次发起读取IO，读取内核中准备好的数据。<br>多个进程注册IO后，只有另一个select调用进程被阻塞。</p>
+<p>IO多路复用实现有三种方案：select、poll、epoll</p>
+<h3 id="select"><a href="#select" class="headerlink" title="select"></a>select</h3><p>select 的fd_set通过bitmap 1024位的方式存储fd<br>bitmap从用户态拷贝到内核态，由内核态来判断，没有数据变化，select会阻塞，有变化，bitmap的fd会被置位</p>
+<p>缺点：</p>
+<ol>
+<li>1024的大小限制</li>
+<li>fdset不可重用</li>
+<li>rset(bitmap) 用户态到内核态的开销</li>
+<li>复杂度为O(n)</li>
+</ol>
+<h3 id="poll"><a href="#poll" class="headerlink" title="poll"></a>poll</h3><p>poll将要监听的对象存到数组中，且数组中的元素是结构体</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">struct pollfd</span><br><span class="line">&#123;</span><br><span class="line">    int fd;</span><br><span class="line">    short events;//事件</span><br><span class="line">    short revents;//有变化被置位，什么事件，置为什么事件，最后要将revents重新置为0</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p>解决了select中 的两个问题</p>
+<ol>
+<li>1024的大小限制</li>
+<li>fdset不可重用</li>
+</ol>
+<h3 id="epoll"><a href="#epoll" class="headerlink" title="epoll"></a>epoll</h3><p>在epoll机制中，Linux内核会创建一个eventpoll结构体，其中包含了红黑树和双向链表两种数据结构。红黑树用于fd，而双向链表则用于存储就绪的fd。</p>
+<p>当程序调用epoll_create函数时，会创建一个epoll对象，并返回一个文件描述符。然后，程序可以通过epoll_ctl函数向epoll对象中添加或删除需要监听的套接字。这些套接字会与设备驱动程序建立回调关系，一旦有事件发生（如数据可读、可写等），就会调用内核中的回调函数，将事件添加到双向链表中。</p>
+<p>当程序需要收集发生的事件时，可以调用epoll_wait函数。该函数会检查eventpoll对象中的双向链表，如果链表不为空，则将发生的事件复制到用户空间，并清空链表。同时，epoll_wait函数还会返回事件的数量。</p>
+<p>epoll机制有两种工作模式：水平触发和边缘触发。在水平触发模式下，只要文件描述符处于就绪状态，epoll就会持续通知应用程序进行I&#x2F;O操作。而在边缘触发模式下，只有在文件描述符从未就绪状态转换为就绪状态时，epoll才会通知应用程序进行I&#x2F;O操作。通常情况下，推荐使用边缘触发模式，因为它能更高效地利用CPU资源</p>
+<h4 id="监视socket索引-红黑树"><a href="#监视socket索引-红黑树" class="headerlink" title="监视socket索引-红黑树"></a>监视socket索引-红黑树</h4><p>为什么采用红黑树呢？因为和epoll的工作机制有关。epoll在添加一个socket或者删除一个socket或者修改一个socket的时候，它需要查询速度更快，操作效率最高，因此需要一个更加优秀的数据结构能够管理这些socket。</p>
+<p>我们想到的比如链表，数组，二叉搜索树，B+树等都无法满足要求:</p>
+<ul>
+<li>因为链表在查询，删除的时候毫无疑问时间复杂度是O(n)；</li>
+<li>数组查询很快，但是删除和新增时间复杂度是O(n)；</li>
+<li>二叉搜索树虽然查询效率是lgn，但是如果不是平衡的，那么就会退化为线性查找，复杂度直接来到O(n)；</li>
+<li>B+树是平衡多路查找树，主要是通过降低树的高度来存储上亿级别的数据，但是它的应用场景是内存放不下的时候能够用最少的IO访问次数从磁盘获取数据。</li>
+</ul>
+<p>因为我们处理上万级的fd，它们本身的存储空间并不会很大，所以倾向于在内存中去实现管理，而红黑树是一种非常优秀的平衡树，它完全是在内存中操作，而且查找，删除和新增时间复杂度都是lgn，效率非常高，因此选择用红黑树实现epoll是最佳的选择。</p>
+<p>当然不选择用AVL树是因为红黑树是不符合AVL树的平衡条件的，红黑是用非严格的平衡来换取增删节点时候旋转次数的降低，任何不平衡都会在三次旋转之内解决；而AVL树是严格平衡树，在增加或者删除节点的时候，根据不同情况，旋转的次数比红黑树要多。所以红黑树的插入效率更高。</p>
+<h4 id="就绪socket列表-双向链表"><a href="#就绪socket列表-双向链表" class="headerlink" title="就绪socket列表-双向链表"></a>就绪socket列表-双向链表</h4><p>就绪列表存储的是就绪的socket，所以它应能够快速的插入数据。</p>
+<p>程序可能随时调用epoll_ctl添加监视socket，也可能随时删除。当删除时，若该socket已经存放在就绪列表中，它也应该被移除。（事实上，每个epoll_item既是红黑树节点，也是链表节点，删除红黑树节点，自然删除了链表节点）</p>
+<p>所以就绪列表应是一种能够快速插入和删除的数据结构。双向链表就是这样一种数据结构，epoll使用双向链表来实现就绪队列（rdllist）</p>
+<h4 id="epoll为什么比select-poll快，快在什么地方"><a href="#epoll为什么比select-poll快，快在什么地方" class="headerlink" title="epoll为什么比select&#x2F;poll快，快在什么地方"></a>epoll为什么比select&#x2F;poll快，快在什么地方</h4><ol>
+<li>epoll只是在调用epoll_ctl的时候才会把fd从用户态拷贝的内核态，而select&#x2F;poll每次执行的时候都会把fd全部拷贝到内核态</li>
+<li>调用epoll_wait时候，只会拷贝已就绪的事件到用户态</li>
+<li>epoll采用事件回调机制，将已就绪的fd加入到链表中，而不是像select&#x2F;poll主动轮询的方式获取就绪事件</li>
+</ol>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E9%9D%A2%E8%AF%95%E9%A2%98/" rel="tag"># 面试题</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2023/01/11/algo/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/" rel="prev" title="设计模式">
+      <i class="fa fa-chevron-left"></i> 设计模式
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2023/01/11/interview/Kafka%E9%9D%A2%E8%AF%95%E9%A2%98/" rel="next" title="Kafka面试题">
+      Kafka面试题 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+  </div>
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let activeClass = CONFIG.comments.activeClass;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%BB%8EURL%E5%9C%A8%E6%B5%8F%E8%A7%88%E5%99%A8%E8%BE%93%E5%85%A5%E5%88%B0%E9%A1%B5%E9%9D%A2%E5%B1%95%E7%8E%B0%E7%9A%84%E8%BF%87%E7%A8%8B%E4%B8%AD%E5%8F%91%E7%94%9F%E4%BA%86%E4%BB%80%E4%B9%88"><span class="nav-number">1.</span> <span class="nav-text">从URL在浏览器输入到页面展现的过程中发生了什么</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#HTTP1-1-HTTP2-HTTP3-%E7%9A%84%E5%8C%BA%E5%88%AB"><span class="nav-number">2.</span> <span class="nav-text">HTTP1.1&#x2F;HTTP2&#x2F;HTTP3 的区别</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%AE%80%E8%BF%B0HTTP2-0%E5%A4%9A%E8%B7%AF%E5%A4%8D%E7%94%A8"><span class="nav-number">3.</span> <span class="nav-text">简述HTTP2.0多路复用</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#HTTP%E5%8D%8F%E8%AE%AE%E5%92%8CRPC%E5%8D%8F%E8%AE%AE%E6%9C%89%E4%BB%80%E4%B9%88%E5%8C%BA%E5%88%AB"><span class="nav-number">4.</span> <span class="nav-text">HTTP协议和RPC协议有什么区别</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%AE%80%E8%BF%B0HTTPS%E5%8A%A0%E5%AF%86%E8%BF%87%E7%A8%8B"><span class="nav-number">5.</span> <span class="nav-text">简述HTTPS加密过程</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#TCP"><span class="nav-number">6.</span> <span class="nav-text">TCP</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#SOCKET"><span class="nav-number">7.</span> <span class="nav-text">SOCKET</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#TCP%E9%9D%A2%E5%90%91%E8%BF%9E%E6%8E%A5%E7%9A%84%EF%BC%8C%E6%80%8E%E4%B9%88%E7%90%86%E8%A7%A3%E8%BF%99%E4%B8%AA%E8%BF%9E%E6%8E%A5"><span class="nav-number">8.</span> <span class="nav-text">TCP面向连接的，怎么理解这个连接</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#TCP%E6%98%AF%E5%8F%AF%E9%9D%A0%E7%9A%84%EF%BC%8C%E6%80%8E%E4%B9%88%E7%90%86%E8%A7%A3%E8%BF%99%E4%B8%AA%E5%8F%AF%E9%9D%A0"><span class="nav-number">9.</span> <span class="nav-text">TCP是可靠的，怎么理解这个可靠</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%B8%89%E6%AC%A1%E6%8F%A1%E6%89%8B"><span class="nav-number">10.</span> <span class="nav-text">三次握手</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%9B%9B%E6%AC%A1%E6%8C%A5%E6%89%8B"><span class="nav-number">11.</span> <span class="nav-text">四次挥手</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#TCP%E6%B5%81%E9%87%8F%E6%8E%A7%E5%88%B6"><span class="nav-number">12.</span> <span class="nav-text">TCP流量控制</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#TCP%E6%8B%A5%E5%A1%9E%E6%8E%A7%E5%88%B6"><span class="nav-number">13.</span> <span class="nav-text">TCP拥塞控制</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#rpc%E5%BE%AE%E6%9C%8D%E5%8A%A1%E6%A1%86%E6%9E%B6"><span class="nav-number">14.</span> <span class="nav-text">rpc微服务框架</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%BE%AE%E6%9C%8D%E5%8A%A1%E4%B9%8B%E9%97%B4%E5%A6%82%E4%BD%95%E8%BF%9B%E8%A1%8C%E9%80%9A%E4%BF%A1%EF%BC%9F"><span class="nav-number">14.1.</span> <span class="nav-text">微服务之间如何进行通信？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#RPC%E4%BA%86%E8%A7%A3%E5%A4%9A%E5%B0%91%EF%BC%9F%E9%83%BD%E6%9C%89%E5%93%AA%E4%BA%9B%EF%BC%9F"><span class="nav-number">14.2.</span> <span class="nav-text">RPC了解多少？都有哪些？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#RPC%E5%8C%85%E5%90%AB%E5%93%AA%E4%BA%9B%E9%83%A8%E5%88%86%EF%BC%9F"><span class="nav-number">14.3.</span> <span class="nav-text">RPC包含哪些部分？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%AE%BE%E8%AE%A1%E4%B8%80%E4%B8%AARPC%E4%BC%9A%E8%80%83%E8%99%91%E5%93%AA%E4%BA%9B%E9%97%AE%E9%A2%98"><span class="nav-number">14.4.</span> <span class="nav-text">设计一个RPC会考虑哪些问题?</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%9C%8D%E5%8A%A1%E7%AB%AF%E5%A6%82%E4%BD%95%E5%A4%84%E7%90%86%E8%AF%B7%E6%B1%82%EF%BC%9F%E6%9C%89%E5%93%AA%E4%BA%9B%E6%96%B9%E5%BC%8F%EF%BC%9F"><span class="nav-number">14.5.</span> <span class="nav-text">服务端如何处理请求？有哪些方式？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#IO%E5%A4%9A%E8%B7%AF%E5%A4%8D%E7%94%A8"><span class="nav-number">14.6.</span> <span class="nav-text">IO多路复用</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#select"><span class="nav-number">14.6.1.</span> <span class="nav-text">select</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#poll"><span class="nav-number">14.6.2.</span> <span class="nav-text">poll</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#epoll"><span class="nav-number">14.6.3.</span> <span class="nav-text">epoll</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%9B%91%E8%A7%86socket%E7%B4%A2%E5%BC%95-%E7%BA%A2%E9%BB%91%E6%A0%91"><span class="nav-number">14.6.3.1.</span> <span class="nav-text">监视socket索引-红黑树</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%B0%B1%E7%BB%AAsocket%E5%88%97%E8%A1%A8-%E5%8F%8C%E5%90%91%E9%93%BE%E8%A1%A8"><span class="nav-number">14.6.3.2.</span> <span class="nav-text">就绪socket列表-双向链表</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#epoll%E4%B8%BA%E4%BB%80%E4%B9%88%E6%AF%94select-poll%E5%BF%AB%EF%BC%8C%E5%BF%AB%E5%9C%A8%E4%BB%80%E4%B9%88%E5%9C%B0%E6%96%B9"><span class="nav-number">14.6.3.3.</span> <span class="nav-text">epoll为什么比select&#x2F;poll快，快在什么地方</span></a></li></ol></li></ol></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Chen Yu"
+      src="/images/head.jpeg">
+  <p class="site-author-name" itemprop="name">Chen Yu</p>
+  <div class="site-description" itemprop="description">自律给我自由</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">123</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">20</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">84</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2025</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Chen Yu</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v6.3.0
+  </div>
+  <span class="post-meta-divider">|</span>
+  <div class="theme-info">主题 – <a href="https://theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a> v7.7.0
+  </div>
+
+<div>
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<span id="busuanzi_container_site_pv" style='display:none'>
+    本站总访问量 <span id="busuanzi_value_site_pv"></span> 次
+    <span class="post-meta-divider">|</span>
+</span>
+<span id="busuanzi_container_site_uv" style='display:none'>
+    有<span id="busuanzi_value_site_uv"></span>人看过我的博客啦
+</span>
+</div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>

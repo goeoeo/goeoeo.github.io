@@ -1,0 +1,912 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 6.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+  <meta name="baidu-site-verification" content="D033aiBRFi">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+
+
+<script id="hexo-configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    hostname: new URL('https://phpdi.github.io').hostname,
+    root: '/',
+    scheme: 'Gemini',
+    version: '7.7.0',
+    exturl: false,
+    sidebar: {"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},
+    copycode: {"enable":false,"show_result":false,"style":null},
+    back2top: {"enable":true,"sidebar":false,"scrollpercent":false},
+    bookmark: {"enable":false,"color":"#222","save":"auto"},
+    fancybox: false,
+    mediumzoom: false,
+    lazyload: false,
+    pangu: false,
+    comments: {"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},
+    algolia: {
+      appID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    },
+    localsearch: {"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},
+    path: 'search.xml',
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}
+  };
+</script>
+
+  <meta name="description" content="架构简介架构的类型：  单体架构模式 分布式架构 微服务架构 服务网格模式  不谈场景的架构设计都是耍流氓。架构没有对不对，只有合不合适。  单体架构：    假设单体架构由于大量文件读取产生高磁盘IO,导致数据库查询慢，如何解决？加入新组件 redis将非事务请求的数据缓存在redis中，利用内存，解决这个问题。   带来的问题：  架构的复杂度增加 新的数据一致性问题  在架构不变的情况下解决">
+<meta property="og:type" content="article">
+<meta property="og:title" content="分布式改造理论与实战">
+<meta property="og:url" content="https://phpdi.github.io/2025/04/12/micro/IT%E8%80%81%E9%BD%90%E6%9E%B6%E6%9E%84900%E8%AE%B2/index.html">
+<meta property="og:site_name" content="goeoeo">
+<meta property="og:description" content="架构简介架构的类型：  单体架构模式 分布式架构 微服务架构 服务网格模式  不谈场景的架构设计都是耍流氓。架构没有对不对，只有合不合适。  单体架构：    假设单体架构由于大量文件读取产生高磁盘IO,导致数据库查询慢，如何解决？加入新组件 redis将非事务请求的数据缓存在redis中，利用内存，解决这个问题。   带来的问题：  架构的复杂度增加 新的数据一致性问题  在架构不变的情况下解决">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://phpdi.github.io/2025/04/12/micro/IT%E8%80%81%E9%BD%90%E6%9E%B6%E6%9E%84900%E8%AE%B2/img.png">
+<meta property="og:image" content="https://phpdi.github.io/2025/04/12/micro/IT%E8%80%81%E9%BD%90%E6%9E%B6%E6%9E%84900%E8%AE%B2/img_1.png">
+<meta property="og:image" content="https://phpdi.github.io/2025/04/12/micro/IT%E8%80%81%E9%BD%90%E6%9E%B6%E6%9E%84900%E8%AE%B2/img_2.png">
+<meta property="og:image" content="https://phpdi.github.io/2025/04/12/micro/IT%E8%80%81%E9%BD%90%E6%9E%B6%E6%9E%84900%E8%AE%B2/img_3.png">
+<meta property="og:image" content="https://phpdi.github.io/2025/04/12/micro/IT%E8%80%81%E9%BD%90%E6%9E%B6%E6%9E%84900%E8%AE%B2/img_5.png">
+<meta property="og:image" content="https://phpdi.github.io/2025/04/12/micro/IT%E8%80%81%E9%BD%90%E6%9E%B6%E6%9E%84900%E8%AE%B2/img_4.png">
+<meta property="og:image" content="https://phpdi.github.io/2025/04/12/micro/IT%E8%80%81%E9%BD%90%E6%9E%B6%E6%9E%84900%E8%AE%B2/img_6.png">
+<meta property="og:image" content="https://phpdi.github.io/2025/04/12/micro/IT%E8%80%81%E9%BD%90%E6%9E%B6%E6%9E%84900%E8%AE%B2/img_7.png">
+<meta property="og:image" content="https://phpdi.github.io/2025/04/12/micro/IT%E8%80%81%E9%BD%90%E6%9E%B6%E6%9E%84900%E8%AE%B2/img_8.png">
+<meta property="og:image" content="https://phpdi.github.io/2025/04/12/micro/IT%E8%80%81%E9%BD%90%E6%9E%B6%E6%9E%84900%E8%AE%B2/img_9.png">
+<meta property="og:image" content="https://phpdi.github.io/2025/04/12/micro/IT%E8%80%81%E9%BD%90%E6%9E%B6%E6%9E%84900%E8%AE%B2/img_11.png">
+<meta property="og:image" content="https://phpdi.github.io/2025/04/12/micro/IT%E8%80%81%E9%BD%90%E6%9E%B6%E6%9E%84900%E8%AE%B2/img_12.png">
+<meta property="og:image" content="https://phpdi.github.io/2025/04/12/micro/IT%E8%80%81%E9%BD%90%E6%9E%B6%E6%9E%84900%E8%AE%B2/img_13.png">
+<meta property="og:image" content="https://phpdi.github.io/2025/04/12/micro/IT%E8%80%81%E9%BD%90%E6%9E%B6%E6%9E%84900%E8%AE%B2/img_14.png">
+<meta property="og:image" content="https://phpdi.github.io/2025/04/12/micro/IT%E8%80%81%E9%BD%90%E6%9E%B6%E6%9E%84900%E8%AE%B2/img_15.png">
+<meta property="og:image" content="https://phpdi.github.io/2025/04/12/micro/IT%E8%80%81%E9%BD%90%E6%9E%B6%E6%9E%84900%E8%AE%B2/img_16.png">
+<meta property="og:image" content="https://phpdi.github.io/2025/04/12/micro/IT%E8%80%81%E9%BD%90%E6%9E%B6%E6%9E%84900%E8%AE%B2/img_17.png">
+<meta property="og:image" content="https://phpdi.github.io/2025/04/12/micro/IT%E8%80%81%E9%BD%90%E6%9E%B6%E6%9E%84900%E8%AE%B2/img_18.png">
+<meta property="og:image" content="https://phpdi.github.io/2025/04/12/micro/IT%E8%80%81%E9%BD%90%E6%9E%B6%E6%9E%84900%E8%AE%B2/img.png">
+<meta property="og:image" content="https://phpdi.github.io/2025/04/12/micro/IT%E8%80%81%E9%BD%90%E6%9E%B6%E6%9E%84900%E8%AE%B2/img_19.png">
+<meta property="og:image" content="https://phpdi.github.io/2025/04/12/micro/IT%E8%80%81%E9%BD%90%E6%9E%B6%E6%9E%84900%E8%AE%B2/img_20.png">
+<meta property="og:image" content="https://phpdi.github.io/2025/04/12/micro/IT%E8%80%81%E9%BD%90%E6%9E%B6%E6%9E%84900%E8%AE%B2/img_21.png">
+<meta property="og:image" content="https://phpdi.github.io/2025/04/12/micro/IT%E8%80%81%E9%BD%90%E6%9E%B6%E6%9E%84900%E8%AE%B2/img_22.png">
+<meta property="og:image" content="https://phpdi.github.io/2025/04/12/micro/IT%E8%80%81%E9%BD%90%E6%9E%B6%E6%9E%84900%E8%AE%B2/img_23.png">
+<meta property="og:image" content="https://phpdi.github.io/2025/04/12/micro/IT%E8%80%81%E9%BD%90%E6%9E%B6%E6%9E%84900%E8%AE%B2/img_24.png">
+<meta property="og:image" content="https://phpdi.github.io/2025/04/12/micro/IT%E8%80%81%E9%BD%90%E6%9E%B6%E6%9E%84900%E8%AE%B2/img_25.png">
+<meta property="og:image" content="https://phpdi.github.io/2025/04/12/micro/IT%E8%80%81%E9%BD%90%E6%9E%B6%E6%9E%84900%E8%AE%B2/img_25.png">
+<meta property="og:image" content="https://phpdi.github.io/2025/04/12/micro/IT%E8%80%81%E9%BD%90%E6%9E%B6%E6%9E%84900%E8%AE%B2/img_25.png">
+<meta property="og:image" content="https://phpdi.github.io/2025/04/12/micro/IT%E8%80%81%E9%BD%90%E6%9E%B6%E6%9E%84900%E8%AE%B2/img_26.png">
+<meta property="article:published_time" content="2025-04-12T08:37:11.172Z">
+<meta property="article:modified_time" content="2025-06-24T06:33:13.158Z">
+<meta property="article:author" content="Chen Yu">
+<meta property="article:tag" content="架构">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://phpdi.github.io/2025/04/12/micro/IT%E8%80%81%E9%BD%90%E6%9E%B6%E6%9E%84900%E8%AE%B2/img.png">
+
+<link rel="canonical" href="https://phpdi.github.io/2025/04/12/micro/IT%E8%80%81%E9%BD%90%E6%9E%B6%E6%9E%84900%E8%AE%B2/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome: false,
+    isPost: true
+  };
+</script>
+
+  <title>分布式改造理论与实战 | goeoeo</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-meta">
+
+    <div>
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">goeoeo</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+        <h1 class="site-subtitle" itemprop="description">会吃鱼</h1>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+</div>
+
+
+<nav class="site-nav">
+  
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>归档</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-fw fa-th"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-fw fa-user"></i>关于</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+
+</nav>
+  <div class="site-search">
+    <div class="popup search-popup">
+    <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocorrect="off" autocapitalize="none"
+           placeholder="搜索..." spellcheck="false"
+           type="text" id="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result"></div>
+
+</div>
+<div class="search-pop-overlay"></div>
+
+  </div>
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content">
+            
+
+  <div class="posts-expand">
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://phpdi.github.io/2025/04/12/micro/IT%E8%80%81%E9%BD%90%E6%9E%B6%E6%9E%84900%E8%AE%B2/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/head.jpeg">
+      <meta itemprop="name" content="Chen Yu">
+      <meta itemprop="description" content="自律给我自由">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="goeoeo">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          分布式改造理论与实战
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2025-04-12 16:37:11" itemprop="dateCreated datePublished" datetime="2025-04-12T16:37:11+08:00">2025-04-12</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2025-06-24 14:33:13" itemprop="dateModified" datetime="2025-06-24T14:33:13+08:00">2025-06-24</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/micro/" itemprop="url" rel="index">
+                    <span itemprop="name">micro</span>
+                  </a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="架构简介"><a href="#架构简介" class="headerlink" title="架构简介"></a>架构简介</h1><p>架构的类型：</p>
+<ol>
+<li>单体架构模式</li>
+<li>分布式架构</li>
+<li>微服务架构</li>
+<li>服务网格模式</li>
+</ol>
+<p>不谈场景的架构设计都是耍流氓。<br>架构没有对不对，只有合不合适。 </p>
+<p>单体架构：<br><img src="/2025/04/12/micro/IT%E8%80%81%E9%BD%90%E6%9E%B6%E6%9E%84900%E8%AE%B2/img.png">   </p>
+<h2 id="假设单体架构由于大量文件读取产生高磁盘IO-导致数据库查询慢，如何解决？"><a href="#假设单体架构由于大量文件读取产生高磁盘IO-导致数据库查询慢，如何解决？" class="headerlink" title="假设单体架构由于大量文件读取产生高磁盘IO,导致数据库查询慢，如何解决？"></a>假设单体架构由于大量文件读取产生高磁盘IO,导致数据库查询慢，如何解决？</h2><h3 id="加入新组件-redis"><a href="#加入新组件-redis" class="headerlink" title="加入新组件 redis"></a>加入新组件 redis</h3><p>将非事务请求的数据缓存在redis中，利用内存，解决这个问题。  </p>
+<p>带来的问题：</p>
+<ol>
+<li>架构的复杂度增加</li>
+<li>新的数据一致性问题</li>
+</ol>
+<h3 id="在架构不变的情况下解决问题"><a href="#在架构不变的情况下解决问题" class="headerlink" title="在架构不变的情况下解决问题"></a>在架构不变的情况下解决问题</h3><ol>
+<li>Web容器层面增加拦截器阻挡垃圾重复无效的请求穿透到数据库</li>
+<li>分析业务代码中SQL是否存在全表扫描以及索引选择性问题</li>
+<li>增加InnoDB引擎的Buffer_Pool让查询拥有更多的缓存命中率</li>
+<li>在操作系统层面，增加文件系统缓存，减少文件10次数</li>
+</ol>
+<h2 id="架构和框架的区别"><a href="#架构和框架的区别" class="headerlink" title="架构和框架的区别"></a>架构和框架的区别</h2><p>架构指的是软件目标的宏观设计。<br>框架是具体实现的规则。  </p>
+<p>架构需要阐述的是：</p>
+<ol>
+<li>服务器如何部署</li>
+<li>模块如何切分</li>
+<li>数据如何流转</li>
+<li>带宽需要多少</li>
+<li>人员组织，数据库集群选型是什么</li>
+</ol>
+<span id="more"></span>
+
+<h1 id="Mysql集群模式与应用场景"><a href="#Mysql集群模式与应用场景" class="headerlink" title="Mysql集群模式与应用场景"></a>Mysql集群模式与应用场景</h1><h2 id="单库模式"><a href="#单库模式" class="headerlink" title="单库模式"></a>单库模式</h2><p>简单粗暴，适合数据量千万以下小型应用，企业网站，创业公司首选。<br>不具备可用性和并发性  </p>
+<h2 id="读写分离"><a href="#读写分离" class="headerlink" title="读写分离"></a>读写分离</h2><p><img src="/2025/04/12/micro/IT%E8%80%81%E9%BD%90%E6%9E%B6%E6%9E%84900%E8%AE%B2/img_1.png"> </p>
+<h3 id="缺点"><a href="#缺点" class="headerlink" title="缺点"></a>缺点</h3><ol>
+<li>架构复杂度提升，成本提高</li>
+<li>所有节点数据均保持同步</li>
+<li>适用于读多写少，单表不过干万的互联网应用</li>
+<li>配合MHA中间件方案实现高可用性</li>
+</ol>
+<h2 id="分库分表（分片）集群模式"><a href="#分库分表（分片）集群模式" class="headerlink" title="分库分表（分片）集群模式"></a>分库分表（分片）集群模式</h2><p><img src="/2025/04/12/micro/IT%E8%80%81%E9%BD%90%E6%9E%B6%E6%9E%84900%E8%AE%B2/img_2.png"> </p>
+<h3 id="缺点-1"><a href="#缺点-1" class="headerlink" title="缺点"></a>缺点</h3><ol>
+<li>架构复杂度提升，成本提高</li>
+<li>每个节点数据是所有数据的子集</li>
+<li>适用于十亿级数据总量大型应用</li>
+<li>不具备高可用特性</li>
+</ol>
+<p>对于超过10亿级别的数据，应该选择非关系型数据库的解决方案。   </p>
+<h3 id="分片算法"><a href="#分片算法" class="headerlink" title="分片算法"></a>分片算法</h3><ol>
+<li>范围法，对主键（即为分片键进行划分。如id），mysql默认提供的特性（分区表为典型的范围法），易扩展，适用范围检索，但数据不均匀，局部负载大，适用流水账应用。</li>
+<li>HASH法，对id取模。取模和一致性Hash（独特的环形算法）。数据分布均匀。扩展复杂，数据迁移大。建议提前部署。</li>
+</ol>
+<h2 id="主流模式"><a href="#主流模式" class="headerlink" title="主流模式"></a>主流模式</h2><p>读写分离和分片的组合运用<br><img src="/2025/04/12/micro/IT%E8%80%81%E9%BD%90%E6%9E%B6%E6%9E%84900%E8%AE%B2/img_3.png"> </p>
+<h1 id="为什么大厂要做数据垂直分表"><a href="#为什么大厂要做数据垂直分表" class="headerlink" title="为什么大厂要做数据垂直分表"></a>为什么大厂要做数据垂直分表</h1><p>一张表的字段太多需要做垂直分表。   </p>
+<p>什么是水平分表？<br>以行为单位对数据进行拆分（范围法，hash法）。特点：所有的表结构完全相同。用于解决数据量大的存储问题。</p>
+<p>什么是垂直分表？<br>将表按列拆分成2张以上的小表，通过主外键关联获取数据。</p>
+<p>为什么要这么做？<br>需要了解mysql的InnoDB处理引擎。<br>行数据称为：row<br>管理数据基本单位称为页：page；每一页的默认大小：16k<br>保存页的单位称为区：Extent。<br>关系：区由连续页组成，页由连续行组成。1024&#x2F;16&#x3D;64(即：一个1M的区有64个页)</p>
+<p>InnoDB1.0后新特性，压缩页。<br>压缩页：对数据底层进行压缩，使实际大小小于逻辑大小。<br>在跨页检索数据的过程中，压缩和解压缩的效率低。在表设计时，尽可能在页内多存储行数据，减少跨页检索，增加页内检索。</p>
+<p>分析：<br>1行数据为1K，1页16K，即1页16条数据，1亿的数据需要625万页<br>垂直分页后，1行数据为64字节（1K&#x3D;1024字节），即1页256条数据，1亿的数据需要39万页。分页后的数据根据id等关系进行快速提取。<br>通过将重要字段单独剥离成小表，让每页容纳更多行数据，页减少后，缩小数据扫描范围，达到提高执行效率的目的。</p>
+<p>垂直分表条件：<br>1.单表数据达千万<br>2.字段超20个，且包含vachar，CLOB,BLOB等字段</p>
+<p>字段放大小表的依据：<br>小表：数据查询、排序时需要的字段；高频访问的小字段<br>大表：低频访问字段；大字段</p>
+<h1 id="为什么架构师对多级缓存架构情有独钟"><a href="#为什么架构师对多级缓存架构情有独钟" class="headerlink" title="为什么架构师对多级缓存架构情有独钟"></a>为什么架构师对多级缓存架构情有独钟</h1><p>缓存是提升性能最直接的方法<br>多级缓存分为：客户端，应用层，服务层，数据层<br><img src="/2025/04/12/micro/IT%E8%80%81%E9%BD%90%E6%9E%B6%E6%9E%84900%E8%AE%B2/img_5.png"> </p>
+<h2 id="客户端缓存"><a href="#客户端缓存" class="headerlink" title="客户端缓存"></a>客户端缓存</h2><p>主要对浏览器的静态资源进行缓存<br>通过在浏览器设置Expires，时间段内以文件形式把图片保存在本地，减少多次请求静态资源带来的带宽损耗（解决并发手段）</p>
+<h2 id="应用层缓存："><a href="#应用层缓存：" class="headerlink" title="应用层缓存："></a>应用层缓存：</h2><p>浏览器只负责读取Expires，Expires在CDN内容分发网络和Nginx进行设置</p>
+<h3 id="CDN的核心技术："><a href="#CDN的核心技术：" class="headerlink" title="CDN的核心技术："></a>CDN的核心技术：</h3><p>CDN内容分发网络是静态资源分发的主要技术手段，有效解决带宽集中占用以及数据分发问<br><img src="/2025/04/12/micro/IT%E8%80%81%E9%BD%90%E6%9E%B6%E6%9E%84900%E8%AE%B2/img_4.png"><br>根据请求访问DNS节点， 自动转发到上海CDN节点，检查资源是否被缓存，若已缓存则返回资源否则回源北京提取到并缓存到上海CDN节点，再由上海CDN节点进行返回。</p>
+<p>响应头Expires和Cache-control的区别：<br>1.均为通知浏览器进行文件缓存<br>2.Expires指在这个时间点缓存就到期<br>3.Cache-control指缓存时间有多长<br>即：你明天还钱给我Expires，时间是一天Cache-control</p>
+<h3 id="Nginx缓存管理："><a href="#Nginx缓存管理：" class="headerlink" title="Nginx缓存管理："></a>Nginx缓存管理：</h3><p>Nginx对Tomcat集群做软负载均衡，提供高可用性。有静态资源缓存和压缩功能（在本地缓存文件）</p>
+<h2 id="服务层缓存"><a href="#服务层缓存" class="headerlink" title="服务层缓存"></a>服务层缓存</h2><h3 id="进程内缓存"><a href="#进程内缓存" class="headerlink" title="进程内缓存"></a>进程内缓存</h3><p>进程内缓存：即数据运行时载入程序开辟的缓存中JAVA框架的运用（hibernate，mybatis一二级缓存，springmvc页面缓存）<br>开源实现：ehcache，Caffeine</p>
+<h3 id="进程外缓存"><a href="#进程外缓存" class="headerlink" title="进程外缓存"></a>进程外缓存</h3><p>即为分布式缓存（redis）<br>常见的加缓存是直接加redis是不严谨<br>需要按照：先近到远，先快后慢逐级访问<br>场景：商品秒杀，若无本地缓存，都保存在redis 每完成一笔交易，局域网会进行若干网络通信，可能存在网络异常不稳定因素<br>且redis会承担所有节点的压力，当突发流量若超过容载上限redis会崩溃<br>所有java的应用端也需要设计多级缓存</p>
+<p>一般会通过进程内缓存和进程外缓存（分布式缓存）组合分担压力<br>ehcache（进程内缓存）可以在缓存不存在时去redis进程外缓存进行读取，redis没有读取数据库 数据库再对ehcache，redis进行更新</p>
+<p>缓存一致性处理：<br><img src="/2025/04/12/micro/IT%E8%80%81%E9%BD%90%E6%9E%B6%E6%9E%84900%E8%AE%B2/img_6.png"><br>场景：修改商品价格为80，如何保证缓存也进行更新<br>处理方法：引入消息队列（MQ）的主动推送功能，对服务实例推送变更实例<br>即：修改商品价格为80，向MQ发送变更消息，MQ将消息推送到服务实例服务实例将原缓存数据删除，再创建缓存</p>
+<p>什么情况适用多级缓存架构   </p>
+<ol>
+<li>缓存数据稳定</li>
+<li>可能产生高并发场景（12306）应用启动时进行预热处理，访问前将热点数据先缓存，减少后端压力</li>
+<li>一定程度上允许数据不一致不重要的信息更新处理方式：T+1,ETL日中处理（处理方式这块不懂）</li>
+</ol>
+<h1 id="为什么大厂在大表做水平分表时严禁使用自增主键"><a href="#为什么大厂在大表做水平分表时严禁使用自增主键" class="headerlink" title="为什么大厂在大表做水平分表时严禁使用自增主键"></a>为什么大厂在大表做水平分表时严禁使用自增主键</h1><p>自增主键在分布式环境下不适用。<br>由于自增主键必须连续，所以按范围法进行分片，ID的数量已固定。无法进行动态扩展。会产生“尾部热点”效应。<br>尾部热点：即按范围法进行分片后，前面的分片已储存数据，最后一个分片的压力很大。<br>Hash分片的效率更高。</p>
+<p>使用UUID替代自增主键吗？不可以、<br>涉及数据库底层机制：<br>1.uuid，唯一无序。无序导致索引重排。主键有序的情况下，B+树只需要在原有的数据后面追加即可。</p>
+<p>怎么解决？分布式且有序的主键生成算法？<br>雪花算法（SnowFlake），推特公司。<br>结构：符号位（1bit）+时间戳（41bit）+机器ID（10bit）+序列（12bit）<br>使用方法：直接调用JAR包</p>
+<p>雪花算法需要注意时间回拨带来的影响。可能出现id重复的可能。</p>
+<h2 id="如何解决雪花算法的时钟回拨问题"><a href="#如何解决雪花算法的时钟回拨问题" class="headerlink" title="如何解决雪花算法的时钟回拨问题"></a>如何解决雪花算法的时钟回拨问题</h2><p>大多数场景：短暂回拨等待 + 持久化时间戳 + 报警机制。<br>短暂的时钟回拨可休眠等待，长时间回拨需要停止ID生成，人工干预。      </p>
+<p>高要求场景：逻辑时钟补偿 + Worker ID动态切换 + 分布式协调。<br>当物理时钟回拨时，使用逻辑递增的虚拟时间戳替代    </p>
+<h1 id="布隆过滤器在亿级流量电商系统的应用"><a href="#布隆过滤器在亿级流量电商系统的应用" class="headerlink" title="布隆过滤器在亿级流量电商系统的应用"></a>布隆过滤器在亿级流量电商系统的应用</h1><p>布隆过滤器（Bloom Filter）是一种高效的空间概率型数据结构，主要用于快速判断元素是否存在集合中。尽管存在一定的误判率（假阳性），但其极低的内存占用和常数级查询速度使其在多个领域广泛应用 </p>
+<p>java代码示例<br><img src="/2025/04/12/micro/IT%E8%80%81%E9%BD%90%E6%9E%B6%E6%9E%84900%E8%AE%B2/img_7.png"></p>
+<h2 id="可能遇到的问题"><a href="#可能遇到的问题" class="headerlink" title="可能遇到的问题"></a>可能遇到的问题</h2><p>不支持删除操作：标准布隆过滤器无法直接删除元素（需改用Counting Bloom Filter或者定时重建）。<br>预热成本：初始化需预加载全量数据，不适合频繁更新的场景。<br>哈希函数选择：需使用高散列性的哈希函数（如MurmurHash、SHA-1）。  </p>
+<h2 id="应用场景"><a href="#应用场景" class="headerlink" title="应用场景"></a>应用场景</h2><h3 id="数据库查询优化"><a href="#数据库查询优化" class="headerlink" title="数据库查询优化"></a>数据库查询优化</h3><p>场景：避免对不存在的Key查询数据库。<br>实现：<br>将数据库中所有记录的Key预先存入布隆过滤器。<br>查询时先检查布隆过滤器：若返回“不存在”，直接终止查询；若返回“可能存在”，再执行数据库查询。<br>优势：减少磁盘I&#x2F;O压力，尤其适合高并发场景（如电商商品查询）。 </p>
+<h3 id="缓存穿透防护"><a href="#缓存穿透防护" class="headerlink" title="缓存穿透防护"></a>缓存穿透防护</h3><p>场景：防止恶意请求攻击（如频繁查询不存在的缓存Key）。<br>实现：<br>缓存击穿时，大量请求绕过缓存直接访问数据库。<br>在缓存前加布隆过滤器层，拦截明确不存在的Key。</p>
+<h3 id="网络爬虫去重"><a href="#网络爬虫去重" class="headerlink" title="网络爬虫去重"></a>网络爬虫去重</h3><p>场景：判断URL是否已被抓取，避免重复爬取。<br>实现：<br>爬虫启动时加载已抓取的URL到布隆过滤器。<br>新URL抓取前检查过滤器，若“可能存在”则跳过。</p>
+<h3 id="分布式系统协同"><a href="#分布式系统协同" class="headerlink" title="分布式系统协同"></a>分布式系统协同</h3><p>场景：分布式数据库&#x2F;缓存中快速过滤无效请求。<br>案例：<br>Apache Cassandra：使用布隆过滤器判断某行数据是否在指定SSTable中，减少磁盘扫描。<br>CDN节点：边缘节点同步资源指纹的布隆过滤器，快速判断资源是否缓存。 </p>
+<h3 id="安全与黑名单过滤"><a href="#安全与黑名单过滤" class="headerlink" title="安全与黑名单过滤"></a>安全与黑名单过滤</h3><p>场景：快速判断用户请求是否属于黑名单（如垃圾邮件、恶意IP）。<br>实现：<br>将黑名单数据（如IP哈希、邮件域名）存入布隆过滤器。<br>新请求到达时，先通过过滤器拦截高风险请求。<br>优点：内存占用远低于哈希表（适合亿级数据）。</p>
+<h1 id="为啥京东开发要禁用IP直连"><a href="#为啥京东开发要禁用IP直连" class="headerlink" title="为啥京东开发要禁用IP直连"></a>为啥京东开发要禁用IP直连</h1><p>IP直连有什么问题？（存在强耦合问题）<br>jdbc:mysql&#x2F;&#x2F;192.168.3.21:3306:db（写法没问题，但存在强耦合问题）<br>线上建议用域名代替ip地址，因为在架构设计中需要考虑解耦问题。    </p>
+<p>场景：原代码连接数据库地址是192.168.3.21，现在业务需要连接到另一台数据库192.168.3.31，则可能存在代码修改，编译，部署，走流程等。<br>所以ip直连不可取。  </p>
+<h2 id="引入内部DNS，即建立一个域名解析服务器。"><a href="#引入内部DNS，即建立一个域名解析服务器。" class="headerlink" title="引入内部DNS，即建立一个域名解析服务器。"></a>引入内部DNS，即建立一个域名解析服务器。</h2><p>jdbc:mysql&#x2F;&#x2F;域名:3306:db，直接访问数据库ip对应的域名，域名解析服务器根据配置解析该域名对应的IP返回。<br>优点：IP地址迁移变得灵活，后续直接修改域名解析服务器域名对应的IP地址即可。<br>缺点：1.没有故障发现和转移，2.一个域名绑定多个ip，负载均衡只有轮询规则。      </p>
+<h2 id="加入注册中心（Nacos-Eureka-Consul）"><a href="#加入注册中心（Nacos-Eureka-Consul）" class="headerlink" title="加入注册中心（Nacos&#x2F;Eureka&#x2F;Consul）"></a>加入注册中心（Nacos&#x2F;Eureka&#x2F;Consul）</h2><p>弥补没有故障发现和转移。<br>多个数据库IP，在注册中心进行配置，注册中心通过多种负载均衡，选取某个IP进行返回（跟内部DNS类似）<br>如果发现故障和故障转移。<br>数据库注册到注册中心，两者之间通过注册保持连续，注册相当于一个心跳包，服务器节点定时向注册中心发送信息，告知服务器正常。<br>若某节点异常，异常服务器会被注册中心移除。   </p>
+<p>优点：支持故障发现和转移。具有多种负载均衡策略。<br>缺点：架构复杂度增加。 （注册中心需要维护节点的状态，并且定时监听心跳包。一般会部署成集群，比内部DNS复杂，还需考虑高可用）   </p>
+<h1 id="什么是CAP定理"><a href="#什么是CAP定理" class="headerlink" title="什么是CAP定理"></a>什么是CAP定理</h1><p>分布式架构的基本理论，指的是在一个分布式系统中，一致性（Consistency）、可用性（Availability）、分区容错性（Partition tolerance）。<br>C：更新操作成功后，所有节点在同一时间的数据完全一致。(复习：事务的一致性：事务前后的数据完整性保持一致)<br>A：用户访问数据时，系统能否在正常响应时间返回预期结果。（复习：事务的原子性：事务是一个不可分割的工作单位，事务要么发生要么不发生）<br>P：分布式系统遇到某节点或网络分区故障的时候，仍能对外提供一致性和可用性的服务。   </p>
+<p>CAP这三个要素最多只能同时实现两点，不可能三者兼顾。<br>所有只有CP,AP,AC    </p>
+<p>当前场景：订单系统下单买了1瓶酒，库存系统酒的数量-1。分布式系统中，系统之间需要网络通信等各种问题。无法实现买了1瓶酒，库存即时-1。<br>CP：订单创建后，等待库存减少后才返回结果。保证数据一致，强一致性表现，用户体验差。（类似银行存钱）<br>AP：订单创建后，不等待库存减少后就返回结果。那库存数据怎么办？（异步处理后通知订单系统，若异步处理失败，有补偿机制（重新发请求，补录，校对程序）保证数据一致）。（类似淘宝）<br>AC：不拆分数据库系统，在一个数据库的一个事务中完成操作，即单体应用。下单，减库存在一个事务。缺点：不能做分区， 分区涉及网络，进而涉及分区容错性，进而选CP,AP。   </p>
+<p>银行金融大多使用CP模式，强调数据一致性<br>互联网应用大多使用AP模式，强调用户体验   </p>
+<h1 id="负载均衡器"><a href="#负载均衡器" class="headerlink" title="负载均衡器"></a>负载均衡器</h1><p>负载均衡的种类：</p>
+<p>1、硬件负载均衡（F5），软件负载均衡<br>2、网络层面：<br>4层代理（指网络7层模型（OSI）的传输层，TCP），举例：Linux的LVS<br>7层代理（指网络7层模型（OSI）的应用层，HTTP），举例：Nginx  </p>
+<p>Nginx：内置负载均衡策略有哪些？<br>轮询策略（默认）、权重策略、IP_HASH、URL_HASH(第三方模块)、FAIR（第三方模块）   </p>
+<p><img src="/2025/04/12/micro/IT%E8%80%81%E9%BD%90%E6%9E%B6%E6%9E%84900%E8%AE%B2/img_8.png"></p>
+<h1 id="阿里开发规范解读：为啥禁用外键约束"><a href="#阿里开发规范解读：为啥禁用外键约束" class="headerlink" title="阿里开发规范解读：为啥禁用外键约束"></a>阿里开发规范解读：为啥禁用外键约束</h1><p>阿里规范：不得使用外键与级联，一切外键概念必须在应用层（代码层面）解决。</p>
+<p>不喜欢外键约束的理由：测试人员和开发人员，在做delete或update受到外键约束，需要处理外键约束涉及的其他表的数据。<br>拥护外键约束的理由：保证数据的一致性和完整性，级联操作方便，数据一致性交给数据库，代码量少。   </p>
+<p>场景：订单表跟订单明细表。这时订单id主外键关联。<br>1.性能问题，额外的数据一致性校验查询。往订单明细表添加一条数据，会强制查询对应订单表中的订单id是否存在。<br>2.并发问题：外键约束会启用行级锁，主表写入会进入阻塞。<br>并发环境下，往订单明细表添加一条数据，会强制查询对应订单表中的订单id是否存在，所以订单表开启共享锁（共享锁【S锁】，又称为读锁，可以查看但无法修改和删除的一种数据锁）。<br>某种情况下对订单id进行更新操作，这时该数据开启排它锁（排他锁【X锁】，又称写锁）。若写锁不被释放，订单明细表处于被锁定的状态。会造成线层积压，系统崩溃。<br>3.级联删除问题：多层级联删除会让数据变得不可控，触发器严禁使用。<br>4.数据耦合：数据库层面数据关系产生耦合，数据迁移维护困难。<br>场景：订单明细表数据增长，数据量10亿后，需要迁移到Hbase。这时数据不在同一个库，没有了主外键约束，代码上无校验，就会产生属于一致性问题。   </p>
+<h1 id="使用阿里Canal实现MySQL异构数据同步"><a href="#使用阿里Canal实现MySQL异构数据同步" class="headerlink" title="使用阿里Canal实现MySQL异构数据同步"></a>使用阿里Canal实现MySQL异构数据同步</h1><p>Canal:阿里巴巴的，基于db增量日志解析，提供增量数据订阅和消费<br><img src="/2025/04/12/micro/IT%E8%80%81%E9%BD%90%E6%9E%B6%E6%9E%84900%E8%AE%B2/img_9.png"></p>
+<h1 id="18-Redis-Sentinel高可用架构"><a href="#18-Redis-Sentinel高可用架构" class="headerlink" title="18.Redis Sentinel高可用架构"></a>18.Redis Sentinel高可用架构</h1><h2 id="Redis主从复制过程"><a href="#Redis主从复制过程" class="headerlink" title="Redis主从复制过程"></a>Redis主从复制过程</h2><ol>
+<li>slave执行命令向master建立连接</li>
+<li>master执行bgsave（后台存储），生成rdb快照（redis备份方式，data以二进制方式保存在本地），发送到slave上</li>
+<li>slave获取快照后读取，对data还原，保证初始化数据一致</li>
+<li>master接受命令发送到salve，salve执行保证后续数据一致</li>
+</ol>
+<h2 id="Redis-Sentinel集群"><a href="#Redis-Sentinel集群" class="headerlink" title="Redis Sentinel集群"></a>Redis Sentinel集群</h2><ol>
+<li>建立sentinel集群，有一个leader角色</li>
+<li>一般需要6个节点，3个sentinel，3个主从。</li>
+<li>sentinel安装在节点上，根据配置信息监听redis的健康状态。<br>（每个sentinel 1次&#x2F;秒频率向master，salve及其他sentinel实例发送ping命令）</li>
+</ol>
+<h2 id="下线判定"><a href="#下线判定" class="headerlink" title="下线判定"></a>下线判定</h2><p>主观下线：sentinel 与master连接超时，则当前sentinel认为master已下线<br>客观下线：超过半数的sentinel 主观下线</p>
+<h2 id="sentinel选主过程"><a href="#sentinel选主过程" class="headerlink" title="sentinel选主过程"></a>sentinel选主过程</h2><ol>
+<li>剔除主观下线、已断线、或者最后一次回复PING命令的时间大于五秒钟的Slave</li>
+<li>剔除与失效主服务器连接断开的时长超过down-after选项指定的时长十倍的Slave</li>
+<li>按同步数据的偏移量选出数据最完整的Slave</li>
+<li>如果偏称量相同，选中ID最小的Slave</li>
+</ol>
+<h2 id="故障转移"><a href="#故障转移" class="headerlink" title="故障转移"></a>故障转移</h2><ol>
+<li>向被选中的从服务器发送SLAVEOF NO ONE命令，让它转变为主服务器。</li>
+<li>通过发布与订阅功能，将更新后的配置传播给所有其他Sentinel，其他Sentinel对它们自2的配置进行更新。</li>
+<li>向所有Slave下达SLAVEOF命令，指向新的主</li>
+<li>redis-slave向master重新建立连接，重放rdb保持数据同步</li>
+<li>在上述转移过程中，伴随着Redis本地配置文件的自动重写，这样即使是实例重启配置也不会丢失</li>
+<li>原有的master在恢复后降级为slave与新master全量同步</li>
+</ol>
+<h2 id="Sentinel高可用"><a href="#Sentinel高可用" class="headerlink" title="Sentinel高可用"></a>Sentinel高可用</h2><ol>
+<li>sentinel自动故障迁移使用raft算法来选举领头(leader) sentinel</li>
+<li>超过半数投票选出leader, sentinel Leader用于下达故障转移的指令</li>
+<li>如果某个Leader挂了，则使用Raft从剩余的Sentinel中选出leader</li>
+</ol>
+<p>Sentinel如何知道彼此的存在？<br>Sentinel的信息在redis的master进行注册，master持有Sentinel的信息。</p>
+<p>总的来说 sentinel的作用,就是选master，包括自身master和redismaster</p>
+<h1 id="19-Seata分布式事务解决方案"><a href="#19-Seata分布式事务解决方案" class="headerlink" title="19.Seata分布式事务解决方案"></a>19.Seata分布式事务解决方案</h1><h1 id="20-如何保障接口幂等性"><a href="#20-如何保障接口幂等性" class="headerlink" title="20.如何保障接口幂等性"></a>20.如何保障接口幂等性</h1><p>幂等指多次操作产生的影响只会跟一次执行的结果相同</p>
+<ol>
+<li>唯一主键索引实现幂等性</li>
+<li>乐观锁实现幂等性<ul>
+<li>它的心态就是很乐观，每次去拿数据的时候都认为别人不会修改，所以不会上锁</li>
+<li>一般使用版本号控制 version，即为数据增加一个版本标识</li>
+</ul>
+</li>
+<li>悲观锁实现幂等性<ul>
+<li>悲观锁它是一种悲观的心里状态，对应于生活中悲观的人总是想着事情往坏的方向发展</li>
+<li>select * from update</li>
+</ul>
+</li>
+<li>Token 令牌如何实现幂等性<ul>
+<li>客户端每次进入表单页面可以优先申请一个唯一令牌存储本地，服务端存储令牌 token 值(redis,文件，memcache 都可)</li>
+<li>每次发送请求时可以在 Headers 头部中带上当前这个 token 令牌</li>
+<li>服务端验证 token 是否存在，存在则删除 token，执行后续业务逻辑；不存在则响应客户端重复提交提示语</li>
+</ul>
+</li>
+</ol>
+<h1 id="21-通过乐观锁解决并发数据冲突"><a href="#21-通过乐观锁解决并发数据冲突" class="headerlink" title="21.通过乐观锁解决并发数据冲突"></a>21.通过乐观锁解决并发数据冲突</h1><p>它的心态就是很乐观，每次去拿数据的时候都认为别人不会修改，所以不会上锁<br>一般使用版本号控制 version，即为数据增加一个版本标识<br>在更新数据的时候，需要在where条件中带上这个version   </p>
+<p>如果由于version问题更新出错如何处理？  </p>
+<ol>
+<li>直接接口报错，让调用断重试</li>
+<li>在接口的位置，判定是由于version问题导致的，可以重试，降低接口出错的概率。</li>
+</ol>
+<h1 id="22-阿里开发规范解读，为啥禁止三表Join关联"><a href="#22-阿里开发规范解读，为啥禁止三表Join关联" class="headerlink" title="22.阿里开发规范解读，为啥禁止三表Join关联"></a>22.阿里开发规范解读，为啥禁止三表Join关联</h1><p>【强制】超过三个表禁止join,需要join的字段，数据类型必须绝对一致，多表关联查询时，保证被关联的字段需要有索引<br>即使双表join 也要注意表索引，SQL性能。  </p>
+<p>早期的版本如mysql5.7使用的 Loop Join, 连表的时候如果右边的表数据量很大，则会很慢时间复杂度为 N*M (N:左边表的行数，M：右边表的行数)。<br>最新的pgsql,mysql8 会自动选择算法，如果内存足够会优先使用 Hash join，其时间复杂度为 N+M</p>
+<h1 id="24-前后端分离架构下jwt认证该如何设计？"><a href="#24-前后端分离架构下jwt认证该如何设计？" class="headerlink" title="24.前后端分离架构下jwt认证该如何设计？"></a>24.前后端分离架构下jwt认证该如何设计？</h1><p>Json Web Token(jwt)<br>jwt是一个经过加密的，包含用户信息的且具有时效性的固定格式字符串<br>结构： header.paylod.sign </p>
+<h2 id="网关统一校验"><a href="#网关统一校验" class="headerlink" title="网关统一校验"></a>网关统一校验</h2><p><img src="/2025/04/12/micro/IT%E8%80%81%E9%BD%90%E6%9E%B6%E6%9E%84900%E8%AE%B2/img_11.png"><br>jwt校验无感知，验证过程无入侵<br>执行效率低，适用于低并发企业级应用    </p>
+<h2 id="应用认证方案"><a href="#应用认证方案" class="headerlink" title="应用认证方案"></a>应用认证方案</h2><p><img src="/2025/04/12/micro/IT%E8%80%81%E9%BD%90%E6%9E%B6%E6%9E%84900%E8%AE%B2/img_12.png"><br>控制更加灵活，有一定代码入侵，代码可以灵活控制，适用于追求性能的互联网应用   </p>
+<h1 id="25-无状态的jwt令牌如何实现续签功能"><a href="#25-无状态的jwt令牌如何实现续签功能" class="headerlink" title="25.无状态的jwt令牌如何实现续签功能"></a>25.无状态的jwt令牌如何实现续签功能</h1><p>JWT 不建议设置长时间有效期，有安全风险<br>续签JWT必须有退出机制    </p>
+<h2 id="不允许改变Token令牌实现续签"><a href="#不允许改变Token令牌实现续签" class="headerlink" title="不允许改变Token令牌实现续签"></a>不允许改变Token令牌实现续签</h2><p><img src="/2025/04/12/micro/IT%E8%80%81%E9%BD%90%E6%9E%B6%E6%9E%84900%E8%AE%B2/img_13.png"><br>为什么加入Redis后JWT中的过期时间可以去掉？<br>因为过期时间被放到后端Redis存储，可以灵活控制<br>同时在生产MD5时加入环境特征，尽量避免人为盗取，但这也意味着JWT是有状态的了。 </p>
+<h2 id="允许前端改变token实现续签"><a href="#允许前端改变token实现续签" class="headerlink" title="允许前端改变token实现续签"></a>允许前端改变token实现续签</h2><p><img src="/2025/04/12/micro/IT%E8%80%81%E9%BD%90%E6%9E%B6%E6%9E%84900%E8%AE%B2/img_14.png">    </p>
+<p>为什么必须要两个jwt,为什么不直接设置一个token一个小时过期，判断还有10分钟过期的时候，生成新的token进行替换？<br>这两个token的职责不一样，两个token的情况下 认证中心是不关心 “还有10分钟数过期的”，只关心token是否有效<br>虽然同样可以实现，但给整个认证系统多加了一个“还有10分钟数过期的” 逻辑    </p>
+<p>这个方案的问题，客户端要处理大量的jwt工作： </p>
+<ol>
+<li>需要由原先的一个jwt变成了两个jwt</li>
+<li>需要观察header并刷新本地jwt</li>
+</ol>
+<p>存在重复生成JWT（多线程情况下） 解决方案：</p>
+<ul>
+<li>认证中心记录过去n秒内的原始jwt 刷新所生成的新的jwt数据</li>
+<li>n秒内同样的jwt再次请求刷新，就返回相同的新jwt数据</li>
+</ul>
+<h1 id="26-公共表在分布式架构下如何进行访问"><a href="#26-公共表在分布式架构下如何进行访问" class="headerlink" title="26.公共表在分布式架构下如何进行访问"></a>26.公共表在分布式架构下如何进行访问</h1><p>什么事公共表 ？<br>被其他业务模块共享的基础数据表，被称为公共表，比如：系统用户表，行政区域，组织结构，系统配置  </p>
+<p>通过微服务解耦     </p>
+<h1 id="27-一套经典的web高可用架构"><a href="#27-一套经典的web高可用架构" class="headerlink" title="27.一套经典的web高可用架构"></a>27.一套经典的web高可用架构</h1><p><img src="/2025/04/12/micro/IT%E8%80%81%E9%BD%90%E6%9E%B6%E6%9E%84900%E8%AE%B2/img_15.png">     </p>
+<p>通过nginx 对后端web服务做负载均衡。<br>通过 Virtual IP + keepalived组件的主备的方式，解决nginx单点问题<br>此时备nginx 并不工作    </p>
+<p>如何让备nginx也用起来？<br>DNS轮询与多VIP组合解决利用率问题<br>DNS-server 配置两个VitrualIP, 分别指向两台nginx形成互备机制<br><img src="/2025/04/12/micro/IT%E8%80%81%E9%BD%90%E6%9E%B6%E6%9E%84900%E8%AE%B2/img_16.png">     </p>
+<h1 id="28-Redis-Cluster-集群模式"><a href="#28-Redis-Cluster-集群模式" class="headerlink" title="28.Redis Cluster 集群模式"></a>28.Redis Cluster 集群模式</h1><p>Cluster模式是Redis3.0开始推出  </p>
+<ul>
+<li>采用无中心结构，每个节点保存数据和整个集群状态，每个节点都和其他所有节点连接  </li>
+<li>官方要求：至少6个节点才可以保证高可用，即3主3从；扩展性强，更好做高可用</li>
+<li>各个节点会相互通信，采用gossip协议交换节点元数据信息</li>
+<li>数据分散存储到各个节点上<br><img src="/2025/04/12/micro/IT%E8%80%81%E9%BD%90%E6%9E%B6%E6%9E%84900%E8%AE%B2/img_17.png"></li>
+</ul>
+<p><strong>Redis Clouster集群如何将数据分散存储？</strong><br>集群采用 Hash Slot(哈希槽) 分配<br>Redis集群预分好16384个槽，初始化集群时平均规划给每一台Redis Master<br><img src="/2025/04/12/micro/IT%E8%80%81%E9%BD%90%E6%9E%B6%E6%9E%84900%E8%AE%B2/img_18.png">      </p>
+<p>集群存储槽的分配信息采用的是bitmap存储，16384&#x2F;8(bit)&#x3D;2k ，也就是说存储一个节点持有的槽位信息需要2K<br>2k的数据需要在各个节点间通过gossip协议交换数据，过大会占用网络带宽<br>redis官方推荐不要超过1000个节点，16384完全够用    </p>
+<p><strong>故障转移过程</strong><br>master节点挂掉后，会被标记为fail,其对应的slave会成为新的master<br>当新的slave（包括原有的master）连上后,会重新对master进行全量同步<br>如果 master,slave都挂了，那么整个集群将不可用  </p>
+<p><strong>节点扩容缩容，后redis key 如何迁移</strong><br>集群通过 重新分配槽 来扩容缩容，使用 MIGRATE 原子迁移槽内的每个 Key，并在迁移过程中用 -ASK 临时重定向 保证客户端访问正确。迁移完成后，槽的所有权正式转移。</p>
+<h1 id="29-MySql脏读，幻读，不可重复读"><a href="#29-MySql脏读，幻读，不可重复读" class="headerlink" title="29.MySql脏读，幻读，不可重复读"></a>29.MySql脏读，幻读，不可重复读</h1><p>脏读： 是指事务中读取到其他事务没提交的数据<br>不可重复读： 同一事务中前后查询不一致的情况（读的别的事务已提交的结果）<br>幻读： 一次事务中前后数据量发生变化，范围查询的时候，两次查询结果不一致，MVCC机制解决不了范围查询</p>
+<h2 id="事务隔离机制"><a href="#事务隔离机制" class="headerlink" title="事务隔离机制"></a>事务隔离机制</h2><ol>
+<li>读未提交（Read Uncommitted）：这是最低的隔离级别，允许读取尚未提交的数据变更，可能会导致脏读、不可重复读和幻读。</li>
+<li>读已提交（Read Committed）：只允许读取已提交的数据，可以避免脏读，但是可能会出现不可重复读和幻读。</li>
+<li>可重复读（Repeatable Read）：在同一事务内，多次读取同一数据返回的结果是一致的，可以避免脏读和不可重复读，但是可能出现幻读。</li>
+<li>串行化（Serializable）：这是最严格的隔离级别，完全遵循ACID特性，所有的事务依次逐个执行，可以避免脏读、不可重复读和幻读。</li>
+</ol>
+<table>
+<thead>
+<tr>
+<th>隔离级别</th>
+<th>脏读</th>
+<th>不可以重复读</th>
+<th>幻读</th>
+<th>加锁读</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>读未提交</td>
+<td>✓</td>
+<td>✓</td>
+<td>✓</td>
+<td>x</td>
+</tr>
+<tr>
+<td>读以提交</td>
+<td>x</td>
+<td>✓</td>
+<td>✓</td>
+<td>x</td>
+</tr>
+<tr>
+<td>可重复读</td>
+<td>x</td>
+<td>x</td>
+<td>✓ (InnoDb除外)</td>
+<td>x</td>
+</tr>
+<tr>
+<td>串行化</td>
+<td>x</td>
+<td>x</td>
+<td>x</td>
+<td>✓</td>
+</tr>
+</tbody></table>
+<p>MVCC多版本并发控制，保证的是“读已提交”和“可重复读”</p>
+<p>幻读：范围查询的时候，两次查询结果不一致，MVCC机制解决不了范围查询<br>MySQL默认为可重复读    </p>
+<h1 id="30-MySQL-MVCC机制"><a href="#30-MySQL-MVCC机制" class="headerlink" title="30.MySQL MVCC机制"></a>30.MySQL MVCC机制</h1><p>MVCC（乐观锁）多版本并发控制，保证的是“读已提交”和“可重复读”</p>
+<p>版本链：<br>InnoDB 引擎的数据行中有 两个额外的字段trx_id(事务ID)和roll_pointer(回滚指针),<br>undolog 当事务对数据进行修改时，先将修改前旧值写入undolog，形成一个旧版本,将当前事务id写入trx_id，将旧版记录的指针写入当前和roll_pointer<br>这样基于 undolog的数据版本以及字段roll_pointer就形成了一个版本链</p>
+<p><img src="/2025/04/12/micro/IT%E8%80%81%E9%BD%90%E6%9E%B6%E6%9E%84900%E8%AE%B2/img.png"></p>
+<p>ReadView:<br>事务在使用MVCC机制时产生的一致性视图，包含4个字段：</p>
+<ol>
+<li>creator_trx_id: 创建readView的事务的事务ID</li>
+<li>m_ids: 创建视图时当前数据库中活跃且为提交的事务ID列表，在这个列表里面的事务版本不可读</li>
+<li>min_trx_id: 创建ReadView时，最小活跃事务ID，用于在版本链中找出已经提交过的数据</li>
+<li>max_trx_id: 全局事务ID最大值+1</li>
+</ol>
+<p>MVCC 通过ReadView以及undo日志形成的版本来控制多版本并发读，查询记录时，先判定页记录的trx_id是否在当前ReadView的m_ids列表中，如果不在说明事务已提交，如果在表明<br>当前当前数据行是在，查询开始后提交的，就需要根据版本链找出小于min_trx_id的记录</p>
+<p>读已提交和可重复读的实现区别在于，读已提交每次读的时候都会重新生成ReadView，这样已提交的事务就不在m_ids中，实现读到提交的记录</p>
+<p>MVCC没有解决幻读的问题，Innodb 默认的隔离级别是“可重复读”，通过行锁和间隙锁(next-key Lock)来解决幻读的问题,在查询时使用 SELECT … FOR UPDATE开启行锁或间隙锁  </p>
+<h1 id="31-从宜信架构演化理解微服务"><a href="#31-从宜信架构演化理解微服务" class="headerlink" title="31.从宜信架构演化理解微服务"></a>31.从宜信架构演化理解微服务</h1><h2 id="单体架构"><a href="#单体架构" class="headerlink" title="单体架构"></a>单体架构</h2><p><img src="/2025/04/12/micro/IT%E8%80%81%E9%BD%90%E6%9E%B6%E6%9E%84900%E8%AE%B2/img_19.png">    </p>
+<ul>
+<li>紧耦合</li>
+<li>系统复杂，牵一发动全局，发布周期长</li>
+<li>所有模块耦合在一个进程中</li>
+<li>完全封闭架构</li>
+<li>业务发展初期，快速满足客户需求</li>
+</ul>
+<h2 id="垂直拆封阶段"><a href="#垂直拆封阶段" class="headerlink" title="垂直拆封阶段"></a>垂直拆封阶段</h2><p><img src="/2025/04/12/micro/IT%E8%80%81%E9%BD%90%E6%9E%B6%E6%9E%84900%E8%AE%B2/img_20.png"></p>
+<ul>
+<li>紧耦合 </li>
+<li>垂直拆分系统，竖井式架构，子系统之间没有直接关联，重复造轮子：OS,DB,Midderware</li>
+<li>存在大量的重复代码拷贝</li>
+<li>完全封闭架构</li>
+<li>快速增长时，以应用系统为中心的架构模式</li>
+</ul>
+<h2 id="RPC通信阶段"><a href="#RPC通信阶段" class="headerlink" title="RPC通信阶段"></a>RPC通信阶段</h2><p><img src="/2025/04/12/micro/IT%E8%80%81%E9%BD%90%E6%9E%B6%E6%9E%84900%E8%AE%B2/img_21.png">   </p>
+<p>数据库由各个子系统共享改为独享。   </p>
+<ul>
+<li>紧耦合（共享分布式对象实现远程方法调用）</li>
+<li>系统交互采用RPC或者私有TCP协议</li>
+<li>服务生产者消费者存在强代码依赖</li>
+<li>异构系统（不同子系统之间编程语言不同）集成不友好</li>
+<li>高并发场景，性能比较好。</li>
+</ul>
+<h2 id="ESB服务总线阶段"><a href="#ESB服务总线阶段" class="headerlink" title="ESB服务总线阶段"></a>ESB服务总线阶段</h2><p><img src="/2025/04/12/micro/IT%E8%80%81%E9%BD%90%E6%9E%B6%E6%9E%84900%E8%AE%B2/img_22.png"> </p>
+<ul>
+<li>松耦合</li>
+<li>ESB消息总线技术实现异构系统集成集中式管理</li>
+<li>基于WebService技术，重量级消息通讯机制    </li>
+<li>业务功能重用，粒度粗</li>
+<li>面向服务架构，团队规模大时，集成异构系统，提供统一服务解决方案    </li>
+<li>ESB服务总线，因为是集中式的线路，容易出现瓶颈</li>
+</ul>
+<p>ESB服务总线有两个职责： </p>
+<ol>
+<li>存储服务在什么位置</li>
+<li>统一调用端的api,ESB负责不同消息协议的转换，例如：Grpc，Dobble</li>
+</ol>
+<h2 id="微服务"><a href="#微服务" class="headerlink" title="微服务"></a>微服务</h2><p>微服务架构风格是一种将单个应用程序开发为一组小型服务的方法，每个服务运行在自己的进程中，并以轻量级的机制（通常是HTTP RESTful API）的方式进行通信，<br>这些服务围绕着业务能力所建立的，并且可以完全自动化的部署机构独立部署，这些服务的集中管理只有最低限度，可以用不同的编程语言编写并使用不同的数据库存储技术   </p>
+<p><img src="/2025/04/12/micro/IT%E8%80%81%E9%BD%90%E6%9E%B6%E6%9E%84900%E8%AE%B2/img_23.png"> </p>
+<h1 id="32-为什么互联网公司离不开Docker"><a href="#32-为什么互联网公司离不开Docker" class="headerlink" title="32.为什么互联网公司离不开Docker?"></a>32.为什么互联网公司离不开Docker?</h1><p>容器化技术的应用场景： </p>
+<ol>
+<li>标准的迁移方式</li>
+<li>统一的参数配置</li>
+<li>自动化部署</li>
+<li>应用集群监控</li>
+<li>开发和运维之间的沟通桥梁</li>
+</ol>
+<p>容器与镜像    </p>
+<ol>
+<li>镜像：镜像是文件，只读，提供了运行程序完整的数据，是应用程序的“集装箱” </li>
+<li>容器：镜像的运行环境，迷你的“Linux操作系统”，由Docker负责创建，容器之间彼此隔离</li>
+</ol>
+<h1 id="35-红黑，灰度发布"><a href="#35-红黑，灰度发布" class="headerlink" title="35.红黑，灰度发布"></a>35.红黑，灰度发布</h1><p>红黑属于全量发布<br>灰度属于增量发布    </p>
+<p>灰度发布具有局限性，对于新旧版本无法协同作业的情况，需要放弃灰度发布，采用红黑发布    </p>
+<h1 id="36-MySQL索引选择性问题"><a href="#36-MySQL索引选择性问题" class="headerlink" title="36.MySQL索引选择性问题"></a>36.MySQL索引选择性问题</h1><p>当索引列的值区分度不高的时候 例如sex字段，这时候筛选的数据结果集太大，比全表扫描还慢的时候，优化器会选择走全表扫描，从而不会用到索引。    </p>
+<p>解决办法：</p>
+<ul>
+<li>通过组合索引提高选择性</li>
+<li>引入搜索引擎(针对于模糊搜索) 例如：Es</li>
+<li>sql语句中强制使用索引 “force index(字段)”</li>
+<li>增加缓存，提高全表扫描的速度（钞能力）</li>
+</ul>
+<h1 id="38-MQ中间件是如何实现可靠性投递的"><a href="#38-MQ中间件是如何实现可靠性投递的" class="headerlink" title="38.MQ中间件是如何实现可靠性投递的"></a>38.MQ中间件是如何实现可靠性投递的</h1><p>ack确认机制<br><img src="/2025/04/12/micro/IT%E8%80%81%E9%BD%90%E6%9E%B6%E6%9E%84900%E8%AE%B2/img_24.png"> </p>
+<ol>
+<li>发送阶段：遇到高延迟，Producer会多次重发消息，直到Broker ack确认，过程中Broker会自动去重。超时Producer产生异常，应用进行捕获提示  </li>
+<li>存储阶段：Broker先刷盘再ack确认，即便ack失败消息不会丢失，多次重试直到Producer接收，会有消息积压的情况</li>
+<li>消费阶段：Broker向Consumer发数据，一段时间未接收，自动重发，直到Consumer Ack确认，Consumer注意幂等处理</li>
+</ol>
+<p>可靠性设置：</p>
+<ul>
+<li>MQ异步刷盘(NSYNC_FLUSH),改为同步刷盘</li>
+<li>存储介质损坏，建议采用RAID10或分布式存储</li>
+<li>不要启用自动ACK,RabbitMQ默认会自动ACK</li>
+</ul>
+<h1 id="39-应用持续集成与发布-CI-CD"><a href="#39-应用持续集成与发布-CI-CD" class="headerlink" title="39.应用持续集成与发布 CI&#x2F;CD"></a>39.应用持续集成与发布 CI&#x2F;CD</h1><p><img src="/2025/04/12/micro/IT%E8%80%81%E9%BD%90%E6%9E%B6%E6%9E%84900%E8%AE%B2/img_25.png">   </p>
+<ul>
+<li>CI: 应用编译打包,推送镜像的过程</li>
+<li>CD: 应用自动部署的过程</li>
+</ul>
+<h1 id="40-为什么表的主键要使用代理主键（自增编号），不建议使用业务主键？"><a href="#40-为什么表的主键要使用代理主键（自增编号），不建议使用业务主键？" class="headerlink" title="40.为什么表的主键要使用代理主键（自增编号），不建议使用业务主键？"></a>40.为什么表的主键要使用代理主键（自增编号），不建议使用业务主键？</h1><ol>
+<li>业务主键更浪费空间</li>
+<li>业务主键无顺序，可能会造成写入数据时需要更长的时间组织索引  </li>
+<li>业务主键如果是字符串，在分库分表时，无法直接取模运算，需要先转换为数字。</li>
+</ol>
+<h1 id="44-sql优化过程-190ms将到2ms"><a href="#44-sql优化过程-190ms将到2ms" class="headerlink" title="44.sql优化过程 190ms将到2ms"></a>44.sql优化过程 190ms将到2ms</h1><ol>
+<li>使用explain 查看sql执行计划</li>
+<li>为where条件中的字段建立索引</li>
+<li>使用explain 查看执行计划，如果索引未被使用到，可以使用explain extend，show warnings 获取详细的未使用到索引的原因,例如是否有隐式转换发生</li>
+<li>跟warnings分析，修复对应情况。</li>
+</ol>
+<h1 id="45-RabbitMQ六种工作模式"><a href="#45-RabbitMQ六种工作模式" class="headerlink" title="45.RabbitMQ六种工作模式"></a>45.RabbitMQ六种工作模式</h1><p><img src="/2025/04/12/micro/IT%E8%80%81%E9%BD%90%E6%9E%B6%E6%9E%84900%E8%AE%B2/img_25.png"><br>基本构成：</p>
+<ul>
+<li>Producer: 生产者</li>
+<li>Consumer: 消费者</li>
+<li>Broker: MQ服务器，管理队列，消息以及相关信息</li>
+<li>Message: 消息，程序间的通信数据</li>
+<li>Queue: 队列，消息存放的容器，消息先进先出</li>
+<li>Exchange: 交换机，用于分发消息</li>
+</ul>
+<p><img src="/2025/04/12/micro/IT%E8%80%81%E9%BD%90%E6%9E%B6%E6%9E%84900%E8%AE%B2/img_25.png">   </p>
+<h2 id="简单模式"><a href="#简单模式" class="headerlink" title="简单模式"></a>简单模式</h2><p>消息直接投递到队列，不经过交换机，且队列只有一个消费者</p>
+<h2 id="工作队列模式"><a href="#工作队列模式" class="headerlink" title="工作队列模式"></a>工作队列模式</h2><p>消息直接投递到队列，不经过交换机，队列有多个消费者，负载均衡的消费消息</p>
+<h2 id="发布订阅"><a href="#发布订阅" class="headerlink" title="发布订阅"></a>发布订阅</h2><p>rabbitMQ队列，一个队列有多个消费者时，队列消息会被负载均衡的分发<br>要实现，多个消费者消费相同的消息，就要借助交换机，将消息分发到不同的队列    </p>
+<p>消息通过交换机，进入不同队列， 不同队列绑定的消费者，可以消费到相同的消息。   </p>
+<h2 id="路由模式"><a href="#路由模式" class="headerlink" title="路由模式"></a>路由模式</h2><p>type&#x3D;direct<br>交换机根据不同的 routing key 将消息分发到不同的队列中，路由模式下 routing key是一种精准匹配模式   </p>
+<h2 id="主题模式"><a href="#主题模式" class="headerlink" title="主题模式"></a>主题模式</h2><p>type&#x3D;topic<br>交换机根据key 模糊匹配，以投递到不同的队列中  </p>
+<h2 id="RPC远程同步调用"><a href="#RPC远程同步调用" class="headerlink" title="RPC远程同步调用"></a>RPC远程同步调用</h2><p>client到server之间是一种阻塞模式的调用<br>RPC 通信通常会选用专有的RPC框架，这种模式用的很少</p>
+<h1 id="46-利用Rabbitmq死信队列解决消息积压问题"><a href="#46-利用Rabbitmq死信队列解决消息积压问题" class="headerlink" title="46.利用Rabbitmq死信队列解决消息积压问题"></a>46.利用Rabbitmq死信队列解决消息积压问题</h1><p>解决消息积压可以从两个方面入手  </p>
+<p><strong>消费者端</strong></p>
+<ul>
+<li>增加消费者数量</li>
+<li>提升单个消费者消费消息的能力，例如优化代码</li>
+</ul>
+<p><strong>生产者端</strong></p>
+<ul>
+<li>对消息的生产进行限流和降级</li>
+<li>延迟发送， 例如：利用rabbitmq的死信队列，将多余的消息发回生产者端，暂时存起来，等一段时间再进行发送（流量削峰填谷）<br><img src="/2025/04/12/micro/IT%E8%80%81%E9%BD%90%E6%9E%B6%E6%9E%84900%E8%AE%B2/img_26.png"></li>
+</ul>
+<p>什么是死信？<br>过期或者无法处理的消息称为死信</p>
+<p>死信是怎么产生的？   </p>
+<ul>
+<li>消费者拒绝接受，且没有重新入列的消息</li>
+<li>队列满了，无法入列的消息</li>
+<li>消息设置了TTL过期时间，超过有效期后的消息</li>
+<li>队列设置了TTL过期时间，超过有效期后的消息<blockquote>
+<p>消息设置了TTL,队列也设置了TTL，以小的TTL为准</p>
+</blockquote>
+</li>
+</ul>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E6%9E%B6%E6%9E%84/" rel="tag"># 架构</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2025/04/03/k8s/k8s%E4%B8%AD%E5%AF%B9grpc%E6%9C%8D%E5%8A%A1%E8%BF%9B%E8%A1%8C%E5%81%A5%E5%BA%B7%E6%A3%80%E6%9F%A5/" rel="prev" title="k8s中对grpc服务进行健康检查">
+      <i class="fa fa-chevron-left"></i> k8s中对grpc服务进行健康检查
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2025/05/24/linux/%E8%99%9A%E6%8B%9F%E5%8C%96KVM%E6%9E%81%E9%80%9F%E5%85%A5%E9%97%A8/" rel="next" title="虚拟化KVM极速入门">
+      虚拟化KVM极速入门 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+  </div>
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let activeClass = CONFIG.comments.activeClass;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%9E%B6%E6%9E%84%E7%AE%80%E4%BB%8B"><span class="nav-number">1.</span> <span class="nav-text">架构简介</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%81%87%E8%AE%BE%E5%8D%95%E4%BD%93%E6%9E%B6%E6%9E%84%E7%94%B1%E4%BA%8E%E5%A4%A7%E9%87%8F%E6%96%87%E4%BB%B6%E8%AF%BB%E5%8F%96%E4%BA%A7%E7%94%9F%E9%AB%98%E7%A3%81%E7%9B%98IO-%E5%AF%BC%E8%87%B4%E6%95%B0%E6%8D%AE%E5%BA%93%E6%9F%A5%E8%AF%A2%E6%85%A2%EF%BC%8C%E5%A6%82%E4%BD%95%E8%A7%A3%E5%86%B3%EF%BC%9F"><span class="nav-number">1.1.</span> <span class="nav-text">假设单体架构由于大量文件读取产生高磁盘IO,导致数据库查询慢，如何解决？</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8A%A0%E5%85%A5%E6%96%B0%E7%BB%84%E4%BB%B6-redis"><span class="nav-number">1.1.1.</span> <span class="nav-text">加入新组件 redis</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%9C%A8%E6%9E%B6%E6%9E%84%E4%B8%8D%E5%8F%98%E7%9A%84%E6%83%85%E5%86%B5%E4%B8%8B%E8%A7%A3%E5%86%B3%E9%97%AE%E9%A2%98"><span class="nav-number">1.1.2.</span> <span class="nav-text">在架构不变的情况下解决问题</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%9E%B6%E6%9E%84%E5%92%8C%E6%A1%86%E6%9E%B6%E7%9A%84%E5%8C%BA%E5%88%AB"><span class="nav-number">1.2.</span> <span class="nav-text">架构和框架的区别</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Mysql%E9%9B%86%E7%BE%A4%E6%A8%A1%E5%BC%8F%E4%B8%8E%E5%BA%94%E7%94%A8%E5%9C%BA%E6%99%AF"><span class="nav-number">2.</span> <span class="nav-text">Mysql集群模式与应用场景</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8D%95%E5%BA%93%E6%A8%A1%E5%BC%8F"><span class="nav-number">2.1.</span> <span class="nav-text">单库模式</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%AF%BB%E5%86%99%E5%88%86%E7%A6%BB"><span class="nav-number">2.2.</span> <span class="nav-text">读写分离</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%BC%BA%E7%82%B9"><span class="nav-number">2.2.1.</span> <span class="nav-text">缺点</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%88%86%E5%BA%93%E5%88%86%E8%A1%A8%EF%BC%88%E5%88%86%E7%89%87%EF%BC%89%E9%9B%86%E7%BE%A4%E6%A8%A1%E5%BC%8F"><span class="nav-number">2.3.</span> <span class="nav-text">分库分表（分片）集群模式</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%BC%BA%E7%82%B9-1"><span class="nav-number">2.3.1.</span> <span class="nav-text">缺点</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%88%86%E7%89%87%E7%AE%97%E6%B3%95"><span class="nav-number">2.3.2.</span> <span class="nav-text">分片算法</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%BB%E6%B5%81%E6%A8%A1%E5%BC%8F"><span class="nav-number">2.4.</span> <span class="nav-text">主流模式</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%B8%BA%E4%BB%80%E4%B9%88%E5%A4%A7%E5%8E%82%E8%A6%81%E5%81%9A%E6%95%B0%E6%8D%AE%E5%9E%82%E7%9B%B4%E5%88%86%E8%A1%A8"><span class="nav-number">3.</span> <span class="nav-text">为什么大厂要做数据垂直分表</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%B8%BA%E4%BB%80%E4%B9%88%E6%9E%B6%E6%9E%84%E5%B8%88%E5%AF%B9%E5%A4%9A%E7%BA%A7%E7%BC%93%E5%AD%98%E6%9E%B6%E6%9E%84%E6%83%85%E6%9C%89%E7%8B%AC%E9%92%9F"><span class="nav-number">4.</span> <span class="nav-text">为什么架构师对多级缓存架构情有独钟</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%A2%E6%88%B7%E7%AB%AF%E7%BC%93%E5%AD%98"><span class="nav-number">4.1.</span> <span class="nav-text">客户端缓存</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%BA%94%E7%94%A8%E5%B1%82%E7%BC%93%E5%AD%98%EF%BC%9A"><span class="nav-number">4.2.</span> <span class="nav-text">应用层缓存：</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#CDN%E7%9A%84%E6%A0%B8%E5%BF%83%E6%8A%80%E6%9C%AF%EF%BC%9A"><span class="nav-number">4.2.1.</span> <span class="nav-text">CDN的核心技术：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Nginx%E7%BC%93%E5%AD%98%E7%AE%A1%E7%90%86%EF%BC%9A"><span class="nav-number">4.2.2.</span> <span class="nav-text">Nginx缓存管理：</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%9C%8D%E5%8A%A1%E5%B1%82%E7%BC%93%E5%AD%98"><span class="nav-number">4.3.</span> <span class="nav-text">服务层缓存</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%BF%9B%E7%A8%8B%E5%86%85%E7%BC%93%E5%AD%98"><span class="nav-number">4.3.1.</span> <span class="nav-text">进程内缓存</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%BF%9B%E7%A8%8B%E5%A4%96%E7%BC%93%E5%AD%98"><span class="nav-number">4.3.2.</span> <span class="nav-text">进程外缓存</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%B8%BA%E4%BB%80%E4%B9%88%E5%A4%A7%E5%8E%82%E5%9C%A8%E5%A4%A7%E8%A1%A8%E5%81%9A%E6%B0%B4%E5%B9%B3%E5%88%86%E8%A1%A8%E6%97%B6%E4%B8%A5%E7%A6%81%E4%BD%BF%E7%94%A8%E8%87%AA%E5%A2%9E%E4%B8%BB%E9%94%AE"><span class="nav-number">5.</span> <span class="nav-text">为什么大厂在大表做水平分表时严禁使用自增主键</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%A6%82%E4%BD%95%E8%A7%A3%E5%86%B3%E9%9B%AA%E8%8A%B1%E7%AE%97%E6%B3%95%E7%9A%84%E6%97%B6%E9%92%9F%E5%9B%9E%E6%8B%A8%E9%97%AE%E9%A2%98"><span class="nav-number">5.1.</span> <span class="nav-text">如何解决雪花算法的时钟回拨问题</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%B8%83%E9%9A%86%E8%BF%87%E6%BB%A4%E5%99%A8%E5%9C%A8%E4%BA%BF%E7%BA%A7%E6%B5%81%E9%87%8F%E7%94%B5%E5%95%86%E7%B3%BB%E7%BB%9F%E7%9A%84%E5%BA%94%E7%94%A8"><span class="nav-number">6.</span> <span class="nav-text">布隆过滤器在亿级流量电商系统的应用</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8F%AF%E8%83%BD%E9%81%87%E5%88%B0%E7%9A%84%E9%97%AE%E9%A2%98"><span class="nav-number">6.1.</span> <span class="nav-text">可能遇到的问题</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%BA%94%E7%94%A8%E5%9C%BA%E6%99%AF"><span class="nav-number">6.2.</span> <span class="nav-text">应用场景</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%95%B0%E6%8D%AE%E5%BA%93%E6%9F%A5%E8%AF%A2%E4%BC%98%E5%8C%96"><span class="nav-number">6.2.1.</span> <span class="nav-text">数据库查询优化</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%BC%93%E5%AD%98%E7%A9%BF%E9%80%8F%E9%98%B2%E6%8A%A4"><span class="nav-number">6.2.2.</span> <span class="nav-text">缓存穿透防护</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%BD%91%E7%BB%9C%E7%88%AC%E8%99%AB%E5%8E%BB%E9%87%8D"><span class="nav-number">6.2.3.</span> <span class="nav-text">网络爬虫去重</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%88%86%E5%B8%83%E5%BC%8F%E7%B3%BB%E7%BB%9F%E5%8D%8F%E5%90%8C"><span class="nav-number">6.2.4.</span> <span class="nav-text">分布式系统协同</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%89%E5%85%A8%E4%B8%8E%E9%BB%91%E5%90%8D%E5%8D%95%E8%BF%87%E6%BB%A4"><span class="nav-number">6.2.5.</span> <span class="nav-text">安全与黑名单过滤</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%B8%BA%E5%95%A5%E4%BA%AC%E4%B8%9C%E5%BC%80%E5%8F%91%E8%A6%81%E7%A6%81%E7%94%A8IP%E7%9B%B4%E8%BF%9E"><span class="nav-number">7.</span> <span class="nav-text">为啥京东开发要禁用IP直连</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%BC%95%E5%85%A5%E5%86%85%E9%83%A8DNS%EF%BC%8C%E5%8D%B3%E5%BB%BA%E7%AB%8B%E4%B8%80%E4%B8%AA%E5%9F%9F%E5%90%8D%E8%A7%A3%E6%9E%90%E6%9C%8D%E5%8A%A1%E5%99%A8%E3%80%82"><span class="nav-number">7.1.</span> <span class="nav-text">引入内部DNS，即建立一个域名解析服务器。</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8A%A0%E5%85%A5%E6%B3%A8%E5%86%8C%E4%B8%AD%E5%BF%83%EF%BC%88Nacos-Eureka-Consul%EF%BC%89"><span class="nav-number">7.2.</span> <span class="nav-text">加入注册中心（Nacos&#x2F;Eureka&#x2F;Consul）</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%BB%80%E4%B9%88%E6%98%AFCAP%E5%AE%9A%E7%90%86"><span class="nav-number">8.</span> <span class="nav-text">什么是CAP定理</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1%E5%99%A8"><span class="nav-number">9.</span> <span class="nav-text">负载均衡器</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E9%98%BF%E9%87%8C%E5%BC%80%E5%8F%91%E8%A7%84%E8%8C%83%E8%A7%A3%E8%AF%BB%EF%BC%9A%E4%B8%BA%E5%95%A5%E7%A6%81%E7%94%A8%E5%A4%96%E9%94%AE%E7%BA%A6%E6%9D%9F"><span class="nav-number">10.</span> <span class="nav-text">阿里开发规范解读：为啥禁用外键约束</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8%E9%98%BF%E9%87%8CCanal%E5%AE%9E%E7%8E%B0MySQL%E5%BC%82%E6%9E%84%E6%95%B0%E6%8D%AE%E5%90%8C%E6%AD%A5"><span class="nav-number">11.</span> <span class="nav-text">使用阿里Canal实现MySQL异构数据同步</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#18-Redis-Sentinel%E9%AB%98%E5%8F%AF%E7%94%A8%E6%9E%B6%E6%9E%84"><span class="nav-number">12.</span> <span class="nav-text">18.Redis Sentinel高可用架构</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Redis%E4%B8%BB%E4%BB%8E%E5%A4%8D%E5%88%B6%E8%BF%87%E7%A8%8B"><span class="nav-number">12.1.</span> <span class="nav-text">Redis主从复制过程</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Redis-Sentinel%E9%9B%86%E7%BE%A4"><span class="nav-number">12.2.</span> <span class="nav-text">Redis Sentinel集群</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%8B%E7%BA%BF%E5%88%A4%E5%AE%9A"><span class="nav-number">12.3.</span> <span class="nav-text">下线判定</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#sentinel%E9%80%89%E4%B8%BB%E8%BF%87%E7%A8%8B"><span class="nav-number">12.4.</span> <span class="nav-text">sentinel选主过程</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%95%85%E9%9A%9C%E8%BD%AC%E7%A7%BB"><span class="nav-number">12.5.</span> <span class="nav-text">故障转移</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Sentinel%E9%AB%98%E5%8F%AF%E7%94%A8"><span class="nav-number">12.6.</span> <span class="nav-text">Sentinel高可用</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#19-Seata%E5%88%86%E5%B8%83%E5%BC%8F%E4%BA%8B%E5%8A%A1%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88"><span class="nav-number">13.</span> <span class="nav-text">19.Seata分布式事务解决方案</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#20-%E5%A6%82%E4%BD%95%E4%BF%9D%E9%9A%9C%E6%8E%A5%E5%8F%A3%E5%B9%82%E7%AD%89%E6%80%A7"><span class="nav-number">14.</span> <span class="nav-text">20.如何保障接口幂等性</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#21-%E9%80%9A%E8%BF%87%E4%B9%90%E8%A7%82%E9%94%81%E8%A7%A3%E5%86%B3%E5%B9%B6%E5%8F%91%E6%95%B0%E6%8D%AE%E5%86%B2%E7%AA%81"><span class="nav-number">15.</span> <span class="nav-text">21.通过乐观锁解决并发数据冲突</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#22-%E9%98%BF%E9%87%8C%E5%BC%80%E5%8F%91%E8%A7%84%E8%8C%83%E8%A7%A3%E8%AF%BB%EF%BC%8C%E4%B8%BA%E5%95%A5%E7%A6%81%E6%AD%A2%E4%B8%89%E8%A1%A8Join%E5%85%B3%E8%81%94"><span class="nav-number">16.</span> <span class="nav-text">22.阿里开发规范解读，为啥禁止三表Join关联</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#24-%E5%89%8D%E5%90%8E%E7%AB%AF%E5%88%86%E7%A6%BB%E6%9E%B6%E6%9E%84%E4%B8%8Bjwt%E8%AE%A4%E8%AF%81%E8%AF%A5%E5%A6%82%E4%BD%95%E8%AE%BE%E8%AE%A1%EF%BC%9F"><span class="nav-number">17.</span> <span class="nav-text">24.前后端分离架构下jwt认证该如何设计？</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%BD%91%E5%85%B3%E7%BB%9F%E4%B8%80%E6%A0%A1%E9%AA%8C"><span class="nav-number">17.1.</span> <span class="nav-text">网关统一校验</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%BA%94%E7%94%A8%E8%AE%A4%E8%AF%81%E6%96%B9%E6%A1%88"><span class="nav-number">17.2.</span> <span class="nav-text">应用认证方案</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#25-%E6%97%A0%E7%8A%B6%E6%80%81%E7%9A%84jwt%E4%BB%A4%E7%89%8C%E5%A6%82%E4%BD%95%E5%AE%9E%E7%8E%B0%E7%BB%AD%E7%AD%BE%E5%8A%9F%E8%83%BD"><span class="nav-number">18.</span> <span class="nav-text">25.无状态的jwt令牌如何实现续签功能</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%8D%E5%85%81%E8%AE%B8%E6%94%B9%E5%8F%98Token%E4%BB%A4%E7%89%8C%E5%AE%9E%E7%8E%B0%E7%BB%AD%E7%AD%BE"><span class="nav-number">18.1.</span> <span class="nav-text">不允许改变Token令牌实现续签</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%85%81%E8%AE%B8%E5%89%8D%E7%AB%AF%E6%94%B9%E5%8F%98token%E5%AE%9E%E7%8E%B0%E7%BB%AD%E7%AD%BE"><span class="nav-number">18.2.</span> <span class="nav-text">允许前端改变token实现续签</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#26-%E5%85%AC%E5%85%B1%E8%A1%A8%E5%9C%A8%E5%88%86%E5%B8%83%E5%BC%8F%E6%9E%B6%E6%9E%84%E4%B8%8B%E5%A6%82%E4%BD%95%E8%BF%9B%E8%A1%8C%E8%AE%BF%E9%97%AE"><span class="nav-number">19.</span> <span class="nav-text">26.公共表在分布式架构下如何进行访问</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#27-%E4%B8%80%E5%A5%97%E7%BB%8F%E5%85%B8%E7%9A%84web%E9%AB%98%E5%8F%AF%E7%94%A8%E6%9E%B6%E6%9E%84"><span class="nav-number">20.</span> <span class="nav-text">27.一套经典的web高可用架构</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#28-Redis-Cluster-%E9%9B%86%E7%BE%A4%E6%A8%A1%E5%BC%8F"><span class="nav-number">21.</span> <span class="nav-text">28.Redis Cluster 集群模式</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#29-MySql%E8%84%8F%E8%AF%BB%EF%BC%8C%E5%B9%BB%E8%AF%BB%EF%BC%8C%E4%B8%8D%E5%8F%AF%E9%87%8D%E5%A4%8D%E8%AF%BB"><span class="nav-number">22.</span> <span class="nav-text">29.MySql脏读，幻读，不可重复读</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%8B%E5%8A%A1%E9%9A%94%E7%A6%BB%E6%9C%BA%E5%88%B6"><span class="nav-number">22.1.</span> <span class="nav-text">事务隔离机制</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#30-MySQL-MVCC%E6%9C%BA%E5%88%B6"><span class="nav-number">23.</span> <span class="nav-text">30.MySQL MVCC机制</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#31-%E4%BB%8E%E5%AE%9C%E4%BF%A1%E6%9E%B6%E6%9E%84%E6%BC%94%E5%8C%96%E7%90%86%E8%A7%A3%E5%BE%AE%E6%9C%8D%E5%8A%A1"><span class="nav-number">24.</span> <span class="nav-text">31.从宜信架构演化理解微服务</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8D%95%E4%BD%93%E6%9E%B6%E6%9E%84"><span class="nav-number">24.1.</span> <span class="nav-text">单体架构</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9E%82%E7%9B%B4%E6%8B%86%E5%B0%81%E9%98%B6%E6%AE%B5"><span class="nav-number">24.2.</span> <span class="nav-text">垂直拆封阶段</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#RPC%E9%80%9A%E4%BF%A1%E9%98%B6%E6%AE%B5"><span class="nav-number">24.3.</span> <span class="nav-text">RPC通信阶段</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#ESB%E6%9C%8D%E5%8A%A1%E6%80%BB%E7%BA%BF%E9%98%B6%E6%AE%B5"><span class="nav-number">24.4.</span> <span class="nav-text">ESB服务总线阶段</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%BE%AE%E6%9C%8D%E5%8A%A1"><span class="nav-number">24.5.</span> <span class="nav-text">微服务</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#32-%E4%B8%BA%E4%BB%80%E4%B9%88%E4%BA%92%E8%81%94%E7%BD%91%E5%85%AC%E5%8F%B8%E7%A6%BB%E4%B8%8D%E5%BC%80Docker"><span class="nav-number">25.</span> <span class="nav-text">32.为什么互联网公司离不开Docker?</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#35-%E7%BA%A2%E9%BB%91%EF%BC%8C%E7%81%B0%E5%BA%A6%E5%8F%91%E5%B8%83"><span class="nav-number">26.</span> <span class="nav-text">35.红黑，灰度发布</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#36-MySQL%E7%B4%A2%E5%BC%95%E9%80%89%E6%8B%A9%E6%80%A7%E9%97%AE%E9%A2%98"><span class="nav-number">27.</span> <span class="nav-text">36.MySQL索引选择性问题</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#38-MQ%E4%B8%AD%E9%97%B4%E4%BB%B6%E6%98%AF%E5%A6%82%E4%BD%95%E5%AE%9E%E7%8E%B0%E5%8F%AF%E9%9D%A0%E6%80%A7%E6%8A%95%E9%80%92%E7%9A%84"><span class="nav-number">28.</span> <span class="nav-text">38.MQ中间件是如何实现可靠性投递的</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#39-%E5%BA%94%E7%94%A8%E6%8C%81%E7%BB%AD%E9%9B%86%E6%88%90%E4%B8%8E%E5%8F%91%E5%B8%83-CI-CD"><span class="nav-number">29.</span> <span class="nav-text">39.应用持续集成与发布 CI&#x2F;CD</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#40-%E4%B8%BA%E4%BB%80%E4%B9%88%E8%A1%A8%E7%9A%84%E4%B8%BB%E9%94%AE%E8%A6%81%E4%BD%BF%E7%94%A8%E4%BB%A3%E7%90%86%E4%B8%BB%E9%94%AE%EF%BC%88%E8%87%AA%E5%A2%9E%E7%BC%96%E5%8F%B7%EF%BC%89%EF%BC%8C%E4%B8%8D%E5%BB%BA%E8%AE%AE%E4%BD%BF%E7%94%A8%E4%B8%9A%E5%8A%A1%E4%B8%BB%E9%94%AE%EF%BC%9F"><span class="nav-number">30.</span> <span class="nav-text">40.为什么表的主键要使用代理主键（自增编号），不建议使用业务主键？</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#44-sql%E4%BC%98%E5%8C%96%E8%BF%87%E7%A8%8B-190ms%E5%B0%86%E5%88%B02ms"><span class="nav-number">31.</span> <span class="nav-text">44.sql优化过程 190ms将到2ms</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#45-RabbitMQ%E5%85%AD%E7%A7%8D%E5%B7%A5%E4%BD%9C%E6%A8%A1%E5%BC%8F"><span class="nav-number">32.</span> <span class="nav-text">45.RabbitMQ六种工作模式</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%AE%80%E5%8D%95%E6%A8%A1%E5%BC%8F"><span class="nav-number">32.1.</span> <span class="nav-text">简单模式</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%B7%A5%E4%BD%9C%E9%98%9F%E5%88%97%E6%A8%A1%E5%BC%8F"><span class="nav-number">32.2.</span> <span class="nav-text">工作队列模式</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8F%91%E5%B8%83%E8%AE%A2%E9%98%85"><span class="nav-number">32.3.</span> <span class="nav-text">发布订阅</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%B7%AF%E7%94%B1%E6%A8%A1%E5%BC%8F"><span class="nav-number">32.4.</span> <span class="nav-text">路由模式</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%BB%E9%A2%98%E6%A8%A1%E5%BC%8F"><span class="nav-number">32.5.</span> <span class="nav-text">主题模式</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#RPC%E8%BF%9C%E7%A8%8B%E5%90%8C%E6%AD%A5%E8%B0%83%E7%94%A8"><span class="nav-number">32.6.</span> <span class="nav-text">RPC远程同步调用</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#46-%E5%88%A9%E7%94%A8Rabbitmq%E6%AD%BB%E4%BF%A1%E9%98%9F%E5%88%97%E8%A7%A3%E5%86%B3%E6%B6%88%E6%81%AF%E7%A7%AF%E5%8E%8B%E9%97%AE%E9%A2%98"><span class="nav-number">33.</span> <span class="nav-text">46.利用Rabbitmq死信队列解决消息积压问题</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Chen Yu"
+      src="/images/head.jpeg">
+  <p class="site-author-name" itemprop="name">Chen Yu</p>
+  <div class="site-description" itemprop="description">自律给我自由</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">123</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">20</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">84</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2025</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Chen Yu</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v6.3.0
+  </div>
+  <span class="post-meta-divider">|</span>
+  <div class="theme-info">主题 – <a href="https://theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a> v7.7.0
+  </div>
+
+<div>
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<span id="busuanzi_container_site_pv" style='display:none'>
+    本站总访问量 <span id="busuanzi_value_site_pv"></span> 次
+    <span class="post-meta-divider">|</span>
+</span>
+<span id="busuanzi_container_site_uv" style='display:none'>
+    有<span id="busuanzi_value_site_uv"></span>人看过我的博客啦
+</span>
+</div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>

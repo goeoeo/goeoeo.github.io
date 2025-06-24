@@ -1,0 +1,532 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 6.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+  <meta name="baidu-site-verification" content="D033aiBRFi">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+
+
+<script id="hexo-configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    hostname: new URL('https://phpdi.github.io').hostname,
+    root: '/',
+    scheme: 'Gemini',
+    version: '7.7.0',
+    exturl: false,
+    sidebar: {"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},
+    copycode: {"enable":false,"show_result":false,"style":null},
+    back2top: {"enable":true,"sidebar":false,"scrollpercent":false},
+    bookmark: {"enable":false,"color":"#222","save":"auto"},
+    fancybox: false,
+    mediumzoom: false,
+    lazyload: false,
+    pangu: false,
+    comments: {"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},
+    algolia: {
+      appID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    },
+    localsearch: {"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},
+    path: 'search.xml',
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}
+  };
+</script>
+
+  <meta name="description" content="KVM概述虚拟化的定义在计算机技术中，虚拟化意味着创建设备或资源的虚拟版本，如服务器，存储设备，网络设备，操作系统等。    虚拟化技术：  系统虚拟化 存储虚拟化 网络虚拟化 GPU虚拟化 软件虚拟化 硬件支持虚拟化  系统虚拟化这种虚拟化通常表现为在单一系统上运行多个操作系统。这些虚拟操作系统同时运行，每个操作系统又相互独立。   虚拟化的实现方式有三种：    纯软件仿真 虚拟化翻译 容器技">
+<meta property="og:type" content="article">
+<meta property="og:title" content="虚拟化KVM极速入门">
+<meta property="og:url" content="https://phpdi.github.io/2025/05/24/linux/%E8%99%9A%E6%8B%9F%E5%8C%96KVM%E6%9E%81%E9%80%9F%E5%85%A5%E9%97%A8/index.html">
+<meta property="og:site_name" content="goeoeo">
+<meta property="og:description" content="KVM概述虚拟化的定义在计算机技术中，虚拟化意味着创建设备或资源的虚拟版本，如服务器，存储设备，网络设备，操作系统等。    虚拟化技术：  系统虚拟化 存储虚拟化 网络虚拟化 GPU虚拟化 软件虚拟化 硬件支持虚拟化  系统虚拟化这种虚拟化通常表现为在单一系统上运行多个操作系统。这些虚拟操作系统同时运行，每个操作系统又相互独立。   虚拟化的实现方式有三种：    纯软件仿真 虚拟化翻译 容器技">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://phpdi.github.io/2025/05/24/linux/%E8%99%9A%E6%8B%9F%E5%8C%96KVM%E6%9E%81%E9%80%9F%E5%85%A5%E9%97%A8/img.png">
+<meta property="og:image" content="https://phpdi.github.io/2025/05/24/linux/%E8%99%9A%E6%8B%9F%E5%8C%96KVM%E6%9E%81%E9%80%9F%E5%85%A5%E9%97%A8/img_1.png">
+<meta property="og:image" content="https://phpdi.github.io/2025/05/24/linux/%E8%99%9A%E6%8B%9F%E5%8C%96KVM%E6%9E%81%E9%80%9F%E5%85%A5%E9%97%A8/img_2.png">
+<meta property="article:published_time" content="2025-05-24T01:00:46.447Z">
+<meta property="article:modified_time" content="2025-05-24T01:38:57.328Z">
+<meta property="article:author" content="Chen Yu">
+<meta property="article:tag" content="kvm">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://phpdi.github.io/2025/05/24/linux/%E8%99%9A%E6%8B%9F%E5%8C%96KVM%E6%9E%81%E9%80%9F%E5%85%A5%E9%97%A8/img.png">
+
+<link rel="canonical" href="https://phpdi.github.io/2025/05/24/linux/%E8%99%9A%E6%8B%9F%E5%8C%96KVM%E6%9E%81%E9%80%9F%E5%85%A5%E9%97%A8/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome: false,
+    isPost: true
+  };
+</script>
+
+  <title>虚拟化KVM极速入门 | goeoeo</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-meta">
+
+    <div>
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">goeoeo</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+        <h1 class="site-subtitle" itemprop="description">会吃鱼</h1>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+</div>
+
+
+<nav class="site-nav">
+  
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>归档</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-fw fa-th"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-fw fa-user"></i>关于</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+
+</nav>
+  <div class="site-search">
+    <div class="popup search-popup">
+    <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocorrect="off" autocapitalize="none"
+           placeholder="搜索..." spellcheck="false"
+           type="text" id="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result"></div>
+
+</div>
+<div class="search-pop-overlay"></div>
+
+  </div>
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content">
+            
+
+  <div class="posts-expand">
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://phpdi.github.io/2025/05/24/linux/%E8%99%9A%E6%8B%9F%E5%8C%96KVM%E6%9E%81%E9%80%9F%E5%85%A5%E9%97%A8/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/head.jpeg">
+      <meta itemprop="name" content="Chen Yu">
+      <meta itemprop="description" content="自律给我自由">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="goeoeo">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          虚拟化KVM极速入门
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2025-05-24 09:00:46 / 修改时间：09:38:57" itemprop="dateCreated datePublished" datetime="2025-05-24T09:00:46+08:00">2025-05-24</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/linux/" itemprop="url" rel="index">
+                    <span itemprop="name">linux</span>
+                  </a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="KVM概述"><a href="#KVM概述" class="headerlink" title="KVM概述"></a>KVM概述</h1><h2 id="虚拟化的定义"><a href="#虚拟化的定义" class="headerlink" title="虚拟化的定义"></a>虚拟化的定义</h2><p>在计算机技术中，虚拟化意味着创建设备或资源的虚拟版本，如服务器，存储设备，网络设备，操作系统等。   </p>
+<p>虚拟化技术：</p>
+<ol>
+<li>系统虚拟化</li>
+<li>存储虚拟化</li>
+<li>网络虚拟化</li>
+<li>GPU虚拟化</li>
+<li>软件虚拟化</li>
+<li>硬件支持虚拟化</li>
+</ol>
+<p>系统虚拟化<br>这种虚拟化通常表现为在单一系统上运行多个操作系统。<br>这些虚拟操作系统同时运行，每个操作系统又相互独立。  </p>
+<p>虚拟化的实现方式有三种：  </p>
+<ol>
+<li>纯软件仿真</li>
+<li>虚拟化翻译</li>
+<li>容器技术</li>
+</ol>
+<h2 id="纯软件仿真"><a href="#纯软件仿真" class="headerlink" title="纯软件仿真"></a>纯软件仿真</h2><p>通过模拟完整的硬件环境来虚拟化来宾平台<br>模拟X86,ARM,PowerPC等多种CPU<br>效率较低<br>产品或方案有： QEMU,Bochs,PearPC</p>
+<h2 id="虚拟化层翻译"><a href="#虚拟化层翻译" class="headerlink" title="虚拟化层翻译"></a>虚拟化层翻译</h2><p>多数的虚拟化采用虚拟机管理程序Hypervisor, 其是一个软件层或子系统，也称为VMM(Virtual Machine Monitor,虚拟机监控器)<br>允许多种操作系统在相同的物理系统中运行<br>控制硬件并向来宾操作系统提供访问底层硬件的途径，向来宾操作系统提供虚拟化硬件    </p>
+<p><img src="/2025/05/24/linux/%E8%99%9A%E6%8B%9F%E5%8C%96KVM%E6%9E%81%E9%80%9F%E5%85%A5%E9%97%A8/img.png">     </p>
+<h3 id="无硬件辅助的全虚拟化"><a href="#无硬件辅助的全虚拟化" class="headerlink" title="无硬件辅助的全虚拟化"></a>无硬件辅助的全虚拟化</h3><p>基于二进制翻译的全虚拟化，Hypervisor运行在Ring0 ,Guest OS 运行在Ring1<br>通过异常，捕获，翻译 Guest OS Ring0操作<br>示例： </p>
+<ol>
+<li>VMware Workstation</li>
+<li>QEMU</li>
+<li>Virtual PC</li>
+</ol>
+<span id="more"></span>
+
+
+<p><img src="/2025/05/24/linux/%E8%99%9A%E6%8B%9F%E5%8C%96KVM%E6%9E%81%E9%80%9F%E5%85%A5%E9%97%A8/img_1.png">     </p>
+<h3 id="半虚拟化"><a href="#半虚拟化" class="headerlink" title="半虚拟化"></a>半虚拟化</h3><p>也称为超虚拟化，操作系统辅助虚拟化<br>Hypervisor 运行在Ring0<br>Guest OS 不能直接运行在Ring0,需要对其Kernel进行修改，将其运行在Ring0上的指令转为调用Hypervisor<br>Guest OS 上的APP运行在Ring3<br>示例： Xen</p>
+<h3 id="硬件辅助的全虚拟化"><a href="#硬件辅助的全虚拟化" class="headerlink" title="硬件辅助的全虚拟化"></a>硬件辅助的全虚拟化</h3><p>Intel VT和AMD-V 创建一个新的Ring-1 单独给Hypervisor使用，Guest OS可以直接使用Ring0而无需修改<br>示例：</p>
+<ol>
+<li>VMWare ESXi</li>
+<li>Microsoft Hyper-v</li>
+<li>Xen3.0</li>
+<li>KVM</li>
+</ol>
+<h2 id="LXC和Docker"><a href="#LXC和Docker" class="headerlink" title="LXC和Docker"></a>LXC和Docker</h2><p>一种轻量级&#x2F;操作系统虚拟化方式，由Linux内核支持<br>起源： chroot系统调用，对当前程序及其子程序改变根目录<br>优势：</p>
+<ol>
+<li>更快速的交付和部署</li>
+<li>更高效的虚拟化</li>
+<li>更轻松的迁移和扩展</li>
+<li>更简单的管理</li>
+</ol>
+<h2 id="Hypervisor的分类"><a href="#Hypervisor的分类" class="headerlink" title="Hypervisor的分类"></a>Hypervisor的分类</h2><p><img src="/2025/05/24/linux/%E8%99%9A%E6%8B%9F%E5%8C%96KVM%E6%9E%81%E9%80%9F%E5%85%A5%E9%97%A8/img_2.png">     </p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/kvm/" rel="tag"># kvm</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2025/04/12/micro/IT%E8%80%81%E9%BD%90%E6%9E%B6%E6%9E%84900%E8%AE%B2/" rel="prev" title="分布式改造理论与实战">
+      <i class="fa fa-chevron-left"></i> 分布式改造理论与实战
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2025/06/24/go/%E4%BD%BF%E7%94%A8unsafe%E5%8C%85%E5%AF%BC%E8%87%B4%E7%BA%BF%E4%B8%8A%E6%9C%8D%E5%8A%A1%E5%81%B6%E5%B0%94%E9%87%8D%E5%90%AF%E7%9A%84%E9%97%AE%E9%A2%98/" rel="next" title="使用unsafe包导致线上服务偶尔重启的问题">
+      使用unsafe包导致线上服务偶尔重启的问题 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+  </div>
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let activeClass = CONFIG.comments.activeClass;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#KVM%E6%A6%82%E8%BF%B0"><span class="nav-number">1.</span> <span class="nav-text">KVM概述</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%99%9A%E6%8B%9F%E5%8C%96%E7%9A%84%E5%AE%9A%E4%B9%89"><span class="nav-number">1.1.</span> <span class="nav-text">虚拟化的定义</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%BA%AF%E8%BD%AF%E4%BB%B6%E4%BB%BF%E7%9C%9F"><span class="nav-number">1.2.</span> <span class="nav-text">纯软件仿真</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%99%9A%E6%8B%9F%E5%8C%96%E5%B1%82%E7%BF%BB%E8%AF%91"><span class="nav-number">1.3.</span> <span class="nav-text">虚拟化层翻译</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%97%A0%E7%A1%AC%E4%BB%B6%E8%BE%85%E5%8A%A9%E7%9A%84%E5%85%A8%E8%99%9A%E6%8B%9F%E5%8C%96"><span class="nav-number">1.3.1.</span> <span class="nav-text">无硬件辅助的全虚拟化</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8D%8A%E8%99%9A%E6%8B%9F%E5%8C%96"><span class="nav-number">1.3.2.</span> <span class="nav-text">半虚拟化</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%A1%AC%E4%BB%B6%E8%BE%85%E5%8A%A9%E7%9A%84%E5%85%A8%E8%99%9A%E6%8B%9F%E5%8C%96"><span class="nav-number">1.3.3.</span> <span class="nav-text">硬件辅助的全虚拟化</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#LXC%E5%92%8CDocker"><span class="nav-number">1.4.</span> <span class="nav-text">LXC和Docker</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Hypervisor%E7%9A%84%E5%88%86%E7%B1%BB"><span class="nav-number">1.5.</span> <span class="nav-text">Hypervisor的分类</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Chen Yu"
+      src="/images/head.jpeg">
+  <p class="site-author-name" itemprop="name">Chen Yu</p>
+  <div class="site-description" itemprop="description">自律给我自由</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">123</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">20</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">84</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2025</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Chen Yu</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v6.3.0
+  </div>
+  <span class="post-meta-divider">|</span>
+  <div class="theme-info">主题 – <a href="https://theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a> v7.7.0
+  </div>
+
+<div>
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<span id="busuanzi_container_site_pv" style='display:none'>
+    本站总访问量 <span id="busuanzi_value_site_pv"></span> 次
+    <span class="post-meta-divider">|</span>
+</span>
+<span id="busuanzi_container_site_uv" style='display:none'>
+    有<span id="busuanzi_value_site_uv"></span>人看过我的博客啦
+</span>
+</div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>

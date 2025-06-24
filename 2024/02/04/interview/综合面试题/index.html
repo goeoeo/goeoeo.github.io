@@ -1,0 +1,1904 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 6.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+  <meta name="baidu-site-verification" content="D033aiBRFi">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+
+
+<script id="hexo-configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    hostname: new URL('https://phpdi.github.io').hostname,
+    root: '/',
+    scheme: 'Gemini',
+    version: '7.7.0',
+    exturl: false,
+    sidebar: {"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},
+    copycode: {"enable":false,"show_result":false,"style":null},
+    back2top: {"enable":true,"sidebar":false,"scrollpercent":false},
+    bookmark: {"enable":false,"color":"#222","save":"auto"},
+    fancybox: false,
+    mediumzoom: false,
+    lazyload: false,
+    pangu: false,
+    comments: {"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},
+    algolia: {
+      appID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    },
+    localsearch: {"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},
+    path: 'search.xml',
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}
+  };
+</script>
+
+  <meta name="description" content="rpc微服务框架微服务之间如何进行通信？ 单体项目时：一次服务调用发生在同一台机器上的同一个进程内部，也就是说调用发生在本机内部，因此也被叫作本地方法调用。 微服务项目时：服务提供者和服务消费者运行在两台不同物理机上的不同进程内，它们之间的调用相比于本地方法调用，可称之为远程方法调用，简称 RPC  RPC了解多少？都有哪些？ GRPC：Google 2015 年开源，支持多种语言 Thrift：">
+<meta property="og:type" content="article">
+<meta property="og:title" content="综合面试题">
+<meta property="og:url" content="https://phpdi.github.io/2024/02/04/interview/%E7%BB%BC%E5%90%88%E9%9D%A2%E8%AF%95%E9%A2%98/index.html">
+<meta property="og:site_name" content="goeoeo">
+<meta property="og:description" content="rpc微服务框架微服务之间如何进行通信？ 单体项目时：一次服务调用发生在同一台机器上的同一个进程内部，也就是说调用发生在本机内部，因此也被叫作本地方法调用。 微服务项目时：服务提供者和服务消费者运行在两台不同物理机上的不同进程内，它们之间的调用相比于本地方法调用，可称之为远程方法调用，简称 RPC  RPC了解多少？都有哪些？ GRPC：Google 2015 年开源，支持多种语言 Thrift：">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2024-02-04T09:19:28.874Z">
+<meta property="article:modified_time" content="2024-03-09T00:43:50.312Z">
+<meta property="article:author" content="Chen Yu">
+<meta property="article:tag" content="golang">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="https://phpdi.github.io/2024/02/04/interview/%E7%BB%BC%E5%90%88%E9%9D%A2%E8%AF%95%E9%A2%98/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome: false,
+    isPost: true
+  };
+</script>
+
+  <title>综合面试题 | goeoeo</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-meta">
+
+    <div>
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">goeoeo</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+        <h1 class="site-subtitle" itemprop="description">会吃鱼</h1>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+</div>
+
+
+<nav class="site-nav">
+  
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>归档</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-fw fa-th"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-fw fa-user"></i>关于</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+
+</nav>
+  <div class="site-search">
+    <div class="popup search-popup">
+    <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocorrect="off" autocapitalize="none"
+           placeholder="搜索..." spellcheck="false"
+           type="text" id="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result"></div>
+
+</div>
+<div class="search-pop-overlay"></div>
+
+  </div>
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content">
+            
+
+  <div class="posts-expand">
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://phpdi.github.io/2024/02/04/interview/%E7%BB%BC%E5%90%88%E9%9D%A2%E8%AF%95%E9%A2%98/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/head.jpeg">
+      <meta itemprop="name" content="Chen Yu">
+      <meta itemprop="description" content="自律给我自由">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="goeoeo">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          综合面试题
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2024-02-04 17:19:28" itemprop="dateCreated datePublished" datetime="2024-02-04T17:19:28+08:00">2024-02-04</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2024-03-09 08:43:50" itemprop="dateModified" datetime="2024-03-09T08:43:50+08:00">2024-03-09</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/interview/" itemprop="url" rel="index">
+                    <span itemprop="name">interview</span>
+                  </a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="rpc微服务框架"><a href="#rpc微服务框架" class="headerlink" title="rpc微服务框架"></a>rpc微服务框架</h1><h2 id="微服务之间如何进行通信？"><a href="#微服务之间如何进行通信？" class="headerlink" title="微服务之间如何进行通信？"></a>微服务之间如何进行通信？</h2><ul>
+<li>单体项目时：一次服务调用发生在同一台机器上的同一个进程内部，也就是说调用发生在本机内部，因此也被叫作本地方法调用。</li>
+<li>微服务项目时：服务提供者和服务消费者运行在两台不同物理机上的不同进程内，它们之间的调用相比于本地方法调用，可称之为远程方法调用，简称 RPC</li>
+</ul>
+<h2 id="RPC了解多少？都有哪些？"><a href="#RPC了解多少？都有哪些？" class="headerlink" title="RPC了解多少？都有哪些？"></a>RPC了解多少？都有哪些？</h2><ul>
+<li>GRPC：Google 2015 年开源，支持多种语言</li>
+<li>Thrift：最初Facebook 开发的内部框架，2007 年贡献给了 Apache 基金，成为 Apache 开源项目之一，支持多种语言。</li>
+<li>RPCX</li>
+</ul>
+<h2 id="RPC包含哪些部分？"><a href="#RPC包含哪些部分？" class="headerlink" title="RPC包含哪些部分？"></a>RPC包含哪些部分？</h2><ul>
+<li>客户端和服务端建立网络连接模块( server模块、client模块 )</li>
+<li>服务端处理请求模块</li>
+<li>协议模块</li>
+<li>序列化和反序列模块</li>
+</ul>
+<h2 id="设计一个RPC会考虑哪些问题"><a href="#设计一个RPC会考虑哪些问题" class="headerlink" title="设计一个RPC会考虑哪些问题?"></a>设计一个RPC会考虑哪些问题?</h2><ul>
+<li>客户端和服务端如何建立网络连接？</li>
+<li>服务端如何处理请求？</li>
+<li>数据传输采用什么协议？</li>
+<li>数据该如何序列化和反序列化？</li>
+</ul>
+<h2 id="服务端如何处理请求？有哪些方式？"><a href="#服务端如何处理请求？有哪些方式？" class="headerlink" title="服务端如何处理请求？有哪些方式？"></a>服务端如何处理请求？有哪些方式？</h2><p>服务端接收到客户端的请求后，常见的处理方式有三种，分别是BIO、NIO和AIO。  </p>
+<ul>
+<li><strong>同步阻塞方式（BIO）</strong> 客户端发一次请求，服务端生成一个对应线程去处理。当客户端同时发起的请求很多时，服务端需要创建多个线程去处理每一个请求，当达到了系统最大的线程数时，新来的请求就无法处理了。</li>
+<li><strong>同步非阻塞方式 (NIO)</strong>  客户端发一次请求，服务端并不是每次都创建一个新线程来处理，而是通过 I&#x2F;O 多路复用技术进行处理。就是把多个 I&#x2F;O 的阻塞复用到同一个 select 的阻塞上，从而使系统在单线程的情况下可以同时处理多个客户端请求。这种方式的优势是开销小，不用为每个请求创建一个线程，可以节省系统开销。</li>
+<li><strong>异步非阻塞方式（AIO）</strong>  客户端发起一个 I&#x2F;O 操作然后立即返回，等 I&#x2F;O 操作真正完成以后，客户端会得到 I&#x2F;O 操作完成的通知，此时客户端只需要对数据进行处理就好了，不需要进行实际的 I&#x2F;O 读写操作，因为真正的 I&#x2F;O 读取或者写入操作已经由内核完成了。这种方式的优势是客户端无需等待，不存在阻塞等待问题。</li>
+</ul>
+<blockquote>
+<p>BIO 适用于连接数比较小的业务场景，这样的话不至于系统中没有可用线程去处理请求。这种方式写的程序也比较简单直观，易于理解。<br>NIO 适用于连接数比较多并且请求消耗比较轻的业务场景，比如聊天服务器。这种方式相比 BIO，相对来说编程比较复杂。<br>AIO 适用于连接数比较多而且请求消耗比较重的业务场景，比如涉及 I&#x2F;O 操作的相册服务器。这种方式相比另外两种，编程难度最大，程序也不易于理解。 【来自网络】</p>
+</blockquote>
+<h2 id="IO多路复用"><a href="#IO多路复用" class="headerlink" title="IO多路复用"></a>IO多路复用</h2><p>多个的进程的IO可以注册到一个复用器（select）上，然后用一个进程调用该select， select会监听所有注册进来的IO；<br>如果select没有监听的IO在内核缓冲区都没有可读数据，select调用进程会被阻塞；而当任一IO在内核缓冲区中有可数据时，select调用就会返回；<br>而后select调用进程可以自己或通知另外的进程（注册进程）来再次发起读取IO，读取内核中准备好的数据。<br>多个进程注册IO后，只有另一个select调用进程被阻塞。</p>
+<p>IO多路复用实现有三种方案：select、poll、epoll   </p>
+<h3 id="select"><a href="#select" class="headerlink" title="select"></a>select</h3><p>select 的fd_set通过bitmap 1024位的方式存储fd<br>bitmap从用户态拷贝到内核态，由内核态来判断，没有数据变化，select会阻塞，有变化，bitmap的fd会被置位</p>
+<p>缺点：</p>
+<ol>
+<li>1024的大小限制</li>
+<li>fdset不可重用</li>
+<li>rset(bitmap) 用户态到内核态的开销</li>
+<li>复杂度为O(n)</li>
+</ol>
+<h3 id="poll"><a href="#poll" class="headerlink" title="poll"></a>poll</h3><p>poll将要监听的对象存到数组中，且数组中的元素是结构体</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">struct pollfd</span><br><span class="line">&#123;</span><br><span class="line">    int fd;</span><br><span class="line">    short events;//事件</span><br><span class="line">    short revents;//有变化被置位，什么事件，置为什么事件，最后要将revents重新置为0</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p>解决了select中 的两个问题</p>
+<ol>
+<li>1024的大小限制</li>
+<li>fdset不可重用</li>
+</ol>
+<h3 id="epoll"><a href="#epoll" class="headerlink" title="epoll"></a>epoll</h3><p>在epoll机制中，Linux内核会创建一个eventpoll结构体，其中包含了红黑树和双向链表两种数据结构。红黑树用于fd，而双向链表则用于存储就绪的fd。</p>
+<p>当程序调用epoll_create函数时，会创建一个epoll对象，并返回一个文件描述符。然后，程序可以通过epoll_ctl函数向epoll对象中添加或删除需要监听的套接字。这些套接字会与设备驱动程序建立回调关系，一旦有事件发生（如数据可读、可写等），就会调用内核中的回调函数，将事件添加到双向链表中。</p>
+<p>当程序需要收集发生的事件时，可以调用epoll_wait函数。该函数会检查eventpoll对象中的双向链表，如果链表不为空，则将发生的事件复制到用户空间，并清空链表。同时，epoll_wait函数还会返回事件的数量。</p>
+<p>epoll机制有两种工作模式：水平触发和边缘触发。在水平触发模式下，只要文件描述符处于就绪状态，epoll就会持续通知应用程序进行I&#x2F;O操作。而在边缘触发模式下，只有在文件描述符从未就绪状态转换为就绪状态时，epoll才会通知应用程序进行I&#x2F;O操作。通常情况下，推荐使用边缘触发模式，因为它能更高效地利用CPU资源</p>
+<h4 id="监视socket索引-红黑树"><a href="#监视socket索引-红黑树" class="headerlink" title="监视socket索引-红黑树"></a>监视socket索引-红黑树</h4><p>为什么采用红黑树呢？因为和epoll的工作机制有关。epoll在添加一个socket或者删除一个socket或者修改一个socket的时候，它需要查询速度更快，操作效率最高，因此需要一个更加优秀的数据结构能够管理这些socket。</p>
+<p>我们想到的比如链表，数组，二叉搜索树，B+树等都无法满足要求:</p>
+<ul>
+<li>因为链表在查询，删除的时候毫无疑问时间复杂度是O(n)；</li>
+<li>数组查询很快，但是删除和新增时间复杂度是O(n)；</li>
+<li>二叉搜索树虽然查询效率是lgn，但是如果不是平衡的，那么就会退化为线性查找，复杂度直接来到O(n)；</li>
+<li>B+树是平衡多路查找树，主要是通过降低树的高度来存储上亿级别的数据，但是它的应用场景是内存放不下的时候能够用最少的IO访问次数从磁盘获取数据。</li>
+</ul>
+<p>因为我们处理上万级的fd，它们本身的存储空间并不会很大，所以倾向于在内存中去实现管理，而红黑树是一种非常优秀的平衡树，它完全是在内存中操作，而且查找，删除和新增时间复杂度都是lgn，效率非常高，因此选择用红黑树实现epoll是最佳的选择。</p>
+<p>当然不选择用AVL树是因为红黑树是不符合AVL树的平衡条件的，红黑是用非严格的平衡来换取增删节点时候旋转次数的降低，任何不平衡都会在三次旋转之内解决；而AVL树是严格平衡树，在增加或者删除节点的时候，根据不同情况，旋转的次数比红黑树要多。所以红黑树的插入效率更高。</p>
+<h4 id="就绪socket列表-双向链表"><a href="#就绪socket列表-双向链表" class="headerlink" title="就绪socket列表-双向链表"></a>就绪socket列表-双向链表</h4><p>就绪列表存储的是就绪的socket，所以它应能够快速的插入数据。</p>
+<p>程序可能随时调用epoll_ctl添加监视socket，也可能随时删除。当删除时，若该socket已经存放在就绪列表中，它也应该被移除。（事实上，每个epoll_item既是红黑树节点，也是链表节点，删除红黑树节点，自然删除了链表节点）</p>
+<p>所以就绪列表应是一种能够快速插入和删除的数据结构。双向链表就是这样一种数据结构，epoll使用双向链表来实现就绪队列（rdllist）</p>
+<h4 id="epoll为什么比select-poll快，快在什么地方"><a href="#epoll为什么比select-poll快，快在什么地方" class="headerlink" title="epoll为什么比select&#x2F;poll快，快在什么地方"></a>epoll为什么比select&#x2F;poll快，快在什么地方</h4><ol>
+<li>epoll只是在调用epoll_ctl的时候才会把fd从用户态拷贝的内核态，而select&#x2F;poll每次执行的时候都会把fd全部拷贝到内核态</li>
+<li>调用epoll_wait时候，只会拷贝已就绪的事件到用户态</li>
+<li>epoll采用事件回调机制，将已就绪的fd加入到链表中，而不是像select&#x2F;poll主动轮询的方式获取就绪事件</li>
+</ol>
+<span id="more"></span>
+
+<h1 id="runtime包里面的方法"><a href="#runtime包里面的方法" class="headerlink" title="runtime包里面的方法"></a>runtime包里面的方法</h1><p>Go 语言的 goroutine 是由 运行时（runtime）调度和管理的  </p>
+<p>Go 语言的 runtime 类似 Java 和 .NET 语言所用到的虚拟机，它负责管理包括内存分配、垃圾回收（第 10.8 节）、栈处理、goroutine、channel、切片（slice）、map 和反射（reflection）等等。</p>
+<ol>
+<li>Gosched()：让当前线程让出 cpu 以让其它线程运行，它不会挂起当前线程，因此当前线程未来会继续执行。</li>
+<li>NumCPU()：返回当前系统的 CPU 核数量。</li>
+<li>GOMAXPROCS()：设置最大的可同时使用的 CPU 核数。 通过runtime.GOMAXPROCS函数，应用程序可以设置运行时系统中的 P 最大数量。注意，如果在运行期间设置该值的话，会引起“Stop the World”。所以，应在应用程序最早期调用，并且最好是在运行Go程序之前设置好操作程序的环境变量GOMAXPROCS，而不是在程序中调用runtime.GOMAXPROCS函数。</li>
+<li>Goexit()：退出当前 goroutine（但是defer语句会照常执行）。</li>
+<li>NumGoroutine：返回正在执行和排队的任务总数。</li>
+<li>runtime.NumGoroutine函数在被调用后，会返回系统中的处于特定状态的 Goroutine 的数量。这里的特定状态是指Grunnable\Gruning\Gsyscall\Gwaition。处于这些状态的Groutine即被看做是活跃的或者说正在被调度。 注意：垃圾回收所在Groutine的状态也处于这个范围内的话，也会被纳入该计数器。</li>
+<li>GOOS：查看目标操作系统。很多时候，我们会根据平台的不同实现不同的操作，就可以用GOOS来查看自己所在的操作系统。</li>
+<li>runtime.GC：会让运行时系统进行一次强制性的垃圾收集。 强制的垃圾回收：不管怎样，都要进行的垃圾回收。非强制的垃圾回收：只会在一定条件下进行的垃圾回收（即运行时，系统自上次垃圾回收之后新申请的堆内存的单元（也成为单元增量）达到指定的数值）。</li>
+<li>GOROOT() ：获取 goroot 目录。</li>
+<li>runtime.LockOSThread 和 runtime.UnlockOSThread 函数：前者调用会使调用他的 Goroutine 与当前运行它的M锁定到一起，后者调用会解除这样的锁定。</li>
+</ol>
+<h1 id="Redis的过期策略"><a href="#Redis的过期策略" class="headerlink" title="Redis的过期策略"></a>Redis的过期策略</h1><p>redis会将每个设置了过期时间的key放到一个独立的字典中，以后会定时遍历这个字典来删除到期的key，除定时遍历外，它还会使用惰性策略来删除过期的key。</p>
+<p>定期删除是集中处理，惰性删除是零散处理</p>
+<h2 id="定期删除"><a href="#定期删除" class="headerlink" title="定期删除"></a>定期删除</h2><p>redis默认会每秒进行十次过期扫描，过期扫描不会遍历过期字典中所有的key，而是采用了一种简单的贪心算法策略</p>
+<ol>
+<li>从过期字典中随机20个key</li>
+<li>删除这20个key中已经过期的key</li>
+<li>如果过期的key比例超过1&#x2F;4，那就重复步骤1</li>
+</ol>
+<h3 id="如果一个大的redis实例中所有的key，在同一时间过期，会出现怎样的结果？"><a href="#如果一个大的redis实例中所有的key，在同一时间过期，会出现怎样的结果？" class="headerlink" title="如果一个大的redis实例中所有的key，在同一时间过期，会出现怎样的结果？"></a>如果一个大的redis实例中所有的key，在同一时间过期，会出现怎样的结果？</h3><p>redis 会持续扫描过期字典（循环多次），直到过期字典中过期的key变得稀疏，才会停止（循环次数明显下降），这就会导致线上读写请求出现明显的卡顿现象，<br>导致这种卡顿的另外一种原因是内存管理器需要频繁的回收内存页，产生一定的CPU消耗</p>
+<p>所以开发的时候要注意给过期时间设置一个随机范围，避免同一时间有大量key 过期</p>
+<h3 id="从库的过期策略"><a href="#从库的过期策略" class="headerlink" title="从库的过期策略"></a>从库的过期策略</h3><p>从库不会进行定期扫描，从库对过期的处理是被动的。主库在key到期时，会在AOF文件里增加一条del指令，同步到所有的从库，从库通过执行这条del指令来删除过期的key<br>因为指令同步是异步的，所以主库过期的key的del指令还没有同步到从库的话，会出现主从数据不一致。</p>
+<h2 id="惰性删除"><a href="#惰性删除" class="headerlink" title="惰性删除"></a>惰性删除</h2><p>客户端在访问这个key的时候，redis对key的过期时间进行检查，如果过期了就会立即删除，不会给你返回任何东西</p>
+<h1 id="Redis的内存淘汰机制"><a href="#Redis的内存淘汰机制" class="headerlink" title="Redis的内存淘汰机制"></a>Redis的内存淘汰机制</h1><p>当redis内存超出物理内存限制的时，内存的数据会开始和磁盘产生频繁的交换（swap），交换会让redis的性能急剧下降，对于访问量比较频繁的redis来说，<br>这样龟速的存取效率基本上等于不可用</p>
+<p>在生产环境中我们是不允许Redis出现交换行为的，为了限制最大使用内存，Redis提供了配置参数maxmemory来限制内存超出期望的大小</p>
+<ul>
+<li>config set maxmemory 2gb</li>
+<li>config set maxmemory-policy volatile-lfu  设置缓存淘汰算法</li>
+</ul>
+<p>缓存淘汰算法可设置的值：</p>
+<ol>
+<li>noeviction 不会淘汰任何数据，当使用的内存空间超过maxmemory值时，返回错误。这种策略一般不常用，因为当内存不足时，新写入操作会报错，无法写入新数据。</li>
+<li>volatile&#x2F;allkeys-lru 筛选最近最少使用的key进行淘汰。这种策略适用于那些有过期时间要求，且希望优先淘汰最不常用的数据的场景。</li>
+<li>volatile&#x2F;allkeys-ttl：挑选即将过期的数据淘汰。这种策略可以优先淘汰那些更早过期的数据，从而避免数据过期后还占用内存。</li>
+<li>volatile&#x2F;allkeys-random：随机挑选数据淘汰。这种策略在数据过期时间分布不均时，可以提供相对公平的淘汰策略。</li>
+<li>volatile&#x2F;allkeys-lfu：LFU算法根据数据的访问频率和访问时间衰减来淘汰最不常用的数据。这种策略适用于那些希望优先淘汰最不常用的数据的场景。</li>
+</ol>
+<h2 id="近似LRU算法-时间维度"><a href="#近似LRU算法-时间维度" class="headerlink" title="近似LRU算法(时间维度)"></a>近似LRU算法(时间维度)</h2><p><a target="_blank" rel="noopener" href="https://baijiahao.baidu.com/s?id=1720665108516577924&wfr=spider&for=pc">Redis的LRU缓存淘汰算法实现</a><br>LRU算法需要以时间为维度维护链表，代价太大，所以redis采用一个近似LRU的算法，用24bits存储时间戳<br>过程：</p>
+<ol>
+<li>计算待释放的内存空间</li>
+<li>随机采样键值对(maxmemory-samples,默认为5)，并插入到待淘汰集合中</li>
+<li>遍历待淘汰集合，选择实际被淘汰数据，并删除。</li>
+</ol>
+<h2 id="近似LFU-频率维度"><a href="#近似LFU-频率维度" class="headerlink" title="近似LFU(频率维度)"></a>近似LFU(频率维度)</h2><p><a target="_blank" rel="noopener" href="https://blog.csdn.net/u013277209/article/details/126754778">缓存淘汰篇-LFU算法</a><br>LFU算法是redis4.0以后增加的策略，LFU算法需要以时间为维度维护链表，代价太大,其复用了lru的字段，将前16bits作为上一次访问的时间戳，后8bit 用作计数器<br>8bits 最大存储255次，因此需要做一个衰减,lfu_decay_time(每分钟衰减的次数，默认为1)</p>
+<p>过程：</p>
+<ol>
+<li>计算待释放的内存空间</li>
+<li>随机采样键值对(maxmemory-samples,默认为5)，并插入到待淘汰集合中</li>
+<li>遍历待淘汰集合，选择实际被淘汰数据，并删除。</li>
+</ol>
+<p>可以看到LFU算法，巧妙的复用的LRU算法的字段以及淘汰数据的过程</p>
+<h1 id="mysql索引种类"><a href="#mysql索引种类" class="headerlink" title="mysql索引种类"></a>mysql索引种类</h1><table>
+<thead>
+<tr>
+<th>从逻辑功能划分</th>
+<th>从物理实现划分</th>
+<th>从作用字段划分</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>普通索引、唯一索引、主键索引、全文索引</td>
+<td>聚簇索引、非聚簇索引</td>
+<td>单列索引、联合索引</td>
+</tr>
+</tbody></table>
+<h1 id="一个update语句的执行过程"><a href="#一个update语句的执行过程" class="headerlink" title="一个update语句的执行过程"></a>一个update语句的执行过程</h1><ol>
+<li><p>解析（Parsing）：<br>客户端（如 SQL 客户端工具）将 UPDATE 语句发送给 MySQL 服务器。<br>服务器首先解析 SQL 语句，检查语法是否正确，并确定要执行的操作。</p>
+</li>
+<li><p>预处理（Preprocessing）：<br>MySQL 检查语句中涉及的表和列是否存在，以及用户是否有足够的权限执行此操作。<br>如果语句中使用了任何存储过程或函数，它们在这个阶段也会被处理。</p>
+</li>
+<li><p>优化（Optimization）：  </p>
+<p>MySQL 优化器（Optimizer）确定执行该 UPDATE 语句的最佳方法。</p>
+</li>
+</ol>
+<p>优化器可能会考虑多种执行计划，并选择其中一个认为是最有效的。<br>例如，如果 UPDATE 语句涉及多个索引，优化器可能会选择使用哪个索引来最快地找到需要更新的行。</p>
+<ol start="4">
+<li><p>执行（Execution）：</p>
+<p>一旦确定了执行计划，MySQL 开始执行 UPDATE 语句。</p>
+</li>
+</ol>
+<p>它首先定位到需要更新的行，然后根据 SET 子句中的值来更新这些行。<br>在这个过程中，MySQL 可能会锁定涉及的行或表，以防止其他事务同时修改这些数据。</p>
+<ol start="5">
+<li><p>写回（Write-back）：</p>
+<p>如果更新操作导致了数据页的变化，MySQL 会将这些变化写回到磁盘上。</p>
+</li>
+</ol>
+<p>这个过程可能涉及日志记录（例如，在 InnoDB 存储引擎中，可能会写入重做日志和&#x2F;或撤销日志）。</p>
+<ol start="6">
+<li><p>提交（Commit）：</p>
+<p>如果该操作是在事务中执行的，那么在执行完 UPDATE 语句后，事务需要被提交。</p>
+</li>
+</ol>
+<p>提交操作会确保所有之前的更改都被永久保存，并且对其他事务可见。<br>如果在提交过程中出现错误，MySQL 可能会执行回滚操作，撤销之前所做的更改。</p>
+<h1 id="go的profile工具？"><a href="#go的profile工具？" class="headerlink" title="go的profile工具？"></a>go的profile工具？</h1><h2 id="有哪几种采样方式"><a href="#有哪几种采样方式" class="headerlink" title="有哪几种采样方式"></a>有哪几种采样方式</h2><ul>
+<li>runtime&#x2F;pprof：采集程序（非 Server）的指定区块的运行数据进行分析。</li>
+<li>net&#x2F;http&#x2F;pprof：基于 HTTP Server 运行，并且可以采集运行时数据进行分析。</li>
+<li>go test：通过运行测试用例，并指定所需标识来进行采集。</li>
+<li>gops: 针对非HTTP Server的其它Server 比如GRPC Server 持续采集</li>
+</ul>
+<h2 id="支持什么使用模式"><a href="#支持什么使用模式" class="headerlink" title="支持什么使用模式"></a>支持什么使用模式</h2><ul>
+<li>Report generation：报告生成。</li>
+<li>Interactive terminal use：交互式终端使用。</li>
+<li>Web interface：Web 界面。</li>
+<li>graphviz 图形化采集结果</li>
+</ul>
+<h2 id="可以做什么"><a href="#可以做什么" class="headerlink" title="可以做什么"></a>可以做什么</h2><ul>
+<li>CPU Profiling：CPU 分析，按照一定的频率采集所监听的应用程序 CPU（含寄存器）的使用情况，可确定应用程序在主动消耗 CPU 周期时花费时间的位置。</li>
+<li>Memory Profiling：内存分析，在应用程序进行堆分配时记录堆栈跟踪，用于监视当前和历史内存使用情况，以及检查内存泄漏。</li>
+<li>Block Profiling：阻塞分析，记录 Goroutine 阻塞等待同步（包括定时器通道）的位置，默认不开启，需要调用 runtime.SetBlockProfileRate 进行设置。</li>
+<li>Mutex Profiling：互斥锁分析，报告互斥锁的竞争情况，默认不开启，需要调用 runtime.SetMutexProfileFraction 进行设置。</li>
+<li>Goroutine Profiling： Goroutine 分析，可以对当前应用程序正在运行的 Goroutine 进行堆栈跟踪和分析。这项功能在实际排查中会经常用到，<br>因为很多问题出现时的表象就是 Goroutine 暴增，而这时候我们要做的事情之一就是查看应用程序中的 Goroutine 正在做什么事情，因为什么阻塞了，然后再进行下一步。</li>
+</ul>
+<h1 id="http和tcp有什么区别"><a href="#http和tcp有什么区别" class="headerlink" title="http和tcp有什么区别"></a>http和tcp有什么区别</h1><ol>
+<li>性质：HTTP是一个简单的请求-响应协议，主要基于文本进行传输，通常运行在TCP之上。而TCP是一种面向连接的、可靠的、基于字节流的传输层通信协议，主要负责数据的可靠传输。</li>
+<li>连接：TCP连接是不同但互连的计算机通信网络的主计算机中的成对进程之间的连接，它提供可靠的通信服务。而HTTP通常运行在TCP之上，指定了客户端可能发送给服务器什么样的消息以及得到什么样的响应。</li>
+<li>功能：当应用层向TCP层发送用于网间传输的、用8位字节表示的数据流时，TCP会将数据流分割成适当长度的报文段，最大传输段大小（MSS）通常受该计算机连接的网络的数据链路层的最大传送单元（MTU）限制。而HTTP协议是基于请求&#x2F;响应范式的，用于传输超文本或其他内容。</li>
+<li>位置：HTTP协议对应于应用层，而TCP协议对应于传输层。从本质上来说，HTTP协议是建立在TCP协议基础之上的。</li>
+</ol>
+<h1 id="用netstat看tcp连接的时候有关注过time-wait和close-wait吗？"><a href="#用netstat看tcp连接的时候有关注过time-wait和close-wait吗？" class="headerlink" title="用netstat看tcp连接的时候有关注过time_wait和close_wait吗？"></a>用netstat看tcp连接的时候有关注过time_wait和close_wait吗？</h1><p><strong>time_wait</strong><br>time_wait状态表示一个TCP连接在主动关闭之后等待一段时间，以确保最后一个网络分组（可能是之前连接中的最后一个ACK或其他分组）能够安全地到达对方。这是TCP协议设计中的一个重要部分，以避免因延迟的分组导致的新连接与旧连接之间的混淆。在time_wait状态下，连接不会立即关闭，而是会等待一个特定的时间（通常是2倍的MSL，Maximum Segment Lifetime，最大报文段生存时间），以确保所有的分组都已到达对方。</p>
+<p><strong>close_wait</strong><br>close_wait状态表示远程关闭了TCP连接，但本地应用程序还没有关闭套接字。换句话说，这是一个半开状态，其中一方已经决定结束连接，但另一方还没有响应。这通常是由于本地应用程序未能正确处理远程关闭的连接，或者由于应用程序的bug导致的。如果发现有大量的连接处于close_wait状态，这可能是一个性能问题或应用程序错误的指示，需要进一步调查。</p>
+<h1 id="如何处理"><a href="#如何处理" class="headerlink" title="如何处理"></a>如何处理</h1><ul>
+<li>对于time_wait，通常不需要手动干预，因为它是TCP协议的正常部分。但是，如果服务器上有大量的time_wait连接，可能会耗尽可用端口，这时可以考虑调整TCP参数，如tcp_fin_timeout，或者使用SO_REUSEADDR套接字选项。</li>
+<li>对于close_wait，应该检查应用程序的代码和逻辑，确保在接收到远程关闭连接的通知时，本地也正确地关闭了连接。此外，定期清理和监控处于close_wait状态的连接也是很有帮助的。</li>
+</ul>
+<blockquote>
+<p> netstat -natp 查看网络连接情况</p>
+</blockquote>
+<h1 id="fork的底层实现方式"><a href="#fork的底层实现方式" class="headerlink" title="fork的底层实现方式"></a>fork的底层实现方式</h1><p>fork() 是一个 Unix&#x2F;Linux 系统调用，它创建一个与当前进程几乎完全相同的子进程。新创建的子进程（子进程）获得与父进程（调用 fork() 的进程）几乎完全相同的环境：相同的程序，相同的开放文件和环境变量等。子进程和父进程之间的主要区别在于它们的 PID（进程 ID）和 PPID（父进程 ID），以及某些状态和资源使用情况（如未处理的信号和文件锁）。</p>
+<p>fork() 的底层实现方式主要依赖于操作系统内核，特别是其进程管理和内存管理部分。以下是一个简化的 fork() 实现概述：  </p>
+<ol>
+<li><p>复制进程描述符</p>
+<ul>
+<li>当一个进程调用 fork() 时，内核首先为新的子进程创建一个新的进程描述符（也称为任务结构或进程控制块）。</li>
+<li>这个新的进程描述符是父进程描述符的一个副本，但大多数字段（如 PID 和 PPID）都需要修改。</li>
+</ul>
+</li>
+<li><p>复制或共享内存</p>
+<ul>
+<li>写时复制 (Copy-on-Write, CoW) 这是大多数现代 Unix&#x2F;Linux 系统使用的策略。在 fork() 时，子进程并不立即获得父进程的物理内存页的副本。相反，它们共享相同的物理内存页，但每个页面都有一个额外的引用计数器。当任何一个进程尝试修改一个页面时，内核会为该页面创建一个新的副本，并更新相应的引用计数器。这样可以节省内存，因为许多进程在创建后很快就执行 exec() 系列调用，替换了它们的内存内容。</li>
+<li>完全复制：在某些情况下，或者在某些操作系统版本中，子进程会立即获得父进程内存空间的完整副本。这会增加 fork() 的开销，但确保子进程和父进程在 fork() 后有完全独立的内存空间。</li>
+</ul>
+</li>
+<li><p>复制其他资源</p>
+<ul>
+<li>除了内存外，还需要复制其他进程资源，如打开的文件描述符、信号处理程序、信号屏蔽字、账户信息、进程调度信息等。</li>
+<li>在许多情况下，子进程和父进程会共享某些资源，如文件描述符（使用写时复制策略）。</li>
+</ul>
+</li>
+<li><p>设置子进程的上下文</p>
+<ul>
+<li>子进程需要有自己的上下文，包括其自己的寄存器状态、栈和程序计数器。这通常是通过复制父进程的上下文并稍作修改来实现的。</li>
+<li>在某些情况下，子进程可能会立即执行一个新的程序（通过 exec() 系列调用），因此不需要保留父进程的上下文。</li>
+</ul>
+</li>
+<li><p>返回</p>
+<ul>
+<li>fork() 在父进程中返回子进程的 PID，在子进程中返回 0。这样，父进程和子进程就可以根据它们的返回值来区分自己的身份，并执行相应的操作。</li>
+</ul>
+</li>
+</ol>
+<h1 id="go语言什么时候垃圾回收，写代码的时候如何减少小对象分配"><a href="#go语言什么时候垃圾回收，写代码的时候如何减少小对象分配" class="headerlink" title="go语言什么时候垃圾回收，写代码的时候如何减少小对象分配"></a>go语言什么时候垃圾回收，写代码的时候如何减少小对象分配</h1><h2 id="go垃圾回收GC触发条件"><a href="#go垃圾回收GC触发条件" class="headerlink" title="go垃圾回收GC触发条件"></a>go垃圾回收GC触发条件</h2><ol>
+<li>超过内存大小阈值</li>
+<li>达到定时时间</li>
+</ol>
+<p>阈值是由一个gcpercent的变量控制的,当新分配的内存占已在使用中的内存的比例超过gcprecent时就会触发。比如一次回收完毕后，内存的使用量为5M，那么下次回收的时机则是内存分配达到10M的时候。也就是说，并不是内存分配越多，垃圾回收频率越高。 如果一直达不到内存大小的阈值呢？这个时候GC就会被定时时间触发，比如一直达不到10M，那就定时（默认2min触发一次）触发一次GC保证资源的回收。</p>
+<h2 id="减少小对象分配"><a href="#减少小对象分配" class="headerlink" title="减少小对象分配"></a>减少小对象分配</h2><ol>
+<li>使用对象池</li>
+<li>结构体复用 如果你的程序中频繁地创建和销毁具有相同字段的结构体对象，可以考虑使用切片（slice）或映射（map）来存储这些对象，并在需要时重用它们。通过避免频繁地分配和释放内存，可以减少垃圾回收的压力。</li>
+<li>使用更大的数据结构 如果频繁分配的小对象可以组合成更大的数据结构，那么使用这些更大的数据结构可能会更有效。例如，使用切片（slice）代替单独的对象，或者使用映射（map）代替独立的键值对。</li>
+</ol>
+<h2 id="redis的存储结构？"><a href="#redis的存储结构？" class="headerlink" title="redis的存储结构？"></a>redis的存储结构？</h2><ol>
+<li>字符串</li>
+<li>哈希表</li>
+<li>列表</li>
+<li>集合</li>
+<li>有序集合</li>
+<li>地理位置（Geo）</li>
+<li>基数统计（HyperLogLog）</li>
+<li>位图（Bitmaps）</li>
+</ol>
+<h1 id="实现map的方法除了哈希还有哪些？"><a href="#实现map的方法除了哈希还有哪些？" class="headerlink" title="实现map的方法除了哈希还有哪些？"></a>实现map的方法除了哈希还有哪些？</h1><p>哈希表，散列表（Scatter Table）：散列表是另一种用于实现映射的数据结构，它通过哈希函数将键映射到散列表中的槽位。每个槽位存储一个值或一个指向值的指针。当发生哈希冲突时，可以使用链地址法、开放地址法等策略进行处理。</p>
+<ol>
+<li>二叉搜索树（Binary Search Tree）：二叉搜索树是一种常用的数据结构，它可以用来实现映射。在二叉搜索树中，每个节点都包含一个键和一个值，树的左子树包含所有键小于当前节点键的节点，右子树包含所有键大于当前节点键的节点。通过遍历二叉搜索树，我们可以找到特定的键并返回对应的值。</li>
+<li>平衡二叉搜索树（Balanced Binary Search Tree）：平衡二叉搜索树是二叉搜索树的改进版本，它通过维护树的平衡性来确保查找、插入和删除操作的效率。常见的平衡二叉搜索树有AVL树、红黑树等。</li>
+<li>B树（B-Tree）：B树是一种自平衡的树，主要用于维护排序数据的有序性。B树的阶（order）定义了每个节点允许的最大子节点数目。B树在数据库和文件系统中广泛应用，也可以用来实现映射。</li>
+<li>B+树（B+-Tree）：B+树是B树的变种，它在B树的基础上进行了优化。B+树的叶子节点之间通过指针相连，形成了一个有序链表，这使得范围查询和顺序访问变得更加高效。B+树在数据库索引中广泛使用。</li>
+<li>Trie树（前缀树）：Trie树是一种用于存储字符串集合的树形数据结构。在Trie树中，每个节点表示一个字符，从根节点到某个节点的路径表示一个字符串。Trie树非常适合用于实现基于字符串键的映射。</li>
+</ol>
+<h1 id="怎么理解redis的事务"><a href="#怎么理解redis的事务" class="headerlink" title="怎么理解redis的事务"></a>怎么理解redis的事务</h1><h2 id="语法"><a href="#语法" class="headerlink" title="语法"></a>语法</h2><ul>
+<li>multi 开起事务</li>
+<li>exec 执行事务</li>
+<li>discard 回滚事务</li>
+</ul>
+<p>redis的事务功能很弱，在事务回滚机制上，Redis只能对基本的语法错误进行判断   </p>
+<ol>
+<li>语法命令错误，会回滚</li>
+<li>运行时错误，不能回滚</li>
+</ol>
+<h2 id="原理"><a href="#原理" class="headerlink" title="原理"></a>原理</h2><p>事务是Redis实现在服务端的行为，用户执行MULTI时，服务器会将对应这个用户的客户端对象设置为一种特殊状态，在这个状态下后续用户执行的查询命令不会被<br>真的执行，而是被服务器缓存起来，知道用户执行Exec命令为止，服务器会将这个用户对应的客户端对象中缓存的命令按提交的顺序依次执行</p>
+<h1 id="redis的setnx底层怎么实现的？"><a href="#redis的setnx底层怎么实现的？" class="headerlink" title="redis的setnx底层怎么实现的？"></a>redis的setnx底层怎么实现的？</h1><ol>
+<li><strong>检查键是否存在</strong>：在Redis中，所有的键值对都保存在哈希表中。当用户发起SETNX命令时，Redis会先在哈希表中查询键是否存在。为了避免哈希表中存在大量的冲突，Redis会在哈希表的每个桶上都放置一条链表，所以在检查键是否存在的时候，只需要扫描一条链表即可。</li>
+<li><strong>插入键值对</strong>：如果检查发现该键并不存在，那么Redis会将该键值对插入到哈希表中，并返回成功插入的信息，否则返回插入失败的信息。在插入键值对的过程中，Redis会先分配一个新的哈希表节点，然后将键值对添加到哈希表节点中，最后将哈希表节点插入到哈希表的对应桶上的链表中。</li>
+</ol>
+<p>由于Redis采用的是单线程机制，所以在检查和插入的过程中，所有的操作都是原子性的，即不可分割的。这种机制保证了SETNX命令的原子性，使得多个客户端并发执行SETNX命令时，只有一个客户端能够成功设置键的值。</p>
+<h1 id="go的gc原理了解吗？"><a href="#go的gc原理了解吗？" class="headerlink" title="go的gc原理了解吗？"></a>go的gc原理了解吗？</h1><p>用于回收在程序运行过程中不再使用的内存<br>Golang 使用标记清扫+主体并发式增量垃圾回收</p>
+<ul>
+<li>标记清扫：从栈，数据段 上的对象作为root对象，基于它们进一步追踪，把能追踪到的数据进行标记，追踪不到的数据，则视为垃圾，进行清理</li>
+<li>主体并发式增量垃圾回收: 短暂的stw确保所有线程开启写屏障，与用户程序并行执行，且将垃圾回收的时间分散到不同的线程上执行。<ul>
+<li>主体并发：只有在开启写屏障的短暂时间stw，整个gc绝大部分时间是和用户程序并发进行的</li>
+<li>增量：利用cpu多核与用户程序交替进行，最大程度减少对用户程序的影响</li>
+</ul>
+</li>
+</ul>
+<h2 id="三色标记过程"><a href="#三色标记过程" class="headerlink" title="三色标记过程"></a>三色标记过程</h2><p>三色标记法将对象分为三种状态：白色、灰色和黑色。白色表示该对象未被标记过，灰色表示该对象已被标记，但其子对象可能还未被标记，黑色表示该对象及其子对象都已被标记。通过不断将灰色对象标记为黑色，并将黑色对象的子对象标记为灰色，最终将所有可达对象标记为黑色，然后清除所有白色对象，完成垃圾回收。</p>
+<p>三色标记法无STW，会出现有效数据被回收的场景，同时满足：</p>
+<ul>
+<li>黑色对象下面引用了白色对象</li>
+<li>灰色对象与它们之间的可达性关系遭到破坏</li>
+</ul>
+<p>解决这个问题的方案有两个：</p>
+<ol>
+<li>强三色不变式： 强制性不允许黑色对象引用白色对象</li>
+<li>弱三色不变式： 黑色对象可以引用白色对象，但要求白色对象必须存在其它灰色对象对它的引用或者可达它的链路上有灰色对象</li>
+</ol>
+<p>使用屏障机制（可以理解为“钩子”函数，在执行插入&#x2F;删除时，先执行“钩子”函数）来实现强弱三色不变式：</p>
+<ol>
+<li>插入写屏障：对象引用时触发,对象A引用对象B,对象B会被标记为灰色，由于栈上的对象触发写屏障（性能考虑），所以在标记结束时，需要STW(大约需要10~100ms)来重新扫描栈，来确保没有黑色对象到白色对象的引用</li>
+<li>删除写屏障：对象删除时触发，自身会被标记为灰色，来保证灰色对象到白色对象的路径不会断，因此一个对象即使被删除了最后一个指向它的指针，也依旧可以活过这一轮，在下一轮GC中被删除掉（延迟GC）</li>
+</ol>
+<blockquote>
+<p>只用删除写屏障无法解决，黑色节点下新增白色节点的情况，</p>
+</blockquote>
+<p>go1.8版本引入混合写屏障，其过程如下：</p>
+<ol>
+<li>GC刚开始的时候，会将栈上的可达对象全部标记为黑色。</li>
+<li>GC期间，任何在栈上新创建的对象，均为黑色。</li>
+<li>堆上被删除的对象标记为灰色</li>
+<li>堆上新添加的对象标记为灰色</li>
+</ol>
+<p>栈上由于性能保证，未开启写屏障，其中1.2两点的目的有一个：强三色不变，2.保证栈对象只有黑色和白色，标记结束时不用再stw去检查白色对象。<br>堆上操作对象会被标记为灰色，保证灰色对象及其下游对象不会被错误GC</p>
+<h2 id="GC过程"><a href="#GC过程" class="headerlink" title="GC过程"></a>GC过程</h2><ol>
+<li><p>GC准备阶段,为每个p创建MarkWorker协程（很快会休眠，_Gwaiting）</p>
+</li>
+<li><p>第一次STW,记录GC阶段为_GCMark,同时开启写屏障</p>
+<ul>
+<li>gcBlackenEnable&#x3D;1  是否允许gc扫描</li>
+<li>writeBarrier.enabled&#x3D;true 开启写屏障</li>
+<li>gcphrase&#x3D;_GCMark 标识GC阶段为 标记阶段</li>
+</ul>
+</li>
+<li><p>MarkWorker开始根据p的调度进行标记工作，直到标记完成</p>
+</li>
+<li><p>第二次STW，停止标记，关闭写屏障</p>
+<ul>
+<li>gcBlackenEnable&#x3D;0 停止标记</li>
+<li>writeBarrier.enabled&#x3D;false 关闭写屏障</li>
+<li>gcphrase&#x3D;_GCMarkTermination</li>
+</ul>
+</li>
+<li><p>开始清扫（清扫也是增量进行，每轮gc开始之前，需要保证上一次清扫已经完成</p>
+</li>
+</ol>
+<h2 id="GC标记过程实现-gcw-wbBuf"><a href="#GC标记过程实现-gcw-wbBuf" class="headerlink" title="GC标记过程实现 gcw&amp;wbBuf"></a>GC标记过程实现 gcw&amp;wbBuf</h2><p>GC标记需要扫描的对象会加入到工作队列中，由后台MarkWorker来消息队列：</p>
+<ol>
+<li>全局工作队列</li>
+<li>本地工作队列，包含wbuf1,wbuf2。 先加入wbuf1,再加入wbuf2,当wbuf2满了，就加入全局工作队列</li>
+</ol>
+<p>每个P有一个写屏障缓冲区 wbBuf,写屏障触发时，会加入到这个缓存区中，通过flush 刷入工作队列中</p>
+<h2 id="GC-CPU使用用率（决定MarkWork-可以启动的个数）"><a href="#GC-CPU使用用率（决定MarkWork-可以启动的个数）" class="headerlink" title="GC CPU使用用率（决定MarkWork 可以启动的个数）"></a>GC CPU使用用率（决定MarkWork 可以启动的个数）</h2><p>GC 默认cpu使用率为25%<br>workCount&#x3D;gomaxprocs* 25%，如果计算出来不是整数，需要向上取整，例如取出来的值时1.5，则会取2，如果这个向上取整的数值与原目标比较超过0.3（0.5&#x2F;1.5&gt;0.3）,那多出来的这个worker就会<br>进入fraction模式，加入cpu核数时6，那每个cpu再fraction模式下的工作目标就是 0.5&#x2F;6&#x3D;1&#x2F;12，GC Worker有两种模式：</p>
+<ul>
+<li>Dedicated 完全占用模式，直到调度器调度</li>
+<li>Fraction 非完全占用模式，Mark时间会均摊到每个p上以合计到达 1&#x2F;12这个目标（p的work时间&#x3D;Fraction模式的时间&#x2F;总的Mark的时间），如果当前P到了目标就会让出cpu</li>
+</ul>
+<h2 id="GC-过程中GC内存分配"><a href="#GC-过程中GC内存分配" class="headerlink" title="GC 过程中GC内存分配"></a>GC 过程中GC内存分配</h2><p>为避免GC过程的内存分配压力过大，GO语言有 GC Assist(辅助GC)，如果GC过程中协程要分配内存，它需要负担一部分GC标记工作，要申请的内存越大，那对应要<br>负担的标记任务也多（借贷偿还机制，你申请了内存，那就得你去释放内存），有负债的G在成功申请内存前，需要辅助gc完成一些标记工作，来偿还债务</p>
+<p>后台的MarkWorker 每完成一定量的标记任务就会在全局gcController中存一笔信用，有债务需要偿还的G可以在gcController这里偷取信用来偿还债务</p>
+<p>gc标记阶段，每次分配内存，都会检查当G是否需要辅助GC，到GC清扫阶段，内存分配也会触发辅助清扫</p>
+<p>辅助标记和辅助清扫，可以避免因过大的内存分配压力，导致GC来不及回收的情况（GC标记的速度没有分配的速度快，就永远标记不完）</p>
+<h2 id="GC-触发方式"><a href="#GC-触发方式" class="headerlink" title="GC 触发方式"></a>GC 触发方式</h2><ul>
+<li>手动触发 runtime.GC</li>
+<li>分配内存，每次GC都会在标记结束后设置下一次触发gc的内存分配量，分配大对象或者从mcentral获取空闲内存时，会判断是否达到了这个值</li>
+<li>sysmon 系统监控，达到一定的时间间隔，强制执行gc,默认是2分钟</li>
+</ul>
+<h1 id="gin框架的路由是怎么处理的？"><a href="#gin框架的路由是怎么处理的？" class="headerlink" title="gin框架的路由是怎么处理的？"></a>gin框架的路由是怎么处理的？</h1><p>gin框架的路由处理主要依赖于其高性能的路由分发器httprouter。httprouter负责将不同方法的多个路径分别注册到各个处理函数，当收到请求时，它负责快速查找请求的路径是否有相对应的处理函数，并进行下一步业务逻辑处理。</p>
+<p>gin框架的路由实现使用了类似前缀树（radix tree）的数据结构，这种数据结构只需要遍历一遍字符串即可，因此其时间复杂度为O(n)。这种实现方式相比传统的根据“&#x2F;”把路由切分成多个字符串数组，然后按照相同的前子数组把路由构造成树的结构的方式（时间复杂度为O(2n)）更为高效。</p>
+<p>Engine是gin框架最重要的数据结构，它是框架的入口。通过Engine对象，我们可以定义服务路由信息、组装插件、运行服务等。</p>
+<h1 id="B-树和B树有什么区别"><a href="#B-树和B树有什么区别" class="headerlink" title="B+树和B树有什么区别?"></a>B+树和B树有什么区别?</h1><ol>
+<li>节点结构：B树的每个节点（包括内部节点和叶子节点）都存储数据，而B+树只有叶子节点存储数据，内部节点仅作为索引使用，存储关键字和指向子节点的指针。</li>
+<li>指针的使用：在B+树中，内部节点的指针用于连接子节点，叶子节点的指针则用于连接相邻的叶子节点，形成一个有序的链表。而在B树中，指针主要用于连接子节点，叶子节点之间没有指针连接。</li>
+<li>检索方式：B树既支持随机检索也支持顺序检索，而B+树主要支持顺序检索。由于B+树的所有数据都存储在叶子节点中，且叶子节点通过指针连接，因此可以方便地进行范围查询和顺序访问。</li>
+<li>空间利用率和IO效率：B+树的空间利用率更高，因为内部节点不存储数据，可以容纳更多的索引项，从而降低了树的高度。此外，B+树的IO效率也更高，因为每次磁盘IO可以加载更多的索引项，减少了IO次数。</li>
+<li>查询效率：B+树的查询效率通常比B树更稳定，因为所有数据都存储在叶子节点中，每次查询的路径长度相对固定。而B树的查询效率可能会受到数据分布和查询模式的影响。</li>
+<li>增删操作的复杂性：在进行增删操作时，B树可能需要重新调整树结构以保持平衡，这增加了操作的复杂性。相比之下，B+树在增删操作时不需要调整树结构，因此相对更简单和高效。</li>
+</ol>
+<h1 id="sql查询性能瓶颈处理方式"><a href="#sql查询性能瓶颈处理方式" class="headerlink" title="sql查询性能瓶颈处理方式"></a>sql查询性能瓶颈处理方式</h1><p>SQL查询性能瓶颈的处理方式主要包括软优化和硬优化两个方面。软优化主要是操作数据库，通过优化SQL语句、使用缓存、添加索引、数据库读写分离、分库分表等方式来提高查询性能。硬优化则是操作服务器硬件及参数设置，如升级硬件、调整操作系统参数等。</p>
+<ol>
+<li>优化SQL语句：通过调整SQL语句的结构、使用更合适的查询语句、避免全表扫描等方式来提高查询效率。同时，可以使用数据库的查询执行计划工具来查看SQL语句的执行情况，进一步优化。</li>
+<li>使用缓存：将热点数据放入缓存中，减少数据库的访问次数，从而提高查询性能。常见的缓存技术包括Redis、Memcached等。</li>
+<li>添加索引：通过添加索引来加快查询速度，但需要注意避免过度索引导致性能下降。在添加索引时，需要综合考虑查询频率、数据更新频率等因素。</li>
+<li>数据库读写分离：将读操作和写操作分离到不同的数据库服务器上，从而提高系统的并发处理能力。这种方式需要应用层进行相应的改造，确保读写分离的正确性和一致性。</li>
+<li>分库分表：当单表数据量过大时，可以通过分库分表的方式来降低单表的数据量，从而提高查询性能。分库分表需要综合考虑数据的分布、访问频率等因素，同时需要进行相应的数据迁移和应用改造。</li>
+<li>升级硬件：当数据库服务器的硬件性能成为瓶颈时，可以考虑升级硬件，如增加内存、提高CPU性能等。</li>
+<li>调整操作系统参数：通过调整操作系统的参数设置，如文件描述符数量、网络参数等，来提高数据库的性能。</li>
+</ol>
+<h1 id="索引优化策略"><a href="#索引优化策略" class="headerlink" title="索引优化策略"></a>索引优化策略</h1><ol>
+<li>查询频次较高且数据量大的表建立索引；索引选择使用频次较高，过滤效果好的列或者组合。</li>
+<li>使用短索引；例如，如果某一列的取值范围很小，可以考虑使用较短的数据类型，如SMALLINT或TINYINT，而不是使用INT或BIGINT。</li>
+<li>对于很长的动态字符串，考虑使用前缀索引；例如邮箱</li>
+<li>对于组合索引，考虑最左侧匹配原则和覆盖索引；</li>
+<li>尽量选择区分度高的列作为索引；该列的值相同的越少越好；</li>
+<li>不要 select * ； 尽量只列出需要的列字段；方便使用覆盖索引；</li>
+<li>索引列，列尽量设置为非空；</li>
+</ol>
+<h1 id="B-树细节优势，和哈希索引的区别，是为了解决什么问题？"><a href="#B-树细节优势，和哈希索引的区别，是为了解决什么问题？" class="headerlink" title="B+树细节优势，和哈希索引的区别，是为了解决什么问题？"></a>B+树细节优势，和哈希索引的区别，是为了解决什么问题？</h1><p>B+树和哈希索引是两种常见的数据库索引结构，它们各有特点和优势，适用于不同的查询场景。以下是B+树索引的细节优势以及与哈希索引的区别：</p>
+<p>B+树索引的优势：</p>
+<ol>
+<li>有序性：B+树索引中的数据按照键值有序排列，这使得范围查询（如区间查询、排序）非常高效。</li>
+<li>高度平衡：B+树索引中的所有叶子节点位于同一层级，这意味着查询时的IO操作次数相对较少，提高了查询效率。</li>
+<li>节点分裂与合并：B+树在插入和删除数据时，通过节点的分裂与合并操作保持树的平衡，从而确保查询性能的稳定。</li>
+<li>支持顺序访问：由于叶子节点通过指针连接形成有序的链表，B+树索引支持顺序访问，这在某些应用场景中非常有用。</li>
+</ol>
+<p>哈希索引与B+树索引的区别：</p>
+<ol>
+<li>数据结构：哈希索引基于哈希表实现，而B+树索引是一种多路径的平衡搜索树。</li>
+<li>查询方式：哈希索引通过计算哈希值直接定位到数据，而B+树索引则需要从根节点开始逐层搜索。因此，哈希索引在等值查询时速度更快，但不适用于范围查询和模糊匹配查询。</li>
+<li>数据有序性：B+树索引中的数据有序，而哈希索引中的数据是无序的。</li>
+<li>索引更新：当数据发生变化时，B+树索引需要更新相应的节点以保持平衡，而哈希索引则只需重新计算哈希值。因此，B+树索引在更新操作上可能更耗时。</li>
+</ol>
+<p>B+树索引和哈希索引都是为了解决数据库查询性能问题而设计的。B+树索引适用于需要高效处理范围查询和排序操作的场景，而哈希索引则更适用于等值查询和快速定位数据的场景</p>
+<h1 id="事务四个特性四个隔离级别"><a href="#事务四个特性四个隔离级别" class="headerlink" title="事务四个特性四个隔离级别"></a>事务四个特性四个隔离级别</h1><p>事务的四个特性通常被称为ACID特性，它们分别是：</p>
+<ol>
+<li>原子性（Atomicity）：事务是一个不可分割的工作单位，事务中包括的操作要么全部完成，要么全部不完成。也就是说，如果一个事务中的某些操作失败，那么整个事务就会失败，需要回滚到事务开始前的状态。</li>
+<li>一致性（Consistency）：事务必须使数据库从一个一致性状态变换到另一个一致性状态。也就是说，一个事务执行前后，数据库中的数据必须保持一致。</li>
+<li>隔离性（Isolation）：通常，一个事务所做的修改在最终提交以前，对其他事务是不可见的。即一个事务内部的操作及使用的数据对并发的其他事务是隔离的，并发执行的各个事务之间不能互相干扰。</li>
+<li>持久性（Durability）：一旦事务提交，则其结果永久保存在数据库中。即使系统崩溃，重新启动后数据库还能恢复到事务成功结束时的状态</li>
+</ol>
+<p>数据库提供的四种隔离级别分别是：</p>
+<ol>
+<li>读未提交（Read Uncommitted）：这是最低的隔离级别，允许读取尚未提交的数据变更，可能会导致脏读、不可重复读和幻读。</li>
+<li>读已提交（Read Committed）：只允许读取已提交的数据，可以避免脏读，但是可能会出现不可重复读和幻读。</li>
+<li>可重复读（Repeatable Read）：在同一事务内，多次读取同一数据返回的结果是一致的，可以避免脏读和不可重复读，但是可能出现幻读。</li>
+<li>串行化（Serializable）：这是最严格的隔离级别，完全遵循ACID特性，所有的事务依次逐个执行，可以避免脏读、不可重复读和幻读。</li>
+</ol>
+<h2 id="MVCC-多版本并发控制"><a href="#MVCC-多版本并发控制" class="headerlink" title="MVCC 多版本并发控制"></a>MVCC 多版本并发控制</h2><p>MVCC（乐观锁）多版本并发控制，保证的是“读已提交”和“可重复读”</p>
+<p>版本链：<br>页记录里面有两个额外的字段trx_id(事务ID)和roll_pointer, undo日志里面有三个额外的字段trx_id(事务ID)和roll_pointer,row_id<br>roll_pointer指向row_id形成一条版本链</p>
+<p>ReadView:<br>事务在使用MVCC机制时产生的一致性视图，包含4个字段：</p>
+<ol>
+<li>creator_trx_id: 创建readView的事务的事务ID</li>
+<li>m_ids: 创建视图时当前数据库中活跃且为提交的事务ID列表，在这个列表里面的事务版本不可读</li>
+<li>min_trx_id: 创建ReadView时，最小活跃事务ID，用于在版本链中找出已经提交过的数据</li>
+<li>max_trx_id: 全局事务ID最大值+1</li>
+</ol>
+<p>MVCC 通过ReadView以及undo日志形成的版本来控制多版本并发读，查询记录时先判定，页记录是否在当前ReadView的m_ids列表中，如果不在说明事务已提交，如果在表明<br>当前当前数据行是在，查询开始后提交的，就需要根据版本链找出小于min_trx_id的记录</p>
+<p>读已提交和可重复读的实现区别在于，读已提交每次读的时候都会重新生成ReadView，这样已提交的事务就不在m_ids中，实现读到提交的记录</p>
+<p>MVCC没有解决幻读的问题，Innodb 默认的隔离级别是“可重复读”，通过行锁和间隙锁(next-key Lock)来解决幻读的问题,在查询时使用 SELECT … FOR UPDATE开启行锁或间隙锁</p>
+<h1 id="http-time-wait状态分析"><a href="#http-time-wait状态分析" class="headerlink" title="http  time_wait状态分析"></a>http  time_wait状态分析</h1><p>TIME_WAIT 是一个 TCP 协议中的状态，而不是 HTTP 协议特有的。当 TCP 连接关闭时，主动关闭连接的端点（通常是客户端）会进入 TIME_WAIT 状态。这个状态的主要目的是确保网络中延迟的数据包不会被误解为新的连接的一部分。</p>
+<h2 id="为什么需要-TIME-WAIT-状态？"><a href="#为什么需要-TIME-WAIT-状态？" class="headerlink" title="为什么需要 TIME_WAIT 状态？"></a>为什么需要 TIME_WAIT 状态？</h2><ol>
+<li>避免旧的数据包被误解为新连接的数据包: 在网络中，数据包可能会因为各种原因（如网络拥塞、路由延迟等）被延迟到达。如果一个连接刚刚关闭，并且立即尝试建立一个新的连接，那么这些延迟的数据包可能会被误解为新连接的一部分，从而导致错误。为了避免这种情况，TCP 协议设计了一个 TIME_WAIT 状态，让主动关闭连接的端点在关闭连接后等待一段时间，确保所有的延迟数据包都已经从网络中消失。</li>
+<li>确保 TCP 协议的正确性: TCP 协议依赖于序列号来确保数据的顺序和完整性。如果一个连接刚刚关闭，并且立即尝试建立一个新的连接，那么新连接的序列号可能与旧连接的序列号发生冲突，这可能会导致混乱。TIME_WAIT 状态确保了在建立新连接之前，旧连接的序列号空间已经完全使用完毕。</li>
+</ol>
+<h2 id="如何处理-TIME-WAIT-状态"><a href="#如何处理-TIME-WAIT-状态" class="headerlink" title="如何处理 TIME_WAIT 状态"></a>如何处理 TIME_WAIT 状态</h2><ol>
+<li>调整 TIME_WAIT 时间：可以通过操作系统参数（如 Linux 上的 tcp_fin_timeout）来调整 TIME_WAIT 状态的持续时间。缩短这个时间可以减少端口资源的占用，但可能会增加网络中延迟数据包被误解的风险。</li>
+<li>使用 SO_REUSEADDR 选项：在服务器端，可以通过设置 SO_REUSEADDR 选项来允许在同一端口上重用地址。这可以减少 TIME_WAIT 状态对新连接建立的影响，但需要注意的是，在某些情况下，这可能会导致数据混淆或其他问题。</li>
+<li>使用更现代的协议：HTTP&#x2F;1.1 和 HTTP&#x2F;2 协议通过长连接（持久连接）减少了 TIME_WAIT 状态的影响。这些协议允许在单个 TCP 连接上发送多个 HTTP 请求，从而减少了连接的建立和关闭次数。</li>
+</ol>
+<p>TIME_WAIT 状态是 TCP 协议中的一个重要机制，用于确保网络数据的正确性和可靠性。</p>
+<h1 id="nginx负载均衡策略"><a href="#nginx负载均衡策略" class="headerlink" title="nginx负载均衡策略"></a>nginx负载均衡策略</h1><ol>
+<li>轮询（默认）：每个请求按时间顺序逐一分配到不同的后端服务器。如果后端服务器down掉，nginx会自动剔除该服务器。这种策略适合每个后端服务器的配置相当，无状态且短平快的服务使用。</li>
+<li>权重（weight）方式：在轮询策略的基础上指定轮询的几率。权重越高，分配到需要处理的请求越多。此策略可以与least_conn和ip_hash结合使用，适合服务器的硬件配置差别比较大的情况。</li>
+<li>IP_HASH：指定负载均衡器按照基于客户端IP的分配方式。这个方法确保了相同的客户端的请求一直发送到相同的服务器，以保证session会话。这样每个访客都固定访问一个后端服务器，可以解决session不能跨服务器的问题。</li>
+<li>least_conn：把请求转发给连接数最少的后端服务器。轮询算法是把请求平均的转发给各个后端，使它们的负载大致相同；但是，有些请求占用的时间很长，会导致其所在的后端负载较高。least_conn策略可以解决这个问题。</li>
+</ol>
+<h1 id="es内部实现原理，如何保证数据一致性，如何降低压力"><a href="#es内部实现原理，如何保证数据一致性，如何降低压力" class="headerlink" title="es内部实现原理，如何保证数据一致性，如何降低压力"></a>es内部实现原理，如何保证数据一致性，如何降低压力</h1><p>Elasticsearch（简称ES）是一个基于Lucene的搜索服务器，用于全文搜索、结构化搜索、分析，并能将其部署到一个或多个服务器上。它通常被用作某种形式的数据仓库，其设计能够处理大量的数据并提供近实时的搜索和分析能力。</p>
+<h2 id="内部实现原理"><a href="#内部实现原理" class="headerlink" title="内部实现原理"></a>内部实现原理</h2><ol>
+<li>倒排索引：ES的核心是倒排索引，这是一种能够快速检索文档的技术。它首先将文档内容分解为单词或词组（称为term），然后将这些term映射到文档列表上。</li>
+<li>分片和副本：ES通过分片（Sharding）和副本（Replication）机制实现数据的水平扩展和高可用性。一个ES集群可以包含多个节点，每个节点可以存储一个或多个分片，而每个分片可以有多个副本。</li>
+<li>分布式架构：ES是一个分布式系统，其内部使用ZooKeeper或内置的Raft选举机制进行集群管理。所有的节点都是对等的，并且可以互相通信。</li>
+</ol>
+<h2 id="如何保证数据一致性"><a href="#如何保证数据一致性" class="headerlink" title="如何保证数据一致性"></a>如何保证数据一致性</h2><ol>
+<li>事务日志（Transaction Log）：每个分片都有一个事务日志，用于记录所有对分片的更改。这确保了即使在发生故障时，已提交的更改也不会丢失。</li>
+<li>复制：通过创建分片的副本，ES可以提高数据的可用性和一致性。副本不仅用于故障恢复，还可以用于查询，从而提高查询性能。</li>
+<li>分布式一致性协议：ES使用一种称为“基于主-从的复制”的分布式一致性协议。每个分片都有一个主节点和零个或多个副本节点。主节点负责处理写请求，并将更改复制到副本节点。</li>
+</ol>
+<h2 id="如何降低压力"><a href="#如何降低压力" class="headerlink" title="如何降低压力"></a>如何降低压力</h2><ol>
+<li>水平扩展：通过增加节点数量，ES可以水平扩展其存储和计算能力。这允许您处理更多的数据和查询请求。</li>
+<li>分片策略：通过合理地设置分片的数量和副本的数量，您可以平衡存储和计算负载。例如，您可以增加分片的数量以分散存储负载，或增加副本的数量以提高可用性和查询性能。</li>
+<li>查询优化：通过优化查询语句和使用过滤器（Filter）而不是查询（Query）来减少不必要的计算。此外，利用ES的查询缓存和预热查询功能也可以提高查询性能。</li>
+<li>硬件优化：通过升级硬件（如增加内存、使用更快的磁盘等）或优化ES的配置设置（如调整JVM参数、增加线程池大小等）来提高ES的性能和稳定性。</li>
+</ol>
+<h1 id="linux查看磁盘、io、内存情况的命令"><a href="#linux查看磁盘、io、内存情况的命令" class="headerlink" title="linux查看磁盘、io、内存情况的命令"></a>linux查看磁盘、io、内存情况的命令</h1><h2 id="查看磁盘情况："><a href="#查看磁盘情况：" class="headerlink" title="查看磁盘情况："></a>查看磁盘情况：</h2><ol>
+<li>df 命令：显示文件系统的磁盘空间使用情况。<ul>
+<li>-h 参数：以人类可读的方式显示磁盘空间。</li>
+</ul>
+</li>
+<li>du 命令：估算文件和目录的磁盘空间使用量。<ul>
+<li>-h 参数：以人类可读的方式显示磁盘空间。</li>
+<li>&#x2F;path&#x2F;to&#x2F;directory：要查看的目录路径。</li>
+</ul>
+</li>
+<li>lsblk 命令：列出块设备的信息，包括磁盘、分区和挂载点等。</li>
+<li>fdisk 命令：查看和管理磁盘分区。<ul>
+<li>-l 参数：列出所有的磁盘分区信息。</li>
+</ul>
+</li>
+<li>blkid 命令：显示块设备的属性，包括设备的UUID、文件系统类型等。<ul>
+<li>&#x2F;dev&#x2F;sda1：要查看的设备。</li>
+</ul>
+</li>
+</ol>
+<h2 id="查看IO情况："><a href="#查看IO情况：" class="headerlink" title="查看IO情况："></a>查看IO情况：</h2><ol>
+<li>iostat 命令：查看系统的磁盘IO情况。<ul>
+<li>-x 参数：显示关于磁盘读写速度、平均响应时间、IO队列长度等信息。</li>
+<li>1：每隔1秒输出一次IO信息。</li>
+</ul>
+</li>
+<li>vmstat 命令：查看系统的虚拟内存、进程和IO情况。</li>
+<li>dstat 命令：查看CPU、内存、磁盘、网络和IO等方面的实时统计信息。</li>
+</ol>
+<h2 id="查看内存情况："><a href="#查看内存情况：" class="headerlink" title="查看内存情况："></a>查看内存情况：</h2><ol>
+<li>free 命令：显示系统的内存使用情况。</li>
+<li>top 命令：实时的系统监视器，可以显示内存使用情况。<ul>
+<li>Shift + M：按内存使用情况排序。</li>
+</ul>
+</li>
+<li>vmstat 命令：显示系统的虚拟内存统计信息。</li>
+<li>ps 命令：显示当前运行的进程信息，并可以通过选项按内存使用量排序。<ul>
+<li>aux –sort -rss：按内存使用量从高到低的顺序显示进程信息。</li>
+</ul>
+</li>
+</ol>
+<h1 id="分库分表联表查询有哪些方式"><a href="#分库分表联表查询有哪些方式" class="headerlink" title="分库分表联表查询有哪些方式"></a>分库分表联表查询有哪些方式</h1><h2 id="单表情况"><a href="#单表情况" class="headerlink" title="单表情况"></a>单表情况</h2><ol>
+<li>应用层分页：将查询条件分发到各个数据库，然后在应用层合并结果集并进行分页。这种方案可以实现比较灵活的分页查询，但是需要考虑分组、排序等复杂的情况，还需要处理分页边界问题。</li>
+<li>数据库中间件：使用数据库中间件来屏蔽分库分表对应用的影响，中间件会将应用发出的SQL语句转换成针对多个数据库的查询语句，并将结果集进行合并。这种方案可以实现比较灵活的查询，但需要引入额外的中间件，可能会影响性能和稳定性。</li>
+<li>分库分表框架：使用分库分表框架来实现跨多个数据库和表的查询，例如Sharding-JDBC等。这种方案可以实现透明化的分库分表操作，但需要引入额外的框架和配置，可能会增加复杂度。</li>
+</ol>
+<h2 id="多表情况"><a href="#多表情况" class="headerlink" title="多表情况"></a>多表情况</h2><ol>
+<li>利用UNION或UNION ALL：将多个查询结果集合并成一个结果集返回。</li>
+<li>建立主表：将需要联表查询的字段放在一张主表中，并做好索引。记录下用户经常查询的条件，把查出的数据缓存，以便用户经常调用。</li>
+<li>多线程处理：每个子表各开一个线程分别查询数据，然后进行合并。但需要注意的是，线程数不能开太多，要根据处理器个数和总连接数来衡量。</li>
+</ol>
+<p>无论采用哪种方式，都需要考虑分页边界问题和性能问题。在分页查询时，需要确保每个分库分表中的数据都被查询到，并且可以正确排序和分页。</p>
+<h1 id="覆盖查询-回表查询"><a href="#覆盖查询-回表查询" class="headerlink" title="覆盖查询&amp;回表查询"></a>覆盖查询&amp;回表查询</h1><p>覆盖查询（Covering Index）：当查询所需的所有列都包含在索引中时，就会发生覆盖查询。这意味着数据库引擎可以直接从索引中获取所需的所有数据，而无需再访问表中的数据行。因为避免了额外的表访问，所以覆盖查询通常更高效。在InnoDB存储引擎中，如果一个查询可以利用主键索引获取所有所需数据，就可以实现覆盖查询。</p>
+<p>回表查询（Secondary Index Lookup）：当查询无法从索引中获取所需的所有列数据时，数据库引擎必须执行回表查询。这通常发生在普通索引（非主键索引）中，因为普通索引的叶子节点只包含索引列的值和主键值，而不包含其他列的数据。当查询需要获取表中的其他列数据时，数据库引擎会首先使用索引定位到主键值，然后再通过主键值去表中查找完整的行记录。这个过程被称为回表查询，因为它需要回到表中查找数据。回表查询通常比覆盖查询更耗时，因为它涉及到额外的表访问。</p>
+<p>为了提高查询性能，数据库优化者通常会尝试创建覆盖索引，即将查询中所需的列包含在索引中，以减少回表查询的需要。然而，过多的索引也会增加数据库的存储空间和维护成本，因此需要在覆盖查询和回表查询之间找到平衡。</p>
+<h1 id="聚簇索引-非聚簇索引"><a href="#聚簇索引-非聚簇索引" class="headerlink" title="聚簇索引&amp;非聚簇索引"></a>聚簇索引&amp;非聚簇索引</h1><p>存储索引的物理区分方式  </p>
+<ul>
+<li>聚簇索引节点中存储的是数据</li>
+<li>非聚簇索引节点中存储的是行记录的地址</li>
+</ul>
+<p>mysql中Innodb使用的是聚簇索引,data目录中包含两个文件（表节结构定义文件，表数据文件）<br>myisam用的是非聚簇索引，data目录中包含3个文件（表结构定义文件，索引文件，数据文件）</p>
+<h1 id="go实现不重启热部署"><a href="#go实现不重启热部署" class="headerlink" title="go实现不重启热部署"></a>go实现不重启热部署</h1><p>用的是overseer这个包，采用主从进程设计，有父进程创建监听 socket ，然后fork-exec派生出子进程，将全部监听 socket 继承给子进程，业务逻辑由子进程来运行。<br>在重启的过程中，旧的子进程不在接受请求，而转移到新的子进程中，旧的子进程处理所有请求后就会推出</p>
+<h1 id="go性能分析工具"><a href="#go性能分析工具" class="headerlink" title="go性能分析工具"></a>go性能分析工具</h1><h2 id="服务性采集"><a href="#服务性采集" class="headerlink" title="服务性采集"></a>服务性采集</h2><ol>
+<li>net&#x2F;http&#x2F;prof</li>
+<li>gops 用于非web服务</li>
+</ol>
+<h2 id="非服务性采集"><a href="#非服务性采集" class="headerlink" title="非服务性采集"></a>非服务性采集</h2><ol>
+<li>runtime&#x2F;prof</li>
+<li>go test</li>
+</ol>
+<p>使用graphviz 可以图形化结果<br>go tool pprof 本地文件&#x2F;url  </p>
+<h1 id="tcp如何保证稳定性"><a href="#tcp如何保证稳定性" class="headerlink" title="tcp如何保证稳定性"></a>tcp如何保证稳定性</h1><ol>
+<li>字节流传输：TCP将应用层发送的数据划分成以字节为单位的报文段，并进行序列号标记，以确保数据传输的有序性。</li>
+<li>确认重传机制：TCP在通信过程中采用确认和重传机制。当接收方收到报文段后，会进行确认(Ack)操作。如果发送方没有收到确认，则会重新传送该报文段。</li>
+<li>滑动窗口机制：TCP利用滑动窗口机制实现流量控制和拥塞控制。通过限制发送方窗口大小，防止发送速度过快，而接收方处理不及时导致的包丢失等问题。同时，可以根据网络拥塞情况来动态调整窗口大小，保证网络的稳定性和可靠性。</li>
+<li>头部校验和：在TCP传输过程中，每个报文段都会添加一个头部校验和，以检测数据在传输过程中是否损坏或者被篡改。如果发现数据损坏，则会进行重传，以确保数据的完整性和准确性。</li>
+<li>连接管理：TCP通过三次握手建立连接，并通过四次挥手关闭连接，确保连接的稳定性和可靠性。</li>
+</ol>
+<h1 id="http和http2区别"><a href="#http和http2区别" class="headerlink" title="http和http2区别"></a>http和http2区别</h1><ol>
+<li>二进制传输：HTTP&#x2F;2采用二进制传输，而HTTP&#x2F;1.x使用文本传输。二进制传输使得HTTP&#x2F;2更为高效和安全，因为二进制数据可以被机器直接解析，减少了由于文本带来的二义性。此外，二进制传输的单位是帧和流，帧组成了流，同时流还有流ID标示。</li>
+<li>多路复用：HTTP&#x2F;2支持多路复用，这意味着一个HTTP&#x2F;2连接可以并行处理多个请求，而不需要为每个请求建立新的连接。通过流ID，HTTP&#x2F;2可以在同一个连接中同时传输多个请求，降低了连接的数量，提高了网络的吞吐量。</li>
+<li>头部压缩：HTTP&#x2F;2通过gzip和compress对头部进行压缩，然后在客户端和服务器端同时维护一份头部索引表。这样，每次传输只需要传输索引ID，通过索引ID查询表头的值，从而缩小了头部容量，间接提升了传输效率。</li>
+<li>服务端推送：HTTP&#x2F;2支持服务端推送，即服务器可以在未经客户端许可的情况下，主动向客户端推送内容。这避免了客户端需要逐个请求资源，降低了响应时间。</li>
+</ol>
+<h1 id="https的连接过程"><a href="#https的连接过程" class="headerlink" title="https的连接过程"></a>https的连接过程</h1><ol>
+<li>客户端发起请求：客户端（通常是浏览器）向服务器发起建立连接的请求，同时发送客户端支持的一套加密规则，包括对称加密、非对称加密、摘要算法等。</li>
+<li>服务器响应并选择加密方式：服务器接收到请求后，从中选出一组加密算法和hash算法，并将自己的身份信息以证书的形式发送给客户端。证书包括网站地址、加密公钥（用于非对称加密）和证书颁布机构等信息。</li>
+<li>客户端验证服务器证书：客户端收到服务器证书后，会验证证书的合法性。验证内容包括证书是否过期、证书颁发机构（CA）是否可靠、发行者证书的公钥是否能正确解开服务器证书的“发行者的数字签名”，以及服务器证书上的域名是否和服务器的实际域名相匹配等。</li>
+<li>生成随机密钥并进行加密：如果证书验证通过，或者即使证书不受信任，客户端会生成一个随机密钥（用于对称加密），并用服务器提供的公钥（非对称加密）对密钥进行加密。然后，采用hash算法对握手信息进行摘要计算，再用随机密钥（对称加密算法）对摘要进行加密。最后，将随机密钥和摘要发送给服务器。</li>
+<li>服务器解密并验证握手信息：服务器收到加密的随机密钥和摘要后，用自己的私钥解密获得随机密钥，再解密得到hash摘要值，然后验证握手信息是否一致。</li>
+<li>产生主通讯密码：如果服务器要求客户的身份认证，服务器必须检验客户证书和签名随机数的合法性。验证通过后，服务器和客户端将使用相同的对称加密密钥进行通讯。这个对称密钥用于SSL协议的安全数据通讯的加解密通讯。</li>
+<li>建立安全连接：客户端和服务器通过交换信息，确认将使用之前产生的对称密钥作为后续通讯的加密密钥，并通知对方握手过程结束。此时，双方已经建立了安全的HTTPS连接，可以开始进行加密的数据通讯。</li>
+</ol>
+<p>HTTPS在HTTP的基础上增加了一个TLS层，所有的数据都先经过TLS加密后再发送给TCP进行传输。这种加密方式确保了数据在传输过程中的安全性和完整性，防止了数据泄露和被篡改。  </p>
+<h1 id="分布式锁如何实现"><a href="#分布式锁如何实现" class="headerlink" title="分布式锁如何实现"></a>分布式锁如何实现</h1><ol>
+<li><p>基于数据库实现分布式锁<br>在数据库中创建一张表，用于记录锁的占用情况。当需要获取锁时，向该表中插入一条记录，表示占用该锁。其他线程或进程在尝试获取锁时，会先查询该表，判断锁是否已被占用。如果锁已被占用，则等待或尝试获取其他锁；如果锁未被占用，则插入一条记录，表示占用该锁。释放锁时，只需删除对应的记录即可。<br>但是，基于数据库实现分布式锁存在一些问题，如性能瓶颈、单点故障等。因此，在实际应用中，通常会选择其他更高效的实现方式。</p>
+</li>
+<li><p>基于Redis实现分布式锁<br>当需要获取锁时，使用SETNX命令尝试设置一个键值对，如果设置成功，则表示占用该锁；如果设置失败（即键已存在），则表示锁已被其他线程或进程占用。释放锁时，使用DEL命令删除对应的键值对即可。<br>为了提高可靠性，可以在设置键值对时设置一个过期时间，以防止因进程崩溃等原因导致锁无法被释放。此外，还可以使用Redis的Lua脚本功能来确保操作的原子性。</p>
+</li>
+<li><p>基于zookeeper实现分布式锁<br>在Zookeeper中创建一个节点作为锁，当需要获取锁时，尝试在该节点下创建一个子节点（即临时节点或顺序节点）。如果创建成功，则表示占用该锁；如果创建失败（即节点已存在），则表示锁已被其他线程或进程占用。释放锁时，只需删除对应的子节点即可。<br>Zookeeper具有强一致性、高可用性和容错性等特点，因此基于它实现的分布式锁也具有较高的可靠性和稳定性。但是，与基于缓存服务的实现方式相比，基于Zookeeper的实现方式性能可能稍逊一些。因此，在选择实现方式时需要根据具体场景进行权衡和选择。</p>
+</li>
+<li><p>基于Etcd实现分布式锁<br>在ETCd中创建一个键值对，键作为锁的名称，值可以是任意信息。由于ETCd支持原子操作，这可以确保在同一时间只有一个客户端能够成功创建锁。在ETCd中创建一个键值对，键作为锁的名称，值可以是任意信息。由于ETCd支持原子操作，这可以确保在同一时间只有一个客户端能够成功创建锁。</p>
+</li>
+</ol>
+<h1 id="读扩散-写扩散"><a href="#读扩散-写扩散" class="headerlink" title="读扩散&amp;写扩散"></a>读扩散&amp;写扩散</h1><p>读扩散是指在分布式系统中，由于数据的复制和缓存等原因，当一条数据被更新后，在多个节点中都存在该数据的副本。当其他节点请求该数据时，可能会读取到过期的数据，因为该节点上的数据还未被更新。这导致其他节点上的数据过期，从而读取到过期数据的现象。</p>
+<p>写扩散则是指在分布式系统中，当一条数据被更新后，需要将该数据的更新操作同步到多个节点中的副本，以保证数据的一致性。这种同步操作可能需要耗费较多的时间和网络带宽，对系统性能产生一定的影响。</p>
+<p>为了解决读扩散和写扩散的问题，分布式系统中通常会采用一些策略和技术。例如，对于读扩散问题，可以使用版本号或时间戳等机制来比较数据的版本或时间戳，从而确保读取到的数据是最新的。对于写扩散问题，可以采用异步复制或延迟复制等技术，将数据的同步操作放到后台进行，避免对系统性能造成较大的影响。</p>
+<p>此外，分布式共识算法，如Paxos和Raft协议等，也可以确保分布式系统中节点间的一致性，从而解决读扩散和写扩散问题。这些算法可以确保节点达成共识，协同完成数据的读写操作，从而保证了系统的正确性和可靠性</p>
+<h1 id="goroutine创建数量有限制吗？"><a href="#goroutine创建数量有限制吗？" class="headerlink" title="goroutine创建数量有限制吗？"></a>goroutine创建数量有限制吗？</h1><p>Goroutine的创建数量没有直接的限制。Goroutine是Go语言中的轻量级线程，由Go运行时环境管理。在理论上，你可以创建数以百万计的Goroutine，但实际上的数量受到系统资源（如内存）的限制。因为每个Goroutine都会占用一定的内存，如果无限制地创建，可能会导致内存耗尽。</p>
+<p>但是，Go语言的运行时环境对Goroutine的数量也有一定的管理机制。当Goroutine的数量达到一定的阈值时，调度器会限制新的Goroutine的创建，直到已有的Goroutine执行完毕并释放资源。这个阈值并不是固定的，而是根据系统的实际情况动态调整的。</p>
+<p>因此，虽然Goroutine的创建数量没有直接限制，但在实际使用中，仍需要根据系统的资源情况来合理控制Goroutine的数量，避免出现资源耗尽的问题。同时，也需要注意Goroutine的创建和销毁时机，避免出现内存泄漏等问题。</p>
+<h1 id="go并发机制"><a href="#go并发机制" class="headerlink" title="go并发机制"></a>go并发机制</h1><p>这种机制主要基于goroutine和CSP（通信顺序过程）概念。  </p>
+<ol>
+<li>Goroutine：Goroutine是Go语言中的轻量级线程，由Go运行时环境管理。与传统的线程相比，Goroutine的上下文切换开销要小很多，因此可以创建数以百万计的Goroutine。Goroutine的创建非常简单，只需使用go关键字后跟一个函数调用即可。</li>
+<li>CSP（通信顺序过程）：CSP是Go并发机制的理论基础，强调通过通信来共享内存，而不是通过共享内存来通信。这有助于简化并发编程模型，并减少竞态条件和死锁的风险。在Go中，可以使用channel来实现Goroutine之间的通信。Channel是一个类型安全的、阻塞的通信管道，用于在Goroutine之间传递数据。</li>
+<li>调度与执行：Go运行时环境负责Goroutine的调度和执行。调度器会根据Goroutine的优先级和系统的负载情况来调度Goroutine的执行。当Goroutine执行完毕或阻塞时（如等待I&#x2F;O操作完成），调度器会将其挂起，并切换到其他可执行的Goroutine。</li>
+</ol>
+<h1 id="线程协程区别"><a href="#线程协程区别" class="headerlink" title="线程协程区别"></a>线程协程区别</h1><ol>
+<li>调度方式：线程由操作系统内核进行调度，可以在不同的核心上并行执行。而协程的调度则是由程序员或运行时环境显式地控制，在单个线程内通过协作式调度来实现并发。</li>
+<li>并发性：线程是并发执行的，多个线程可以同时执行不同的任务。而协程是协作式的，只有一个协程在执行，其他协程需要等待当前协程主动释放控制权才能执行。</li>
+<li>内存消耗：线程需要独立的堆栈空间，每个线程都有自己的堆栈，因此线程的内存消耗较大。而协程共享线程的堆栈，因此协程的内存消耗较小。</li>
+<li>切换开销：线程的切换需要保存和恢复线程的上下文，这涉及到内核态和用户态之间的切换，开销较大。而协程的切换只需要保存和恢复协程的上下文，开销较小。</li>
+</ol>
+<h1 id="锁的可重入"><a href="#锁的可重入" class="headerlink" title="锁的可重入"></a>锁的可重入</h1><p>锁的可重入性（Reentrant）是指同一个线程在已经持有锁的情况下，再次获取该锁时不会被阻塞，而是可以继续获取该锁。</p>
+<p>可重入锁是一种允许同一个线程多次获得同一把锁的机制。然而，Go的设计者故意避免了这种复杂性，因为它们认为可重入锁会导致代码更加复杂和难以维护。使用通道和协程的方式鼓励开发者写出更简单、更清晰且更容易理解的并发代码。</p>
+<p>Go的标准库提供了基本的同步原语，如互斥锁（sync.Mutex），但这些锁是非重入的。如果一个 goroutine 试图两次锁定同一个互斥锁，它会死锁。</p>
+<p>这强制开发者更仔细地考虑锁的使用，从而减少死锁和其他并发问题的可能性。Go 语言不支持可重入锁（reentrant locks），主要是因为它的并发模型和设计哲学。在Go中，推荐的并发处理方式是通过通道（channels）和协程（goroutines）来进行，而不是传统的锁和线程模型。这种方法被称为“以通讯来共享内存，而非以共享内存来通讯”。</p>
+<p>当然也可用go来实现可重入的锁，获取Goroutine的ID,再维护一个计数器，即可</p>
+<h1 id="常用限流算法"><a href="#常用限流算法" class="headerlink" title="常用限流算法"></a>常用限流算法</h1><ol>
+<li>固定窗口算法：在指定的时间段内只允许通过固定次数的请求。例如，1秒到10秒这个时间段内允许通过100个请求。但是，这种算法存在临界值问题，如果请求集中在一个时间窗口内，可能会超过系统处理能力。</li>
+<li>滑动窗口算法：为了解决固定窗口算法中的临界值问题，滑动窗口算法将固定窗口中的时间段进行细分，分成更小的时间窗口。这样可以平滑突发流量，减少临界值问题。</li>
+<li>漏桶算法：漏桶算法有一个固定容量的漏桶和固定的流出速度。当请求进入时，先放入漏桶中。如果请求速度小于流出速度，则请求可以正常执行；如果请求速度大于流出速度，则按照流出速度执行请求，相当于进行了限流。Nginx的限流算法就是使用的漏桶算法。</li>
+<li>令牌桶算法：令牌桶算法有一个固定容量的令牌桶，系统以一定的速度往令牌桶中放令牌。当请求到来时，先从令牌桶中获取令牌，获取到令牌才有权限访问系统。如果请求速度小于令牌生成速度，则请求可以正常执行；如果请求速度大于令牌生成速度，则超出部分的请求将被拒绝，实现了限流。Gateway网关用到的限流算法就是令牌桶算法</li>
+</ol>
+<p>Golang标准库中实现的限流器使用了令牌桶算法（Token Bucket）。在Golang的golang.org&#x2F;x&#x2F;time&#x2F;rate包中提供了限流器的实现。</p>
+<h1 id="rpc调用过程"><a href="#rpc调用过程" class="headerlink" title="rpc调用过程"></a>rpc调用过程</h1><ol>
+<li>客户端（Client）以本地调用的方式发起调用。</li>
+<li>客户端存根（Client stub）收到调用后，负责将被调用的方法名、参数等打包编码成特定格式的消息体。</li>
+<li>客户端存根将消息体通过网络发送给服务端。</li>
+<li>服务端存根（Server stub）收到通过网络接收到的消息后，按照相应格式进行拆包解码，获取方法名和参数。</li>
+<li>服务端存根根据方法名和参数进行本地调用。</li>
+<li>被调用者（Server）本地调用执行后将结果返回给服务端存根。</li>
+<li>服务端存根将返回值打包编码成消息。</li>
+<li>通过网络发送给客户端。</li>
+<li>客户端存根收到消息后，进行拆包解码，返回给客户端。</li>
+<li>客户端得到本次RPC调用的最终结果</li>
+</ol>
+<h1 id="熔断降级开源框架"><a href="#熔断降级开源框架" class="headerlink" title="熔断降级开源框架"></a>熔断降级开源框架</h1><p>熔断降级开源框架是一种用于提高服务可靠性的工具，适用于依赖大量外部服务的业务系统。当系统出现不稳定因素（如响应时间变长，错误率上升）的时候，熔断降级框架会暂时切断服务的调用，等待一段时间再进行尝试，防止给不稳定服务“雪上加霜”，同时也保护服务的调用方不被拖垮。</p>
+<p>其中，Hystrix是一个开源的熔断降级框架，用于处理分布式系统的延迟和容错。它实现了断路器模式，当某个服务的调用连续多次失败达到一定的阈值，断路器会打开，后续对该服务的调用请求将不再继续，直接返回错误响应，从而避免系统资源的浪费。此外，Hystrix还提供了降级机制，当某个服务出现故障或者性能下降时，可以执行备用的逻辑，保证系统的整体稳定性。</p>
+<p>另一个值得关注的熔断降级开源框架是Sentinel。Sentinel是阿里巴巴开源的，面向分布式服务架构的流量控制组件，主要以流量为切入点，从限流、流量整形、熔断降级、系统自适应保护等多个维度来帮助开发者保障微服务的稳定性。Sentinel支持两种熔断策略：基于响应时间（慢调用比例）和基于错误（错误比例&#x2F;错误数），可以有效地针对各种不稳定的场景进行防护。</p>
+<h1 id="serviceMash"><a href="#serviceMash" class="headerlink" title="serviceMash"></a>serviceMash</h1><p>Service Mesh（服务网格）是一种专门用于处理服务间通信的基础设施层。它通常是由一组轻量级的网络代理组成，这些代理与应用程序一起部署，但对应用程序是透明的。Service Mesh的目标是在云原生应用复杂的服务拓扑中实现可靠的请求传递。</p>
+<p>Service Mesh可以看作是传统代理的升级版，用来解决当前微服务框架中出现的问题（如网络相关的问题）。传统意义的代理主要强调底层网络数据，而Service Mesh则更强调程序级别的API级别的通用功能，与业务逻辑有一定的关联。它把和网络API基本配置相关的通用功能独立出来，并提供一个公共的数据和控制面板，方便用户使用。</p>
+<p>Service Mesh的基本结构是一组与应用一起部署的轻量级服务代理和应用逻辑的服务，它们共同存在，并且对于应用服务是透明的。这种设计使得Service Mesh可以专注于处理服务间的通信，从而实现业务升级和微服务SDK升级的解耦，降低异构系统的维护成本。</p>
+<p>此外，Service Mesh类似于TCP&#x2F;IP协议栈，它抽象了在服务之间可靠地传递请求的机制。与TCP不同的是，Service Mesh有更高的目标，即为应用运行时提供统一的、应用层面的可见性和可控性。</p>
+<p>总之，Service Mesh是一种用于处理云原生应用中服务间通信的基础设施层，它通过轻量级的网络代理实现可靠的请求传递，并提供统一的、应用层面的可见性和可控性。</p>
+<h1 id="什么操作会影响联表查询效率"><a href="#什么操作会影响联表查询效率" class="headerlink" title="什么操作会影响联表查询效率"></a>什么操作会影响联表查询效率</h1><ol>
+<li>未使用索引：当进行联表查询时，如果连接的字段没有建立索引，查询效率会大大降低。因此，为经常用于连接的字段建立索引是非常重要的。</li>
+<li>使用了不恰当的连接类型：SQL支持多种连接类型，如INNER JOIN、LEFT JOIN、RIGHT JOIN和FULL JOIN等。选择不恰当的连接类型可能会导致查询效率降低。例如，当只需要获取两个表中匹配的数据时，使用INNER JOIN通常比使用LEFT JOIN或RIGHT JOIN更高效。</li>
+<li>查询条件复杂：如果查询条件复杂，涉及多个字段、多个表以及复杂的逻辑运算，可能会导致查询效率降低。</li>
+<li>数据量大：当连接的两个表的数据量都很大时，联表查询的效率可能会受到影响。这种情况下，可以考虑对表进行分区或使用其他优化策略。</li>
+<li>使用了函数或计算：在查询条件中使用函数或进行复杂的计算可能会降低查询效率，因为数据库可能无法有效地使用索引。</li>
+<li>未使用合适的查询优化器提示：某些数据库允许使用查询优化器提示来指导查询的执行。如果提供了不恰当的提示，可能会影响查询效率。</li>
+<li>数据库统计信息不准确：数据库优化器依赖于统计信息来选择最佳的查询执行计划。如果统计信息不准确或过时，可能会导致查询效率降低。</li>
+<li>硬件和配置限制：硬件性能（如CPU、内存、磁盘速度）和数据库配置（如内存分配、并行度等）也可能影响联表查询的效率。</li>
+</ol>
+<p>为了提高联表查询的效率，可以考虑以下策略：</p>
+<ol>
+<li>为连接字段建立索引。</li>
+<li>选择合适的连接类型。</li>
+<li>简化查询条件。</li>
+<li>对大表进行分区。</li>
+<li>定期更新数据库的统计信息。</li>
+<li>优化数据库的配置和硬件性能。</li>
+</ol>
+<h1 id="一个sql的查询过程"><a href="#一个sql的查询过程" class="headerlink" title="一个sql的查询过程"></a>一个sql的查询过程</h1><ol>
+<li><p>解析（Parsing）:</p>
+<ul>
+<li>语法检查：首先，数据库检查SQL查询的语法是否正确。如果查询包含语法错误，数据库将返回一个错误。</li>
+<li>语义检查：然后，数据库进行语义检查，确保查询中引用的所有表、列和函数都存在，并且用户有权限执行查询。</li>
+<li>生成解析树：数据库将SQL查询转换成一个解析树（parse tree），这是查询的一个抽象语法表示。</li>
+</ul>
+</li>
+<li><p>优化（Optimization）:</p>
+<ul>
+<li>查询重写：数据库可能重写查询，以使其更有效。例如，它可能会转换联接的顺序或重写子查询。</li>
+<li>选择执行计划：数据库评估多个可能的执行计划，并选择其中效率最高的一个。这包括确定如何最好地访问数据（例如，使用索引还是全表扫描）、如何连接多个表以及如何处理排序和分组。</li>
+<li>统计信息：数据库使用表的统计信息（如行数、列值分布等）来帮助选择最佳执行计划。</li>
+</ul>
+</li>
+<li><p>执行（Execution）:</p>
+<ul>
+<li>开始执行计划：数据库开始执行选择的执行计划。这可能涉及读取数据、连接表、应用过滤条件、排序和分组等。</li>
+<li>获取数据：根据执行计划，数据库从磁盘或内存中检索数据。如果查询涉及多个表，数据库将按照指定的顺序和方式连接它们。</li>
+<li>处理结果：数据库处理查询结果，这可能包括排序、分组、聚合等。</li>
+</ul>
+</li>
+<li><p>返回结果:</p>
+<ul>
+<li>结果集：一旦处理完查询，数据库将结果集返回给客户端。这通常是一个表格形式的数据集，包含查询请求的数据。</li>
+<li>错误处理：如果在查询执行过程中出现任何错误（如权限问题、资源不足等），数据库将返回相应的错误消息。</li>
+</ul>
+</li>
+</ol>
+<h1 id="redis单线程是如何做到支持高并发的"><a href="#redis单线程是如何做到支持高并发的" class="headerlink" title="redis单线程是如何做到支持高并发的"></a>redis单线程是如何做到支持高并发的</h1><ol>
+<li>基于内存的数据存储：Redis将所有数据都存储在内存中，这使得数据读取和写入速度非常快，远超过磁盘操作的速度。由于内存访问速度非常快，Redis可以在单个线程中高效地处理大量并发请求。</li>
+<li>非阻塞I&#x2F;O模型：Redis采用单线程的非阻塞I&#x2F;O模型，这意味着Redis可以在等待数据到达或数据发送完成的过程中继续处理其他请求，而不会阻塞整个线程。这种模型使得Redis能够同时处理多个客户端请求，提高了并发处理能力。</li>
+<li>高效的数据结构：Redis提供了多种高效的数据结构，如字符串、哈希表、列表、集合、有序集合等。这些数据结构在内存中使用非常节省，并且在处理数据时具有很高的效率。Redis通过使用这些数据结构，可以在单个线程中快速完成各种操作，从而提高并发性能。</li>
+<li>事件驱动的设计：Redis采用事件驱动的设计，当请求到达时，通过事件处理器直接处理请求，这种设计可以减少线程切换和上下文切换的开销，提高并发处理能力。</li>
+<li>Lua脚本的支持：Redis支持Lua脚本，可以将多个操作合并成一个原子性操作，从而减少网络延迟和多次调用的开销。这有助于在单个线程中更高效地处理并发请求。</li>
+</ol>
+<h1 id="为什么内存操作很快"><a href="#为什么内存操作很快" class="headerlink" title="为什么内存操作很快"></a>为什么内存操作很快</h1><ol>
+<li>物理特性：内存通常是由高速的半导体材料（如DRAM）构成的，这些材料允许数据以非常快的速度被读取和写入。相比之下，硬盘等存储设备则使用机械结构，其读写速度受到机械运动的限制，因此速度较慢。</li>
+<li>访问模式：内存中的数据是以连续的字节块形式存储的，这种连续性的存储模式使得计算机可以快速地定位并访问所需的数据。此外，内存通常使用直接寻址模式，即每个内存位置都有一个唯一的地址，这使得访问过程更加高效。</li>
+<li>缓存机制：为了提高内存访问速度，现代计算机系统通常会采用多级缓存（如L1、L2、L3缓存）来缓存最近访问过的数据。当CPU需要访问某个内存位置时，它首先会检查缓存中是否已有该数据。如果缓存命中，则可以直接从缓存中读取数据，从而避免了访问主存的延迟。</li>
+<li>并行处理：内存通常被设计成支持并行访问，这意味着多个内存位置可以同时被读取或写入。这种并行处理能力使得内存访问速度得到进一步提高。</li>
+<li>硬件优化：内存硬件设计通常针对速度进行了优化，例如采用高速的时钟频率、优化数据传输路径等。这些硬件层面的优化都有助于提高内存访问速度。</li>
+</ol>
+<h1 id="k8s各种组件"><a href="#k8s各种组件" class="headerlink" title="k8s各种组件"></a>k8s各种组件</h1><ol>
+<li>Master 组件：<ul>
+<li>API Server：Kubernetes的主要管理组件，提供HTTP&#x2F;HTTPS RESTful API（即Kubernetes API）。所有请求都通过此接口进行通信，它是接收、校验并响应所有REST请求的唯一入口。</li>
+<li>etcd：Kubernetes的主要键值存储系统，用于保存集群的配置信息和各种资源的状态信息。当数据发生变化时，etcd会快速通知Kubernetes相关组件。</li>
+<li>Scheduler：负责资源的调度，根据预定的调度策略将Pod调度到相应的节点上。</li>
+<li>Controller Manager：处理集群中的常规任务，包括故障检测、自动扩展、滚动更新等。它由多种controller组成，如replication controller、endpoints controller等。</li>
+</ul>
+</li>
+<li>Node 组件：<ul>
+<li>Kubelet：负责管理Pods以及容器、镜像、Volume等，实现对集群节点的管理。</li>
+<li>Kube-proxy：提供网络代理和负载均衡，实现与Service的通信。</li>
+<li>Docker Engine：负责节点的容器管理工作。</li>
+</ul>
+</li>
+</ol>
+<h1 id="gomap并发安全问题，如何解决"><a href="#gomap并发安全问题，如何解决" class="headerlink" title="gomap并发安全问题，如何解决"></a>gomap并发安全问题，如何解决</h1><ol>
+<li>使用互斥锁（Mutex）：在对Map进行读写操作之前，先获取锁，操作完成后释放锁。这样可以保证同一时间只有一个goroutine能够对Map进行操作，从而避免了竞争条件 </li>
+<li>使用读写锁（RWMutex）：读写锁允许多个goroutine同时对Map进行读操作，但只允许一个goroutine进行写操作。这样可以提高读操作的并发性能。</li>
+<li>分片加锁：如果一个操作会导致整个map被锁住，可能会导致性能降低。因此，可以将map分成几个片，按片加锁，以提高并发性能。</li>
+<li>使用sync.Map：sync.Map是Go标准库提供的一个并发安全的map实现。它在读多写少的场景下性能较好，但在并发写较多的场景下性能较差。使用sync.Map可以无需手动加锁，但需要注意其使用方式和限制</li>
+</ol>
+<h1 id="一个进程能创建的线程数量受到哪些制约？"><a href="#一个进程能创建的线程数量受到哪些制约？" class="headerlink" title="一个进程能创建的线程数量受到哪些制约？"></a>一个进程能创建的线程数量受到哪些制约？</h1><ol>
+<li>可用虚拟空间：一个进程可用的虚拟空间是有限的，通常情况下是2GB（在32位系统中）或更大（在64位系统中）。每个线程都需要一定的栈空间，因此可用的虚拟空间会限制可创建的线程数量。默认情况下，线程的栈大小是1MB，所以理论上在32位系统中最多只能创建2048个线程。在64位系统中，由于虚拟空间更大，理论上可以创建的线程数量更多，但实际操作中还会受到其他因素的限制。</li>
+<li>系统参数限制：虽然Linux没有内核参数来控制单个进程创建的最大线程数，但有一些系统级别的参数可以限制整个系统的最大线程数。例如，&#x2F;proc&#x2F;sys&#x2F;kernel&#x2F;threads-max表示系统支持的最大线程数，&#x2F;proc&#x2F;sys&#x2F;kernel&#x2F;pid_max表示系统全局的PID号数值的限制，而&#x2F;proc&#x2F;sys&#x2F;vm&#x2F;max_map_count则限制了一个进程可以拥有的VMA（虚拟内存区域）的数量。这些参数的值都可能影响到进程能创建的线程数量。</li>
+<li>物理内存限制：虽然虚拟空间很大，但实际的物理内存是有限的。每个线程都需要占用一定的物理内存，因此当物理内存被耗尽时，即使虚拟空间还有剩余，也无法再创建新的线程。此外，线程对象本身也会占用非页面内存，当非页面内存被耗尽时，也无法创建新的线程。</li>
+<li>线程管理开销：创建和管理大量的线程会带来额外的开销，包括线程切换、上下文保存和恢复等。过多的线程可能会导致性能下降，甚至使程序运行效率变低。</li>
+</ol>
+<h1 id="redis主从同步怎么做的"><a href="#redis主从同步怎么做的" class="headerlink" title="redis主从同步怎么做的"></a>redis主从同步怎么做的</h1><p>Redis的主从同步是通过异步复制实现的。主节点负责处理客户端的写操作，并将写操作的日志（命令）发送给从节点。从节点接收到主节点发送的日志后，按照接收的顺序执行这些日志，从而实现主从数据的同步。具体步骤如下：</p>
+<ol>
+<li>从服务器连接主服务器，发送SYNC命令。</li>
+<li>主服务器接收到SYNC命令后，开始执行BGSAVE命令生成RDB文件，并使用缓冲区记录此后执行的所有写命令。</li>
+<li>主服务器BGSAVE执行完后，向所有从服务器发送快照文件，并在发送期间继续记录被执行的写命令。</li>
+<li>从服务器收到快照文件后丢弃所有旧数据，载入收到的快照。</li>
+<li>主服务器快照发送完毕后开始向从服务器发送缓冲区中的写命令。</li>
+<li>从服务器完成对快照的载入，开始接收命令请求，并执行来自主服务器缓冲区的写命令。<br>完成上述步骤后，从服务器数据初始化完成，此时可以接收来自用户的读请求。此外，主从刚连接的时候进行全量同步，全同步结束后，进行增量同步。当有需要时，从节点可以在任何时候发起全量同步</li>
+</ol>
+<h1 id="k8s基本操作"><a href="#k8s基本操作" class="headerlink" title="k8s基本操作"></a>k8s基本操作</h1><ol>
+<li>创建资源: apply</li>
+<li>查看资源: get</li>
+<li>描述资源: describe</li>
+<li>删除资源: delete</li>
+<li>进入容器：exec -it pod-name – ls</li>
+<li>查看日志：logs -f</li>
+</ol>
+<h1 id="docker底层实现原理"><a href="#docker底层实现原理" class="headerlink" title="docker底层实现原理"></a>docker底层实现原理</h1><p>Docker的底层实现主要基于Linux技术，包含Linux上的命名空间（Namespaces）、控制组（Control groups）和联合文件系统（Union file system）</p>
+<h1 id="docker基本操作"><a href="#docker基本操作" class="headerlink" title="docker基本操作"></a>docker基本操作</h1><ol>
+<li>启动Docker：安装完成后，可以使用系统服务命令来启动Docker服务。</li>
+<li>镜像管理：<ul>
+<li>查找镜像：使用docker search命令来搜索官方或其他仓库中的镜像。</li>
+<li>下载镜像：使用docker pull命令从Docker Hub或其他仓库下载镜像到本地。</li>
+<li>查看本地镜像：使用docker images命令查看已下载的镜像列表。</li>
+<li>删除镜像：使用docker rmi命令删除不再需要的镜像。</li>
+<li>上传镜像：使用docker push命令将镜像上传到Docker Hub或其他仓库。</li>
+</ul>
+</li>
+<li>容器管理：<ul>
+<li>创建并启动容器：使用docker run命令基于镜像创建并启动一个容器。</li>
+<li>查看运行中的容器：使用docker ps命令查看当前正在运行的容器。</li>
+<li>查看所有容器：包括已停止的容器，可以使用docker ps -a命令。</li>
+<li>进入容器：使用docker exec -i -t命令进入正在运行的容器并创建交互式会话。</li>
+<li>停止容器：使用docker stop命令停止运行中的容器。</li>
+<li>重启容器：使用docker restart命令重启已停止的容器。</li>
+<li>删除容器：使用docker rm命令删除已停止的容器。</li>
+</ul>
+</li>
+<li>数据卷和容器间通信：<ul>
+<li>创建数据卷：使用docker volume create命令为容器创建持久化存储。</li>
+<li>容器间通信：通过Docker网络功能实现容器间的相互通信。</li>
+</ul>
+</li>
+<li>Docker网络：<ul>
+<li>查看网络：使用docker network ls命令查看所有Docker网络。</li>
+<li>创建网络：使用docker network create命令创建自定义网络。</li>
+<li>连接容器到网络：在创建或运行容器时指定网络。</li>
+</ul>
+</li>
+<li>Docker Compose：<ul>
+<li>编写Dockerfile：用于自动化构建Docker镜像。</li>
+<li>编写docker-compose.yml：定义多容器应用的服务、网络和卷。</li>
+<li>使用docker-compose命令：如docker-compose up来启动整个应用。</li>
+</ul>
+</li>
+<li>Docker可视化工具：可以使用如Docker Desktop、Portainer等可视化工具来更方便地管理Docker容器和镜像。</li>
+</ol>
+<h1 id="linux内核"><a href="#linux内核" class="headerlink" title="linux内核"></a>linux内核</h1><p>Linux内核是Linux操作系统的核心部分，它负责管理系统的硬件和软件资源，确保系统的正常运行。Linux内核的主要功能包括进程管理、内存管理、文件系统、设备驱动和网络系统等。</p>
+<p>Linux内核采用单内核模式，将所有基本功能集于同个进程，形成一个大进程。内核内部采用的是模块化设计，不同功能属于不同模块，模块间通信采用的是函数调用。运行内核的所有信息都在内核空间，而用户程序普遍都在用户空间。若用户程序想使用内核功能时，则需通过内核提供的接口，进行系统调用。</p>
+<h1 id="数据库分库分表，啥时候分库啥时候分表"><a href="#数据库分库分表，啥时候分库啥时候分表" class="headerlink" title="数据库分库分表，啥时候分库啥时候分表"></a>数据库分库分表，啥时候分库啥时候分表</h1><ol>
+<li>数据量巨大：当单表的数据量达到百万、千万甚至亿级别时，查询效率会明显下降，这时可以考虑进行分表。通过将数据分散到多个表中，可以减少单个表的负担，提高查询性能。</li>
+<li>访问频率高：如果某个表的访问频率非常高，导致数据库连接成为瓶颈，也可以考虑分表。通过将数据分散到多个表中，可以分散数据库的访问压力，提高系统的并发处理能力。</li>
+<li>业务复杂度提高：随着业务的发展，可能需要将不同的业务数据存储在不同的数据库中，以实现业务的隔离和管理。这时可以考虑进行分库，将不同业务的数据分散到不同的数据库中。</li>
+<li>硬件资源限制：当单台服务器的硬件资源（如CPU、内存、磁盘空间等）无法满足数据存储和处理的需求时，也可以考虑分库分表。通过将数据分散到多台服务器上，可以充分利用硬件资源，提高系统的整体性能</li>
+</ol>
+<h1 id="数据库的存储引擎有哪些，区别是啥"><a href="#数据库的存储引擎有哪些，区别是啥" class="headerlink" title="数据库的存储引擎有哪些，区别是啥"></a>数据库的存储引擎有哪些，区别是啥</h1><ol>
+<li>InnoDB：InnoDB是MySQL的默认存储引擎，它支持事务处理、行级锁定和外键约束。InnoDB的设计目标是提供高性能和可靠性，同时支持ACID事务特性。它使用多版本并发控制（MVCC）来提高并发性能，并且具有崩溃恢复能力。</li>
+<li>MyISAM：MyISAM是MySQL的另一个常见的存储引擎，它主要适用于读密集型的应用。MyISAM不支持事务处理和外键约束，但它提供了全文索引和高速缓存功能。MyISAM在处理非事务性的工作负载时通常比InnoDB更快。</li>
+<li>Memory（或HEAP）：Memory存储引擎将所有数据存储在RAM中，因此它提供了极快的读写性能。但是，由于数据存储在内存中，如果数据库服务器崩溃或重启，数据将丢失。Memory存储引擎适用于临时表、缓存和需要快速访问的数据。</li>
+<li>Archive：Archive存储引擎是MySQL中用于存储和检索大量归档数据的引擎。它使用gzip算法对数据进行压缩，以节省存储空间。Archive表只支持INSERT和SELECT操作，不支持UPDATE和DELETE操作。它适用于存储历史数据、日志等不需要频繁更新的数据</li>
+</ol>
+<h1 id="innodb索引用的是啥，为什么不用b树、红黑"><a href="#innodb索引用的是啥，为什么不用b树、红黑" class="headerlink" title="innodb索引用的是啥，为什么不用b树、红黑"></a>innodb索引用的是啥，为什么不用b树、红黑</h1><p>InnoDB存储引擎在MySQL中使用的索引结构主要是B+树（B+ Tree）。虽然红黑树（Red-Black Tree）等其他数据结构也可以用于实现索引，但B+树更适合数据库索引的场景，原因如下：</p>
+<ol>
+<li>磁盘I&#x2F;O操作：数据库索引的主要目的是提高查询性能，而查询性能的一个关键因素就是减少磁盘I&#x2F;O操作。B+树的设计非常适合磁盘I&#x2F;O操作，因为它能够保持树的平衡，使得查找、插入和删除操作的磁盘I&#x2F;O次数相对较少。相比之下，红黑树等平衡二叉树在磁盘上的性能较差，因为它们可能导致树的高度较高，从而增加磁盘I&#x2F;O次数。</li>
+<li>范围查询：B+树的所有叶子节点都通过指针相连，这使得范围查询（例如查询某个范围内的所有记录）变得非常高效。InnoDB利用这一特性，可以高效地执行范围查询。而红黑树等数据结构则不具备这种特性。</li>
+<li>数据排序：由于B+树的叶子节点是有序的，因此在某些情况下，InnoDB可以利用索引进行排序操作，进一步减少磁盘I&#x2F;O次数。</li>
+<li>索引大小：B+树的非叶子节点仅存储键值信息，不存储数据，这使得索引本身的大小相对较小，从而减少了磁盘空间的占用。<br>综上所述，B+树作为InnoDB存储引擎的索引结构，能够更好地满足数据库查询性能的需求，因此在数据库系统中得到了广泛应用。</li>
+</ol>
+<h1 id="事务的隔离级别"><a href="#事务的隔离级别" class="headerlink" title="事务的隔离级别"></a>事务的隔离级别</h1><p>事务的隔离级别是数据库管理系统（DBMS）中用于控制多个并发事务之间可见性和相互影响程度的设置。这些隔离级别定义了事务在访问和修改数据时所能看到的数据状态，以及它们对其他并发事务的影响</p>
+<ol>
+<li>读未提交（Read Uncommitted）：这是最低的隔离级别。在这个级别下，一个事务可以读取另一个尚未提交的事务的数据。这可能导致“脏读”问题，即读取到其他事务尚未提交的数据，这些数据可能最终会被回滚，从而导致读取到的数据不准确。</li>
+<li>读已提交（Read Committed）：这是大多数数据库的默认隔离级别，如Oracle和Sqlserver。在这个级别下，一个事务只能看到其他事务已经提交的更新。这消除了“脏读”问题，因为一个事务不会读取到另一个事务尚未提交的数据。但是，它仍然可能面临“不可重复读”和“幻读”问题。</li>
+<li>可重复读（Repeatable Read）：这是MySQL数据库的默认隔离级别。在这个级别下，一个事务在进行多次同样的数据内容查询时，得到的结果是一样的，只要存在读改行数据就禁止写。这消除了“不可重复读”问题，因为在一个事务的执行过程中，多次读取同一数据会返回相同的结果。但是，它仍然可能面临“幻读”问题。</li>
+<li>串行化（Serializable）：这是事务隔离的最高级别，也是最安全最省心的级别。在这个级别下，一个事务在执行时会完全锁定相关的数据资源，禁止其他事务并发执行。这消除了“幻读”问题，因为所有并发事务都被串行化执行。但是，这种级别的隔离会导致并发性能降低，因为事务需要等待其他事务完成才能执行。</li>
+</ol>
+<h1 id="层序遍历二叉树"><a href="#层序遍历二叉树" class="headerlink" title="层序遍历二叉树"></a>层序遍历二叉树</h1><p>层序遍历二叉树是一种常用的遍历方法，也称为广度优先遍历（Breadth-First Search, BFS）。在层序遍历中，我们先访问根节点，然后逐层向下访问子节点，同一层的节点按照从左到右的顺序访问。</p>
+<h1 id="判断二叉树是否是镜像二叉树"><a href="#判断二叉树是否是镜像二叉树" class="headerlink" title="判断二叉树是否是镜像二叉树"></a>判断二叉树是否是镜像二叉树</h1><p>方法一：将其中一颗二叉树转为镜像，并与另外一棵树进行比较判断各节点值是否相等。这种方法需要理解二叉树的镜像概念，即将二叉树的左右子树交换位置。</p>
+<p>方法二：互为镜像的两个二叉树，每层数据顺序相反，逐层判断即可，需要注意结点为空的情况。这种方法需要逐层遍历二叉树，并比较每层节点的值是否对称。</p>
+<p>方法三：递归实现——树1左结点和树2右结点判断；树1右结点和树2左结点判断。这种方法需要理解递归的概念，并通过递归函数来实现二叉树的镜像判断</p>
+<h1 id="堆排"><a href="#堆排" class="headerlink" title="堆排"></a>堆排</h1><p>堆排序（Heap Sort）是一种基于二叉堆（Binary Heap）的排序算法。它的基本思想是将待排序的序列构造成一个大顶堆（或小顶堆），此时，整个序列的最大值（或最小值）就是堆顶的根节点。然后将其与末尾元素进行交换，此时末尾就为最大值（或最小值）。然后将剩余n-1个元素重新构造成一个堆，这样会得到n个元素的次小值。如此反复执行，便能得到一个有序序列了。<br>堆排序可以分为两个主要步骤：</p>
+<ol>
+<li>建堆：将待排序的序列构造成一个大顶堆（或小顶堆）。这个过程从最后一个非叶子节点开始（对于长度为n的数组，最后一个非叶子节点的索引是 n&#x2F;2 - 1），从右至左、从下至上进行调整。</li>
+<li>排序：将堆顶元素（最大或最小）与末尾元素交换，使末尾元素最大（或最小）。然后将剩余n-1个元素重新构造成一个堆，这样会得到n个元素的次大值（或次小值）。如此反复执行，便能得到一个有序序列。</li>
+</ol>
+<h1 id="中间件-kafka丢失消息和不重复消费skip"><a href="#中间件-kafka丢失消息和不重复消费skip" class="headerlink" title="中间件:kafka丢失消息和不重复消费skip"></a>中间件:kafka丢失消息和不重复消费skip</h1><h1 id="对一个链表进行排序"><a href="#对一个链表进行排序" class="headerlink" title="对一个链表进行排序"></a>对一个链表进行排序</h1><p>要对链表进行排序，你可以使用多种算法，包括归并排序、插入排序和快速排序等</p>
+<h1 id="线程和协程的区别"><a href="#线程和协程的区别" class="headerlink" title="线程和协程的区别"></a>线程和协程的区别</h1><ol>
+<li>调度方式：线程由操作系统内核进行调度，而协程由程序员或运行时环境进行调度。线程的调度是由操作系统决定的，它可以在不同的核心上并行执行。而协程的调度是由程序员显式地控制的，它在单个线程内通过协作式调度来实现并发。</li>
+<li>并发性：线程是并发执行的，多个线程可以同时执行不同的任务。而协程是协作式的，只有一个协程在执行，其他协程需要等待当前协程主动释放控制权才能执行。</li>
+<li>资源占用：线程需要独立的堆栈空间，每个线程都有自己的堆栈，因此线程的内存消耗较大。而协程共享线程的堆栈，因此协程的内存消耗较小。</li>
+<li>切换开销：线程的切换需要保存和恢复线程的上下文，这涉及到内核态和用户态之间的切换，开销较大。而协程的切换只需要保存和恢复协程的上下文，开销较小。</li>
+<li>优先级：线程没有优先级，它们的调度完全由操作系统决定。而协程可以有优先级，程序员可以根据需要设置协程的优先级，从而控制协程的执行顺序。</li>
+<li>调度速度：协程的调度速度几乎比线程快一个数量级，因为协程的调度由编程者控制，可以减少无效的调度。</li>
+<li>创建数量：由于协程的调度损耗较小，因此真实可创建且有效的协程数量可以比线程多很多。然而，由于调度和资源的限制，有效协程的数量也是有上限的。</li>
+</ol>
+<p>协程是用户态的线程</p>
+<h1 id="TCP三次握手和四次挥手"><a href="#TCP三次握手和四次挥手" class="headerlink" title="TCP三次握手和四次挥手"></a>TCP三次握手和四次挥手</h1><p>TCP（传输控制协议）是一种面向连接的、可靠的、基于字节流的传输层通信协议。在TCP通信中，为了建立连接和断开连接，需要进行一系列的握手操作，这些操作被称为TCP三次握手和四次挥手。</p>
+<h2 id="TCP三次握手"><a href="#TCP三次握手" class="headerlink" title="TCP三次握手"></a>TCP三次握手</h2><p>TCP三次握手是建立TCP连接的过程，用于确认双方已准备好进行数据传输。具体过程如下：</p>
+<ol>
+<li>第一次握手：客户端发送一个SYN（synchronize）标志的数据包给服务器，请求建立连接。此时，客户端进入SYN_SEND状态，等待服务器的确认。</li>
+<li>第二次握手：服务器收到SYN数据包后，如果同意建立连接，则发送一个SYN&#x2F;ACK标志的数据包给客户端，表示已收到SYN数据包并确认。此时，服务器进入SYN_RECV状态。</li>
+<li>第三次握手：客户端收到SYN&#x2F;ACK数据包后，发送一个ACK标志的数据包给服务器，表示已收到并确认服务器的SYN&#x2F;ACK数据包。此时，客户端和服务器都进入ESTABLISHED状态，表示连接已建立，可以开始数据传输。</li>
+</ol>
+<h2 id="TCP四次挥手"><a href="#TCP四次挥手" class="headerlink" title="TCP四次挥手"></a>TCP四次挥手</h2><p>TCP四次挥手是断开TCP连接的过程，用于确保双方都已完成数据传输并释放资源。具体过程如下：</p>
+<ol>
+<li>第一次挥手：数据传输结束后，客户端发送一个FIN（finish）标志的数据包给服务器，表示客户端已完成数据传输，请求断开连接。此时，客户端进入FIN_WAIT_1状态。</li>
+<li>第二次挥手：服务器收到FIN数据包后，发送一个ACK标志的数据包给客户端，表示已收到FIN数据包并确认。此时，客户端进入FIN_WAIT_2状态，等待服务器的断开请求。</li>
+<li>第三次挥手：服务器完成数据传输后，发送一个FIN标志的数据包给客户端，表示服务器已完成数据传输，请求断开连接。此时，服务器进入LAST_ACK状态，等待客户端的确认。</li>
+<li>第四次挥手：客户端收到服务器的FIN数据包后，发送一个ACK标志的数据包给服务器，表示已收到并确认服务器的FIN数据包。此时，客户端和服务器都进入CLOSED状态，表示连接已断开，释放相关资源。</li>
+</ol>
+<p>总的来说，TCP三次握手和四次挥手是TCP连接建立和断开的重要过程，确保了数据传输的可靠性和稳定性。</p>
+<h1 id="长连接和短链接-怎么实现的、区别以及应用场景"><a href="#长连接和短链接-怎么实现的、区别以及应用场景" class="headerlink" title="长连接和短链接(怎么实现的、区别以及应用场景)"></a>长连接和短链接(怎么实现的、区别以及应用场景)</h1><h2 id="长连接"><a href="#长连接" class="headerlink" title="长连接"></a>长连接</h2><p>长连接指的是在一个TCP连接上可以连续发送多个数据包，而不需要每次发送数据都建立一个新的连接。在连接保持期间，如果没有数据包发送，需要双方定期发送链路检测包以维持这个长连接。</p>
+<p>应用场景：长连接适用于客户端和服务端通信频繁的场景，如聊天室、实时游戏等。在这些场景中，由于需要频繁地发送数据，如果每次发送数据都建立一个新的连接，会消耗大量的网络资源和时间。因此，使用长连接可以提高通信效率，减少连接建立和断开的开销。</p>
+<h2 id="短连接"><a href="#短连接" class="headerlink" title="短连接"></a>短连接</h2><p>短连接指的是每次通信时建立一个新的连接，当数据发送完成后立即断开连接。短连接的生命周期只包含一次数据传输过程。</p>
+<p>应用场景：短连接适用于数据刷新频度较低的场景，如网页浏览等。在这些场景中，由于不需要频繁地发送数据，因此每次发送数据都建立一个新的连接是可以接受的。此外，由于短连接的生命周期较短，可以更快地释放网络资源，因此在并发量较大但每个用户无需频繁操作的情况下，使用短连接可以更好地利用网络资源。</p>
+<h1 id="计算二叉树所有左叶子节点的和-力扣"><a href="#计算二叉树所有左叶子节点的和-力扣" class="headerlink" title="计算二叉树所有左叶子节点的和(力扣)"></a>计算二叉树所有左叶子节点的和(力扣)</h1><p><a target="_blank" rel="noopener" href="https://leetcode.cn/problems/sum-of-left-leaves/">https://leetcode.cn/problems/sum-of-left-leaves/</a></p>
+<h1 id="n对括号输出所有合法的情况"><a href="#n对括号输出所有合法的情况" class="headerlink" title="n对括号输出所有合法的情况"></a>n对括号输出所有合法的情况</h1><p><a target="_blank" rel="noopener" href="https://blog.csdn.net/ffmpeg4976/article/details/42340379/">https://blog.csdn.net/ffmpeg4976/article/details/42340379/</a></p>
+<h1 id="n个有序的数组合并成一个"><a href="#n个有序的数组合并成一个" class="headerlink" title="n个有序的数组合并成一个"></a>n个有序的数组合并成一个</h1><p><a target="_blank" rel="noopener" href="https://leetcode.cn/problems/merge-sorted-array/description/">https://leetcode.cn/problems/merge-sorted-array/description/</a></p>
+<h1 id="二叉树中序遍历，递归和非递归两种方式-skip"><a href="#二叉树中序遍历，递归和非递归两种方式-skip" class="headerlink" title="二叉树中序遍历，递归和非递归两种方式 skip"></a>二叉树中序遍历，递归和非递归两种方式 skip</h1><h1 id="sync-Pool的实现原理"><a href="#sync-Pool的实现原理" class="headerlink" title="sync.Pool的实现原理"></a>sync.Pool的实现原理</h1><p>sync.Pool 是 Go 语言标准库中的一个并发安全的对象池，用于缓存那些创建代价高昂的对象，比如临时对象。其实现原理主要包括以下几个方面：</p>
+<ol>
+<li>对象池管理：sync.Pool 维护一个对象池，这个对象池被多个 goroutine 共享。当需要一个对象时，goroutine 会尝试从对象池中获取一个对象，如果对象池为空，则会通过用户定义的 New 函数创建一个新的对象。当对象不再需要时，可以通过 Put 方法将对象放回对象池中，以便之后重用。</li>
+<li>并发安全：为了保证在并发环境下的安全访问，sync.Pool 使用了一个互斥锁（sync.Mutex）来保护对象池中的对象。在获取或放回对象时，会先对互斥锁进行加锁操作，以确保只有一个 goroutine 在操作对象池。</li>
+<li>对象重用：sync.Pool 的核心思想是重用对象，从而降低系统的资源消耗和提高并发性能。当一个对象被放回对象池后，它并不会立即被销毁，而是被标记为可重用状态。在之后的请求中，如果对象池为空，系统会尝试从对象池中获取一个可重用的对象，而不是立即创建一个新对象。</li>
+<li>内存管理：虽然 sync.Pool 可以提高性能和减少内存分配，但它并不保证对象的可重用性。当对象池中的对象过多时，sync.Pool 可能会丢弃一些对象，以保持一定数量的对象在池中。此外，对象池中的对象并不是一直存在，它们会在多轮垃圾回收（GC）间被清除。</li>
+</ol>
+<p>sync.Pool 的实现原理是通过并发安全的对象池来重用对象，从而降低资源消耗和提高并发性能。在 Go 语言中，当需要频繁创建和销毁相同类型的对象时，可以考虑使用 sync.Pool 来优化性能。</p>
+<h1 id="hash冲突解决办法，有什么弊端"><a href="#hash冲突解决办法，有什么弊端" class="headerlink" title="hash冲突解决办法，有什么弊端"></a>hash冲突解决办法，有什么弊端</h1><p>哈希冲突（Hash Collision）是指当两个或多个不同的输入值经过哈希函数处理后，产生了相同的输出值，即哈希值相同。这种情况在哈希表、加密等应用中可能会导致问题。为了解决哈希冲突，有多种方法，但同时这些方法也存在一些弊端。</p>
+<p>常见的哈希冲突解决方法：   </p>
+<ol>
+<li>开放寻址法（Open Addressing）：当发生哈希冲突时，通过一定的探测方法在哈希表中寻找下一个可用的空槽位。这种方法包括线性探测、二次探测和双重哈希等。</li>
+<li>链地址法（Chaining）：将哈希值相同的记录构成一个链表，存放于哈希表的同一位置。当查找哈希表时，先找到对应的哈希值位置，然后在链表中查找实际记录。</li>
+</ol>
+<p>弊端：   </p>
+<ol>
+<li>性能下降：哈希冲突可能导致性能下降。例如，在开放寻址法中，当哈希表填充因子较高时，查找、插入和删除操作可能需要多次探测，导致时间复杂度增加。</li>
+<li>空间浪费：在链地址法中，如果链表过长，可能会导致空间浪费。此外，当哈希表扩容时，可能需要重新计算所有记录的哈希值并重新插入，这也会带来额外的空间和时间开销。</li>
+<li>安全问题：哈希冲突在某些安全场景下可能导致问题。例如，在密码学中，如果两个不同的输入值经过哈希函数处理后产生相同的输出值（即哈希碰撞），那么攻击者可能利用这一特点来破解加密系统。</li>
+<li>实现复杂度：解决哈希冲突的方法可能增加实现的复杂度。例如，需要设计合适的哈希函数、处理哈希冲突的策略等。这可能会增加开发和维护的难度。</li>
+</ol>
+<h1 id="map里面解决hash冲突怎么做的，冲突了元素放在头还是尾"><a href="#map里面解决hash冲突怎么做的，冲突了元素放在头还是尾" class="headerlink" title="map里面解决hash冲突怎么做的，冲突了元素放在头还是尾"></a>map里面解决hash冲突怎么做的，冲突了元素放在头还是尾</h1><p>在Go语言中，map的实现使用了哈希表，而哈希表解决哈希冲突的策略通常是链地址法（Chaining），也就是每个桶（bucket）内部使用链表来存储具有相同哈希值的键值对。</p>
+<p>如果多个键计算出相同的哈希值并映射到同一个桶中，那么这些键值对就会以链表的形式串联起来。链表中的元素按照它们被插入到map中的顺序排列，新插入的元素会被添加到链表的尾部。</p>
+<p>在查找操作中，Go会先计算键的哈希值，然后找到对应的桶，接着遍历桶内的链表，直到找到匹配的键或遍历完整个链表。由于链表是按照插入顺序组织的，因此最早插入的元素实际上位于链表的头部，而最新插入的元素位于链表的尾部。</p>
+<h1 id="10亿的url去重怎么做"><a href="#10亿的url去重怎么做" class="headerlink" title="10亿的url去重怎么做"></a>10亿的url去重怎么做</h1><h2 id="严格方案（分治）"><a href="#严格方案（分治）" class="headerlink" title="严格方案（分治）"></a>严格方案（分治）</h2><ol>
+<li>数据分割</li>
+<li>去重处理</li>
+<li>结果合并</li>
+</ol>
+<h2 id="非严格方案（布隆过滤器）"><a href="#非严格方案（布隆过滤器）" class="headerlink" title="非严格方案（布隆过滤器）"></a>非严格方案（布隆过滤器）</h2><p>可以增加hash函数，来提升布隆过滤器的准确性</p>
+<h1 id="rediszset怎么使用的，底层怎么实现的，适用于什么场景"><a href="#rediszset怎么使用的，底层怎么实现的，适用于什么场景" class="headerlink" title="rediszset怎么使用的，底层怎么实现的，适用于什么场景"></a>rediszset怎么使用的，底层怎么实现的，适用于什么场景</h1><p>Redis的ZSET（有序集合）是一种非常有用的数据结构，它允许你存储唯一的字符串元素，并为每个元素关联一个分数（score）。Redis根据这个分数对集合中的元素进行排序</p>
+<p>底层实现：</p>
+<p>Redis的ZSET底层实现是一个跳跃表（SkipList）和一个哈希表。跳跃表用于按照元素的分数进行排序和范围查询，而哈希表则用于快速定位元素的位置。跳跃表是一种可以进行对数级别查找的数据结构，它通过在每个节点上维护多个“前进”指针来实现高效的查找和插入操作。哈希表则用于存储元素到跳跃表节点的映射，以便快速定位元素。</p>
+<p>当ZSET中的元素数量较少时，Redis会使用一个名为ZIPLIST的编码来存储元素。ZIPLIST是一种紧凑的存储结构，它将元素和分数连续存储在一起，以减少内存使用。但是，当元素数量超过一定阈值（默认为128个）时，Redis会将ZSET转换为REDIS_ENCODING_SKIPLIST编码，使用跳跃表和哈希表来存储元素。</p>
+<p>适用场景：</p>
+<p>ZSET适用于许多需要排序和范围查询的场景。例如，你可以使用ZSET来实现一个排行榜，每个用户的分数代表他们的排名。当你需要获取排名前十的用户时，只需使用ZRANGE命令即可。此外，ZSET还可以用于存储用户的粉丝数量、当前在线人数等数据，并通过分数进行排序和查询。</p>
+<h1 id="单链表找到中间节点"><a href="#单链表找到中间节点" class="headerlink" title="单链表找到中间节点"></a>单链表找到中间节点</h1><p>方法一：快慢指针法</p>
+<p>这种方法使用两个指针，一个快指针和一个慢指针，同时从头节点开始遍历链表。快指针每次移动两步，而慢指针每次只移动一步。当快指针到达链表的末尾时，慢指针刚好指向链表的中间节点。如果链表的长度是偶数，则慢指针指向中间两个节点的第一个节点。</p>
+<p>方法二：先求链表长度再取中间节点</p>
+<p>这种方法首先遍历链表一次，求出链表的长度。然后根据链表长度计算出中间节点的位置，再次遍历链表找到中间节点。这种方法需要遍历链表两次，时间复杂度较高。</p>
+<h1 id="设计一个秒杀系统"><a href="#设计一个秒杀系统" class="headerlink" title="设计一个秒杀系统"></a>设计一个秒杀系统</h1><p>设计一个秒杀系统需要考虑多个方面，包括系统架构、数据库设计、并发控制、安全防护等。下面是一个简单的秒杀系统设计方案，供参考：</p>
+<ol>
+<li>系统架构<ul>
+<li>前端: 负责展示商品信息和秒杀按钮。</li>
+<li>负载均衡层: 使用Nginx等负载均衡工具，分散请求到不同的后端服务器。</li>
+<li>应用层: 秒杀业务逻辑处理，包括验证用户身份、库存检查、生成订单等。</li>
+<li>缓存层: 使用Redis等缓存系统，缓存商品信息和库存量，减少数据库压力。</li>
+<li>数据库层: 存储商品信息、库存、用户信息等。</li>
+</ul>
+</li>
+<li>数据库设计<ul>
+<li>商品表: 存储商品基本信息，如商品ID、名称、价格、库存等。</li>
+<li>用户表: 存储用户基本信息，如用户ID、用户名、密码等。</li>
+<li>订单表: 存储用户秒杀成功的订单信息，如订单ID、用户ID、商品ID、秒杀时间等。</li>
+</ul>
+</li>
+<li>并发控制<ul>
+<li>库存预减: 在秒杀开始前，先将商品库存预减到Redis等缓存系统中，确保库存的实时性。</li>
+<li>限流: 使用令牌桶、漏桶等算法限制请求频率，防止系统过载。</li>
+<li>队列: 使用消息队列（如RabbitMQ、Kafka等）将请求排队处理，平滑请求峰值。</li>
+</ul>
+</li>
+<li>安全防护<ul>
+<li>防刷策略: 识别并拦截恶意请求，如使用验证码、IP限制等。</li>
+<li>数据加密: 对敏感数据进行加密存储和传输，如用户密码、订单信息等。</li>
+<li>日志审计: 记录系统操作日志，方便排查问题和追溯责任。</li>
+</ul>
+</li>
+<li>系统优化<ul>
+<li>动态扩容: 根据系统负载情况，动态调整服务器资源，确保系统稳定运行。</li>
+<li>性能监控: 实时监控系统性能指标，如响应时间、吞吐量、错误率等，及时发现并解决问题。</li>
+<li>缓存优化: 根据业务需求和数据特点，选择合适的缓存策略，提高系统性能。</li>
+</ul>
+</li>
+<li>业务流程<ul>
+<li>用户请求: 用户通过前端页面发起秒杀请求。</li>
+<li>负载均衡: 负载均衡层将请求分散到不同的后端服务器。</li>
+<li>身份验证: 应用层验证用户身份，确保用户已登录且符合秒杀条件。</li>
+<li>库存检查: 应用层从缓存层（如Redis）中检查商品库存是否充足。</li>
+<li>库存扣减: 若库存充足，应用层将库存扣减并生成订单信息，存储到数据库层。</li>
+<li>返回结果: 应用层将秒杀结果返回给前端页面，展示给用户。</li>
+</ul>
+</li>
+</ol>
+<h1 id="给定一个二叉树和其中的一个结点，请找出中序遍历顺序的下一个结点并且返回。注意，树中的结点不仅包含左右子结点，同时包含指向父结点的指针"><a href="#给定一个二叉树和其中的一个结点，请找出中序遍历顺序的下一个结点并且返回。注意，树中的结点不仅包含左右子结点，同时包含指向父结点的指针" class="headerlink" title="给定一个二叉树和其中的一个结点，请找出中序遍历顺序的下一个结点并且返回。注意，树中的结点不仅包含左右子结点，同时包含指向父结点的指针"></a>给定一个二叉树和其中的一个结点，请找出中序遍历顺序的下一个结点并且返回。注意，树中的结点不仅包含左右子结点，同时包含指向父结点的指针</h1><ol>
+<li>如果该节点有右子树，那么右子树中的最左节点就是下一个节点。</li>
+<li>如果该节点没有右子树，那么从该节点开始，沿着父节点一直向上找，直到找到一个节点，它是其父节点的左孩子。这个父节点就是下一个节点。</li>
+<li>如果该节点是其父节点的右孩子，或者没有父节点（即它是根节点），那么没有下一个节点。</li>
+</ol>
+<h1 id="while-tree-sleep-1-这个会有什么问题"><a href="#while-tree-sleep-1-这个会有什么问题" class="headerlink" title="while(tree){sleep(1)}这个会有什么问题"></a>while(tree){sleep(1)}这个会有什么问题</h1><p>主动让出cpu?</p>
+<h1 id="sleep底层实现原理"><a href="#sleep底层实现原理" class="headerlink" title="sleep底层实现原理"></a>sleep底层实现原理</h1><p>sleep 函数是许多编程语言和操作系统提供的一个系统调用，用于使当前执行的线程或进程暂停执行指定的时间。虽然具体的实现细节可能因操作系统和编程语言而异，但sleep函数底层的实现原理通常涉及以下几个方面：</p>
+<ol>
+<li><p>调度器交互<br>当线程或进程调用sleep函数时，它会与操作系统的调度器进行交互。调度器是操作系统内核的一部分，负责管理和调度系统中的线程和进程。sleep函数会告诉调度器，当前线程或进程愿意放弃CPU的使用权，并指定一个时间段，在这个时间段内，调度器不应该再调度这个线程或进程执行。</p>
+</li>
+<li><p>时间管理<br>sleep函数通常会接受一个时间参数，这个参数可以是秒、毫秒或其他时间单位，具体取决于编程语言或操作系统的实现。底层实现中，操作系统会利用内部的时间管理机制来跟踪这个时间段，并在时间到达后，重新将线程或进程加入到可调度队列中。</p>
+</li>
+<li><p>状态切换<br>当线程或进程调用sleep函数后，它的状态会从”运行状态”切换到”睡眠状态”。在睡眠状态下，线程或进程不会消耗CPU时间，也不会执行任何代码。当指定的睡眠时间到达后，它的状态会再次切换回”可运行状态”，等待调度器再次调度它执行。</p>
+</li>
+<li><p>中断和信号<br>在某些情况下，操作系统可能会因为某些事件（如中断或信号）而提前唤醒处于睡眠状态的线程或进程。这通常发生在需要处理紧急任务或响应外部事件时。</p>
+</li>
+<li><p>系统资源<br>sleep函数的实现可能会涉及到一些系统资源的分配和管理，如内存、定时器等。操作系统需要确保这些资源在sleep期间得到正确的使用和释放，以避免资源泄漏或其他问题。</p>
+</li>
+<li><p>线程&#x2F;进程上下文保存与恢复<br>在调用sleep之前，操作系统可能需要保存当前线程或进程的上下文（包括寄存器状态、内存布局等），以便在唤醒后能够恢复到之前的状态并继续执行。</p>
+</li>
+</ol>
+<h1 id="线上问题一般怎么排查，比如oom"><a href="#线上问题一般怎么排查，比如oom" class="headerlink" title="线上问题一般怎么排查，比如oom"></a>线上问题一般怎么排查，比如oom</h1><ol>
+<li>监控与告警:<ul>
+<li>使用如Prometheus、Grafana、Datadog等监控工具监控Golang应用的内存使用情况。</li>
+<li>设置内存使用阈值告警，以便在达到某个内存使用水平时及时得到通知。</li>
+</ul>
+</li>
+<li>定位问题:<ul>
+<li>使用top、htop或ps命令查找内存使用最高的Golang进程。</li>
+<li>使用go tool pprof结合net&#x2F;http&#x2F;pprof包来收集和分析程序的运行时性能数据。</li>
+</ul>
+</li>
+<li>内存分析:<ul>
+<li>使用go tool pprof的heap选项来分析堆内存分配。</li>
+<li>通过go tool pprof的Web界面查看内存分配图，找到内存占用大的函数和类型。</li>
+<li>使用go tool pprof的allocs选项来查看内存分配热点，找出频繁分配内存的代码路径。</li>
+</ul>
+</li>
+<li>GC日志分析:<ul>
+<li>启用Golang的垃圾回收（GC）日志，通过GODEBUG环境变量设置GC日志的详细程度。</li>
+<li>分析GC日志，查看GC的频率、停顿时间和回收的内存量，判断是否存在GC性能问题。</li>
+</ul>
+</li>
+<li>代码审查:<ul>
+<li>审查代码中是否存在内存泄漏，如长时间保持大对象引用、关闭资源不及时等。</li>
+<li>检查是否使用了合适的数据结构和算法，避免不必要的内存占用。</li>
+</ul>
+</li>
+<li>内存泄漏检测:<ul>
+<li>使用go leak工具来检测内存泄漏，该工具可以帮助发现潜在的内存泄漏问题</li>
+</ul>
+</li>
+</ol>
+<h1 id="手写LRU"><a href="#手写LRU" class="headerlink" title="手写LRU"></a>手写LRU</h1><p>相关知识点：模拟，结构，增删改查</p>
+<h1 id="一个整型数组，数组中的一个或连续多个整数组成一个子数组。求所有子数组的和的最大值"><a href="#一个整型数组，数组中的一个或连续多个整数组成一个子数组。求所有子数组的和的最大值" class="headerlink" title="一个整型数组，数组中的一个或连续多个整数组成一个子数组。求所有子数组的和的最大值"></a>一个整型数组，数组中的一个或连续多个整数组成一个子数组。求所有子数组的和的最大值</h1><p><a target="_blank" rel="noopener" href="https://leetcode.cn/problems/maximum-subarray/description/">https://leetcode.cn/problems/maximum-subarray/description/</a></p>
+<h1 id="docker和虚拟机区别"><a href="#docker和虚拟机区别" class="headerlink" title="docker和虚拟机区别"></a>docker和虚拟机区别</h1><ol>
+<li>架构差异：虚拟机是基于hypervisor实现的，它会创建一套完整的虚拟硬件环境，来模拟一台完整的计算机，包括虚拟处理器、内存、硬盘和其他设备。而Docker则是基于容器化技术实现的，它使用Docker引擎来访问宿主机的操作系统，并将应用程序打包到容器中。因此，Docker的架构更加轻量级，启动速度也更快。</li>
+<li>隔离原理：虚拟机通常隔离整个操作系统，在虚拟机中运行的进程无法直接访问宿主机的资源和数据，需要通过网络或共享文件夹等方式进行交互。而Docker使用Linux内核提供的namespace和cgroups等功能，实现了对不同容器中进程的隔离，使得它们可以共享宿主机的资源，同时又互相独立运行。</li>
+<li>部署效率：Docker采用镜像文件的方式，使得部署应用程序非常方便，只需要将镜像分发到各个机器中，就可以快速启动和运行。而虚拟机的部署需要相应的操作系统安装和配置，通常需要更多的时间和工作量。</li>
+<li>资源利用率：由于Docker使用宿主机的内核，因此相对于虚拟机来说，它的资源利用率更高，可以在同样的硬件资源上运行更多的应用程序。</li>
+<li>安全性：虚拟机由于隔离了整个操作系统，通常被认为具有更高的安全性。而Docker的隔离性相对较弱，可能存在一些安全风险。</li>
+<li>可管理性：Docker的集中化管理工具还不算成熟，而虚拟机则具有更完善的管理和配置工具。</li>
+</ol>
+<h1 id="k8s底层原理"><a href="#k8s底层原理" class="headerlink" title="k8s底层原理"></a>k8s底层原理</h1><ol>
+<li>自动化部署和扩展：K8s通过Pod和Deployment等资源对象的定义，自动化地管理容器的部署和伸缩，从而实现高可用和弹性扩展。</li>
+<li>负载均衡和服务发现：K8s通过Service对象实现负载均衡和服务发现，使得应用程序可以在集群内进行无缝访问。</li>
+<li>自动故障恢复：K8s通过自动重启、重新调度和滚动更新等机制，实现容器的自动故障恢复，从而确保应用程序的高可用性。</li>
+<li>弹性存储：K8s通过支持多种存储后端（如本地存储、NFS、iSCSI等），以及动态存储卷分配和管理等机制，实现弹性存储。</li>
+</ol>
+<p>在K8s的网络底层实现原理方面，K8s网络架构由CNI（Container Network Interface）、Service、Ingress、Network Policy等多个组件组成。其中CNI是K8s网络底层实现的核心，它负责为容器创建和管理网络，提供容器与宿主机以及其他容器之间的网络通信。K8s要求底层网络支持集群内任意两个Pod之间的TCP&#x2F;IP直接通信，可以使用虚拟二层网络技术（如Flannel、OpenvSwitch等）实现。</p>
+<h1 id="网络七层模型和五层模型"><a href="#网络七层模型和五层模型" class="headerlink" title="网络七层模型和五层模型"></a>网络七层模型和五层模型</h1><p>七层模型也被称为OSI（开放系统互联）参考模型，它从底层到高层分别是：物理层、数据链路层、网络层、传输层、会话层、表示层和应用层。</p>
+<p>五层模型则包括物理层、数据链路层、网络层、传输层和应用层</p>
+<h1 id="数据库索引"><a href="#数据库索引" class="headerlink" title="数据库索引"></a>数据库索引</h1><p>数据库索引是一种数据结构，它允许数据库系统快速查找、访问和检索数据库中的数据。没有索引，数据库系统将不得不扫描整个数据库以找到相关的数据，这被称为全表扫描，对于大型数据库来说是非常低效的。通过使用索引，数据库可以显著提高查询性能，减少查询时间。</p>
+<h2 id="索引的工作原理"><a href="#索引的工作原理" class="headerlink" title="索引的工作原理"></a>索引的工作原理</h2><p>它创建了一个指向数据库表中数据的指针数组，这些指针基于某个或某些列的值进行排序。当查询数据库时，系统首先查找索引，而不是整个表，从而快速找到所需的数据。</p>
+<h2 id="索引的类型"><a href="#索引的类型" class="headerlink" title="索引的类型"></a>索引的类型</h2><ol>
+<li>B-Tree索引：这是最常见的索引类型，它使用B-Tree数据结构来存储索引数据。B-Tree索引可以处理大量的数据，并且查询速度快。</li>
+<li>Hash索引：Hash索引基于哈希算法来存储索引数据。它适用于等值查询，但对于范围查询和排序操作，性能可能较差。</li>
+<li>Bitmap索引：Bitmap索引主要用于处理大量的离散值，例如性别、状态等。它使用位图来表示哪些值存在于表中。</li>
+<li>空间索引：空间索引用于处理地理空间数据，如GIS数据。</li>
+<li>全文索引：全文索引用于处理文本数据，它允许用户基于文本内容进行搜索。</li>
+</ol>
+<h2 id="索引的优点"><a href="#索引的优点" class="headerlink" title="索引的优点"></a>索引的优点</h2><ol>
+<li>提高查询性能：索引可以显著减少数据库查询所需的时间。</li>
+<li>支持快速访问数据：通过索引，可以快速地访问表中的特定数据。</li>
+<li>支持排序和分组操作：索引可以帮助数据库更快地执行排序和分组操作。</li>
+</ol>
+<h2 id="索引的缺点"><a href="#索引的缺点" class="headerlink" title="索引的缺点"></a>索引的缺点</h2><ol>
+<li>增加存储空间：索引本身需要占用额外的存储空间。</li>
+<li>插入、更新和删除操作的性能开销：当表中的数据发生变化时，索引也需要进行相应的更新，这可能会导致插入、更新和删除操作的性能下降。</li>
+<li>维护成本：索引需要定期进行优化和重建，以保持其性能。</li>
+</ol>
+<h1 id="MySQL优化（索引、分表分库）"><a href="#MySQL优化（索引、分表分库）" class="headerlink" title="MySQL优化（索引、分表分库）"></a>MySQL优化（索引、分表分库）</h1><h2 id="索引优化"><a href="#索引优化" class="headerlink" title="索引优化"></a>索引优化</h2><ol>
+<li>选择正确的索引列：<ul>
+<li>为经常出现在WHERE子句、JOIN操作、ORDER BY子句和GROUP BY子句中的列创建索引。</li>
+<li>避免在列上使用函数或表达式，这会导致索引失效。</li>
+<li>使用覆盖索引（Covering Index）来减少回表操作。</li>
+</ul>
+</li>
+<li>使用合适的索引类型：<ul>
+<li>根据数据特点选择B-Tree索引、Hash索引、全文索引等。</li>
+<li>对于有大量重复值的列，使用B-Tree索引可能更高效。</li>
+</ul>
+</li>
+<li>维护索引：<ul>
+<li>定期使用OPTIMIZE TABLE命令来重新整理和优化表的索引。</li>
+<li>监控索引的使用情况，删除不再需要的索引以减少存储和维护开销。</li>
+</ul>
+</li>
+<li>避免过度索引：<ul>
+<li>索引会增加写操作的开销（INSERT、UPDATE、DELETE），因此应避免为不常查询的列创建索引。</li>
+<li>利用EXPLAIN分析查询：</li>
+<li>使用EXPLAIN语句来分析查询的执行计划，找出可能的性能瓶颈。</li>
+</ul>
+</li>
+</ol>
+<h2 id="分表分库"><a href="#分表分库" class="headerlink" title="分表分库"></a>分表分库</h2><ol>
+<li>水平分表（Sharding）：<ul>
+<li>将同一个表中的记录分散到多个物理表中，通常基于某个字段的值进行分片，如用户ID的范围或哈希值。</li>
+<li>可以提高查询性能，减少锁的竞争，并允许更大的数据量。</li>
+</ul>
+</li>
+<li>垂直分表：<ul>
+<li>将一个表中的列分散到多个物理表中，通常基于列的访问频率或数据大小。</li>
+<li>可以减少IO操作，提高查询速度，但会增加应用层的复杂性。</li>
+</ul>
+</li>
+<li>分库：<ul>
+<li>将数据分散到多个物理数据库上，通常基于业务模块或用户群体。</li>
+<li>可以提高系统的可用性和可扩展性，但需要处理跨库查询和事务一致性问题。</li>
+</ul>
+</li>
+<li>选择合适的分片键：<ul>
+<li>分片键的选择应基于业务场景和数据特点，确保分片均匀且易于维护。</li>
+</ul>
+</li>
+<li>管理分片元数据：<ul>
+<li>使用分片中间件或服务来管理分片元数据，简化应用层的分片逻辑。</li>
+</ul>
+</li>
+</ol>
+<p>在进行MySQL优化时，除了索引和分表分库外，还应考虑以下方面：</p>
+<ol>
+<li>查询优化：避免SELECT *、使用LIMIT限制结果集、减少子查询等。</li>
+<li>硬件和配置优化：提高硬件性能、调整MySQL配置参数等。</li>
+<li>应用层优化：使用缓存、减少数据库连接、批量操作等。</li>
+</ol>
+<h1 id="最左匹配原则？问为什么有这个东西？"><a href="#最左匹配原则？问为什么有这个东西？" class="headerlink" title="最左匹配原则？问为什么有这个东西？"></a>最左匹配原则？问为什么有这个东西？</h1><p>MySQL中的索引，尤其是B-Tree索引，是根据索引字段的值进行排序的。对于复合索引（即包含多个列的索引），其结构是根据最左边的列进行排序的，然后是次左边的列，依此类推。这种结构意味着只有最左边的列是有序的，而后面的列的有序性是基于最左边列的有序性的。因此，查询时从最左边的列开始匹配能够最大限度地利用索引的有序性。</p>
+<h1 id="同一个协程里面，对无缓冲channel同时发送和接收数据有什么问题"><a href="#同一个协程里面，对无缓冲channel同时发送和接收数据有什么问题" class="headerlink" title="同一个协程里面，对无缓冲channel同时发送和接收数据有什么问题"></a>同一个协程里面，对无缓冲channel同时发送和接收数据有什么问题</h1><p>阻塞</p>
+<h1 id="channel和锁对比一下"><a href="#channel和锁对比一下" class="headerlink" title="channel和锁对比一下"></a>channel和锁对比一下</h1><ul>
+<li>channel更适合用于在goroutine之间传递数据和进行并发控制。它提供了类型安全、阻塞通信和高效的同步机制。</li>
+<li>锁（如Mutex）更适合用于保护共享资源，确保在同一时间只有一个goroutine可以访问或修改这些数据。但使用锁需要更多的显式管理和注意，以避免死锁和竞态条件</li>
+</ul>
+<h1 id="channel的应用场景"><a href="#channel的应用场景" class="headerlink" title="channel的应用场景"></a>channel的应用场景</h1><ol>
+<li>数据传递：channel最常用于在goroutine之间传递数据。一个goroutine可以将数据发送到channel，而另一个goroutine可以从channel接收数据。这种通信机制是类型安全的，并且在发送方和接收方之间提供了阻塞同步。</li>
+<li>任务同步：channel可以用于同步多个goroutine的任务。例如，你可以使用channel来等待一组goroutine完成它们的任务。每个goroutine在完成任务后将结果发送到channel，主goroutine可以从channel接收所有结果，直到所有任务都完成。</li>
+<li>解耦生产者和消费者：channel可以用于解耦生产者和消费者。生产者goroutine将数据发送到channel，而消费者goroutine从channel接收数据。这种方式允许生产者和消费者独立运行，不需要彼此直接依赖。</li>
+<li>控制并发数：channel可以用于控制并发数。通过限制channel的容量，你可以控制同时执行的任务数量。当channel满时，发送操作会阻塞，直到有接收方准备好接收数据。这可以用于限制并发爬取、处理任务等场景。</li>
+<li>超时和定时控制：channel可以结合select语句实现超时和定时控制。你可以使用带超时的select语句来等待多个channel的操作，以便在超时后执行其他操作。这在需要设置超时或定时任务的场景中非常有用。</li>
+<li>信号通知：channel可以用于在goroutine之间传递信号。例如，你可以使用channel来通知某个goroutine停止运行或执行其他操作。当需要优雅地关闭goroutine时，这种机制非常有用。</li>
+</ol>
+<h1 id="slice和array区别"><a href="#slice和array区别" class="headerlink" title="slice和array区别"></a>slice和array区别</h1><ol>
+<li>长度可变性：<ul>
+<li>数组的长度是固定的，一旦声明就不能更改。例如，var arr [5]int定义了一个长度为5的整数数组。</li>
+<li>切片的长度是可变的。你可以向切片添加或删除元素，从而改变其长度。切片是对底层数组的引用，因此其长度可以随着元素数量的增加或减少而变化。</li>
+</ul>
+</li>
+<li>内存分配：<ul>
+<li>数组是值类型，当数组被赋值或作为函数参数传递时，会进行值的拷贝，这意味着会复制整个数组的内容，占用额外的内存。</li>
+<li>切片是引用类型，当切片被赋值或作为函数参数传递时，实际上传递的是对底层数组的引用（指针），而不是切片的副本。这避免了不必要的内存拷贝，提高了效率。</li>
+</ul>
+</li>
+<li>容量：<ul>
+<li>数组的容量等于其长度，并且容量是固定的，不能更改。</li>
+<li>切片有一个容量属性，表示切片可以容纳的元素数量，而不需要重新分配内存。切片的容量至少与其长度相等，但可能更大。你可以通过append函数向切片添加元素，当元素数量超过容量时，切片会自动扩容。</li>
+</ul>
+</li>
+<li>声明方式：<ul>
+<li>数组在声明时必须指定长度，例如var arr [5]int。</li>
+<li>切片在声明时不需要指定长度，例如var s []int。你可以通过切片操作（如s :&#x3D; arr[1:3]）从数组或其他切片创建切片</li>
+</ul>
+</li>
+</ol>
+<h1 id="向为nil的channel发送数据会怎么样"><a href="#向为nil的channel发送数据会怎么样" class="headerlink" title="向为nil的channel发送数据会怎么样"></a>向为nil的channel发送数据会怎么样</h1><ul>
+<li>nil: 接受和发送都会阻塞</li>
+<li>closed: 发送数据panic,接受数据为0值</li>
+</ul>
+<h1 id="Golang-死锁发生的情况，如何避免？"><a href="#Golang-死锁发生的情况，如何避免？" class="headerlink" title="Golang 死锁发生的情况，如何避免？"></a>Golang 死锁发生的情况，如何避免？</h1><p>死锁发生在以下情况：</p>
+<ol>
+<li>所有的 goroutine 都在等待某个条件发生，而这个条件的满足依赖于其他 goroutine 的动作。</li>
+<li>没有 goroutine 能够执行任何动作来满足这些条件，因此它们都在无限期地等待。<blockquote>
+<p>一句话所有的G 不可调度</p>
+</blockquote>
+</li>
+</ol>
+<p>如何避免：   </p>
+<ol>
+<li>不要向 nil 的 channel 发送或接受数据。因为会阻塞协程</li>
+<li>在 select 语句中包含至少一个可以执行的 case，或者使用带有超时的 select 来避免无限期地等待。</li>
+<li>确保至少有一个 goroutine 能够执行动作来满足 select 语句中的条件</li>
+</ol>
+<h1 id="map取一个key，然后修改这个值，原map数据的值会不会变化"><a href="#map取一个key，然后修改这个值，原map数据的值会不会变化" class="headerlink" title="map取一个key，然后修改这个值，原map数据的值会不会变化"></a>map取一个key，然后修改这个值，原map数据的值会不会变化</h1><p>取决于取出的这个值的类型，如果值的类型是引用类型（如切片、映射或通道），那么修改副本的引用类型将会影响到原 map 中的数据，因为副本和原 map 中的值实际上是指向同一个底层数据的不同引用。</p>
+<h1 id="Hash实现、冲突解决、应用"><a href="#Hash实现、冲突解决、应用" class="headerlink" title="Hash实现、冲突解决、应用"></a>Hash实现、冲突解决、应用</h1><h2 id="哈希实现"><a href="#哈希实现" class="headerlink" title="哈希实现"></a>哈希实现</h2><p>哈希函数通常通过以下步骤实现：</p>
+<ol>
+<li>接收输入：哈希函数接收任意大小的数据作为输入。</li>
+<li>处理输入：哈希函数使用某种算法（如MD5、SHA-256等）来处理输入数据。</li>
+<li>生成输出：处理后的数据被映射到一个固定大小的输出，通常是一个整数或一串字符。</li>
+</ol>
+<h2 id="冲突解决"><a href="#冲突解决" class="headerlink" title="冲突解决"></a>冲突解决</h2><p>哈希函数的一个主要问题是冲突，即两个不同的输入可能产生相同的哈希值。解决冲突的方法有多种：</p>
+<ol>
+<li>开放寻址法：当发生冲突时，按照一定的顺序（如线性探测、二次探测、双重哈希等）在哈希表中查找下一个可用的空位。</li>
+<li>链地址法：哈希表的每个位置都存储一个链表，当发生冲突时，将具有相同哈希值的元素添加到对应位置的链表中。</li>
+</ol>
+<h1 id="应用"><a href="#应用" class="headerlink" title="应用"></a>应用</h1><ol>
+<li>数据库：哈希表常用于数据库索引，以加快查找速度。</li>
+<li>密码学：哈希函数在密码学中用于生成消息的摘要，以验证消息的完整性和来源。</li>
+<li>缓存：哈希表常用于缓存系统，以便快速查找缓存中的数据。</li>
+<li>负载均衡：在分布式系统中，哈希函数可用于将请求分配到不同的服务器，以实现负载均衡。</li>
+<li>数据结构：哈希表是一种常见的数据结构，用于实现关联数组、集合等。</li>
+</ol>
+<h1 id="输入URL发生的整个网络过程"><a href="#输入URL发生的整个网络过程" class="headerlink" title="输入URL发生的整个网络过程"></a>输入URL发生的整个网络过程</h1><ol>
+<li>DNS解析：首先，浏览器会解析输入的URL，将其中的域名转换为对应的IP地址。这个过程涉及到DNS（Domain Name System）解析。浏览器首先会查看本地缓存中是否有该域名的IP地址记录，如果有则直接使用。如果没有，浏览器会向DNS服务器发送查询请求。DNS服务器会递归查询域名，最终找到对应的IP地址并返回给浏览器。</li>
+<li>建立TCP连接：拿到服务器的IP地址后，浏览器会与服务器建立TCP（Transmission Control Protocol）连接。这个过程包括三次握手：<ul>
+<li>客户端发送SYN（同步）报文，并置发送序号为X。</li>
+<li>服务端回复SYN+ACK（同步&#x2F;应答）报文，并置发送序号为Y，再确认序号为X+1。</li>
+<li>客户端发送ACK（应答）报文，并置发送序号为Z，再确认序号为Y+1。这样，TCP连接就建立起来了。</li>
+</ul>
+</li>
+<li>发送HTTP请求：建立TCP连接后，浏览器会向服务器发送HTTP请求。HTTP请求报文包括了请求方法（如GET、POST等）、请求路径、协议版本以及请求头部信息等。这些信息封装在TCP报文段中发送给服务器。</li>
+<li>服务器处理HTTP请求：服务器接收到HTTP请求后，会根据请求路径和方法来定位并处理相应的资源。这可能涉及到文件读取、数据库查询等操作。处理完成后，服务器会生成HTTP响应报文，其中包括状态码、响应头部信息以及响应体等。</li>
+<li>返回HTTP响应：服务器将HTTP响应报文通过之前建立的TCP连接发送回浏览器。浏览器接收到响应报文后，会解析HTTP响应，提取出状态码、响应头部以及响应体等信息。</li>
+<li>渲染页面：浏览器根据解析得到的HTML文档构建DOM（Document Object Model）树，并下载并解析CSS样式表、JavaScript脚本等资源。然后，浏览器会进行页面渲染，将HTML、CSS和JavaScript等组合起来生成最终的页面展示给用户。</li>
+<li>关闭TCP连接：当浏览器从服务器接收到所有需要的数据后，会关闭TCP连接。这个过程包括四次挥手：<ul>
+<li>客户端发送FIN（结束）报文，通知服务器要关闭连接。</li>
+<li>服务器回复ACK报文，确认收到关闭连接的请求。</li>
+<li>服务器发送FIN报文，通知客户端已经关闭连接。</li>
+<li>客户端回复ACK报文，确认收到服务器关闭连接的通知。这样，TCP连接就被关闭了。</li>
+</ul>
+</li>
+</ol>
+<h1 id="TCP流量控制、拥塞控制"><a href="#TCP流量控制、拥塞控制" class="headerlink" title="TCP流量控制、拥塞控制"></a>TCP流量控制、拥塞控制</h1><p>TCP流量控制主要涉及在发送端和接收端之间动态调整数据传输的速率，以防止接收端无法及时处理大量数据而导致的数据丢失或拥塞。这主要通过滑动窗口机制实现。发送端和接收端都有一个接收窗口的大小，发送端根据接收端的接收窗口大小来控制发送数据的速率。当接收端的接收窗口大小减小时，发送端的发送窗口也会减小，从而降低发送数据的速率；当接收端的接收窗口大小增大时，发送端的发送窗口也会增大，从而提高发送数据的速率。</p>
+<p>TCP拥塞控制则关注整个网络的性能，当网络拥塞时，动态调整数据传输的速率，以避免网络拥塞的发生或减轻拥塞的程度。其主要目标是确保网络中的路由器和链路不会因为过多的数据流量而导致丢包和延迟增加。拥塞控制的主要机制包括慢启动、拥塞避免、快重传和快恢复。慢启动在开始传输数据时，发送端以较小的速率逐渐增加发送窗口的大小，以探测网络的拥塞程度；拥塞避免在慢启动阶段后，以较慢的速率逐渐增加发送窗口的大小，以避免过快地发送数据导致网络拥塞；快重传指当发送端连续收到接收端对相同数据的重复确认时，立即重传该数据，以减少丢包造成的数据传输延迟；快恢复指当发送端收到接收端对某个数据段的冗余确认时，将拥塞窗口减半，并重新开始拥塞避免算法。</p>
+<p>总的来说，TCP流量控制主要关注发送端和接收端之间的数据流动，而拥塞控制则关注整个网络的性能。两者结合使用，可以自适应地调整数据传输的速率，确保网络通信的稳定性和可靠性。</p>
+<h1 id="TCP半连接队列"><a href="#TCP半连接队列" class="headerlink" title="TCP半连接队列"></a>TCP半连接队列</h1><p>TCP的半连接队列，也被称为SYN队列，是在TCP三次握手过程中，用于存储处于SYN_RECV状态的连接。当服务端收到客户端发起的SYN请求后，内核会把该连接存储到半连接队列，并向客户端响应SYN+ACK。如果服务端发送SYN_ACK后将会开启一个定时器，如果在超时时间内没有收到客户端的ACK，将会重发SYN_ACK包。</p>
+<p>半连接队列的大小由&#x2F;proc&#x2F;sys&#x2F;net&#x2F;ipv4&#x2F;tcp_max_syn_backlog控制，在Linux系统中，其默认值通常为1024。当超过这个限制时，内核会直接丢弃连接，或返回RST包。</p>
+<p>通过ss命令可以查看TCP半连接队列的使用情况，包括Recv-Q和Send-Q的状态。如果观察到半连接队列的长度持续上升，可能说明存在半连接队列溢出的现象。</p>
+<p>总的来说，TCP的半连接队列是TCP连接建立过程中的一个重要环节，它用于暂时存储还未完成三次握手的连接，并确保在收到客户端的ACK之前不会建立完全的连接。</p>
+<h1 id="TCP半关闭状态"><a href="#TCP半关闭状态" class="headerlink" title="TCP半关闭状态"></a>TCP半关闭状态</h1><p>TCP的半关闭状态是指在TCP连接中，当一方（通常是主动关闭方）发送了FIN请求关闭连接，而另一方回应了ACK后，主动关闭方进入了FIN_WAIT_2状态，而另一方则处于半关闭状态。在半关闭状态下，接收方仍可以接收数据，但无法再向发送方发送数据。</p>
+<p>半关闭状态的存在主要是为了允许接收方继续处理接收到的数据，即使发送方已经关闭了其写操作。这在许多应用场景中是非常有用的，例如，当服务器发送了一个文件给客户端，并希望客户端在接收完文件后发送一个确认消息，但服务器仍然希望继续接收客户端可能发送的其他数据。</p>
+<p>需要注意的是，半关闭状态并不是TCP标准状态之一，而是由应用程序通过调用shutdown函数或close函数并设置相应的参数来实现的。在Linux和Windows系统中，可以通过调用shutdown函数来关闭一个方向的连接，而不是同时关闭两个方向的连接。当应用程序调用shutdown函数并传入SHUT_WR参数时，就会将套接字置于半关闭状态，此时套接字将不再接受新的数据写入，但仍可以接收数据。</p>
+<p>另外，当TCP连接处于半关闭状态时，如果接收方已经处理完所有接收到的数据，并且没有更多的数据需要发送，那么接收方也可以发送一个FIN请求关闭连接，此时连接将进入CLOSE_WAIT状态，等待对方对FIN的确认。当对方确认后，连接将完全关闭。</p>
+<p>总之，TCP的半关闭状态是一种非常有用的机制，它允许在TCP连接中的一方关闭其写操作后，另一方仍然可以继续接收数据并处理，从而提高了网络通信的灵活性和效率。</p>
+<h1 id="TCP-TIME-WAIT状态"><a href="#TCP-TIME-WAIT状态" class="headerlink" title="TCP TIME_WAIT状态"></a>TCP TIME_WAIT状态</h1><p>在TCP连接中，当连接关闭后，主动关闭方会进入TIME_WAIT状态，并等待一段时间（通常为2MSL，即最大报文段生存时间）后才能彻底关闭连接。这段时间内，主动关闭方不会释放连接相关的资源，以便能够识别和丢弃可能出现的延迟报文和重复报文。当TIME_WAIT时间到达后，主动关闭方会释放连接相关的资源，并将连接彻底关闭</p>
+<p>TIME_WAIT状态的存在主要有两个原因：</p>
+<ol>
+<li>防止延迟报文和重复报文：在网络通信中，由于网络延迟、路由选择等原因，可能会出现延迟报文和重复报文。如果连接关闭后立即释放相关资源，那么这些延迟报文和重复报文可能会在连接关闭后到达，导致无法正确处理。因此，TCP协议规定在连接关闭后必须等待一段时间（即TIME_WAIT时间），以确保网络中的所有延迟报文和重复报文都能够被识别和丢弃。</li>
+<li>确保全双工连接的正确关闭：TCP协议是一种全双工协议，即连接双方都可以同时发送和接收数据。在连接关闭过程中，需要确保双方都已经完成了数据的发送和接收，才能彻底关闭连接。TIME_WAIT状态可以确保主动关闭方在发送最后一个ACK报文后，仍然保持连接一段时间，以便接收方能够发送可能存在的最后一个数据报文。这样可以确保双方都能够正确地关闭连接。</li>
+</ol>
+<h1 id="内核态、用户态"><a href="#内核态、用户态" class="headerlink" title="内核态、用户态"></a>内核态、用户态</h1><p>内核态和用户态是操作系统中的两种不同运行级别。</p>
+<p>内核态是操作系统内核运行的级别，具有最高的权限，可以执行所有的指令，访问所有的内存地址，以及调用所有的系统服务。内核态的主要任务是管理系统的硬件和软件资源，确保系统的稳定性和安全性。</p>
+<p>用户态是应用程序运行的级别，权限相对较低。在用户态下，应用程序只能执行有限的指令，访问受限的内存地址，以及调用受限的系统服务。这是为了防止应用程序对系统进行破坏或恶意攻击。</p>
+<p>在Linux系统中，内核态和用户态之间的切换是通过系统调用实现的。当用户态的应用程序需要访问系统资源或执行特权指令时，它会通过系统调用接口向内核发送请求。内核在收到请求后，会切换到内核态执行相应的操作，然后将结果返回给用户态的应用程序。这种切换机制确保了系统的安全性和稳定性。</p>
+<h1 id="100枚硬币，其中有一枚硬币重量不一样，用天平秤怎么快速找到这一枚硬币"><a href="#100枚硬币，其中有一枚硬币重量不一样，用天平秤怎么快速找到这一枚硬币" class="headerlink" title="100枚硬币，其中有一枚硬币重量不一样，用天平秤怎么快速找到这一枚硬币"></a>100枚硬币，其中有一枚硬币重量不一样，用天平秤怎么快速找到这一枚硬币</h1><p>为了快速找到重量不一样的硬币，我们可以采用分治策略。假设我们有100枚硬币，其中一枚的重量是不同的。</p>
+<p>首先，我们可以将100枚硬币分为三组，分别是33枚、33枚和34枚。</p>
+<p>数量相等，重量不等，就有问题</p>
+<h1 id="LRU缓存实现，要求set-get操作o-1-时间复杂度"><a href="#LRU缓存实现，要求set-get操作o-1-时间复杂度" class="headerlink" title="LRU缓存实现，要求set\get操作o(1)时间复杂度"></a>LRU缓存实现，要求set\get操作o(1)时间复杂度</h1><ul>
+<li>双向链表</li>
+<li>引入hash， 解决时间复杂度为O(1)的问题</li>
+</ul>
+<h1 id="TCP滑动窗口"><a href="#TCP滑动窗口" class="headerlink" title="TCP滑动窗口"></a>TCP滑动窗口</h1><p>TCP滑动窗口是TCP协议中用于网络数据传输的流量控制机制。其主要目的是避免网络拥塞，提高数据传输效率。该机制允许发送方在停止并等待确认前发送多个数据分组，从而加速数据的传输，提高网络吞吐量。</p>
+<p>滑动窗口的大小由接收方的TCP数据报缓冲区大小决定，发送方根据这个数据来计算自己最多能发送多长的数据。窗口的大小通常由16位bit定义，因此接收端TCP能最大提供65535个字节的缓冲。</p>
+<p>滑动窗口机制的关键在于，发送方不必每发一个分组就停下来等待确认。这种机制可以确保数据的顺序传输，因为发送窗口中的序列号代表已发送但尚未收到确认的数据包。发送窗口会持续地维持一系列未经确认的数据包，因为发送方窗口内的数据包可能在传输过程中丢失或损坏，所以发送过程必须把发送窗口中的所有数据包保存起来以备重传。</p>
+<p>然而，当发送窗口一旦达到最大值，发送过程就必须停止接收新的数据包，直到有空闲缓存区。这是为了防止发送方发送过多的数据，导致接收方的缓冲区溢出，无法接收新的数据。</p>
+<h1 id="MVCC原理"><a href="#MVCC原理" class="headerlink" title="MVCC原理"></a>MVCC原理</h1><p>MVCC（Multi-Version Concurrency Control）即多版本并发控制，是数据库管理系统中实现事务并发控制的一种技术。它允许多个事务同时读取同一份数据的不同版本，从而在不加锁的情况下实现读写并发，大大提高了数据库的并发性能。</p>
+<p>MVCC的实现原理主要依赖于以下几个核心概念：  </p>
+<ol>
+<li>版本链：版本链是一条链表，链接的是每条数据曾经的修改记录。每修改一次记录，就会插入一条undo日志，并且roll_point指针会指向上一条记录。</li>
+<li>隐藏字段：数据库的聚簇索引记录会包含一些隐藏字段，如trx_id（记录修改此数据的事务id）和DB_ROLL_PTR（回滚指针，指向这条记录的上一个版本）。</li>
+<li>一致性视图：用来判断一个事务是否能看到某个版本的数据。</li>
+</ol>
+<p>当一个事务读取数据时，它会根据自身的trx_id和数据的隐藏字段来构建一个一致性视图。这个视图会确定哪些版本的数据对当前事务是可见的，哪些是不可见的。这样，即使多个事务同时读取同一份数据，每个事务看到的数据版本都是一致的，从而实现了非阻塞的并发读。</p>
+<p>需要注意的是，MVCC只在读已提交（RC）和可重复读（RR）这两种事务隔离级别下才有效，它主要用来解决脏读、不可重复读和部分幻读问题。但在修改数据时，仍然可能遇到幻读问题，这时需要使用间隙锁来解决。</p>
+<p>总的来说，MVCC通过保存数据在多个时间点的快照，使得各个事务可以在不影响其他事务的情况下安全地进行操作，大大提高了数据库的并发读取性能。</p>
+<h1 id="ACID的涵义，MYSQL是如何保证的"><a href="#ACID的涵义，MYSQL是如何保证的" class="headerlink" title="ACID的涵义，MYSQL是如何保证的"></a>ACID的涵义，MYSQL是如何保证的</h1><p>ACID是一个计算机科学中的术语，它代表了数据库事务的四个关键属性：原子性（Atomicity）、一致性（Consistency）、隔离性（Isolation）和持久性（Durability）。这些属性确保事务在数据库中的正确处理，确保数据的完整性和一致性。</p>
+<ol>
+<li>原子性（Atomicity）：事务被视为一个不可分割的最小单元，事务的所有操作要么全部提交成功，要么全部失败回滚。MySQL通过undo log来保证原子性，如果事务执行失败或异常，可以通过undo log进行回滚，撤销事务中的所有操作。</li>
+<li>一致性（Consistency）：事务必须使数据库从一个一致性状态变换到另一个一致性状态。在MySQL中，一致性是由多种机制共同保证的，包括约束、触发器、级联更新和删除等。此外，MySQL的InnoDB存储引擎还通过两阶段提交事务来保证事务持久化时的一致性。</li>
+<li>隔离性（Isolation）：多个事务并发执行时，一个事务的操作不应影响其他事务。MySQL通过多版本并发控制（MVCC）机制来实现隔离性，使得不同事务在读取相同数据时可以看到不同版本的数据，避免了数据脏读、不可重复读和部分幻读问题。</li>
+<li>持久性（Durability）：一旦事务提交，则其结果能够持久保存在数据库中。MySQL通过redo log来保证持久性，即使MySQL宕机或停电，也可以通过redo log恢复数据，保证事务的持久性。</li>
+</ol>
+<p>总的来说，MySQL通过undo log、redo log、MVCC机制、两阶段提交等多种机制共同保证事务的ACID属性，确保数据库在并发环境下的数据完整性和一致性。</p>
+<h1 id="缓存失效的几种场景，以及解决方案"><a href="#缓存失效的几种场景，以及解决方案" class="headerlink" title="缓存失效的几种场景，以及解决方案"></a>缓存失效的几种场景，以及解决方案</h1><ul>
+<li>缓存穿透</li>
+<li>缓存雪崩</li>
+<li>缓存击穿</li>
+</ul>
+<h1 id="如何排查线上程序问题"><a href="#如何排查线上程序问题" class="headerlink" title="如何排查线上程序问题"></a>如何排查线上程序问题</h1><ol>
+<li>确定是什么问题</li>
+<li>查日志</li>
+<li>下线环境是否能复习</li>
+<li>代码分析</li>
+</ol>
+<h1 id="protobuf为什么快"><a href="#protobuf为什么快" class="headerlink" title="protobuf为什么快"></a>protobuf为什么快</h1><ol>
+<li>更小的数据：Protobuf使用的可变长度编码使得数据更加紧凑。这种编码方式会根据不同大小的整数或浮点数使用不同长度的字节来表示，减少了数据的大小。1</li>
+<li>更高的传输速度：由于数据体积减小，因此在大数据传输的场景下，Protobuf的表现优于其他文本格式的数据交换协议，如JSON和XML。</li>
+<li>优化的存储和处理：Protobuf采用了预定义的消息架构，消除了每次数据传输时都需重复定义字段名称的需求，进一步提高了数据处理的效率。</li>
+<li>多语言支持：Protobuf支持多种编程语言，如C++、Java、Python、Go等，并提供相应的API和库，使得跨平台的消息交换变得容易。</li>
+<li>高效的解析：Protobuf的解析过程快速且高效，因为它会利用标签系统来识别数据类型，而不是依赖于数据中的具体键值对。2</li>
+<li>压缩率高的数据结构：Protobuf的设计允许它在不损失太多信息的情况下压缩数据。它的设计理念是通过牺牲部分可读性来获得更高的压缩率和传输效率。</li>
+</ol>
+<h1 id="分布式系统优缺点，一致性是如何保证的"><a href="#分布式系统优缺点，一致性是如何保证的" class="headerlink" title="分布式系统优缺点，一致性是如何保证的"></a>分布式系统优缺点，一致性是如何保证的</h1><p>分布式系统是一种将大型应用程序分解为多个小型应用程序，并在多个计算机上运行的软件架构</p>
+<h2 id="优点"><a href="#优点" class="headerlink" title="优点"></a>优点</h2><ol>
+<li>可靠性：分布式系统具有较高的可靠性，因为即使某个节点发生故障，其他节点仍然可以继续运行。这种容错性使得系统更加健壮。</li>
+<li>可扩展性：分布式系统可以很容易地添加新的节点以支持更多的负载，从而提高系统的可扩展性。</li>
+<li>性能优化：通过将应用程序分解为多个小型应用程序并在多个计算机上运行，分布式系统可以充分利用硬件资源，提高系统的整体性能。</li>
+<li>灵活性：分布式系统具有很高的灵活性，可以根据业务需求进行动态调整，例如增加或减少节点数量。</li>
+</ol>
+<h2 id="缺点"><a href="#缺点" class="headerlink" title="缺点"></a>缺点</h2><ol>
+<li>复杂性：分布式系统的复杂性较高，需要处理网络通信、数据同步和故障恢复等问题。</li>
+<li>安全性：由于数据分布在多个节点上，分布式系统可能面临更高的安全风险，如数据泄露和非法访问等。</li>
+<li>一致性问题：在分布式系统中，如何保证多个节点之间的数据一致性是一个挑战。由于网络延迟、节点故障等原因，可能导致数据不一致的问题。</li>
+</ol>
+<h2 id="一致性是如何保证的"><a href="#一致性是如何保证的" class="headerlink" title="一致性是如何保证的"></a>一致性是如何保证的</h2><ol>
+<li>使用分布式锁：通过引入分布式锁来协调多个节点之间的操作，确保在某一时刻只有一个节点可以执行特定操作，从而避免数据不一致的问题。</li>
+<li>使用分布式事务：通过引入分布式事务来确保多个节点之间的操作具有原子性、一致性和隔离性。当某个操作失败时，可以回滚整个事务，保持数据的一致性。</li>
+<li>数据复制和备份：通过数据复制和备份来提高系统的可用性和可靠性。当某个节点发生故障时，可以从其他节点恢复数据，确保数据的一致性。</li>
+<li>使用一致性协议：如Paxos、Raft等一致性协议可以帮助分布式系统实现数据一致性。这些协议通过选举领导者、提交决策等方式来确保多个节点之间的数据一致性。</li>
+</ol>
+<h1 id="最终一致性"><a href="#最终一致性" class="headerlink" title="最终一致性"></a>最终一致性</h1><p>最终一致性（Eventual Consistency）是分布式系统中的一种数据一致性模型。在最终一致性的系统中，当多个节点或系统对数据进行更新操作时，不会立即保证所有节点都立即获得最新的数据副本。相反，系统会在一段时间后，经过网络传播和同步，使得所有节点最终都达到一致的状态。</p>
+<p>最终一致性的核心思想是“过程松，结果紧”。也就是说，在分布式系统中，数据在传播和同步的过程中可能会存在暂时的不一致性，但这并不影响最终的结果。只要给系统足够的时间，最终所有的数据副本都会达到一致的状态。这种模型适用于对数据一致性要求不是特别严格，但可以接受一定时间延迟的场景。</p>
+<p>最终一致性的实现方式有很多种，其中一种是基于版本向量（Version Vector）的方法。版本向量记录了每个数据项的版本信息和更新顺序，通过比较版本向量，系统可以确定数据项是否需要更新以及如何进行更新操作。另外，还有基于时间戳、向量时钟等方法来实现最终一致性。</p>
+<h1 id="mysql分布式id"><a href="#mysql分布式id" class="headerlink" title="mysql分布式id"></a>mysql分布式id</h1><p>在分布式系统中，生成全局唯一的ID是一个常见的需求。MySQL本身不直接提供分布式ID生成器，但你可以使用各种策略和工具来实现这一目标。以下是一些在分布式系统中生成唯一ID的常见方法：</p>
+<ol>
+<li>UUID（Universally Unique Identifier）<br>UUID是一种标准，用于创建全局唯一的标识符。UUIDs基于时间戳、机器MAC地址等信息生成，并且几乎可以保证全球范围内的唯一性。但是，由于UUID的长度较长（通常为36个字符），并且包含了许多不易于人类阅读和存储的信息，所以在某些场景下可能不是最优选择。在MySQL中，你可以使用UUID()函数来生成UUID</li>
+<li>Snowflake ID<br>Snowflake ID是Twitter开源的一种分布式ID生成算法，它通过一系列位运算和时间戳等信息生成一个64位的整数ID。这种ID具有全局唯一性、有序性、时间趋势性等特点。你可以自己实现Snowflake ID生成器，或者使用现成的库</li>
+<li>数据库自增ID<br>如果你的MySQL数据库是主从复制架构，并且你可以确保写入操作都在主节点上完成，那么可以使用MySQL的自增ID功能来生成唯一的ID。但是，这种方法只适用于单数据库实例的场景，并不适用于真正的分布式系统。</li>
+<li>Redis或ZooKeeper等协调服务<br>你可以使用Redis、ZooKeeper或其他协调服务来生成唯一的ID。这些服务通常提供了原子性的操作来确保ID的唯一性。例如，Redis可以通过INCR命令来生成自增的ID。</li>
+</ol>
+<h1 id="mysql索引慢分析：线上开启slowlog，提取慢查询，然后仔细分析explain中tye字段以及extra字段，发生的具体场景及mysql是怎么做的"><a href="#mysql索引慢分析：线上开启slowlog，提取慢查询，然后仔细分析explain中tye字段以及extra字段，发生的具体场景及mysql是怎么做的" class="headerlink" title="mysql索引慢分析：线上开启slowlog，提取慢查询，然后仔细分析explain中tye字段以及extra字段，发生的具体场景及mysql是怎么做的"></a>mysql索引慢分析：线上开启slowlog，提取慢查询，然后仔细分析explain中tye字段以及extra字段，发生的具体场景及mysql是怎么做的</h1><p>在MySQL中，慢查询日志（slow query log）是一个非常有用的工具，它可以帮助我们识别和优化那些执行时间超过预定阈值的查询。当你发现数据库性能下降时，开启慢查询日志并分析其中的数据是一个很好的起点。</p>
+<h2 id="开启慢查询日志"><a href="#开启慢查询日志" class="headerlink" title="开启慢查询日志"></a>开启慢查询日志</h2><p>在my.cnf或my.ini文件中添加或修改以下设置：  </p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">slow_query_log = 1  </span><br><span class="line">slow_query_log_file = /path/to/your/logfile.log  </span><br><span class="line">long_query_time = 2  # 设置阈值为2秒</span><br></pre></td></tr></table></figure>
+
+<h2 id="提取慢查询"><a href="#提取慢查询" class="headerlink" title="提取慢查询"></a>提取慢查询</h2><p>一旦慢查询日志开始记录，你可以从指定的日志文件中提取慢查询。你可以使用mysqldumpslow工具或其他文本处理工具来分析和提取这些信息。</p>
+<h2 id="分析慢查询"><a href="#分析慢查询" class="headerlink" title="分析慢查询"></a>分析慢查询</h2><p>对于每个慢查询，你可以使用EXPLAIN命令来查看查询的执行计划。这将给你一些关于查询如何执行的信息，特别是type和extra字段。</p>
+<p>type字段：它表示MySQL如何为表中的行找到匹配的行。不同的type值代表了不同的查找方式和效率。例如  </p>
+<ul>
+<li>system：表只有一行（这是最好的类型）。</li>
+<li>const：表有一个匹配行，常用于通过主键或唯一索引查找。</li>
+<li>eq_ref：每个从表的行都与主表的恰好一行匹配。</li>
+<li>ref：非唯一索引查找。</li>
+<li>range：范围查找。</li>
+<li>index：全索引扫描。</li>
+<li>ALL：全表扫描（最差）<blockquote>
+<p>关注那些类型为ALL或index的查询，因为它们可能需要进行优化。</p>
+</blockquote>
+</li>
+</ul>
+<p>extra字段：这个字段提供了查询执行的额外信息。一些常见的值包括：  </p>
+<ul>
+<li>Using where：使用了WHERE过滤。</li>
+<li>Using index：只使用了索引信息，没有读取实际的行数据。</li>
+<li>Using temporary：使用了临时表来存储中间结果。</li>
+<li>Using filesort：需要额外的排序步骤<blockquote>
+<p>Using temporary和Using filesort通常表示查询可能需要优化，因为它们可能会导致额外的性能开销。</p>
+</blockquote>
+</li>
+</ul>
+<h1 id="mysql分库分表平滑扩容方案skip"><a href="#mysql分库分表平滑扩容方案skip" class="headerlink" title="mysql分库分表平滑扩容方案skip"></a>mysql分库分表平滑扩容方案skip</h1><h1 id="docker预热"><a href="#docker预热" class="headerlink" title="docker预热"></a>docker预热</h1><p>Docker预热是指在容器实际启动前，预先将镜像数据加载到主机的过程。这样做的目的是减少从镜像仓库拉取镜像到本地的时间，从而加快容器的启动速度。在高并发或者需要快速扩展的场景下，镜像预热显得尤为重要。</p>
+<h1 id="go-waitGroup的坑"><a href="#go-waitGroup的坑" class="headerlink" title="go waitGroup的坑"></a>go waitGroup的坑</h1><ol>
+<li>Add 和 Done 的配对：对于每一个 Add(1) 调用，必须有一个对应的 Done() 调用。如果 Done() 被调用次数多于 Add(1)，将会导致 WaitGroup 的计数器变为负数，这通常是一个错误。</li>
+<li>Add 和 Done 的顺序：在协程中，通常首先调用 Add(1)，然后执行一些工作，最后调用 Done()。如果在协程完成工作之前调用 Done()，那么 WaitGroup 可能会错误地认为该协程已经完成。</li>
+<li>Wait 的调用时机：Wait() 函数应该在所有协程都启动并且 Add(1) 被调用之后调用。如果在协程启动之前调用 Wait()，或者在没有调用 Add(1) 的情况下调用 Wait()，将会导致程序阻塞。</li>
+<li>Wait 的调用次数：Wait() 函数应该只被调用一次。多次调用 Wait() 可能会导致程序死锁。</li>
+<li>Wait 的并发安全性：WaitGroup 的方法是并发安全的，可以在多个协程中同时调用 Add(1) 和 Done()。但是，必须确保 Add(1) 和 Done() 的配对是正确的。</li>
+<li>WaitGroup 的复制：WaitGroup 不能直接复制。如果你需要在一个函数中使用 WaitGroup，并且该函数被多个协程调用，那么每个协程都应该使用自己的 WaitGroup 实例。</li>
+<li>协程的启动顺序：WaitGroup 不保证协程的启动顺序。如果需要控制协程的启动顺序，应该使用其他同步原语，如通道（channel）</li>
+</ol>
+<h1 id="etcd原理"><a href="#etcd原理" class="headerlink" title="etcd原理"></a>etcd原理</h1><p>etcd是一个分布式键值对存储系统，主要用于共享配置和服务发现  </p>
+<ol>
+<li>分布式存储：etcd将数据存储在一个分布式的键值对数据库中。每个键值对都可以附带一个可选的TTL（Time-To-Live）值，用于自动删除过期数据。</li>
+<li>Raft一致性算法：etcd使用Raft一致性算法来维护集群内各个节点状态的一致性。Raft算法通过选举一个leader节点来负责处理所有的写请求，并将结果同步到其他节点。这样确保了即使部分节点发生故障，整个集群仍然能够保持数据的一致性。</li>
+<li>安全机制：etcd支持可选的SSL客户认证机制，用于保证数据的安全传输。此外，它还提供了访问控制列表（ACL）功能，允许用户根据角色和权限来限制对键值对的访问。</li>
+<li>监听与通知：etcd支持对键值对的变化进行监听，并可以通过HTTP长连接或WebSocket等方式向客户端发送通知。这样，客户端可以实时感知到数据的变化并作出相应的处理。</li>
+<li>租约机制：etcd引入了租约（Lease）的概念，允许用户为键值对设置一个租约期限。在租约期限内，键值对可以被正常访问；一旦租约过期，键值对将被自动删除。这一机制可以用于实现服务的自动续约、自动下线等功能。</li>
+</ol>
+<h1 id="给一个栈，用另外一个栈实现排序"><a href="#给一个栈，用另外一个栈实现排序" class="headerlink" title="给一个栈，用另外一个栈实现排序"></a>给一个栈，用另外一个栈实现排序</h1><p>stack：要被排序的栈<br>helpStack： 申请的辅助栈<br>cur： 当前弹出的元素  </p>
+<ol>
+<li>如果 cur 小于或等于 help 的栈顶元素，则将 cur 直接压入help栈</li>
+<li>如果 cur 大于 help 的栈顶元素，则将 help 的元素逐一弹出，逐一压入 stack栈中，直到 cur 小于或等于 help 的栈顶元素，再将cur压入help栈中</li>
+</ol>
+<h1 id="go-struct能不能比较"><a href="#go-struct能不能比较" class="headerlink" title="go struct能不能比较"></a>go struct能不能比较</h1><p>Go语言中，结构体是否可以比较取决于结构体中成员变量的可比较性。123456</p>
+<p>如果结构体的所有成员变量都是可比较的，那么结构体就可以比较；<br>如果结构体中存在不可比较的成员变量，那么结构体就不能比较。<br>例如，如果结构体中包含slice、map、function等不可比较的类型，使用&#x3D;&#x3D;进行比较会报错。此时，可以使用reflect.DeepEqual方法进行比较。</p>
+<h1 id="select可以用于什么"><a href="#select可以用于什么" class="headerlink" title="select可以用于什么"></a>select可以用于什么</h1><ol>
+<li>等待多个通道中的数据</li>
+<li>超时处理</li>
+<li>默认情况处理</li>
+</ol>
+<h1 id="context包的用途"><a href="#context包的用途" class="headerlink" title="context包的用途"></a>context包的用途</h1><ol>
+<li>传递上下文信息：通过使用context，你可以在goroutine之间传递上下文信息，如请求元数据、身份验证信息、截止时间等。这样，在不同的goroutine中运行的函数可以访问这些共享的数据。</li>
+<li>控制goroutine的并发：context包提供了一种机制来控制goroutine的并发行为。你可以使用context来取消或超时一个或多个goroutine，以便在不再需要它们时释放资源或终止它们。</li>
+</ol>
+<h1 id="client如何实现长连接"><a href="#client如何实现长连接" class="headerlink" title="client如何实现长连接"></a>client如何实现长连接</h1><ol>
+<li>使用HTTP&#x2F;1.1的keep-alive</li>
+<li>使用WebSockets 默认就是长连接</li>
+</ol>
+<h1 id="主协程如何等其余协程完再操作"><a href="#主协程如何等其余协程完再操作" class="headerlink" title="主协程如何等其余协程完再操作"></a>主协程如何等其余协程完再操作</h1><ol>
+<li>sync.WaitGroup</li>
+<li>errors.Group</li>
+<li>用channel + 计数器手动实现</li>
+</ol>
+<h1 id="slice，len，cap，共享，扩容"><a href="#slice，len，cap，共享，扩容" class="headerlink" title="slice，len，cap，共享，扩容"></a>slice，len，cap，共享，扩容</h1><ul>
+<li>len 是可变数组的长度</li>
+<li>cap 是底层数组的长度</li>
+<li>slice 是引用类型，共享底层数组，只有在扩容的时候，才会发生改变</li>
+</ul>
+<p>扩容机制: </p>
+<ol>
+<li>&lt;1024  2倍扩容</li>
+<li><blockquote>
+<p>1024  1.25倍扩容</p>
+</blockquote>
+</li>
+</ol>
+<h1 id="map如何顺序读取"><a href="#map如何顺序读取" class="headerlink" title="map如何顺序读取"></a>map如何顺序读取</h1><p>把key 弄出来排序后，依次读取map</p>
+<h1 id="大文件排序"><a href="#大文件排序" class="headerlink" title="大文件排序"></a>大文件排序</h1><ol>
+<li>分割成小文件，小文件中用快速排序排好</li>
+<li>再把小文件进行归并排序</li>
+</ol>
+<h1 id="tcp与udp区别，udp优点，适用场景"><a href="#tcp与udp区别，udp优点，适用场景" class="headerlink" title="tcp与udp区别，udp优点，适用场景"></a>tcp与udp区别，udp优点，适用场景</h1><p>TCP（传输控制协议）和UDP（用户数据报协议）是两种主要的网络传输协议，它们在许多方面有着显著的区别。</p>
+<ol>
+<li>连接性：TCP是面向连接的协议，需要建立和维护连接。在发送数据前，TCP需要三次握手建立连接，并在数据传输结束后进行四次挥手断开连接。而UDP则是无连接的协议，不需要建立和维护连接，每个数据报都是独立发送的。</li>
+<li>可靠性：TCP提供可靠的数据传输服务，它通过校验和、重传控制、序号标识、滑动窗口和确认应答等机制来确保数据的正确性、不丢失和不重复。相比之下，UDP不提供这些可靠性机制，因此数据可能会丢失、重复或乱序。</li>
+<li>流量控制：TCP具有流量控制功能，可以根据接收方的窗口大小和当前网络拥塞情况动态调整发送速率，以避免数据丢失和网络拥塞。而UDP没有流量控制功能，发送方无法得知接收方的接收能力，容易造成数据丢失或网络拥塞。</li>
+<li>速度：UDP通常比TCP更快，因为它不需要建立和维护连接，也没有重传控制和流量控制等开销。此外，UDP的报文头部比TCP更简洁，也减少了传输延迟。</li>
+</ol>
+<p>UDP的优点包括：</p>
+<ol>
+<li>简单性：UDP协议相对简单，没有TCP那么复杂，因此实现起来更容易，且传输速度快。</li>
+<li>低延迟：UDP报文头部较短，且没有TCP的握手和挥手等过程，因此传输延迟较低。</li>
+<li>支持多播和广播：UDP支持多播和广播，这使得UDP在某些场景下（如网络广播、实时音视频传输等）具有更好的适用性。</li>
+</ol>
+<p>UDP适用的场景包括：</p>
+<ol>
+<li>实时音视频传输：由于UDP具有低延迟和高速度的特点，因此非常适合用于实时音视频传输。</li>
+<li>网络广播：UDP支持广播，因此可以用于网络广播等场景。</li>
+<li>网络游戏：许多网络游戏使用UDP进行数据传输，以保证游戏的实时性和流畅性。</li>
+<li>DNS查询：DNS查询通常使用UDP协议，因为DNS查询请求通常较小，且不需要建立和维护连接。</li>
+</ol>
+<h1 id="raft算法是那种一致性算法"><a href="#raft算法是那种一致性算法" class="headerlink" title="raft算法是那种一致性算法"></a>raft算法是那种一致性算法</h1><p>Raft算法是一种分布式一致性算法，用于管理日志复制。<br>集群选择一个节点作为领导者（Leader），领导者负责接收客户端的请求（日志），并复制这些请求到集群中的其他节点，以确保节点之间的数据同步。<br>Raft算法还引入了一个新的机制来变更集群成员，使用重叠的大多数来保证安全性。  </p>
+<h1 id="一个请求到达pod的过程、configmap、dockerfile"><a href="#一个请求到达pod的过程、configmap、dockerfile" class="headerlink" title="一个请求到达pod的过程、configmap、dockerfile"></a>一个请求到达pod的过程、configmap、dockerfile</h1><p>一个请求到达Pod的过程：</p>
+<ol>
+<li>当一个请求到达Kubernetes集群时，首先会经过Service。Service是一个抽象层，它定义了一个Pod的逻辑集合以及访问这些Pod的策略。</li>
+<li>Service有一个ClusterIP，这是Service在集群内部的虚拟IP地址。客户端通过访问这个ClusterIP和对应的端口（TargetPort）来发起请求。</li>
+<li>当请求到达ClusterIP时，iptables（Linux内核的网络数据包处理框架）会介入处理。iptables将访问Service的流量转发到后端的Pod。这个转发过程使用类似轮询的负载均衡策略。</li>
+<li>具体的转发目标是一个或多个Pod的IP地址（PodIP）和端口（TargetPort）。每个Pod都有一个唯一的IP地址，这个IP地址是在Pod被创建时由Kubernetes自动分配的。</li>
+<li>请求最终到达目标Pod，由Pod内的应用程序处理并返回响应。</li>
+</ol>
+<p>ConfigMap用于管理应用程序的配置数据，而Dockerfile则用于定义如何构建Docker镜像以及如何创建容器来运行应用程序</p>
+<h1 id="二叉树遍历，非递归"><a href="#二叉树遍历，非递归" class="headerlink" title="二叉树遍历，非递归"></a>二叉树遍历，非递归</h1><p>二叉树的遍历主要有四种方式：前序遍历、中序遍历、后序遍历和层次遍历。通常，前序、中序和后序遍历可以通过递归实现，但也可以使用非递归的方法，比如使用栈</p>
+<h1 id="如何保证接口幂等性"><a href="#如何保证接口幂等性" class="headerlink" title="如何保证接口幂等性?"></a>如何保证接口幂等性?</h1><p>幂等指多次操作产生的影响只会跟一次执行的结果相同</p>
+<ol>
+<li>唯一主键索引实现幂等性</li>
+<li>乐观锁实现幂等性<ul>
+<li>它的心态就是很乐观，每次去拿数据的时候都认为别人不会修改，所以不会上锁</li>
+<li>一般使用版本号控制 version，即为数据增加一个版本标识</li>
+</ul>
+</li>
+<li>悲观锁实现幂等性<ul>
+<li>悲观锁它是一种悲观的心里状态，对应于生活中悲观的人总是想着事情往坏的方向发展</li>
+<li>select * from update</li>
+</ul>
+</li>
+<li>Token 令牌如何实现幂等性<ul>
+<li>客户端每次进入表单页面可以优先申请一个唯一令牌存储本地，服务端存储令牌 token 值(redis,文件，memcache 都可)</li>
+<li>每次发送请求时可以在 Headers 头部中带上当前这个 token 令牌</li>
+<li>服务端验证 token 是否存在，存在则删除 token，执行后续业务逻辑；不存在则响应客户端重复提交提示语</li>
+</ul>
+</li>
+</ol>
+<h1 id="undo-log-binlog-redo-log的作用是什么"><a href="#undo-log-binlog-redo-log的作用是什么" class="headerlink" title="undo log, binlog, redo log的作用是什么"></a>undo log, binlog, redo log的作用是什么</h1><p>undo log</p>
+<ul>
+<li>提供回滚操作，保证事务的原子性</li>
+<li>提供多版本并发控制</li>
+</ul>
+<p>redo log<br>mysql 每执行一条DML语句，先将记录写入redo log buffer. 后续某个时间点再一次将多个操作记录写入到redo log file中。当故障发生导致内存数据丢失时，<br>InnoDB会在重启时，经过重放redo,将page恢复到崩溃之前的状态，通过redo log实现事务的持久性</p>
+<p>binlog</p>
+<ul>
+<li>以二进制的形式，记录用户写操作</li>
+<li>mysql Server层实现，所有引擎共用</li>
+<li>binlog为逻辑日志，记录的是原始SQL<ul>
+<li>不限制大小，不会覆盖以前的日志</li>
+<li>需要使用mysqlbinlog 解析查看</li>
+</ul>
+</li>
+</ul>
+<p>binlog作用：</p>
+<ol>
+<li>主从复制</li>
+<li>数据恢复</li>
+</ol>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/golang/" rel="tag"># golang</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2024/01/22/linux/vim/" rel="prev" title="vim">
+      <i class="fa fa-chevron-left"></i> vim
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2024/02/06/interview/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/" rel="next" title="数据结构与算法">
+      数据结构与算法 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+  </div>
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let activeClass = CONFIG.comments.activeClass;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#rpc%E5%BE%AE%E6%9C%8D%E5%8A%A1%E6%A1%86%E6%9E%B6"><span class="nav-number">1.</span> <span class="nav-text">rpc微服务框架</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%BE%AE%E6%9C%8D%E5%8A%A1%E4%B9%8B%E9%97%B4%E5%A6%82%E4%BD%95%E8%BF%9B%E8%A1%8C%E9%80%9A%E4%BF%A1%EF%BC%9F"><span class="nav-number">1.1.</span> <span class="nav-text">微服务之间如何进行通信？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#RPC%E4%BA%86%E8%A7%A3%E5%A4%9A%E5%B0%91%EF%BC%9F%E9%83%BD%E6%9C%89%E5%93%AA%E4%BA%9B%EF%BC%9F"><span class="nav-number">1.2.</span> <span class="nav-text">RPC了解多少？都有哪些？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#RPC%E5%8C%85%E5%90%AB%E5%93%AA%E4%BA%9B%E9%83%A8%E5%88%86%EF%BC%9F"><span class="nav-number">1.3.</span> <span class="nav-text">RPC包含哪些部分？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%AE%BE%E8%AE%A1%E4%B8%80%E4%B8%AARPC%E4%BC%9A%E8%80%83%E8%99%91%E5%93%AA%E4%BA%9B%E9%97%AE%E9%A2%98"><span class="nav-number">1.4.</span> <span class="nav-text">设计一个RPC会考虑哪些问题?</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%9C%8D%E5%8A%A1%E7%AB%AF%E5%A6%82%E4%BD%95%E5%A4%84%E7%90%86%E8%AF%B7%E6%B1%82%EF%BC%9F%E6%9C%89%E5%93%AA%E4%BA%9B%E6%96%B9%E5%BC%8F%EF%BC%9F"><span class="nav-number">1.5.</span> <span class="nav-text">服务端如何处理请求？有哪些方式？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#IO%E5%A4%9A%E8%B7%AF%E5%A4%8D%E7%94%A8"><span class="nav-number">1.6.</span> <span class="nav-text">IO多路复用</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#select"><span class="nav-number">1.6.1.</span> <span class="nav-text">select</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#poll"><span class="nav-number">1.6.2.</span> <span class="nav-text">poll</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#epoll"><span class="nav-number">1.6.3.</span> <span class="nav-text">epoll</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%9B%91%E8%A7%86socket%E7%B4%A2%E5%BC%95-%E7%BA%A2%E9%BB%91%E6%A0%91"><span class="nav-number">1.6.3.1.</span> <span class="nav-text">监视socket索引-红黑树</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%B0%B1%E7%BB%AAsocket%E5%88%97%E8%A1%A8-%E5%8F%8C%E5%90%91%E9%93%BE%E8%A1%A8"><span class="nav-number">1.6.3.2.</span> <span class="nav-text">就绪socket列表-双向链表</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#epoll%E4%B8%BA%E4%BB%80%E4%B9%88%E6%AF%94select-poll%E5%BF%AB%EF%BC%8C%E5%BF%AB%E5%9C%A8%E4%BB%80%E4%B9%88%E5%9C%B0%E6%96%B9"><span class="nav-number">1.6.3.3.</span> <span class="nav-text">epoll为什么比select&#x2F;poll快，快在什么地方</span></a></li></ol></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#runtime%E5%8C%85%E9%87%8C%E9%9D%A2%E7%9A%84%E6%96%B9%E6%B3%95"><span class="nav-number">2.</span> <span class="nav-text">runtime包里面的方法</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Redis%E7%9A%84%E8%BF%87%E6%9C%9F%E7%AD%96%E7%95%A5"><span class="nav-number">3.</span> <span class="nav-text">Redis的过期策略</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%9A%E6%9C%9F%E5%88%A0%E9%99%A4"><span class="nav-number">3.1.</span> <span class="nav-text">定期删除</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%A6%82%E6%9E%9C%E4%B8%80%E4%B8%AA%E5%A4%A7%E7%9A%84redis%E5%AE%9E%E4%BE%8B%E4%B8%AD%E6%89%80%E6%9C%89%E7%9A%84key%EF%BC%8C%E5%9C%A8%E5%90%8C%E4%B8%80%E6%97%B6%E9%97%B4%E8%BF%87%E6%9C%9F%EF%BC%8C%E4%BC%9A%E5%87%BA%E7%8E%B0%E6%80%8E%E6%A0%B7%E7%9A%84%E7%BB%93%E6%9E%9C%EF%BC%9F"><span class="nav-number">3.1.1.</span> <span class="nav-text">如果一个大的redis实例中所有的key，在同一时间过期，会出现怎样的结果？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BB%8E%E5%BA%93%E7%9A%84%E8%BF%87%E6%9C%9F%E7%AD%96%E7%95%A5"><span class="nav-number">3.1.2.</span> <span class="nav-text">从库的过期策略</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%83%B0%E6%80%A7%E5%88%A0%E9%99%A4"><span class="nav-number">3.2.</span> <span class="nav-text">惰性删除</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Redis%E7%9A%84%E5%86%85%E5%AD%98%E6%B7%98%E6%B1%B0%E6%9C%BA%E5%88%B6"><span class="nav-number">4.</span> <span class="nav-text">Redis的内存淘汰机制</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%BF%91%E4%BC%BCLRU%E7%AE%97%E6%B3%95-%E6%97%B6%E9%97%B4%E7%BB%B4%E5%BA%A6"><span class="nav-number">4.1.</span> <span class="nav-text">近似LRU算法(时间维度)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%BF%91%E4%BC%BCLFU-%E9%A2%91%E7%8E%87%E7%BB%B4%E5%BA%A6"><span class="nav-number">4.2.</span> <span class="nav-text">近似LFU(频率维度)</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#mysql%E7%B4%A2%E5%BC%95%E7%A7%8D%E7%B1%BB"><span class="nav-number">5.</span> <span class="nav-text">mysql索引种类</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%B8%80%E4%B8%AAupdate%E8%AF%AD%E5%8F%A5%E7%9A%84%E6%89%A7%E8%A1%8C%E8%BF%87%E7%A8%8B"><span class="nav-number">6.</span> <span class="nav-text">一个update语句的执行过程</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#go%E7%9A%84profile%E5%B7%A5%E5%85%B7%EF%BC%9F"><span class="nav-number">7.</span> <span class="nav-text">go的profile工具？</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%9C%89%E5%93%AA%E5%87%A0%E7%A7%8D%E9%87%87%E6%A0%B7%E6%96%B9%E5%BC%8F"><span class="nav-number">7.1.</span> <span class="nav-text">有哪几种采样方式</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%94%AF%E6%8C%81%E4%BB%80%E4%B9%88%E4%BD%BF%E7%94%A8%E6%A8%A1%E5%BC%8F"><span class="nav-number">7.2.</span> <span class="nav-text">支持什么使用模式</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8F%AF%E4%BB%A5%E5%81%9A%E4%BB%80%E4%B9%88"><span class="nav-number">7.3.</span> <span class="nav-text">可以做什么</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#http%E5%92%8Ctcp%E6%9C%89%E4%BB%80%E4%B9%88%E5%8C%BA%E5%88%AB"><span class="nav-number">8.</span> <span class="nav-text">http和tcp有什么区别</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%94%A8netstat%E7%9C%8Btcp%E8%BF%9E%E6%8E%A5%E7%9A%84%E6%97%B6%E5%80%99%E6%9C%89%E5%85%B3%E6%B3%A8%E8%BF%87time-wait%E5%92%8Cclose-wait%E5%90%97%EF%BC%9F"><span class="nav-number">9.</span> <span class="nav-text">用netstat看tcp连接的时候有关注过time_wait和close_wait吗？</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%A6%82%E4%BD%95%E5%A4%84%E7%90%86"><span class="nav-number">10.</span> <span class="nav-text">如何处理</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#fork%E7%9A%84%E5%BA%95%E5%B1%82%E5%AE%9E%E7%8E%B0%E6%96%B9%E5%BC%8F"><span class="nav-number">11.</span> <span class="nav-text">fork的底层实现方式</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#go%E8%AF%AD%E8%A8%80%E4%BB%80%E4%B9%88%E6%97%B6%E5%80%99%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6%EF%BC%8C%E5%86%99%E4%BB%A3%E7%A0%81%E7%9A%84%E6%97%B6%E5%80%99%E5%A6%82%E4%BD%95%E5%87%8F%E5%B0%91%E5%B0%8F%E5%AF%B9%E8%B1%A1%E5%88%86%E9%85%8D"><span class="nav-number">12.</span> <span class="nav-text">go语言什么时候垃圾回收，写代码的时候如何减少小对象分配</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#go%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6GC%E8%A7%A6%E5%8F%91%E6%9D%A1%E4%BB%B6"><span class="nav-number">12.1.</span> <span class="nav-text">go垃圾回收GC触发条件</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%87%8F%E5%B0%91%E5%B0%8F%E5%AF%B9%E8%B1%A1%E5%88%86%E9%85%8D"><span class="nav-number">12.2.</span> <span class="nav-text">减少小对象分配</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#redis%E7%9A%84%E5%AD%98%E5%82%A8%E7%BB%93%E6%9E%84%EF%BC%9F"><span class="nav-number">12.3.</span> <span class="nav-text">redis的存储结构？</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%AE%9E%E7%8E%B0map%E7%9A%84%E6%96%B9%E6%B3%95%E9%99%A4%E4%BA%86%E5%93%88%E5%B8%8C%E8%BF%98%E6%9C%89%E5%93%AA%E4%BA%9B%EF%BC%9F"><span class="nav-number">13.</span> <span class="nav-text">实现map的方法除了哈希还有哪些？</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%80%8E%E4%B9%88%E7%90%86%E8%A7%A3redis%E7%9A%84%E4%BA%8B%E5%8A%A1"><span class="nav-number">14.</span> <span class="nav-text">怎么理解redis的事务</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%AF%AD%E6%B3%95"><span class="nav-number">14.1.</span> <span class="nav-text">语法</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8E%9F%E7%90%86"><span class="nav-number">14.2.</span> <span class="nav-text">原理</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#redis%E7%9A%84setnx%E5%BA%95%E5%B1%82%E6%80%8E%E4%B9%88%E5%AE%9E%E7%8E%B0%E7%9A%84%EF%BC%9F"><span class="nav-number">15.</span> <span class="nav-text">redis的setnx底层怎么实现的？</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#go%E7%9A%84gc%E5%8E%9F%E7%90%86%E4%BA%86%E8%A7%A3%E5%90%97%EF%BC%9F"><span class="nav-number">16.</span> <span class="nav-text">go的gc原理了解吗？</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%89%E8%89%B2%E6%A0%87%E8%AE%B0%E8%BF%87%E7%A8%8B"><span class="nav-number">16.1.</span> <span class="nav-text">三色标记过程</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#GC%E8%BF%87%E7%A8%8B"><span class="nav-number">16.2.</span> <span class="nav-text">GC过程</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#GC%E6%A0%87%E8%AE%B0%E8%BF%87%E7%A8%8B%E5%AE%9E%E7%8E%B0-gcw-wbBuf"><span class="nav-number">16.3.</span> <span class="nav-text">GC标记过程实现 gcw&amp;wbBuf</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#GC-CPU%E4%BD%BF%E7%94%A8%E7%94%A8%E7%8E%87%EF%BC%88%E5%86%B3%E5%AE%9AMarkWork-%E5%8F%AF%E4%BB%A5%E5%90%AF%E5%8A%A8%E7%9A%84%E4%B8%AA%E6%95%B0%EF%BC%89"><span class="nav-number">16.4.</span> <span class="nav-text">GC CPU使用用率（决定MarkWork 可以启动的个数）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#GC-%E8%BF%87%E7%A8%8B%E4%B8%ADGC%E5%86%85%E5%AD%98%E5%88%86%E9%85%8D"><span class="nav-number">16.5.</span> <span class="nav-text">GC 过程中GC内存分配</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#GC-%E8%A7%A6%E5%8F%91%E6%96%B9%E5%BC%8F"><span class="nav-number">16.6.</span> <span class="nav-text">GC 触发方式</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#gin%E6%A1%86%E6%9E%B6%E7%9A%84%E8%B7%AF%E7%94%B1%E6%98%AF%E6%80%8E%E4%B9%88%E5%A4%84%E7%90%86%E7%9A%84%EF%BC%9F"><span class="nav-number">17.</span> <span class="nav-text">gin框架的路由是怎么处理的？</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#B-%E6%A0%91%E5%92%8CB%E6%A0%91%E6%9C%89%E4%BB%80%E4%B9%88%E5%8C%BA%E5%88%AB"><span class="nav-number">18.</span> <span class="nav-text">B+树和B树有什么区别?</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#sql%E6%9F%A5%E8%AF%A2%E6%80%A7%E8%83%BD%E7%93%B6%E9%A2%88%E5%A4%84%E7%90%86%E6%96%B9%E5%BC%8F"><span class="nav-number">19.</span> <span class="nav-text">sql查询性能瓶颈处理方式</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%B4%A2%E5%BC%95%E4%BC%98%E5%8C%96%E7%AD%96%E7%95%A5"><span class="nav-number">20.</span> <span class="nav-text">索引优化策略</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#B-%E6%A0%91%E7%BB%86%E8%8A%82%E4%BC%98%E5%8A%BF%EF%BC%8C%E5%92%8C%E5%93%88%E5%B8%8C%E7%B4%A2%E5%BC%95%E7%9A%84%E5%8C%BA%E5%88%AB%EF%BC%8C%E6%98%AF%E4%B8%BA%E4%BA%86%E8%A7%A3%E5%86%B3%E4%BB%80%E4%B9%88%E9%97%AE%E9%A2%98%EF%BC%9F"><span class="nav-number">21.</span> <span class="nav-text">B+树细节优势，和哈希索引的区别，是为了解决什么问题？</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%BA%8B%E5%8A%A1%E5%9B%9B%E4%B8%AA%E7%89%B9%E6%80%A7%E5%9B%9B%E4%B8%AA%E9%9A%94%E7%A6%BB%E7%BA%A7%E5%88%AB"><span class="nav-number">22.</span> <span class="nav-text">事务四个特性四个隔离级别</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#MVCC-%E5%A4%9A%E7%89%88%E6%9C%AC%E5%B9%B6%E5%8F%91%E6%8E%A7%E5%88%B6"><span class="nav-number">22.1.</span> <span class="nav-text">MVCC 多版本并发控制</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#http-time-wait%E7%8A%B6%E6%80%81%E5%88%86%E6%9E%90"><span class="nav-number">23.</span> <span class="nav-text">http  time_wait状态分析</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%BA%E4%BB%80%E4%B9%88%E9%9C%80%E8%A6%81-TIME-WAIT-%E7%8A%B6%E6%80%81%EF%BC%9F"><span class="nav-number">23.1.</span> <span class="nav-text">为什么需要 TIME_WAIT 状态？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%A6%82%E4%BD%95%E5%A4%84%E7%90%86-TIME-WAIT-%E7%8A%B6%E6%80%81"><span class="nav-number">23.2.</span> <span class="nav-text">如何处理 TIME_WAIT 状态</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#nginx%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1%E7%AD%96%E7%95%A5"><span class="nav-number">24.</span> <span class="nav-text">nginx负载均衡策略</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#es%E5%86%85%E9%83%A8%E5%AE%9E%E7%8E%B0%E5%8E%9F%E7%90%86%EF%BC%8C%E5%A6%82%E4%BD%95%E4%BF%9D%E8%AF%81%E6%95%B0%E6%8D%AE%E4%B8%80%E8%87%B4%E6%80%A7%EF%BC%8C%E5%A6%82%E4%BD%95%E9%99%8D%E4%BD%8E%E5%8E%8B%E5%8A%9B"><span class="nav-number">25.</span> <span class="nav-text">es内部实现原理，如何保证数据一致性，如何降低压力</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%86%85%E9%83%A8%E5%AE%9E%E7%8E%B0%E5%8E%9F%E7%90%86"><span class="nav-number">25.1.</span> <span class="nav-text">内部实现原理</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%A6%82%E4%BD%95%E4%BF%9D%E8%AF%81%E6%95%B0%E6%8D%AE%E4%B8%80%E8%87%B4%E6%80%A7"><span class="nav-number">25.2.</span> <span class="nav-text">如何保证数据一致性</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%A6%82%E4%BD%95%E9%99%8D%E4%BD%8E%E5%8E%8B%E5%8A%9B"><span class="nav-number">25.3.</span> <span class="nav-text">如何降低压力</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#linux%E6%9F%A5%E7%9C%8B%E7%A3%81%E7%9B%98%E3%80%81io%E3%80%81%E5%86%85%E5%AD%98%E6%83%85%E5%86%B5%E7%9A%84%E5%91%BD%E4%BB%A4"><span class="nav-number">26.</span> <span class="nav-text">linux查看磁盘、io、内存情况的命令</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%9F%A5%E7%9C%8B%E7%A3%81%E7%9B%98%E6%83%85%E5%86%B5%EF%BC%9A"><span class="nav-number">26.1.</span> <span class="nav-text">查看磁盘情况：</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%9F%A5%E7%9C%8BIO%E6%83%85%E5%86%B5%EF%BC%9A"><span class="nav-number">26.2.</span> <span class="nav-text">查看IO情况：</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%9F%A5%E7%9C%8B%E5%86%85%E5%AD%98%E6%83%85%E5%86%B5%EF%BC%9A"><span class="nav-number">26.3.</span> <span class="nav-text">查看内存情况：</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%88%86%E5%BA%93%E5%88%86%E8%A1%A8%E8%81%94%E8%A1%A8%E6%9F%A5%E8%AF%A2%E6%9C%89%E5%93%AA%E4%BA%9B%E6%96%B9%E5%BC%8F"><span class="nav-number">27.</span> <span class="nav-text">分库分表联表查询有哪些方式</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8D%95%E8%A1%A8%E6%83%85%E5%86%B5"><span class="nav-number">27.1.</span> <span class="nav-text">单表情况</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%A4%9A%E8%A1%A8%E6%83%85%E5%86%B5"><span class="nav-number">27.2.</span> <span class="nav-text">多表情况</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E8%A6%86%E7%9B%96%E6%9F%A5%E8%AF%A2-%E5%9B%9E%E8%A1%A8%E6%9F%A5%E8%AF%A2"><span class="nav-number">28.</span> <span class="nav-text">覆盖查询&amp;回表查询</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E8%81%9A%E7%B0%87%E7%B4%A2%E5%BC%95-%E9%9D%9E%E8%81%9A%E7%B0%87%E7%B4%A2%E5%BC%95"><span class="nav-number">29.</span> <span class="nav-text">聚簇索引&amp;非聚簇索引</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#go%E5%AE%9E%E7%8E%B0%E4%B8%8D%E9%87%8D%E5%90%AF%E7%83%AD%E9%83%A8%E7%BD%B2"><span class="nav-number">30.</span> <span class="nav-text">go实现不重启热部署</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#go%E6%80%A7%E8%83%BD%E5%88%86%E6%9E%90%E5%B7%A5%E5%85%B7"><span class="nav-number">31.</span> <span class="nav-text">go性能分析工具</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%9C%8D%E5%8A%A1%E6%80%A7%E9%87%87%E9%9B%86"><span class="nav-number">31.1.</span> <span class="nav-text">服务性采集</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%9D%9E%E6%9C%8D%E5%8A%A1%E6%80%A7%E9%87%87%E9%9B%86"><span class="nav-number">31.2.</span> <span class="nav-text">非服务性采集</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#tcp%E5%A6%82%E4%BD%95%E4%BF%9D%E8%AF%81%E7%A8%B3%E5%AE%9A%E6%80%A7"><span class="nav-number">32.</span> <span class="nav-text">tcp如何保证稳定性</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#http%E5%92%8Chttp2%E5%8C%BA%E5%88%AB"><span class="nav-number">33.</span> <span class="nav-text">http和http2区别</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#https%E7%9A%84%E8%BF%9E%E6%8E%A5%E8%BF%87%E7%A8%8B"><span class="nav-number">34.</span> <span class="nav-text">https的连接过程</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%88%86%E5%B8%83%E5%BC%8F%E9%94%81%E5%A6%82%E4%BD%95%E5%AE%9E%E7%8E%B0"><span class="nav-number">35.</span> <span class="nav-text">分布式锁如何实现</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E8%AF%BB%E6%89%A9%E6%95%A3-%E5%86%99%E6%89%A9%E6%95%A3"><span class="nav-number">36.</span> <span class="nav-text">读扩散&amp;写扩散</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#goroutine%E5%88%9B%E5%BB%BA%E6%95%B0%E9%87%8F%E6%9C%89%E9%99%90%E5%88%B6%E5%90%97%EF%BC%9F"><span class="nav-number">37.</span> <span class="nav-text">goroutine创建数量有限制吗？</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#go%E5%B9%B6%E5%8F%91%E6%9C%BA%E5%88%B6"><span class="nav-number">38.</span> <span class="nav-text">go并发机制</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%BA%BF%E7%A8%8B%E5%8D%8F%E7%A8%8B%E5%8C%BA%E5%88%AB"><span class="nav-number">39.</span> <span class="nav-text">线程协程区别</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E9%94%81%E7%9A%84%E5%8F%AF%E9%87%8D%E5%85%A5"><span class="nav-number">40.</span> <span class="nav-text">锁的可重入</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%B8%B8%E7%94%A8%E9%99%90%E6%B5%81%E7%AE%97%E6%B3%95"><span class="nav-number">41.</span> <span class="nav-text">常用限流算法</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#rpc%E8%B0%83%E7%94%A8%E8%BF%87%E7%A8%8B"><span class="nav-number">42.</span> <span class="nav-text">rpc调用过程</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%86%94%E6%96%AD%E9%99%8D%E7%BA%A7%E5%BC%80%E6%BA%90%E6%A1%86%E6%9E%B6"><span class="nav-number">43.</span> <span class="nav-text">熔断降级开源框架</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#serviceMash"><span class="nav-number">44.</span> <span class="nav-text">serviceMash</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%BB%80%E4%B9%88%E6%93%8D%E4%BD%9C%E4%BC%9A%E5%BD%B1%E5%93%8D%E8%81%94%E8%A1%A8%E6%9F%A5%E8%AF%A2%E6%95%88%E7%8E%87"><span class="nav-number">45.</span> <span class="nav-text">什么操作会影响联表查询效率</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%B8%80%E4%B8%AAsql%E7%9A%84%E6%9F%A5%E8%AF%A2%E8%BF%87%E7%A8%8B"><span class="nav-number">46.</span> <span class="nav-text">一个sql的查询过程</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#redis%E5%8D%95%E7%BA%BF%E7%A8%8B%E6%98%AF%E5%A6%82%E4%BD%95%E5%81%9A%E5%88%B0%E6%94%AF%E6%8C%81%E9%AB%98%E5%B9%B6%E5%8F%91%E7%9A%84"><span class="nav-number">47.</span> <span class="nav-text">redis单线程是如何做到支持高并发的</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%B8%BA%E4%BB%80%E4%B9%88%E5%86%85%E5%AD%98%E6%93%8D%E4%BD%9C%E5%BE%88%E5%BF%AB"><span class="nav-number">48.</span> <span class="nav-text">为什么内存操作很快</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#k8s%E5%90%84%E7%A7%8D%E7%BB%84%E4%BB%B6"><span class="nav-number">49.</span> <span class="nav-text">k8s各种组件</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#gomap%E5%B9%B6%E5%8F%91%E5%AE%89%E5%85%A8%E9%97%AE%E9%A2%98%EF%BC%8C%E5%A6%82%E4%BD%95%E8%A7%A3%E5%86%B3"><span class="nav-number">50.</span> <span class="nav-text">gomap并发安全问题，如何解决</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%B8%80%E4%B8%AA%E8%BF%9B%E7%A8%8B%E8%83%BD%E5%88%9B%E5%BB%BA%E7%9A%84%E7%BA%BF%E7%A8%8B%E6%95%B0%E9%87%8F%E5%8F%97%E5%88%B0%E5%93%AA%E4%BA%9B%E5%88%B6%E7%BA%A6%EF%BC%9F"><span class="nav-number">51.</span> <span class="nav-text">一个进程能创建的线程数量受到哪些制约？</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#redis%E4%B8%BB%E4%BB%8E%E5%90%8C%E6%AD%A5%E6%80%8E%E4%B9%88%E5%81%9A%E7%9A%84"><span class="nav-number">52.</span> <span class="nav-text">redis主从同步怎么做的</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#k8s%E5%9F%BA%E6%9C%AC%E6%93%8D%E4%BD%9C"><span class="nav-number">53.</span> <span class="nav-text">k8s基本操作</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#docker%E5%BA%95%E5%B1%82%E5%AE%9E%E7%8E%B0%E5%8E%9F%E7%90%86"><span class="nav-number">54.</span> <span class="nav-text">docker底层实现原理</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#docker%E5%9F%BA%E6%9C%AC%E6%93%8D%E4%BD%9C"><span class="nav-number">55.</span> <span class="nav-text">docker基本操作</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#linux%E5%86%85%E6%A0%B8"><span class="nav-number">56.</span> <span class="nav-text">linux内核</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%95%B0%E6%8D%AE%E5%BA%93%E5%88%86%E5%BA%93%E5%88%86%E8%A1%A8%EF%BC%8C%E5%95%A5%E6%97%B6%E5%80%99%E5%88%86%E5%BA%93%E5%95%A5%E6%97%B6%E5%80%99%E5%88%86%E8%A1%A8"><span class="nav-number">57.</span> <span class="nav-text">数据库分库分表，啥时候分库啥时候分表</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%95%B0%E6%8D%AE%E5%BA%93%E7%9A%84%E5%AD%98%E5%82%A8%E5%BC%95%E6%93%8E%E6%9C%89%E5%93%AA%E4%BA%9B%EF%BC%8C%E5%8C%BA%E5%88%AB%E6%98%AF%E5%95%A5"><span class="nav-number">58.</span> <span class="nav-text">数据库的存储引擎有哪些，区别是啥</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#innodb%E7%B4%A2%E5%BC%95%E7%94%A8%E7%9A%84%E6%98%AF%E5%95%A5%EF%BC%8C%E4%B8%BA%E4%BB%80%E4%B9%88%E4%B8%8D%E7%94%A8b%E6%A0%91%E3%80%81%E7%BA%A2%E9%BB%91"><span class="nav-number">59.</span> <span class="nav-text">innodb索引用的是啥，为什么不用b树、红黑</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%BA%8B%E5%8A%A1%E7%9A%84%E9%9A%94%E7%A6%BB%E7%BA%A7%E5%88%AB"><span class="nav-number">60.</span> <span class="nav-text">事务的隔离级别</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%B1%82%E5%BA%8F%E9%81%8D%E5%8E%86%E4%BA%8C%E5%8F%89%E6%A0%91"><span class="nav-number">61.</span> <span class="nav-text">层序遍历二叉树</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%88%A4%E6%96%AD%E4%BA%8C%E5%8F%89%E6%A0%91%E6%98%AF%E5%90%A6%E6%98%AF%E9%95%9C%E5%83%8F%E4%BA%8C%E5%8F%89%E6%A0%91"><span class="nav-number">62.</span> <span class="nav-text">判断二叉树是否是镜像二叉树</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%A0%86%E6%8E%92"><span class="nav-number">63.</span> <span class="nav-text">堆排</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%B8%AD%E9%97%B4%E4%BB%B6-kafka%E4%B8%A2%E5%A4%B1%E6%B6%88%E6%81%AF%E5%92%8C%E4%B8%8D%E9%87%8D%E5%A4%8D%E6%B6%88%E8%B4%B9skip"><span class="nav-number">64.</span> <span class="nav-text">中间件:kafka丢失消息和不重复消费skip</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%AF%B9%E4%B8%80%E4%B8%AA%E9%93%BE%E8%A1%A8%E8%BF%9B%E8%A1%8C%E6%8E%92%E5%BA%8F"><span class="nav-number">65.</span> <span class="nav-text">对一个链表进行排序</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%BA%BF%E7%A8%8B%E5%92%8C%E5%8D%8F%E7%A8%8B%E7%9A%84%E5%8C%BA%E5%88%AB"><span class="nav-number">66.</span> <span class="nav-text">线程和协程的区别</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#TCP%E4%B8%89%E6%AC%A1%E6%8F%A1%E6%89%8B%E5%92%8C%E5%9B%9B%E6%AC%A1%E6%8C%A5%E6%89%8B"><span class="nav-number">67.</span> <span class="nav-text">TCP三次握手和四次挥手</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#TCP%E4%B8%89%E6%AC%A1%E6%8F%A1%E6%89%8B"><span class="nav-number">67.1.</span> <span class="nav-text">TCP三次握手</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#TCP%E5%9B%9B%E6%AC%A1%E6%8C%A5%E6%89%8B"><span class="nav-number">67.2.</span> <span class="nav-text">TCP四次挥手</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E9%95%BF%E8%BF%9E%E6%8E%A5%E5%92%8C%E7%9F%AD%E9%93%BE%E6%8E%A5-%E6%80%8E%E4%B9%88%E5%AE%9E%E7%8E%B0%E7%9A%84%E3%80%81%E5%8C%BA%E5%88%AB%E4%BB%A5%E5%8F%8A%E5%BA%94%E7%94%A8%E5%9C%BA%E6%99%AF"><span class="nav-number">68.</span> <span class="nav-text">长连接和短链接(怎么实现的、区别以及应用场景)</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%95%BF%E8%BF%9E%E6%8E%A5"><span class="nav-number">68.1.</span> <span class="nav-text">长连接</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%9F%AD%E8%BF%9E%E6%8E%A5"><span class="nav-number">68.2.</span> <span class="nav-text">短连接</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E8%AE%A1%E7%AE%97%E4%BA%8C%E5%8F%89%E6%A0%91%E6%89%80%E6%9C%89%E5%B7%A6%E5%8F%B6%E5%AD%90%E8%8A%82%E7%82%B9%E7%9A%84%E5%92%8C-%E5%8A%9B%E6%89%A3"><span class="nav-number">69.</span> <span class="nav-text">计算二叉树所有左叶子节点的和(力扣)</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#n%E5%AF%B9%E6%8B%AC%E5%8F%B7%E8%BE%93%E5%87%BA%E6%89%80%E6%9C%89%E5%90%88%E6%B3%95%E7%9A%84%E6%83%85%E5%86%B5"><span class="nav-number">70.</span> <span class="nav-text">n对括号输出所有合法的情况</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#n%E4%B8%AA%E6%9C%89%E5%BA%8F%E7%9A%84%E6%95%B0%E7%BB%84%E5%90%88%E5%B9%B6%E6%88%90%E4%B8%80%E4%B8%AA"><span class="nav-number">71.</span> <span class="nav-text">n个有序的数组合并成一个</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%BA%8C%E5%8F%89%E6%A0%91%E4%B8%AD%E5%BA%8F%E9%81%8D%E5%8E%86%EF%BC%8C%E9%80%92%E5%BD%92%E5%92%8C%E9%9D%9E%E9%80%92%E5%BD%92%E4%B8%A4%E7%A7%8D%E6%96%B9%E5%BC%8F-skip"><span class="nav-number">72.</span> <span class="nav-text">二叉树中序遍历，递归和非递归两种方式 skip</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#sync-Pool%E7%9A%84%E5%AE%9E%E7%8E%B0%E5%8E%9F%E7%90%86"><span class="nav-number">73.</span> <span class="nav-text">sync.Pool的实现原理</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#hash%E5%86%B2%E7%AA%81%E8%A7%A3%E5%86%B3%E5%8A%9E%E6%B3%95%EF%BC%8C%E6%9C%89%E4%BB%80%E4%B9%88%E5%BC%8A%E7%AB%AF"><span class="nav-number">74.</span> <span class="nav-text">hash冲突解决办法，有什么弊端</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#map%E9%87%8C%E9%9D%A2%E8%A7%A3%E5%86%B3hash%E5%86%B2%E7%AA%81%E6%80%8E%E4%B9%88%E5%81%9A%E7%9A%84%EF%BC%8C%E5%86%B2%E7%AA%81%E4%BA%86%E5%85%83%E7%B4%A0%E6%94%BE%E5%9C%A8%E5%A4%B4%E8%BF%98%E6%98%AF%E5%B0%BE"><span class="nav-number">75.</span> <span class="nav-text">map里面解决hash冲突怎么做的，冲突了元素放在头还是尾</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#10%E4%BA%BF%E7%9A%84url%E5%8E%BB%E9%87%8D%E6%80%8E%E4%B9%88%E5%81%9A"><span class="nav-number">76.</span> <span class="nav-text">10亿的url去重怎么做</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%A5%E6%A0%BC%E6%96%B9%E6%A1%88%EF%BC%88%E5%88%86%E6%B2%BB%EF%BC%89"><span class="nav-number">76.1.</span> <span class="nav-text">严格方案（分治）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%9D%9E%E4%B8%A5%E6%A0%BC%E6%96%B9%E6%A1%88%EF%BC%88%E5%B8%83%E9%9A%86%E8%BF%87%E6%BB%A4%E5%99%A8%EF%BC%89"><span class="nav-number">76.2.</span> <span class="nav-text">非严格方案（布隆过滤器）</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#rediszset%E6%80%8E%E4%B9%88%E4%BD%BF%E7%94%A8%E7%9A%84%EF%BC%8C%E5%BA%95%E5%B1%82%E6%80%8E%E4%B9%88%E5%AE%9E%E7%8E%B0%E7%9A%84%EF%BC%8C%E9%80%82%E7%94%A8%E4%BA%8E%E4%BB%80%E4%B9%88%E5%9C%BA%E6%99%AF"><span class="nav-number">77.</span> <span class="nav-text">rediszset怎么使用的，底层怎么实现的，适用于什么场景</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%8D%95%E9%93%BE%E8%A1%A8%E6%89%BE%E5%88%B0%E4%B8%AD%E9%97%B4%E8%8A%82%E7%82%B9"><span class="nav-number">78.</span> <span class="nav-text">单链表找到中间节点</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E8%AE%BE%E8%AE%A1%E4%B8%80%E4%B8%AA%E7%A7%92%E6%9D%80%E7%B3%BB%E7%BB%9F"><span class="nav-number">79.</span> <span class="nav-text">设计一个秒杀系统</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%BB%99%E5%AE%9A%E4%B8%80%E4%B8%AA%E4%BA%8C%E5%8F%89%E6%A0%91%E5%92%8C%E5%85%B6%E4%B8%AD%E7%9A%84%E4%B8%80%E4%B8%AA%E7%BB%93%E7%82%B9%EF%BC%8C%E8%AF%B7%E6%89%BE%E5%87%BA%E4%B8%AD%E5%BA%8F%E9%81%8D%E5%8E%86%E9%A1%BA%E5%BA%8F%E7%9A%84%E4%B8%8B%E4%B8%80%E4%B8%AA%E7%BB%93%E7%82%B9%E5%B9%B6%E4%B8%94%E8%BF%94%E5%9B%9E%E3%80%82%E6%B3%A8%E6%84%8F%EF%BC%8C%E6%A0%91%E4%B8%AD%E7%9A%84%E7%BB%93%E7%82%B9%E4%B8%8D%E4%BB%85%E5%8C%85%E5%90%AB%E5%B7%A6%E5%8F%B3%E5%AD%90%E7%BB%93%E7%82%B9%EF%BC%8C%E5%90%8C%E6%97%B6%E5%8C%85%E5%90%AB%E6%8C%87%E5%90%91%E7%88%B6%E7%BB%93%E7%82%B9%E7%9A%84%E6%8C%87%E9%92%88"><span class="nav-number">80.</span> <span class="nav-text">给定一个二叉树和其中的一个结点，请找出中序遍历顺序的下一个结点并且返回。注意，树中的结点不仅包含左右子结点，同时包含指向父结点的指针</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#while-tree-sleep-1-%E8%BF%99%E4%B8%AA%E4%BC%9A%E6%9C%89%E4%BB%80%E4%B9%88%E9%97%AE%E9%A2%98"><span class="nav-number">81.</span> <span class="nav-text">while(tree){sleep(1)}这个会有什么问题</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#sleep%E5%BA%95%E5%B1%82%E5%AE%9E%E7%8E%B0%E5%8E%9F%E7%90%86"><span class="nav-number">82.</span> <span class="nav-text">sleep底层实现原理</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%BA%BF%E4%B8%8A%E9%97%AE%E9%A2%98%E4%B8%80%E8%88%AC%E6%80%8E%E4%B9%88%E6%8E%92%E6%9F%A5%EF%BC%8C%E6%AF%94%E5%A6%82oom"><span class="nav-number">83.</span> <span class="nav-text">线上问题一般怎么排查，比如oom</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%89%8B%E5%86%99LRU"><span class="nav-number">84.</span> <span class="nav-text">手写LRU</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%B8%80%E4%B8%AA%E6%95%B4%E5%9E%8B%E6%95%B0%E7%BB%84%EF%BC%8C%E6%95%B0%E7%BB%84%E4%B8%AD%E7%9A%84%E4%B8%80%E4%B8%AA%E6%88%96%E8%BF%9E%E7%BB%AD%E5%A4%9A%E4%B8%AA%E6%95%B4%E6%95%B0%E7%BB%84%E6%88%90%E4%B8%80%E4%B8%AA%E5%AD%90%E6%95%B0%E7%BB%84%E3%80%82%E6%B1%82%E6%89%80%E6%9C%89%E5%AD%90%E6%95%B0%E7%BB%84%E7%9A%84%E5%92%8C%E7%9A%84%E6%9C%80%E5%A4%A7%E5%80%BC"><span class="nav-number">85.</span> <span class="nav-text">一个整型数组，数组中的一个或连续多个整数组成一个子数组。求所有子数组的和的最大值</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#docker%E5%92%8C%E8%99%9A%E6%8B%9F%E6%9C%BA%E5%8C%BA%E5%88%AB"><span class="nav-number">86.</span> <span class="nav-text">docker和虚拟机区别</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#k8s%E5%BA%95%E5%B1%82%E5%8E%9F%E7%90%86"><span class="nav-number">87.</span> <span class="nav-text">k8s底层原理</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%BD%91%E7%BB%9C%E4%B8%83%E5%B1%82%E6%A8%A1%E5%9E%8B%E5%92%8C%E4%BA%94%E5%B1%82%E6%A8%A1%E5%9E%8B"><span class="nav-number">88.</span> <span class="nav-text">网络七层模型和五层模型</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%95%B0%E6%8D%AE%E5%BA%93%E7%B4%A2%E5%BC%95"><span class="nav-number">89.</span> <span class="nav-text">数据库索引</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%B4%A2%E5%BC%95%E7%9A%84%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86"><span class="nav-number">89.1.</span> <span class="nav-text">索引的工作原理</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%B4%A2%E5%BC%95%E7%9A%84%E7%B1%BB%E5%9E%8B"><span class="nav-number">89.2.</span> <span class="nav-text">索引的类型</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%B4%A2%E5%BC%95%E7%9A%84%E4%BC%98%E7%82%B9"><span class="nav-number">89.3.</span> <span class="nav-text">索引的优点</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%B4%A2%E5%BC%95%E7%9A%84%E7%BC%BA%E7%82%B9"><span class="nav-number">89.4.</span> <span class="nav-text">索引的缺点</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#MySQL%E4%BC%98%E5%8C%96%EF%BC%88%E7%B4%A2%E5%BC%95%E3%80%81%E5%88%86%E8%A1%A8%E5%88%86%E5%BA%93%EF%BC%89"><span class="nav-number">90.</span> <span class="nav-text">MySQL优化（索引、分表分库）</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%B4%A2%E5%BC%95%E4%BC%98%E5%8C%96"><span class="nav-number">90.1.</span> <span class="nav-text">索引优化</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%88%86%E8%A1%A8%E5%88%86%E5%BA%93"><span class="nav-number">90.2.</span> <span class="nav-text">分表分库</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%9C%80%E5%B7%A6%E5%8C%B9%E9%85%8D%E5%8E%9F%E5%88%99%EF%BC%9F%E9%97%AE%E4%B8%BA%E4%BB%80%E4%B9%88%E6%9C%89%E8%BF%99%E4%B8%AA%E4%B8%9C%E8%A5%BF%EF%BC%9F"><span class="nav-number">91.</span> <span class="nav-text">最左匹配原则？问为什么有这个东西？</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%90%8C%E4%B8%80%E4%B8%AA%E5%8D%8F%E7%A8%8B%E9%87%8C%E9%9D%A2%EF%BC%8C%E5%AF%B9%E6%97%A0%E7%BC%93%E5%86%B2channel%E5%90%8C%E6%97%B6%E5%8F%91%E9%80%81%E5%92%8C%E6%8E%A5%E6%94%B6%E6%95%B0%E6%8D%AE%E6%9C%89%E4%BB%80%E4%B9%88%E9%97%AE%E9%A2%98"><span class="nav-number">92.</span> <span class="nav-text">同一个协程里面，对无缓冲channel同时发送和接收数据有什么问题</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#channel%E5%92%8C%E9%94%81%E5%AF%B9%E6%AF%94%E4%B8%80%E4%B8%8B"><span class="nav-number">93.</span> <span class="nav-text">channel和锁对比一下</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#channel%E7%9A%84%E5%BA%94%E7%94%A8%E5%9C%BA%E6%99%AF"><span class="nav-number">94.</span> <span class="nav-text">channel的应用场景</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#slice%E5%92%8Carray%E5%8C%BA%E5%88%AB"><span class="nav-number">95.</span> <span class="nav-text">slice和array区别</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%90%91%E4%B8%BAnil%E7%9A%84channel%E5%8F%91%E9%80%81%E6%95%B0%E6%8D%AE%E4%BC%9A%E6%80%8E%E4%B9%88%E6%A0%B7"><span class="nav-number">96.</span> <span class="nav-text">向为nil的channel发送数据会怎么样</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Golang-%E6%AD%BB%E9%94%81%E5%8F%91%E7%94%9F%E7%9A%84%E6%83%85%E5%86%B5%EF%BC%8C%E5%A6%82%E4%BD%95%E9%81%BF%E5%85%8D%EF%BC%9F"><span class="nav-number">97.</span> <span class="nav-text">Golang 死锁发生的情况，如何避免？</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#map%E5%8F%96%E4%B8%80%E4%B8%AAkey%EF%BC%8C%E7%84%B6%E5%90%8E%E4%BF%AE%E6%94%B9%E8%BF%99%E4%B8%AA%E5%80%BC%EF%BC%8C%E5%8E%9Fmap%E6%95%B0%E6%8D%AE%E7%9A%84%E5%80%BC%E4%BC%9A%E4%B8%8D%E4%BC%9A%E5%8F%98%E5%8C%96"><span class="nav-number">98.</span> <span class="nav-text">map取一个key，然后修改这个值，原map数据的值会不会变化</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Hash%E5%AE%9E%E7%8E%B0%E3%80%81%E5%86%B2%E7%AA%81%E8%A7%A3%E5%86%B3%E3%80%81%E5%BA%94%E7%94%A8"><span class="nav-number">99.</span> <span class="nav-text">Hash实现、冲突解决、应用</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%93%88%E5%B8%8C%E5%AE%9E%E7%8E%B0"><span class="nav-number">99.1.</span> <span class="nav-text">哈希实现</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%86%B2%E7%AA%81%E8%A7%A3%E5%86%B3"><span class="nav-number">99.2.</span> <span class="nav-text">冲突解决</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%BA%94%E7%94%A8"><span class="nav-number">100.</span> <span class="nav-text">应用</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E8%BE%93%E5%85%A5URL%E5%8F%91%E7%94%9F%E7%9A%84%E6%95%B4%E4%B8%AA%E7%BD%91%E7%BB%9C%E8%BF%87%E7%A8%8B"><span class="nav-number">101.</span> <span class="nav-text">输入URL发生的整个网络过程</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#TCP%E6%B5%81%E9%87%8F%E6%8E%A7%E5%88%B6%E3%80%81%E6%8B%A5%E5%A1%9E%E6%8E%A7%E5%88%B6"><span class="nav-number">102.</span> <span class="nav-text">TCP流量控制、拥塞控制</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#TCP%E5%8D%8A%E8%BF%9E%E6%8E%A5%E9%98%9F%E5%88%97"><span class="nav-number">103.</span> <span class="nav-text">TCP半连接队列</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#TCP%E5%8D%8A%E5%85%B3%E9%97%AD%E7%8A%B6%E6%80%81"><span class="nav-number">104.</span> <span class="nav-text">TCP半关闭状态</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#TCP-TIME-WAIT%E7%8A%B6%E6%80%81"><span class="nav-number">105.</span> <span class="nav-text">TCP TIME_WAIT状态</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%86%85%E6%A0%B8%E6%80%81%E3%80%81%E7%94%A8%E6%88%B7%E6%80%81"><span class="nav-number">106.</span> <span class="nav-text">内核态、用户态</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#100%E6%9E%9A%E7%A1%AC%E5%B8%81%EF%BC%8C%E5%85%B6%E4%B8%AD%E6%9C%89%E4%B8%80%E6%9E%9A%E7%A1%AC%E5%B8%81%E9%87%8D%E9%87%8F%E4%B8%8D%E4%B8%80%E6%A0%B7%EF%BC%8C%E7%94%A8%E5%A4%A9%E5%B9%B3%E7%A7%A4%E6%80%8E%E4%B9%88%E5%BF%AB%E9%80%9F%E6%89%BE%E5%88%B0%E8%BF%99%E4%B8%80%E6%9E%9A%E7%A1%AC%E5%B8%81"><span class="nav-number">107.</span> <span class="nav-text">100枚硬币，其中有一枚硬币重量不一样，用天平秤怎么快速找到这一枚硬币</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#LRU%E7%BC%93%E5%AD%98%E5%AE%9E%E7%8E%B0%EF%BC%8C%E8%A6%81%E6%B1%82set-get%E6%93%8D%E4%BD%9Co-1-%E6%97%B6%E9%97%B4%E5%A4%8D%E6%9D%82%E5%BA%A6"><span class="nav-number">108.</span> <span class="nav-text">LRU缓存实现，要求set\get操作o(1)时间复杂度</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#TCP%E6%BB%91%E5%8A%A8%E7%AA%97%E5%8F%A3"><span class="nav-number">109.</span> <span class="nav-text">TCP滑动窗口</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#MVCC%E5%8E%9F%E7%90%86"><span class="nav-number">110.</span> <span class="nav-text">MVCC原理</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#ACID%E7%9A%84%E6%B6%B5%E4%B9%89%EF%BC%8CMYSQL%E6%98%AF%E5%A6%82%E4%BD%95%E4%BF%9D%E8%AF%81%E7%9A%84"><span class="nav-number">111.</span> <span class="nav-text">ACID的涵义，MYSQL是如何保证的</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%BC%93%E5%AD%98%E5%A4%B1%E6%95%88%E7%9A%84%E5%87%A0%E7%A7%8D%E5%9C%BA%E6%99%AF%EF%BC%8C%E4%BB%A5%E5%8F%8A%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88"><span class="nav-number">112.</span> <span class="nav-text">缓存失效的几种场景，以及解决方案</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%A6%82%E4%BD%95%E6%8E%92%E6%9F%A5%E7%BA%BF%E4%B8%8A%E7%A8%8B%E5%BA%8F%E9%97%AE%E9%A2%98"><span class="nav-number">113.</span> <span class="nav-text">如何排查线上程序问题</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#protobuf%E4%B8%BA%E4%BB%80%E4%B9%88%E5%BF%AB"><span class="nav-number">114.</span> <span class="nav-text">protobuf为什么快</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%88%86%E5%B8%83%E5%BC%8F%E7%B3%BB%E7%BB%9F%E4%BC%98%E7%BC%BA%E7%82%B9%EF%BC%8C%E4%B8%80%E8%87%B4%E6%80%A7%E6%98%AF%E5%A6%82%E4%BD%95%E4%BF%9D%E8%AF%81%E7%9A%84"><span class="nav-number">115.</span> <span class="nav-text">分布式系统优缺点，一致性是如何保证的</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BC%98%E7%82%B9"><span class="nav-number">115.1.</span> <span class="nav-text">优点</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%BC%BA%E7%82%B9"><span class="nav-number">115.2.</span> <span class="nav-text">缺点</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%80%E8%87%B4%E6%80%A7%E6%98%AF%E5%A6%82%E4%BD%95%E4%BF%9D%E8%AF%81%E7%9A%84"><span class="nav-number">115.3.</span> <span class="nav-text">一致性是如何保证的</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%9C%80%E7%BB%88%E4%B8%80%E8%87%B4%E6%80%A7"><span class="nav-number">116.</span> <span class="nav-text">最终一致性</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#mysql%E5%88%86%E5%B8%83%E5%BC%8Fid"><span class="nav-number">117.</span> <span class="nav-text">mysql分布式id</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#mysql%E7%B4%A2%E5%BC%95%E6%85%A2%E5%88%86%E6%9E%90%EF%BC%9A%E7%BA%BF%E4%B8%8A%E5%BC%80%E5%90%AFslowlog%EF%BC%8C%E6%8F%90%E5%8F%96%E6%85%A2%E6%9F%A5%E8%AF%A2%EF%BC%8C%E7%84%B6%E5%90%8E%E4%BB%94%E7%BB%86%E5%88%86%E6%9E%90explain%E4%B8%ADtye%E5%AD%97%E6%AE%B5%E4%BB%A5%E5%8F%8Aextra%E5%AD%97%E6%AE%B5%EF%BC%8C%E5%8F%91%E7%94%9F%E7%9A%84%E5%85%B7%E4%BD%93%E5%9C%BA%E6%99%AF%E5%8F%8Amysql%E6%98%AF%E6%80%8E%E4%B9%88%E5%81%9A%E7%9A%84"><span class="nav-number">118.</span> <span class="nav-text">mysql索引慢分析：线上开启slowlog，提取慢查询，然后仔细分析explain中tye字段以及extra字段，发生的具体场景及mysql是怎么做的</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%BC%80%E5%90%AF%E6%85%A2%E6%9F%A5%E8%AF%A2%E6%97%A5%E5%BF%97"><span class="nav-number">118.1.</span> <span class="nav-text">开启慢查询日志</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%8F%90%E5%8F%96%E6%85%A2%E6%9F%A5%E8%AF%A2"><span class="nav-number">118.2.</span> <span class="nav-text">提取慢查询</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%88%86%E6%9E%90%E6%85%A2%E6%9F%A5%E8%AF%A2"><span class="nav-number">118.3.</span> <span class="nav-text">分析慢查询</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#mysql%E5%88%86%E5%BA%93%E5%88%86%E8%A1%A8%E5%B9%B3%E6%BB%91%E6%89%A9%E5%AE%B9%E6%96%B9%E6%A1%88skip"><span class="nav-number">119.</span> <span class="nav-text">mysql分库分表平滑扩容方案skip</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#docker%E9%A2%84%E7%83%AD"><span class="nav-number">120.</span> <span class="nav-text">docker预热</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#go-waitGroup%E7%9A%84%E5%9D%91"><span class="nav-number">121.</span> <span class="nav-text">go waitGroup的坑</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#etcd%E5%8E%9F%E7%90%86"><span class="nav-number">122.</span> <span class="nav-text">etcd原理</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%BB%99%E4%B8%80%E4%B8%AA%E6%A0%88%EF%BC%8C%E7%94%A8%E5%8F%A6%E5%A4%96%E4%B8%80%E4%B8%AA%E6%A0%88%E5%AE%9E%E7%8E%B0%E6%8E%92%E5%BA%8F"><span class="nav-number">123.</span> <span class="nav-text">给一个栈，用另外一个栈实现排序</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#go-struct%E8%83%BD%E4%B8%8D%E8%83%BD%E6%AF%94%E8%BE%83"><span class="nav-number">124.</span> <span class="nav-text">go struct能不能比较</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#select%E5%8F%AF%E4%BB%A5%E7%94%A8%E4%BA%8E%E4%BB%80%E4%B9%88"><span class="nav-number">125.</span> <span class="nav-text">select可以用于什么</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#context%E5%8C%85%E7%9A%84%E7%94%A8%E9%80%94"><span class="nav-number">126.</span> <span class="nav-text">context包的用途</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#client%E5%A6%82%E4%BD%95%E5%AE%9E%E7%8E%B0%E9%95%BF%E8%BF%9E%E6%8E%A5"><span class="nav-number">127.</span> <span class="nav-text">client如何实现长连接</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%B8%BB%E5%8D%8F%E7%A8%8B%E5%A6%82%E4%BD%95%E7%AD%89%E5%85%B6%E4%BD%99%E5%8D%8F%E7%A8%8B%E5%AE%8C%E5%86%8D%E6%93%8D%E4%BD%9C"><span class="nav-number">128.</span> <span class="nav-text">主协程如何等其余协程完再操作</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#slice%EF%BC%8Clen%EF%BC%8Ccap%EF%BC%8C%E5%85%B1%E4%BA%AB%EF%BC%8C%E6%89%A9%E5%AE%B9"><span class="nav-number">129.</span> <span class="nav-text">slice，len，cap，共享，扩容</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#map%E5%A6%82%E4%BD%95%E9%A1%BA%E5%BA%8F%E8%AF%BB%E5%8F%96"><span class="nav-number">130.</span> <span class="nav-text">map如何顺序读取</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%A4%A7%E6%96%87%E4%BB%B6%E6%8E%92%E5%BA%8F"><span class="nav-number">131.</span> <span class="nav-text">大文件排序</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#tcp%E4%B8%8Eudp%E5%8C%BA%E5%88%AB%EF%BC%8Cudp%E4%BC%98%E7%82%B9%EF%BC%8C%E9%80%82%E7%94%A8%E5%9C%BA%E6%99%AF"><span class="nav-number">132.</span> <span class="nav-text">tcp与udp区别，udp优点，适用场景</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#raft%E7%AE%97%E6%B3%95%E6%98%AF%E9%82%A3%E7%A7%8D%E4%B8%80%E8%87%B4%E6%80%A7%E7%AE%97%E6%B3%95"><span class="nav-number">133.</span> <span class="nav-text">raft算法是那种一致性算法</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%B8%80%E4%B8%AA%E8%AF%B7%E6%B1%82%E5%88%B0%E8%BE%BEpod%E7%9A%84%E8%BF%87%E7%A8%8B%E3%80%81configmap%E3%80%81dockerfile"><span class="nav-number">134.</span> <span class="nav-text">一个请求到达pod的过程、configmap、dockerfile</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%BA%8C%E5%8F%89%E6%A0%91%E9%81%8D%E5%8E%86%EF%BC%8C%E9%9D%9E%E9%80%92%E5%BD%92"><span class="nav-number">135.</span> <span class="nav-text">二叉树遍历，非递归</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%A6%82%E4%BD%95%E4%BF%9D%E8%AF%81%E6%8E%A5%E5%8F%A3%E5%B9%82%E7%AD%89%E6%80%A7"><span class="nav-number">136.</span> <span class="nav-text">如何保证接口幂等性?</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#undo-log-binlog-redo-log%E7%9A%84%E4%BD%9C%E7%94%A8%E6%98%AF%E4%BB%80%E4%B9%88"><span class="nav-number">137.</span> <span class="nav-text">undo log, binlog, redo log的作用是什么</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Chen Yu"
+      src="/images/head.jpeg">
+  <p class="site-author-name" itemprop="name">Chen Yu</p>
+  <div class="site-description" itemprop="description">自律给我自由</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">123</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">20</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">84</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2025</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Chen Yu</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v6.3.0
+  </div>
+  <span class="post-meta-divider">|</span>
+  <div class="theme-info">主题 – <a href="https://theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a> v7.7.0
+  </div>
+
+<div>
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<span id="busuanzi_container_site_pv" style='display:none'>
+    本站总访问量 <span id="busuanzi_value_site_pv"></span> 次
+    <span class="post-meta-divider">|</span>
+</span>
+<span id="busuanzi_container_site_uv" style='display:none'>
+    有<span id="busuanzi_value_site_uv"></span>人看过我的博客啦
+</span>
+</div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>

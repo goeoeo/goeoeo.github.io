@@ -1,0 +1,891 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 6.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+  <meta name="baidu-site-verification" content="D033aiBRFi">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+
+
+<script id="hexo-configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    hostname: new URL('https://phpdi.github.io').hostname,
+    root: '/',
+    scheme: 'Gemini',
+    version: '7.7.0',
+    exturl: false,
+    sidebar: {"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},
+    copycode: {"enable":false,"show_result":false,"style":null},
+    back2top: {"enable":true,"sidebar":false,"scrollpercent":false},
+    bookmark: {"enable":false,"color":"#222","save":"auto"},
+    fancybox: false,
+    mediumzoom: false,
+    lazyload: false,
+    pangu: false,
+    comments: {"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},
+    algolia: {
+      appID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    },
+    localsearch: {"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},
+    path: 'search.xml',
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}
+  };
+</script>
+
+  <meta name="description" content="尚硅谷大数据技术之Telegraf  title: telegraf categories:  cloud  tags:- 云监控- 指标采集认识Telegraf什么是TelegrafTelegraf是一个基于插件的开源指标采集工具。本身是为InfluxDB（一款时序数据库）量身打造的数据收集器，但是它过于优秀，能够将抓取的数据写到很多地方，尤其在时序数据库领域，很多时序数据库都能够与它配合使用。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="goeoeo">
+<meta property="og:url" content="https://phpdi.github.io/2025/03/27/cloud/telegraf/index.html">
+<meta property="og:site_name" content="goeoeo">
+<meta property="og:description" content="尚硅谷大数据技术之Telegraf  title: telegraf categories:  cloud  tags:- 云监控- 指标采集认识Telegraf什么是TelegrafTelegraf是一个基于插件的开源指标采集工具。本身是为InfluxDB（一款时序数据库）量身打造的数据收集器，但是它过于优秀，能够将抓取的数据写到很多地方，尤其在时序数据库领域，很多时序数据库都能够与它配合使用。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://phpdi.github.io/2025/03/27/cloud/telegraf/media/image1.png">
+<meta property="og:image" content="https://phpdi.github.io/2025/03/27/cloud/telegraf/media/image2.png">
+<meta property="og:image" content="https://phpdi.github.io/2025/03/27/cloud/telegraf/media/image3.png">
+<meta property="og:image" content="https://phpdi.github.io/2025/03/27/cloud/telegraf/media/image4.png">
+<meta property="og:image" content="https://phpdi.github.io/2025/03/27/cloud/telegraf/media/image5.png">
+<meta property="og:image" content="https://phpdi.github.io/2025/03/27/cloud/telegraf/media/image6.png">
+<meta property="og:image" content="https://phpdi.github.io/2025/03/27/cloud/telegraf/media/image7.png">
+<meta property="og:image" content="https://phpdi.github.io/2025/03/27/cloud/telegraf/media/image8.png">
+<meta property="og:image" content="https://phpdi.github.io/2025/03/27/cloud/telegraf/media/image9.png">
+<meta property="og:image" content="https://phpdi.github.io/2025/03/27/cloud/telegraf/media/image10.png">
+<meta property="og:image" content="https://phpdi.github.io/2025/03/27/cloud/telegraf/media/image11.png">
+<meta property="og:image" content="https://phpdi.github.io/2025/03/27/cloud/telegraf/media/image12.png">
+<meta property="og:image" content="https://phpdi.github.io/2025/03/27/cloud/telegraf/media/image13.png">
+<meta property="og:image" content="https://phpdi.github.io/2025/03/27/cloud/telegraf/media/image14.png">
+<meta property="og:image" content="https://phpdi.github.io/2025/03/27/cloud/telegraf/media/image15.png">
+<meta property="og:image" content="https://phpdi.github.io/2025/03/27/cloud/telegraf/media/image16.png">
+<meta property="og:image" content="https://phpdi.github.io/2025/03/27/cloud/telegraf/media/image17.png">
+<meta property="og:image" content="https://phpdi.github.io/2025/03/27/cloud/telegraf/media/image18.png">
+<meta property="og:image" content="https://phpdi.github.io/2025/03/27/cloud/telegraf/media/image19.png">
+<meta property="og:image" content="https://phpdi.github.io/2025/03/27/cloud/telegraf/media/image20.png">
+<meta property="og:image" content="https://phpdi.github.io/2025/03/27/cloud/telegraf/media/image21.png">
+<meta property="og:image" content="https://phpdi.github.io/2025/03/27/cloud/telegraf/media/image22.png">
+<meta property="og:image" content="https://phpdi.github.io/2025/03/27/cloud/telegraf/media/image23.png">
+<meta property="og:image" content="https://phpdi.github.io/2025/03/27/cloud/telegraf/media/image24.png">
+<meta property="og:image" content="https://phpdi.github.io/2025/03/27/cloud/telegraf/media/image25.png">
+<meta property="og:image" content="https://phpdi.github.io/2025/03/27/cloud/telegraf/media/image26.png">
+<meta property="og:image" content="https://phpdi.github.io/2025/03/27/cloud/telegraf/media/image27.png">
+<meta property="og:image" content="https://phpdi.github.io/2025/03/27/cloud/telegraf/media/image28.jpeg">
+<meta property="og:image" content="https://phpdi.github.io/2025/03/27/cloud/telegraf/media/image29.png">
+<meta property="article:published_time" content="2025-03-27T02:36:22.455Z">
+<meta property="article:modified_time" content="2025-03-27T02:38:50.950Z">
+<meta property="article:author" content="Chen Yu">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://phpdi.github.io/2025/03/27/cloud/telegraf/media/image1.png">
+
+<link rel="canonical" href="https://phpdi.github.io/2025/03/27/cloud/telegraf/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome: false,
+    isPost: true
+  };
+</script>
+
+  <title> | goeoeo</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-meta">
+
+    <div>
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">goeoeo</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+        <h1 class="site-subtitle" itemprop="description">会吃鱼</h1>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+</div>
+
+
+<nav class="site-nav">
+  
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>归档</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-fw fa-th"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-fw fa-user"></i>关于</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+
+</nav>
+  <div class="site-search">
+    <div class="popup search-popup">
+    <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocorrect="off" autocapitalize="none"
+           placeholder="搜索..." spellcheck="false"
+           type="text" id="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result"></div>
+
+</div>
+<div class="search-pop-overlay"></div>
+
+  </div>
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content">
+            
+
+  <div class="posts-expand">
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://phpdi.github.io/2025/03/27/cloud/telegraf/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/head.jpeg">
+      <meta itemprop="name" content="Chen Yu">
+      <meta itemprop="description" content="自律给我自由">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="goeoeo">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2025-03-27 10:36:22 / 修改时间：10:38:50" itemprop="dateCreated datePublished" datetime="2025-03-27T10:36:22+08:00">2025-03-27</time>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>尚硅谷大数据技术之Telegraf</p>
+<hr>
+<p>title: telegraf</p>
+<p>categories:</p>
+<ul>
+<li>cloud</li>
+</ul>
+<h2 id="tags-云监控-指标采集"><a href="#tags-云监控-指标采集" class="headerlink" title="tags:- 云监控- 指标采集"></a>tags:<br>- 云监控<br>- 指标采集</h2><h1 id="认识Telegraf"><a href="#认识Telegraf" class="headerlink" title="认识Telegraf"></a>认识Telegraf</h1><h2 id="什么是Telegraf"><a href="#什么是Telegraf" class="headerlink" title="什么是Telegraf"></a>什么是Telegraf</h2><p>Telegraf是一个基于插件的开源指标采集工具。本身是为InfluxDB（一款时序数据库）量身打造的数据收集器，但是它过于优秀，能够将抓取的数据写到很多地方，尤其在时序数据库领域，很多时序数据库都能够与它配合使用。通常，它每隔一段时间抓取一批指标数据（比如机器的CPU使用情况，磁盘的IO，网络情况，MySQL服务端的的会话数等等）并将他们发送到时序数据库、消息队列中或者自定义导出到某个地方。供下游的应用处理（比如报警）。Telegraf也能够对外提供一个服务，等待客户端推送数据。</p>
+<p>它与logstash类似，只不过logstash是收集日志的。telegraf是收集指标的。</p>
+<h2 id="Telegraf的能力与社区"><a href="#Telegraf的能力与社区" class="headerlink" title="Telegraf的能力与社区"></a>Telegraf的能力与社区</h2><p>截至文档撰写时，它在github上已有11.7k stars。</p>
+<p><img src="/2025/03/27/cloud/telegraf/media/image1.png" alt="图形用户界面, 文本, 应用程序, 电子邮件, 网站
+描述已自动生成">{width&#x3D;”5.768055555555556in”<br>height&#x3D;”2.3194444444444446in”}</p>
+<p>而且官方还提供了300多个可选的插件，另外Telegraf是易于拓展的，如果官方的插件无法满足你的需求，你随时可以在Telegraf的基础上写出自己的插件。</p>
+<h1 id="安装部署Telegraf"><a href="#安装部署Telegraf" class="headerlink" title="安装部署Telegraf"></a>安装部署Telegraf</h1><p>访问下载页面：<a target="_blank" rel="noopener" href="https://portal.influxdata.com/downloads/">https://portal.influxdata.com/downloads/</a></p>
+<p>右边的Platform是你对应的系统，选择与你的平台相对应的，下载的网址会自动更改。</p>
+<p><img src="/2025/03/27/cloud/telegraf/media/image2.png" alt="图形用户界面, 文本, 应用程序, 电子邮件
+描述已自动生成">{width&#x3D;”5.768055555555556in”<br>height&#x3D;”2.5819444444444444in”}</p>
+<p>这里要去你去写一个yum文件，页面上给出的命令有点问题，需要改成下面这样，红色处是我们的修改</p>
+<p>cat &lt;&lt;EOF | sudo tee &#x2F;etc&#x2F;yum.repos.d&#x2F;influxdata.repo</p>
+<p>[influxdata]</p>
+<p>name &#x3D; InfluxData Repository - Stable</p>
+<p>baseurl &#x3D; <a target="_blank" rel="noopener" href="https://repos.influxdata.com/stable////$basearch/main">https://repos.influxdata.com/stable/\\\$basearch/main</a></p>
+<p>enabled &#x3D; 1</p>
+<p>gpgcheck &#x3D; 1</p>
+<p>gpgkey &#x3D; <a target="_blank" rel="noopener" href="https://repos.influxdata.com/influxdb.key">https://repos.influxdata.com/influxdb.key</a></p>
+<p>EOF</p>
+<p>这段代码运行完，在&#x2F;etc&#x2F;yum.repose.d&#x2F;目录下会变出来一个influxdata.repo文件。里面的内容就是你代码上的中间部分。</p>
+<p><img src="/2025/03/27/cloud/telegraf/media/image3.png" alt="文本
+描述已自动生成">{width&#x3D;”5.768055555555556in”<br>height&#x3D;”1.4680555555555554in”}</p>
+<p>然后，使用yum在线安装。</p>
+<p>sudo yum install telegraf</p>
+<p>使用systemctl查看一下telegraf是否安装成功。</p>
+<p>systemctl status telegraf</p>
+<p><img src="/2025/03/27/cloud/telegraf/media/image4.png" alt="文本
+描述已自动生成">{width&#x3D;”5.768055555555556in”<br>height&#x3D;”0.7673611111111112in”}</p>
+<p>如图所示，安装成功。</p>
+<h1 id="示例1：Telegraf快速入门（单输入单输出工作流）"><a href="#示例1：Telegraf快速入门（单输入单输出工作流）" class="headerlink" title="示例1：Telegraf快速入门（单输入单输出工作流）"></a>示例1：Telegraf快速入门（单输入单输出工作流）</h1><h2 id="编写Telegraf配置文件"><a href="#编写Telegraf配置文件" class="headerlink" title="编写Telegraf配置文件"></a>编写Telegraf配置文件</h2><p>创建一个目录，专门放telegraf的配置文件。</p>
+<p>mkdir &#x2F;opt&#x2F;module&#x2F;telegraf_conf</p>
+<p>创建配置文件example01.conf。</p>
+<p>vim example01.conf</p>
+<p>并键入以下内容。</p>
+<p>[agent]</p>
+<p>interval &#x3D; &quot;3s&quot;</p>
+<p>[[inputs.cpu]]</p>
+<p>percpu &#x3D; true</p>
+<p>totalcpu &#x3D; true</p>
+<p>collect_cpu_time &#x3D; false</p>
+<p>report_active &#x3D; false</p>
+<p>core_tags &#x3D; false</p>
+<p>[[outputs.file]]</p>
+<p>files &#x3D; [&quot;stdout&quot;]</p>
+<h2 id="运行Telegraf程序"><a href="#运行Telegraf程序" class="headerlink" title="运行Telegraf程序"></a>运行Telegraf程序</h2><p>使用下述命令启动telegraf，观察控制台的情况。s</p>
+<p>telegraf --config .&#x2F;example01.conf</p>
+<p>如图所示：控制台出现了以下输出。</p>
+<p><img src="/2025/03/27/cloud/telegraf/media/image5.png" alt="电脑屏幕截图
+描述已自动生成">{width&#x3D;”5.768055555555556in”<br>height&#x3D;”1.3743055555555554in”}</p>
+<h2 id="知识点讲解"><a href="#知识点讲解" class="headerlink" title="知识点讲解"></a>知识点讲解</h2><h3 id="配置文件的含义"><a href="#配置文件的含义" class="headerlink" title="配置文件的含义"></a>配置文件的含义</h3><p>example01.conf配置文件涉及到3个配置块。</p>
+<p>[ agent ]<br>这里面是一些涉及全局的配置。此处我们设置interval&#x3D;&quot;3s&quot;，意思是让配置文件中的所有input插件每隔3秒去采集一次指标。interval的默认值是10秒。</p>
+<p>[[ inputs.cpu ]]<br>这是一个input输入组件，这里的配置是说我们导出的指标会包含每一个CPU核的使用情况，而且还包含所有CPU总的使用情况。</p>
+<p>[[ outputs.file ]]<br>这是一个output输出组件，这里我们用了一个名为file的输出组件，不过files参数设为了<br>stdout<br>（标准输出）也就是控制台，这样程序运行起来我们应该可以看到数据打印在控制台上。</p>
+<h3 id="控制台输出内容"><a href="#控制台输出内容" class="headerlink" title="控制台输出内容"></a>控制台输出内容</h3><p><strong>进程设置与插件加载信息</strong></p>
+<p>首先控制台会输出一段日志内容，这里面包含了我们一个Telegraf进程的描述信息。s</p>
+<p><img src="/2025/03/27/cloud/telegraf/media/image6.png" alt="文本
+描述已自动生成">{width&#x3D;”5.768055555555556in”<br>height&#x3D;”0.8729166666666667in”}</p>
+<ol>
+<li><p>当前Telegraf的版本号为1.23.2</p>
+</li>
+<li><p>加载的input插件列表（目前就1个）：cpu</p>
+</li>
+<li><p>加载的aggregator插件列表（目前没有）</p>
+</li>
+<li><p>加载的processors插件列表（目前没有）</p>
+</li>
+<li><p>加载的output插件列表（目前就1个）：file</p>
+</li>
+<li><p>Tags<br>enable，开启了全局的标签集，全局的指标数据都会加上host&#x3D;hadoop102这个标签</p>
+</li>
+<li><p>agent Config，全局配置</p>
+<p>a)  Interval : 3s，所有的input组件每3s采集一次指标数据，</p>
+<p>b)  Quiet：false，不使用安静模式运行。</p>
+<p>c)  Hostname：&quot;hadoop102&quot;，机器名称hadoop102</p>
+<p>d)  Flush Interval：10s<br>所有的output组件每10s输出一次指标数据。所以，telegraf运行后，你应该每隔10秒，看到控制台上有一批输出。</p>
+</li>
+</ol>
+<p><strong>数据输出</strong></p>
+<p>在Telegraf的配置内容输出完毕后，我们可以看到一堆密密麻麻的数据。你会发现它不像json，也不像csv。这其实是Telegraf内置的数据结构，叫做InfluxDB行协议。后面会专门讲解这种数据结构。</p>
+<p><img src="/2025/03/27/cloud/telegraf/media/image7.png" alt="电脑屏幕的照片上有文字
+中度可信度描述已自动生成">{width&#x3D;”5.768055555555556in”<br>height&#x3D;”1.2479166666666666in”}</p>
+<h3 id="我们声明了一个什么样的工作流"><a href="#我们声明了一个什么样的工作流" class="headerlink" title="我们声明了一个什么样的工作流"></a>我们声明了一个什么样的工作流</h3><p>最后说一下我们的配置文件在Telegraf中起到了什么效果。</p>
+<p>如下图所示，exampl01.conf文件声明了一个仅有一个输入插件和一个输出插件的工作流。当然，Telegraf的组件和概念还有很多，随着课程的深入，这张图也会丰富起来。</p>
+<p><img src="/2025/03/27/cloud/telegraf/media/image8.png" alt="文本
+低可信度描述已自动生成">{width&#x3D;”5.768055555555556in”<br>height&#x3D;”1.9916666666666667in”}</p>
+<h1 id="示例2：启用处理插件"><a href="#示例2：启用处理插件" class="headerlink" title="示例2：启用处理插件"></a>示例2：启用处理插件</h1><p>这一节，我们通过一个更复杂的示例，来学习Telegraf中的processor（处理）插件是如何使用的。</p>
+<h2 id="编写Telegraf配置文件-1"><a href="#编写Telegraf配置文件-1" class="headerlink" title="编写Telegraf配置文件"></a>编写Telegraf配置文件</h2><p>接下来，我们在example01.conf的基础上稍作改进，编写一个新的配置文件example02.conf。</p>
+<p>cp example01.conf example02.conf</p>
+<p>编辑example02.conf文件。</p>
+<p>vim example02.conf</p>
+<p>键入以下内容（红色部分是我们相对example01.conf新增的内容）</p>
+<p>[agent]</p>
+<p>interval &#x3D; &quot;3s&quot;</p>
+<p>flush_interval &#x3D; &quot;5s&quot;</p>
+<p>[global_tags]</p>
+<p>user&#x3D;&quot;atguigu&quot;</p>
+<p>[[inputs.cpu]]</p>
+<p>percpu &#x3D; true</p>
+<p>totalcpu &#x3D; true</p>
+<p>collect_cpu_time &#x3D; false</p>
+<p>report_active &#x3D; false</p>
+<p>core_tags &#x3D; false</p>
+<p>[[processors.converter]]</p>
+<p>[processors.converter.tags]</p>
+<p>measurement &#x3D; [&quot;cpu&quot;]</p>
+<p>[[outputs.file]]</p>
+<p>files &#x3D; [&quot;stdout&quot;]</p>
+<h2 id="运行Telegraf程序-1"><a href="#运行Telegraf程序-1" class="headerlink" title="运行Telegraf程序"></a>运行Telegraf程序</h2><p>执行下面的命令，开启一个配置文件为example02.conf的telegraf进程</p>
+<p>telegraf --conf .&#x2F;example02.conf</p>
+<p>控制台能够正常输出，说明一切正常。</p>
+<p><img src="/2025/03/27/cloud/telegraf/media/image9.png" alt="文本
+描述已自动生成">{width&#x3D;”5.768055555555556in”<br>height&#x3D;”2.047222222222222in”}</p>
+<h2 id="看看和示例1的输出有什么不同"><a href="#看看和示例1的输出有什么不同" class="headerlink" title="看看和示例1的输出有什么不同"></a>看看和示例1的输出有什么不同</h2><h3 id="加载的插件不同"><a href="#加载的插件不同" class="headerlink" title="加载的插件不同"></a>加载的插件不同</h3><p>通过比较两次运行telegraf控制台输出的头部信息。我们可以发现example02.conf文件让我们的telegraf程序多加载了一个converter（转换器）插件。</p>
+<p><img src="/2025/03/27/cloud/telegraf/media/image10.png" alt="屏幕上有字
+描述已自动生成">{width&#x3D;”5.768055555555556in”<br>height&#x3D;”0.8569444444444444in”}</p>
+<h3 id="数据的输出发生了变化"><a href="#数据的输出发生了变化" class="headerlink" title="数据的输出发生了变化"></a>数据的输出发生了变化</h3><p>截至目前，我们还没有讲解Telegraf内部的数据格式。不过我们可以暂时只关注两个示例输出数据的头部。</p>
+<p>如下图所示：</p>
+<p><img src="/2025/03/27/cloud/telegraf/media/image11.png" alt="日程表
+描述已自动生成">{width&#x3D;”5.768055555555556in”<br>height&#x3D;”1.7958333333333334in”}</p>
+<p>一条数据的头部由两部分构成。</p>
+<p>measurement（测量名称）。此处，我们使用CPU<br>input插件来测量CPU的使用情况，所以测量的名称就叫做cpu是很合适的。</p>
+<p>tags（标签集）。因为telegraf是InfluxData公司为InfluxDB开发指标收集组件，这里的tags其实是为了InfluxDB建立索引的方便。关于索引的详细只是后面会说到。</p>
+<p><img src="/2025/03/27/cloud/telegraf/media/image12.png" alt="图示
+描述已自动生成">{width&#x3D;”4.886973972003499in”<br>height&#x3D;”1.5838834208223973in”}</p>
+<p>比较上图的数据可以发现，在我们加了一个processor插件后，数据的格式发生的改变。原本标签集上的内容被拿来替换了measurement（指标名称）。这也体现了processor插件操作、转换、处理数据的功能。</p>
+<ol start="3">
+<li><strong>示例2的工作流</strong></li>
+</ol>
+<p>综上，我们可以总结一下示例2对应的工作流。如下图所示：</p>
+<p><img src="/2025/03/27/cloud/telegraf/media/image13.png" alt="图示
+描述已自动生成">{width&#x3D;”5.768055555555556in”<br>height&#x3D;”2.8055555555555554in”}</p>
+<p>1个Input组件，1个Processor组件，1个Output组件。</p>
+<h1 id="学会使用插件文档"><a href="#学会使用插件文档" class="headerlink" title="学会使用插件文档"></a>学会使用插件文档</h1><p>通过上面的两个示例，我们可以发现，3个插件（1个input，1个processor，1个output）的配置文件，各自有各自的写法。那么作为使用者的你，怎么知道每个配件应该怎么去写配置呢？</p>
+<p>这必须借助文档！</p>
+<p>接来下，我们尝试通过官方文档来了解刚才Processor插件的用法。s</p>
+<h2 id="如何使用插件文档"><a href="#如何使用插件文档" class="headerlink" title="如何使用插件文档"></a>如何使用插件文档</h2><h3 id="不同版本的Telegraf支持的插件不同"><a href="#不同版本的Telegraf支持的插件不同" class="headerlink" title="不同版本的Telegraf支持的插件不同"></a>不同版本的Telegraf支持的插件不同</h3><p>首先注意，如果你正在使用Telegraf的1.23版本，那么你看插件文档的时候，也应该去看1.23版本的文档。这是因为Go语言开发的项目，会把整个项目涉及的东西编译到一个单独的二进制可执行文件中。</p>
+<p>而且这个可执行文件里面写的全部都是本地码（native-code），不需要专门的Go语言执行环境，操作系统环境直接可以让它运行起来。</p>
+<p>介于此，Telegraf的插件和框架核心代码是编译在一块的，它们都在一个可执行文件中。</p>
+<p><img src="/2025/03/27/cloud/telegraf/media/image14.png" alt="图示
+描述已自动生成">{width&#x3D;”4.52830271216098in”<br>height&#x3D;”1.5881233595800526in”}</p>
+<p>因此v1.23中特有的插件，前面的版本就不会有，除非把旧版本的Telegraf源码下下来，然后把想要的插件源码写进去再重新编译。</p>
+<p>注意！上面说的是Telegraf的内置插件，Telegraf还为我们留了一个exec<br>Input插件，通过这个插件，我们可以和外部的捕捉指标数据的插件进行集成，后面的课程涉及详细的案例。</p>
+<h3 id="Telegraf插件目录"><a href="#Telegraf插件目录" class="headerlink" title="Telegraf插件目录"></a>Telegraf插件目录</h3><p>首先，在Telegraf的官方文档上，有一栏叫做Plugin<br>directory（插件目录），在这里，你可以看到对应Telegraf版本上所有可用的插件。</p>
+<p>下面给出的链接，是Telegraf v1.23的插件目录。</p>
+<p><a target="_blank" rel="noopener" href="https://docs.influxdata.com/telegraf/v1.23/plugins/">https://docs.influxdata.com/telegraf/v1.23/plugins/</a></p>
+<p><img src="/2025/03/27/cloud/telegraf/media/image15.png" alt="图形用户界面, 应用程序
+描述已自动生成">{width&#x3D;”5.768055555555556in”<br>height&#x3D;”3.6354166666666665in”}</p>
+<h3 id="插件过滤"><a href="#插件过滤" class="headerlink" title="插件过滤"></a>插件过滤</h3><p>页面的顶部是一组过滤器，你可以勾选想要查看的插件类别，这样页面下方的插件列表就会短很多，方便你快速找到目标。</p>
+<p><img src="/2025/03/27/cloud/telegraf/media/image16.png" alt="图形用户界面, 应用程序, 电子邮件
+描述已自动生成">{width&#x3D;”5.768055555555556in”<br>height&#x3D;”3.134027777777778in”}</p>
+<p>此处，点击Processor选项，这样页面的下方就只剩27个组件供我们浏览了。</p>
+<h3 id="找到相应插件的帮助文档"><a href="#找到相应插件的帮助文档" class="headerlink" title="找到相应插件的帮助文档"></a>找到相应插件的帮助文档</h3><p>将页面向下滚动，我们可以看到一个插件列表，这些就是我们过滤出来的插件。</p>
+<p><img src="/2025/03/27/cloud/telegraf/media/image17.png" alt="图形用户界面, 应用程序
+描述已自动生成">{width&#x3D;”5.768055555555556in”<br>height&#x3D;”3.6743055555555557in”}</p>
+<p>其中第二个卡片，就是我们示例2中使用的Converter插件。如下图所示，卡片上会有一些帮助信息。点击右上角的view按钮，可以看到更加详细的使用说明。</p>
+<p><img src="/2025/03/27/cloud/telegraf/media/image18.png" alt="文本
+描述已自动生成">{width&#x3D;”5.768055555555556in”<br>height&#x3D;”2.0993055555555555in”}</p>
+<p>首先，你可以看到完整的插件配置可以包含那些选项。</p>
+<p><img src="/2025/03/27/cloud/telegraf/media/image19.png">{width&#x3D;”5.768055555555556in”<br>height&#x3D;”3.4131944444444446in”}</p>
+<p>最重要的是，插件的作者通常会给你列出几个示例，方便你理解插件的工作方式。</p>
+<p><img src="/2025/03/27/cloud/telegraf/media/image20.png" alt="图形用户界面, 应用程序
+描述已自动生成">{width&#x3D;”5.768055555555556in”<br>height&#x3D;”2.797222222222222in”}</p>
+<h2 id="在示例配置中也可以获取有帮助的信息"><a href="#在示例配置中也可以获取有帮助的信息" class="headerlink" title="在示例配置中也可以获取有帮助的信息"></a>在示例配置中也可以获取有帮助的信息</h2><p>上述是通过官网查看插件的使用方式。另外，你还可以使用telegraf命令来查看一个插件的示例配置。</p>
+<p>下面的命令可以打印Telegraf中所有内置插件的示例配置。</p>
+<p>telegraf config</p>
+<p>不过打印到控制台的用处不大。将它导出到文件中用编辑器搜索查看才是正确实践。</p>
+<p>telegraf config &gt; tmp.conf</p>
+<p>如图所示，使用vim编辑器打开后，直接用正则表达式找你想要的插件。里面包含这个插件所有可用的配置项，以及各个配置项的说明。但是没有结合数据的使用案例。</p>
+<p><img src="/2025/03/27/cloud/telegraf/media/image21.png">{width&#x3D;”5.768055555555556in”<br>height&#x3D;”2.8694444444444445in”}</p>
+<h1 id="Telegraf内部数据结构（InfluxDB行协议）"><a href="#Telegraf内部数据结构（InfluxDB行协议）" class="headerlink" title="Telegraf内部数据结构（InfluxDB行协议）"></a>Telegraf内部数据结构（InfluxDB行协议）</h1><p>Telegraf的内部数据结构叫做InfluxDB行协议。如下图所示：</p>
+<p><img src="/2025/03/27/cloud/telegraf/media/image22.png">{width&#x3D;”5.768055555555556in”<br>height&#x3D;”0.6673611111111111in”}</p>
+<p>Telegraf本身是InfluxData公司专门为InfluxDB开发的数据采集器。上面这种数据格式是InfluxDB数据库使用的，只要数据符合上面这种格式，就能通过InfluxDB的API将数据导入数据库。所以，自家的插件当然支持自家的生态了，InfluxDB</p>
+<p>接下来介绍一下它的几个构成部分。</p>
+<h2 id="measurement（测量名称）"><a href="#measurement（测量名称）" class="headerlink" title="measurement（测量名称）"></a>measurement（测量名称）</h2><p>随着后面的学习，你会逐渐深入理解这个概念。目前，你可以将它理解为关系型数据库中的一张表。</p>
+<p>必需</p>
+<p>测量的名称。每个数据点都必须声明自己是哪个测量里面的 ，不可省略。</p>
+<p>大小写敏感</p>
+<p>不可以下划线 _ 开头</p>
+<h2 id="Tag-Set（标签集）"><a href="#Tag-Set（标签集）" class="headerlink" title="Tag Set（标签集）"></a>Tag Set（标签集）</h2><p>标签应该用在一些值的范围有限的，不太会变动的属性上。比如传感器的类型和id等等。在InfluxDB中一个Tag相当于一个索引。给数据点加上Tag有利于将来对数据进行检索。但是如果索引太多了，就会减慢数据的插入速度。</p>
+<p>可选</p>
+<p>键值关系使用 &#x3D; 表示</p>
+<p>多个键值对之间使用英文逗号 , 分隔</p>
+<p>标签的键和值都区分大小写</p>
+<p>标签的键不能以下划线 _ 开头</p>
+<p>键的数据类型：字符串</p>
+<p>值的数据类型：字符串</p>
+<h2 id="Field-Set（字段集）"><a href="#Field-Set（字段集）" class="headerlink" title="Field Set（字段集）"></a>Field Set（字段集）</h2><p>必需</p>
+<p>一个数据点上所有的字段键值对，键是字段名，值是数据点的值。</p>
+<p>一个数据点至少要有一个字段。</p>
+<p>字段集的键是大小写敏感的。</p>
+<p>字段</p>
+<p>键的数据类型：字符串</p>
+<p>值的数据类型：浮点数 | 整数 | 无符号整数 | 字符串 | 布尔值</p>
+<h2 id="Timestamp（时间戳）"><a href="#Timestamp（时间戳）" class="headerlink" title="Timestamp（时间戳）"></a>Timestamp（时间戳）</h2><p>可选</p>
+<p>数据点的Unix时间戳，每个数据点都可以指定自己的时间戳。</p>
+<p>如果时间戳没有指定。那么InfluxDB就使用当前系统的时间戳。</p>
+<p>数据类型：Unix timestamp</p>
+<p>如果你的数据里的时间戳不是以纳秒为单位的，那么需要在数据写入时指定时间戳的精度。</p>
+<h2 id="空格"><a href="#空格" class="headerlink" title="空格"></a>空格</h2><p>行协议中的空格决定了InfluxDB如何解释数据点。第一个未转义的空格将测量值&amp;Tag<br>Set （标签集）与 Field Set（字段集） 分开。第二个未转义空格将Field<br>Set（字段级）和时间戳分开。</p>
+<p><img src="/2025/03/27/cloud/telegraf/media/image23.png" alt="日程表
+中度可信度描述已自动生成">{width&#x3D;”5.768055555555556in”<br>height&#x3D;”1.5326388888888889in”}</p>
+<h2 id="协议中的数据类型及其格式"><a href="#协议中的数据类型及其格式" class="headerlink" title="协议中的数据类型及其格式"></a>协议中的数据类型及其格式</h2><h3 id="Float（浮点数）"><a href="#Float（浮点数）" class="headerlink" title="Float（浮点数）"></a>Float（浮点数）</h3><p>IEEE-754标准的64位浮点数。这是默认的数据类型。</p>
+<p>示例：字段级值类型为浮点数的行协议</p>
+<p>myMeasurement fieldKey&#x3D;1.0</p>
+<p>myMeasurement fieldKey&#x3D;1</p>
+<p>myMeasurement fieldKey&#x3D;-1.234456e+78</p>
+<h3 id="Integer（整数）"><a href="#Integer（整数）" class="headerlink" title="Integer（整数）"></a>Integer（整数）</h3><p>有符号64位整数。需要在数字的尾部加上一个小写数字 i 。</p>
+<hr>
+<p>  整数最小值                          整数最大值</p>
+<hr>
+<p>  -9223372036854775808i               9223372036854775807i</p>
+<hr>
+<p>示例：字段值类型为有整数的</p>
+<h3 id="UInteger（无符号整数）"><a href="#UInteger（无符号整数）" class="headerlink" title="UInteger（无符号整数）"></a>UInteger（无符号整数）</h3><p>无符号64位整数。需要在数字的尾部加上一个小写数字 u 。</p>
+<hr>
+<p>  无符号整数最小值                    无符号整数最大值</p>
+<hr>
+<p>  0u                                  18446744073709551615u</p>
+<hr>
+<p>示例：字段值类型为无符号整数的航协议</p>
+<p>myMeasurement fieldKey&#x3D;1u</p>
+<p>myMeasurement fieldKey&#x3D;12485903u</p>
+<h3 id="String（字符串）"><a href="#String（字符串）" class="headerlink" title="String（字符串）"></a>String（字符串）</h3><p>普通文本字符串，长度不能超过64KB</p>
+<p>示例：</p>
+<p># String measurement name, field key, and field value</p>
+<p>myMeasurement fieldKey&#x3D;&quot;this is a string&quot;</p>
+<h3 id="Boolean（布尔值）"><a href="#Boolean（布尔值）" class="headerlink" title="Boolean（布尔值）"></a>Boolean（布尔值）</h3><p>true或者false。</p>
+<p>示例：</p>
+<hr>
+<p>  布尔值                              支持的语法</p>
+<hr>
+<p>  True                                t, T, true, True, TRUE</p>
+<h2 id="False-f-F-false-False-FALSE"><a href="#False-f-F-false-False-FALSE" class="headerlink" title="  False                               f, F, false, False, FALSE"></a>  False                               f, F, false, False, FALSE</h2><p>示例：</p>
+<p>myMeasurement fieldKey&#x3D;true</p>
+<p>myMeasurement fieldKey&#x3D;false</p>
+<p>myMeasurement fieldKey&#x3D;t</p>
+<p>myMeasurement fieldKey&#x3D;f</p>
+<p>myMeasurement fieldKey&#x3D;TRUE</p>
+<p>myMeasurement fieldKey&#x3D;FALSE</p>
+<p>不要对布尔值使用引号，否则会被解释为字符串</p>
+<h3 id="Unix-Timestamp（Unix-时间戳）"><a href="#Unix-Timestamp（Unix-时间戳）" class="headerlink" title="Unix Timestamp（Unix 时间戳）"></a>Unix Timestamp（Unix 时间戳）</h3><p>如果你写时间戳，</p>
+<p>myMeasurementName fieldKey&#x3D;&quot;fieldValue&quot; 1556813561098000000</p>
+<h2 id="注释"><a href="#注释" class="headerlink" title="注释"></a>注释</h2><p>以井号 # 开头的一行会被当做注释。</p>
+<p>示例：</p>
+<p># 这是一行数据</p>
+<p>myMeasurement fieldKey&#x3D;&quot;string value&quot; 1556813561098000000</p>
+<h1 id="Telegraf命令行的使用"><a href="#Telegraf命令行的使用" class="headerlink" title="Telegraf命令行的使用"></a>Telegraf命令行的使用</h1><p>Telegraf安装好之后，就可以使用telegraf命令了。</p>
+<p>用法：</p>
+<p>telegraf [ 命令 ]</p>
+<p>telegraf [ 选项 ]</p>
+<h2 id="命令"><a href="#命令" class="headerlink" title="命令"></a>命令</h2><hr>
+<p>  命令      描述</p>
+<hr>
+<p>  config    将完整的示例配置打印到标准输出（stdout 控制台）</p>
+<h2 id="version-将版本号打印到标准输出（stdout-控制台）"><a href="#version-将版本号打印到标准输出（stdout-控制台）" class="headerlink" title="  version   将版本号打印到标准输出（stdout 控制台）"></a>  version   将版本号打印到标准输出（stdout 控制台）</h2><h2 id="选项"><a href="#选项" class="headerlink" title="选项"></a>选项</h2><hr>
+<p>  参数                               描述</p>
+<hr>
+<p>  --aggregator-filter &lt;filter&gt;    筛选要启用聚合器，分隔符为</p>
+<p>  --config &lt;file&gt;                 要加载的配置文件</p>
+<p>  --config-directory&lt;directory&gt;   包含其他配置文件的目录。其中的配置文件名需要以.conf收尾</p>
+<p>  --deprecation-list                打印所有已弃用的插件或插件选项。</p>
+<p>  --watch-config                    在本地的配置文件更改时，重启Telegraf进程，监听方式使用的是文件系统的通知或者轮询文件。--watch-config功能默认是关闭的。</p>
+<p>  --plugin-directory &lt;directory&gt;  插件目录，会以递归的方式搜索这个目录，来找到可用的插件，找到的插件会被加载。插件文件的后缀是.so</p>
+<p>  --debug                           启动debug级别的日志文件</p>
+<p>  --input-filter &lt;filter&gt;         过滤要启用的输入插件，分隔符为 : 。</p>
+<p>  --input-list                      打印可用的输入插件</p>
+<p>  --output-filter                   过滤要启用的输出插件，分隔符为 : 。</p>
+<p>  --output-list                     打印可用的输出插件</p>
+<p>  --pidfile &lt;file&gt;                要将pid写入到哪个文件。</p>
+<p>  --pprof-addr &lt;address&gt;          pprof地址，默认情况下禁用。pprof是Go中分析程序运行性的工具，它能够提供各种性能数据。比如，内存分配情况的采样信息、对上内存的使用情况采样信息等。</p>
+<p>  --processor-filter &lt;filter&gt;     筛选要启用的filter插件，插件之间使用 : 分隔。</p>
+<p>  --quiet                           在安静模式下运行</p>
+<p>  --section-filter &lt;filter&gt;       这个参数和config命令一起使用才有意义。过滤要打印的配置段（agent，global_tags，outputs，processors，aggregators和inputs）。配置段之间用 : 分隔。</p>
+<p>  --sample-config                   打印完整的示例配置（和config命令的作用一样）</p>
+<p>  --once                            收集一次指标，写出，然后退出进程。</p>
+<p>  --test                            收集一次指标并打印一次，然后退出进程。</p>
+<p>  --test-wait                       telegraf进程在test或once模式下，进行一次input所需要的秒数。</p>
+<p>  --usage &lt;plugin&gt;                打印插件的用法。（比如：telegraf --usage mysql）</p>
+<h2 id="version-打印Telegraf的版本号"><a href="#version-打印Telegraf的版本号" class="headerlink" title="  --version                         打印Telegraf的版本号"></a>  --version                         打印Telegraf的版本号</h2><h2 id="示例：Telegraf命令行用法"><a href="#示例：Telegraf命令行用法" class="headerlink" title="示例：Telegraf命令行用法"></a>示例：Telegraf命令行用法</h2><h3 id="生成Telegraf的配置文件"><a href="#生成Telegraf的配置文件" class="headerlink" title="生成Telegraf的配置文件"></a>生成Telegraf的配置文件</h3><p>使用config命令，打印输出配置配置文件（也可以使用--sample-config参数），将输出重定向到一个文件中。</p>
+<p>telegraf config &gt; telegraf.conf</p>
+<h3 id="生成仅定义了CPU输入和InfluxDB输出的配置文件"><a href="#生成仅定义了CPU输入和InfluxDB输出的配置文件" class="headerlink" title="生成仅定义了CPU输入和InfluxDB输出的配置文件"></a>生成仅定义了CPU输入和InfluxDB输出的配置文件</h3><p>telegraf --input-filter cpu --output-filter influxdb config</p>
+<h3 id="运行单个的Telegraf配置文件并打印到控制台"><a href="#运行单个的Telegraf配置文件并打印到控制台" class="headerlink" title="运行单个的Telegraf配置文件并打印到控制台"></a>运行单个的Telegraf配置文件并打印到控制台</h3><p>使用test模式，output插件不会被启用。</p>
+<p>telegraf --config example01.conf --test</p>
+<p><img src="/2025/03/27/cloud/telegraf/media/image24.png" alt="图片包含 图形用户界面
+描述已自动生成">{width&#x3D;”5.768055555555556in”<br>height&#x3D;”1.2319444444444445in”}</p>
+<h3 id="运行一个配置文件中的所有插件"><a href="#运行一个配置文件中的所有插件" class="headerlink" title="运行一个配置文件中的所有插件"></a>运行一个配置文件中的所有插件</h3><p>telegraf --config telegraf.conf</p>
+<h3 id="运行一个包含CPU和内存输入插件以及InfluxDB输出插件的Telegraf实例"><a href="#运行一个包含CPU和内存输入插件以及InfluxDB输出插件的Telegraf实例" class="headerlink" title="运行一个包含CPU和内存输入插件以及InfluxDB输出插件的Telegraf实例"></a>运行一个包含CPU和内存输入插件以及InfluxDB输出插件的Telegraf实例</h3><p>telegraf --input-filter cpu:mem --output-filter influxdb</p>
+<h3 id="运行Telegraf时开启pprof"><a href="#运行Telegraf时开启pprof" class="headerlink" title="运行Telegraf时开启pprof"></a>运行Telegraf时开启pprof</h3><p>telegraf --config telegraf.conf --pprof-addr localhost:6060</p>
+<p>运行上述代码后，可在浏览器访问hadoop102:6060来观察进程运行的性能信息。</p>
+<p><img src="/2025/03/27/cloud/telegraf/media/image25.png" alt="图片包含 图形用户界面
+描述已自动生成">{width&#x3D;”5.768055555555556in”<br>height&#x3D;”2.3201388888888888in”}</p>
+<h1 id="示例3：使用远程配置"><a href="#示例3：使用远程配置" class="headerlink" title="示例3：使用远程配置"></a>示例3：使用远程配置</h1><p>Telegraf的--cofnig参数还能指定一个URL，让telegraf通过网络远程获取配置文件。</p>
+<h2 id="使用python自带的http-server快速搭建静态文件服务"><a href="#使用python自带的http-server快速搭建静态文件服务" class="headerlink" title="使用python自带的http.server快速搭建静态文件服务"></a>使用python自带的http.server快速搭建静态文件服务</h2><p>cd 到我们放配置文件的目录 &#x2F;opt&#x2F;module&#x2F;telegraf_conf<br>使用下面的命令，快速开启一个静态文件服务。</p>
+<p>python3 -m http.server</p>
+<p>默认情况下，它监听8000端口，并允许外部访问。</p>
+<p><img src="/2025/03/27/cloud/telegraf/media/image26.png">{width&#x3D;”5.768055555555556in”<br>height&#x3D;”0.3972222222222222in”}</p>
+<h2 id="运行Telegraf"><a href="#运行Telegraf" class="headerlink" title="运行Telegraf"></a>运行Telegraf</h2><p>接下来，我们可以尝试使用这个服务来获取配置文件。</p>
+<p>使用下面的命令运行Telegraf</p>
+<p>telegraf --config <a target="_blank" rel="noopener" href="http://hadoop102:8080/example01.conf">http://hadoop102:8080/example01.conf</a></p>
+<p>可以看到，我们成功获取了配置文件，而且数据也能够正常输出。</p>
+<p><img src="/2025/03/27/cloud/telegraf/media/image27.png" alt="文本
+描述已自动生成">{width&#x3D;”5.768055555555556in”<br>height&#x3D;”1.7354166666666666in”}</p>
+<p>但是这种方式不能监听配置的变化。</p>
+<h1 id="配置文件参数"><a href="#配置文件参数" class="headerlink" title="配置文件参数"></a>配置文件参数</h1><h2 id="Agent配置"><a href="#Agent配置" class="headerlink" title="Agent配置"></a>Agent配置</h2><p>+———————–+————+——————————–+<br>| 配置名                | 直译       | 解释                           |<br>+&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;+&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;+:&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;+<br>| interval              | 间隔       | 所有                           |<br>|                       |            | 的input组件采集数据的间隔时间  |<br>+———————–+————+——————————–+<br>| round_interval        | 间隔取整   | 将采集的间隔时                 |<br>|                       |            | 间取整。比如，如果interval设置 |<br>|                       |            | 为10s，但我们在1分02秒启动了te |<br>|                       |            | legraf服务，那么采集的时间会取 |<br>|                       |            | 整到1分10秒，1分20秒，1分30秒  |<br>+———————–+————+——————————–+<br>| metric_batch_size     | 指标       | telegraf一批次                 |<br>|                       | 批大小     | 从output组件向外发送数据的大小 |<br>|                       |            | ，网络不稳定时可以减小此参数。 |<br>+———————–+————+——————————–+<br>| metric_buffer_limit   | 指标       | tele                           |<br>|                       | 缓冲区     | graf会为每个output插件创建一个 |<br>|                       |            | 缓冲区，来缓存指标数据，并在ou |<br>|                       |            | tput成功将数据发送后，将成功发 |<br>|                       |            | 送的数据从缓冲区删除。所以，me |<br>|                       |            | triac_buffer_limit参数应该至少 |<br>|                       |            | 是metric_batch_size参数的两倍  |<br>+———————–+————+——————————–+<br>| collection_jetter     | 采集抖动   | 这个参数会                     |<br>|                       |            | 在采集的时间点上加一个随机的抖 |<br>|                       |            | 动，这样可以避免很多插件同时查 |<br>|                       |            | 询一些消耗资源的指标，从而对被 |<br>|                       |            | 观测的系统产生不可忽视的影响。 |<br>+———————–+————+——————————–+<br>| flush_interval        | 刷新间隔   | 所有output的输出               |<br>|                       |            | 间隔，这个参数不应该设的比int  |<br>|                       |            | erval（所有input组件的采集间隔 |<br>|                       |            | ）小。最大的实际发送间隔将会是 |<br>+———————–+————+——————————–+<br>| flush_jitter          | 刷新抖动   | 对output的输出时间加上一个随   |<br>|                       |            | 机的抖动，这主要是为了避免大量 |<br>|                       |            | 的Telegraf实例在同样的时间同时 |<br>|                       |            | 执行写入操作，出现较大的写入峰 |<br>|                       |            | 值。比如，flush_jitter设为5s， |<br>|                       |            | flush_interval设为10s意味着会  |<br>|                       |            | 在10~15秒的时候进行一次输出。 |<br>+———————–+————+——————————–+<br>| precision             | 精度       | 精度配置确定从输入插件         |<br>|                       |            | 接收的点中保留多少时间戳精度。 |<br>|                       |            | 所有传入的时间戳都被阶段为给定 |<br>|                       |            | 的精度。然后Telegraf用零填充截 |<br>|                       |            | 断的时间戳以创建纳秒时间戳，输 |<br>|                       |            | 出插件将以纳秒为单位发出时间戳 |<br>|                       |            | 。有效的精度为ns，us，ms和s。  |<br>|                       |            |                                |<br>|                       |            | 例如：如果精                   |<br>|                       |            | 度设置为ms，则纳秒时间戳14800  |<br>|                       |            | 00000123456789将被截断为148000 |<br>|                       |            | 0000123毫秒精度，然后用0填充以 |<br>|                       |            | 生成新的，不太精确的纳秒时间戳 |<br>|                       |            | 1480000000123000000。输出插件  |<br>|                       |            | 不会进一步更改时间戳。如果是服 |<br>|                       |            | 务型的输出插件会忽略这个设置。 |<br>+———————–+————+——————————–+<br>| logfile               | 日志文件   | 自定义的日志名称，             |<br>+———————–+————+——————————–+<br>| debug                 | 调试       | 使用debug模式运行Telegraf      |<br>+———————–+————+——————————–+<br>| quiet                 | 安静       | 安静地                         |<br>|                       |            | 运行Telegraf，只会提示错误信息 |<br>+———————–+————+——————————–+<br>| logtarget             | 日志目标   | 该配置用来空值日志             |<br>|                       |            | 的目标。它可以是&quot;file&quot;，&quot;s  |<br>|                       |            | tderr&quot;之一，如果是在Windows系 |<br>|                       |            | 统上，它还可以设为&quot;eventlog&quot; |<br>|                       |            | 。设置为&quot;file&quot;时，输入文件由 |<br>|                       |            | logfile 配置项决定。           |<br>+———————–+————+——————————–+<br>| logfile               | 日志文件   | 指定logtarget指定为&quot;fi        |<br>|                       |            | le&quot;时的日志文件名。如果设置为 |<br>|                       |            | 空，那么日志会输出到stderr上。 |<br>+———————–+————+——————————–+<br>| logf                  | 日         | 日志轮转间隔，多长时间         |<br>| ile_rotation_interval | 志轮转间隔 | 开启一个新的日志文件，如果设置 |<br>|                       |            | 为0，那么就不按时间进行轮转。  |<br>+———————–+————+——————————–+<br>| logf                  | 日         | 当正在使用的日志文件           |<br>| ile_rotation_max_size | 志轮转大小 | 的大小超过该值时，开启一个新的 |<br>|                       |            | 日志文件。当设置为0，表示不按  |<br>|                       |            | 照日志文件的大小进行日志轮转。 |<br>+———————–+————+——————————–+<br>| logfile_              | 最大       | 最大的日志归档数量，每一       |<br>| rotation_max_archives | 轮转存档数 | 次日志轮转发生时，都会产生一个 |<br>|                       |            | 新的正在使用的日志文件，和一个 |<br>|                       |            | 归档（旧的不再使用的日志文件） |<br>+———————–+————+——————————–+<br>| log_with_timezone     | 日志时区   | 设置日志记录要使用的时区，或   |<br>|                       |            | 者设为&quot;local&quot;即为本地时间。  |<br>+———————–+————+——————————–+<br>| hostname              | 主机名     | 覆盖默认的主机名，             |<br>|                       |            | 如果不设该值，那么os.Hostname( |<br>|                       |            | )的返回值。（o                 |<br>|                       |            | s.Hostname）是Go语言标准库中的 |<br>|                       |            | 方法，可以获取当前机器的名称。 |<br>+———————–+————+——————————–+<br>| omit_hostname         | 忽略主机名 | telegraf                       |<br>|                       |            | 输出的指标数据中，有一个默认的 |<br>+———————–+————+——————————–+</p>
+<h2 id="Input-输入插件通用配置"><a href="#Input-输入插件通用配置" class="headerlink" title="Input 输入插件通用配置"></a>Input 输入插件通用配置</h2><p>+————-+———+———————————————+<br>| 配置名      | 直译    | 解释                                        |<br>+&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;+&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;+&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;+<br>| alias       | 别名    | 给一个input插件实例进行命名。               |<br>+————-+———+———————————————+<br>| interval    | 间隔    | 单                                          |<br>|             |         | 个Input组件收集指标的间隔时间，插件中的int  |<br>|             |         | erval配置比全局的interval配置的优先级要高。 |<br>+————-+———+———————————————+<br>| precision   | 精度    | 单个Input组件的时间精度，覆盖[agent\       |<br>|             |         | ]中的配置。精度配置确定从输出插件接收的点中 |<br>|             |         | 保留多少时间戳精度。所有传入的时间戳都被阶  |<br>|             |         | 段为给定的精度。然后Telegraf用零填充截断的  |<br>|             |         | 时间戳以创建纳秒时间戳，输出插件将以纳秒为  |<br>|             |         | 单位发出时间戳。有效的精度为ns，us，ms和s。 |<br>|             |         |                                             |<br>|             |         | 例如：                                      |<br>|             |         | 如果精度设置为ms，则纳秒时间戳1480000000123 |<br>|             |         | 456789将被截断为1480000000123毫秒精度，然后 |<br>|             |         | 用0填充以生成新的，不太精确的纳秒时间戳1480 |<br>|             |         | 000000123000000。输出插件不会进一步更改时间 |<br>|             |         | 戳。如果是服务型的输出插件会忽略这个设置。  |<br>+————-+———+———————————————+<br>| collec      | 采      | 单个Input组件的采集抖动                     |<br>| tion_jitter | 集抖动  |                                             |<br>+————-+———+———————————————+<br>| na          | 重命名  | 覆盖原来的指标名称，默认值为input组件的名称 |<br>| me_override |         |                                             |<br>+————-+———+———————————————+<br>| name_prefix | 名      | 指定要附加到度量值名称的前缀                |<br>|             | 称前缀  |                                             |<br>+————-+———+———————————————+<br>| name_suffix | 名      | 指定要附加到度量值名称的后缀                |<br>|             | 称后缀  |                                             |<br>+————-+———+———————————————+<br>| tags        | 标签集  | 给当前input数据添加新的标签集。             |<br>+————-+———+———————————————+</p>
+<h2 id="Output-输出插件通用配置"><a href="#Output-输出插件通用配置" class="headerlink" title="Output 输出插件通用配置"></a>Output 输出插件通用配置</h2><hr>
+<p>  配置名                直译             解释</p>
+<hr>
+<p>  alias                 别名             给一个output插件起一个别名</p>
+<p>  flush_interval        刷新间隔         单个output插件的输出间隔（覆盖全局配置）</p>
+<p>  flush_jitter          刷新抖动         单个output插件的输出时间抖动（覆盖全局配置）</p>
+<p>  metric_batch_size     指标批次大小     一次最多发送多少条数据（会覆盖全局配置）</p>
+<p>  metric_buffer_limit   指标缓冲区上限   未发送数据的缓冲区（会覆盖全局配置）</p>
+<p>  name_override         重命名           覆盖原来的指标名称，默认值为output的名称（我怀疑官网说错了）</p>
+<p>  name_prefix           名称前缀         指标名称的前缀</p>
+<h2 id="name-suffix-名称后缀-指标名称的后缀"><a href="#name-suffix-名称后缀-指标名称的后缀" class="headerlink" title="  name_suffix           名称后缀         指标名称的后缀"></a>  name_suffix           名称后缀         指标名称的后缀</h2><h2 id="Aggregator-聚合插件通用配置"><a href="#Aggregator-聚合插件通用配置" class="headerlink" title="Aggregator 聚合插件通用配置"></a>Aggregator 聚合插件通用配置</h2><hr>
+<p>  配置名          直译       解释</p>
+<hr>
+<p>  alias           别名       给一个Aggregator插件的实例命名</p>
+<p>  period          期间       聚合器对从now-period 到now 之间的数据进行聚合。</p>
+<p>  delay           延迟       聚合时进行一个小的延迟，防止在对时间戳为1000的数据进行聚合时，上游还在正在发送时间戳为1000的数据</p>
+<p>  grace           宽限       迟到多久的数据可以进入下一个聚合周期。</p>
+<p>  drop_original   删除源     默认为false，如果设置为true，袁术的指标数据就会从流水线上删除，不会发给下游的output插件</p>
+<p>  name_override   名称覆盖   给数据的指标名称重新命名</p>
+<p>  name_prefix     名称前缀   给指标名称加一个前缀</p>
+<p>  name_suffix     名称后缀   给指标名称加一个后缀</p>
+<h2 id="tags-标记-添加额外的标签集"><a href="#tags-标记-添加额外的标签集" class="headerlink" title="  tags            标记       添加额外的标签集"></a>  tags            标记       添加额外的标签集</h2><h2 id="Processor-处理插件通用配置"><a href="#Processor-处理插件通用配置" class="headerlink" title="Processor 处理插件通用配置"></a>Processor 处理插件通用配置</h2><hr>
+<p>  配置名        直译     解释</p>
+<hr>
+<p>  alias         别名     给Processor插件的示例起一个名字</p>
+<h2 id="order-顺序-这是处理器的执行顺序，如果没有制定，那么执行器的顺序就是随机的。注意！不是按照配置文件的先后顺序来的，而是随机。"><a href="#order-顺序-这是处理器的执行顺序，如果没有制定，那么执行器的顺序就是随机的。注意！不是按照配置文件的先后顺序来的，而是随机。" class="headerlink" title="  order         顺序     这是处理器的执行顺序，如果没有制定，那么执行器的顺序就是随机的。注意！不是按照配置文件的先后顺序来的，而是随机。"></a>  order         顺序     这是处理器的执行顺序，如果没有制定，那么执行器的顺序就是随机的。注意！不是按照配置文件的先后顺序来的，而是随机。</h2><h2 id="Metric-filtering-指标过滤器通用配置"><a href="#Metric-filtering-指标过滤器通用配置" class="headerlink" title="Metric filtering 指标过滤器通用配置"></a>Metric filtering 指标过滤器通用配置</h2><p>指标过滤器的配置可以卸载input，output</p>
+<hr>
+<p>  配置名         直译       解释</p>
+<hr>
+<p>  namepass       名称通过   一个glob模式的字符串数组，仅有measurement名称与这个配置的参数能匹配的指标数据可以进入此插件。</p>
+<p>  namedrop       名称删除   一个glob模式的字符串数组，能匹配上measurement的数据直接删除。</p>
+<p>  fieldpass      字段通过   一个glob模式的字符串数组，只有能匹配上的字段才能通过</p>
+<p>  fielddrop      字段删除   一个glob模式的字符串数组，如果匹配上了就删除这个资源。</p>
+<p>  tagpass        标签通过   一个glob模式的字符串数组，tag能匹配上的数据才能通过</p>
+<p>  tagdrop        标签删除   一个glob模式的字符串数组，tag能匹配上的数据会被删除</p>
+<p>  taginclude     标签包含   一个glob模式的字符串数据，能匹配到其中一个的整条数据才能通过。</p>
+<h2 id="tagexclude-标签不含-tageinclude的反函数"><a href="#tagexclude-标签不含-tageinclude的反函数" class="headerlink" title="  tagexclude     标签不含   tageinclude的反函数"></a>  tagexclude     标签不含   tageinclude的反函数</h2><p>注意！由于YOML的解析方式，过滤器参数必须在插件定义的末尾来进行定义，负责后续的插件配置项将被截石位<br>tagpass或者tagdrop的一部分。</p>
+<h2 id="Glob用法（参考资料）"><a href="#Glob用法（参考资料）" class="headerlink" title="Glob用法（参考资料）"></a>Glob用法（参考资料）</h2><blockquote>
+<p>glob起源于Unix上的bash shell。我们知道的bash<br>shell中的一个功能强大的命令，rm-rf &#x2F;* 其中 *<br>就是glob风格的模式匹配，通常<br>glob最常用的地方就是匹配文件名称。它在某些方面与正则表达式相同，但是他们各自有着不同的语法和约定。</p>
+<p>详细内容可以参考:<br>[<a target="_blank" rel="noopener" href="https://github.com/whinc/whinc.github.io/issues/18]%7B.underline%7D">https://github.com/whinc/whinc.github.io/issues/18]{.underline}</a></p>
+</blockquote>
+<p>以下是表达式的说明。</p>
+<h3 id="基础语法"><a href="#基础语法" class="headerlink" title="基础语法"></a>基础语法</h3><p>相比正则表达式大量的元字符，glob模式中元字符极少，所以掌握起来很快，glob默认不匹配隐藏文件（以点<br>. 开头的文件或目录），下面是glob的语法</p>
+<hr>
+<p>  <strong>通配符</strong>            <strong>描述</strong>                         <strong>示例</strong>    <strong>匹配</strong>           <strong>不匹配</strong></p>
+<hr>
+<p>  *                    匹配0个或多个字符，包含空串      Law*       Law, Laws和Lawer   La, aw</p>
+<p>  ?                     匹配1个字符                      ?at         cat, bat           at</p>
+<p>  [abc]               匹配括号内字符集合中的单个字符   [cb]at    cat, bat           at, bcat</p>
+<p>  [a-z]               匹配括号内字符范围中的单个字符   [a-z]at   aat, bat, zat      at, bcat, Bat</p>
+<p>  [^abc]或[!abc]   匹配括号内字符集合中的单个字符   [cb]at    cat, bat           at, bcat</p>
+<h2 id="a-z-或-a-z-匹配括号内字符范围中的单个字符-a-z-at-aat-bat-zat-at-bcat-Bat"><a href="#a-z-或-a-z-匹配括号内字符范围中的单个字符-a-z-at-aat-bat-zat-at-bcat-Bat" class="headerlink" title="  [^a-z]或[!a-z]   匹配括号内字符范围中的单个字符   [a-z]at   aat, bat, zat      at, bcat, Bat"></a>  [^a-z]或[!a-z]   匹配括号内字符范围中的单个字符   [a-z]at   aat, bat, zat      at, bcat, Bat</h2><p>在bash命令行中 [!abc]需要转义成[\!abc]</p>
+<h3 id="扩展语法"><a href="#扩展语法" class="headerlink" title="扩展语法"></a>扩展语法</h3><p>除了基础语法外，bash还支持glob的一些扩展语法，主要包含三种。</p>
+<p>Brace Expansion</p>
+<p>globstar</p>
+<p>extglob</p>
+<blockquote>
+<p>三种拓展语法的定义和描述如下：</p>
+</blockquote>
+<p>+————–+———-+—————+———–+————–+<br>| <strong>通配符</strong>   | <strong>描述</strong> | <strong>示例</strong>      | <strong>匹配</strong>  | <strong>不匹配</strong>   |<br>+:&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;+:&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;+:&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;+:&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;+:&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;+<br>| {x, y, ...} | Brace    | a.            | a.png,    |              |<br>|              | Exp      | {png,jp{,e}g} |           |              |<br>|              | ansion， |               | a.jpg,    |              |<br>|              | 展开花括 |               |           |              |<br>|              | 号内容， |               | a.jpeg    |              |<br>|              | 支持展开 |               |           |              |<br>|              | 嵌套括号 |               |           |              |<br>+————–+———-+—————+———–+————–+<br>| **         | gl       | src&#x2F;**      | s         | sr           |<br>|              | obstar， |               | rc&#x2F;a.js,  | c&#x2F;.hide&#x2F;a.js |<br>|              | 匹配所有 |               |           |              |<br>|              | 文件和任 |               | src       |              |<br>|              | 意层目录 |               | &#x2F;b&#x2F;a.js,  |              |<br>|              | ，如果* |               |           |              |<br>|              | *后面紧 |               | src&#x2F;b&#x2F;    |              |<br>|              | 接着&#x2F;则  |               |           |              |<br>|              | 只匹配目 |               |           |              |<br>|              | 录，不含 |               |           |              |<br>|              | 隐藏目录 |               |           |              |<br>+————–+———-+—————+———–+————–+<br>| ?(p          | 匹配0次  | a.?(txt|bin) | a.,       | a            |<br>| attern-list) | 或1次给  |               |           |              |<br>|              | 定的模式 |               | a.txt,    |              |<br>|              |          |               |           |              |<br>|              |          |               | a.bin     |              |<br>+————–+———-+—————+———–+————–+<br>| *(p         | 匹配0次  | a             | a.,       | a            |<br>| attern-list) | 或多次给 | .*(txt|bin) |           |              |<br>|              | 定的模式 |               | a.txt,    |              |<br>|              |          |               |           |              |<br>|              |          |               | a.bin,    |              |<br>|              |          |               |           |              |<br>|              |          |               | a.txtbin  |              |<br>+————–+———-+—————+———–+————–+<br>| +(p          | 匹配1次  | a.+(txt|bin) | a.txt,    | a., a        |<br>| attern-list) | 或多次给 |               |           |              |<br>|              | 定的模式 |               | a.bin,    |              |<br>|              |          |               |           |              |<br>|              |          |               | a.txtbin  |              |<br>+————–+———-+—————+———–+————–+<br>| @(p          | 匹配给   | a.@(txt|bin) | a.txt,    | a.,          |<br>| attern-list) | 定的模式 |               |           |              |<br>|              |          |               | a.bin     |  a.txtbin    |<br>+————–+———-+—————+———–+————–+<br>| !(p          | 匹配非给 | a.!(txt|bin) | a.,       | a.txt,       |<br>| attern-list) | 定的模式 |               |           |              |<br>|              |          |               | a.txtbin  |  a.bin       |<br>+————–+———-+—————+———–+————–+</p>
+<p>pattern-list是一组以 | 作分隔符的模式集合，例如 abc | a?c | ac*</p>
+<h3 id="与regexp的差异"><a href="#与regexp的差异" class="headerlink" title="与regexp的差异"></a>与regexp的差异</h3><p>glob<br>模式主要用于匹配文件路径，当然也可以用于匹配字符串，不过在匹配字符串的能力上比<br>regexp 要弱很多。由于 glob 模式和 regexp<br>存在相同的元字符，但是含义却不同，容易导致混淆，为了避免混淆，下面将<br>glob 模式转换成对应的 regexp 表示，以便区分他们的异同点。</p>
+<hr>
+<p>  <strong>glob</strong>         <strong>regexp</strong>          <strong>精确的 regexp</strong></p>
+<hr>
+<p>  *               .*                 ^(?!\.)[^\&#x2F;]*?$</p>
+<p>  ?                .                   ^(?!\.)[^\&#x2F;]$</p>
+<h2 id="a-z-a-z-a-z"><a href="#a-z-a-z-a-z" class="headerlink" title="  [a-z]          [a-z]             ^[a-z]$"></a>  [a-z]          [a-z]             ^[a-z]$</h2><p>glob匹配的是整个字符串，而regexp默认匹配的是子串，regexp如果要匹配整个字符串需显式指定^<br>和 $。正则表达式中的(?!\.)，其表示不匹配隐藏文件。</p>
+<h1 id="Telegraf架构"><a href="#Telegraf架构" class="headerlink" title="Telegraf架构"></a>Telegraf架构</h1><h2 id="责任链设计模式"><a href="#责任链设计模式" class="headerlink" title="责任链设计模式"></a>责任链设计模式</h2><p>Telegraf是典型的Pipeline（流水线或者管道）架构，这种架构使用了责任链设计模式的思想。</p>
+<p><img src="/2025/03/27/cloud/telegraf/media/image28.jpeg" alt="preview">{width&#x3D;”4.851562773403325in”<br>height&#x3D;”3.0320811461067367in”}</p>
+<p>简单来说，这种设计模式的关键点就在”链”这个字上，代码的功能被拆分成一个一个独立的组件，而且能够根据需求，灵活地进行组合。</p>
+<p>设计模式是针对代码来说的，在这里，我们还是把关注点放到Telegraf的Pipeline架构上。</p>
+<h2 id="Pipeline架构"><a href="#Pipeline架构" class="headerlink" title="Pipeline架构"></a>Pipeline架构</h2><p>Telegraf将输出的处理流程抽象为由多个插件组成的流水线。插件和插件之间用管道相连（可以理解为一个先进先出的队列）。这种架构至少能体现出两种优势。</p>
+<ul>
+<li><p>插件和插件之间实现了松耦合，下一个插件可以不用管上一个插件的内部逻辑是怎么实现的。他们只要按照约定好的格式传递数据就行。</p>
+</li>
+<li><p>流程配置化，谁和谁组合的决定可以推迟到运行时决定，而不是开发人员必须在开发时就把各种处理流程写死，相当于交给了用户一堆积木。</p>
+</li>
+</ul>
+<p>通常的pipeline架构，除了要配置插件和组合顺序外，还会包括一层上下文配置，所以最终的常见Pipeline架构是如下图所示的。</p>
+<p><img src="/2025/03/27/cloud/telegraf/media/image29.png" alt="图示
+描述已自动生成">{width&#x3D;”5.768055555555556in”<br>height&#x3D;”1.961111111111111in”}</p>
+<h2 id="Telegraf的实现"><a href="#Telegraf的实现" class="headerlink" title="Telegraf的实现"></a>Telegraf的实现</h2><h3 id="架构角度"><a href="#架构角度" class="headerlink" title="架构角度"></a>架构角度</h3>
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2025/01/10/db/doris/" rel="prev" title="doris">
+      <i class="fa fa-chevron-left"></i> doris
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2025/04/03/k8s/k8s%E4%B8%AD%E5%AF%B9grpc%E6%9C%8D%E5%8A%A1%E8%BF%9B%E8%A1%8C%E5%81%A5%E5%BA%B7%E6%A3%80%E6%9F%A5/" rel="next" title="k8s中对grpc服务进行健康检查">
+      k8s中对grpc服务进行健康检查 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+  </div>
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let activeClass = CONFIG.comments.activeClass;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#tags-%E4%BA%91%E7%9B%91%E6%8E%A7-%E6%8C%87%E6%A0%87%E9%87%87%E9%9B%86"><span class="nav-number">1.</span> <span class="nav-text">tags:- 云监控- 指标采集</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E8%AE%A4%E8%AF%86Telegraf"><span class="nav-number"></span> <span class="nav-text">认识Telegraf</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BB%80%E4%B9%88%E6%98%AFTelegraf"><span class="nav-number">1.</span> <span class="nav-text">什么是Telegraf</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Telegraf%E7%9A%84%E8%83%BD%E5%8A%9B%E4%B8%8E%E7%A4%BE%E5%8C%BA"><span class="nav-number">2.</span> <span class="nav-text">Telegraf的能力与社区</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%AE%89%E8%A3%85%E9%83%A8%E7%BD%B2Telegraf"><span class="nav-number"></span> <span class="nav-text">安装部署Telegraf</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%A4%BA%E4%BE%8B1%EF%BC%9ATelegraf%E5%BF%AB%E9%80%9F%E5%85%A5%E9%97%A8%EF%BC%88%E5%8D%95%E8%BE%93%E5%85%A5%E5%8D%95%E8%BE%93%E5%87%BA%E5%B7%A5%E4%BD%9C%E6%B5%81%EF%BC%89"><span class="nav-number"></span> <span class="nav-text">示例1：Telegraf快速入门（单输入单输出工作流）</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%BC%96%E5%86%99Telegraf%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6"><span class="nav-number">1.</span> <span class="nav-text">编写Telegraf配置文件</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%BF%90%E8%A1%8CTelegraf%E7%A8%8B%E5%BA%8F"><span class="nav-number">2.</span> <span class="nav-text">运行Telegraf程序</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%9F%A5%E8%AF%86%E7%82%B9%E8%AE%B2%E8%A7%A3"><span class="nav-number">3.</span> <span class="nav-text">知识点讲解</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6%E7%9A%84%E5%90%AB%E4%B9%89"><span class="nav-number">3.1.</span> <span class="nav-text">配置文件的含义</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%8E%A7%E5%88%B6%E5%8F%B0%E8%BE%93%E5%87%BA%E5%86%85%E5%AE%B9"><span class="nav-number">3.2.</span> <span class="nav-text">控制台输出内容</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%88%91%E4%BB%AC%E5%A3%B0%E6%98%8E%E4%BA%86%E4%B8%80%E4%B8%AA%E4%BB%80%E4%B9%88%E6%A0%B7%E7%9A%84%E5%B7%A5%E4%BD%9C%E6%B5%81"><span class="nav-number">3.3.</span> <span class="nav-text">我们声明了一个什么样的工作流</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%A4%BA%E4%BE%8B2%EF%BC%9A%E5%90%AF%E7%94%A8%E5%A4%84%E7%90%86%E6%8F%92%E4%BB%B6"><span class="nav-number"></span> <span class="nav-text">示例2：启用处理插件</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%BC%96%E5%86%99Telegraf%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6-1"><span class="nav-number">1.</span> <span class="nav-text">编写Telegraf配置文件</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%BF%90%E8%A1%8CTelegraf%E7%A8%8B%E5%BA%8F-1"><span class="nav-number">2.</span> <span class="nav-text">运行Telegraf程序</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%9C%8B%E7%9C%8B%E5%92%8C%E7%A4%BA%E4%BE%8B1%E7%9A%84%E8%BE%93%E5%87%BA%E6%9C%89%E4%BB%80%E4%B9%88%E4%B8%8D%E5%90%8C"><span class="nav-number">3.</span> <span class="nav-text">看看和示例1的输出有什么不同</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8A%A0%E8%BD%BD%E7%9A%84%E6%8F%92%E4%BB%B6%E4%B8%8D%E5%90%8C"><span class="nav-number">3.1.</span> <span class="nav-text">加载的插件不同</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%95%B0%E6%8D%AE%E7%9A%84%E8%BE%93%E5%87%BA%E5%8F%91%E7%94%9F%E4%BA%86%E5%8F%98%E5%8C%96"><span class="nav-number">3.2.</span> <span class="nav-text">数据的输出发生了变化</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%AD%A6%E4%BC%9A%E4%BD%BF%E7%94%A8%E6%8F%92%E4%BB%B6%E6%96%87%E6%A1%A3"><span class="nav-number"></span> <span class="nav-text">学会使用插件文档</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%A6%82%E4%BD%95%E4%BD%BF%E7%94%A8%E6%8F%92%E4%BB%B6%E6%96%87%E6%A1%A3"><span class="nav-number">1.</span> <span class="nav-text">如何使用插件文档</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%8D%E5%90%8C%E7%89%88%E6%9C%AC%E7%9A%84Telegraf%E6%94%AF%E6%8C%81%E7%9A%84%E6%8F%92%E4%BB%B6%E4%B8%8D%E5%90%8C"><span class="nav-number">1.1.</span> <span class="nav-text">不同版本的Telegraf支持的插件不同</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Telegraf%E6%8F%92%E4%BB%B6%E7%9B%AE%E5%BD%95"><span class="nav-number">1.2.</span> <span class="nav-text">Telegraf插件目录</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%8F%92%E4%BB%B6%E8%BF%87%E6%BB%A4"><span class="nav-number">1.3.</span> <span class="nav-text">插件过滤</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%89%BE%E5%88%B0%E7%9B%B8%E5%BA%94%E6%8F%92%E4%BB%B6%E7%9A%84%E5%B8%AE%E5%8A%A9%E6%96%87%E6%A1%A3"><span class="nav-number">1.4.</span> <span class="nav-text">找到相应插件的帮助文档</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9C%A8%E7%A4%BA%E4%BE%8B%E9%85%8D%E7%BD%AE%E4%B8%AD%E4%B9%9F%E5%8F%AF%E4%BB%A5%E8%8E%B7%E5%8F%96%E6%9C%89%E5%B8%AE%E5%8A%A9%E7%9A%84%E4%BF%A1%E6%81%AF"><span class="nav-number">2.</span> <span class="nav-text">在示例配置中也可以获取有帮助的信息</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Telegraf%E5%86%85%E9%83%A8%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%EF%BC%88InfluxDB%E8%A1%8C%E5%8D%8F%E8%AE%AE%EF%BC%89"><span class="nav-number"></span> <span class="nav-text">Telegraf内部数据结构（InfluxDB行协议）</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#measurement%EF%BC%88%E6%B5%8B%E9%87%8F%E5%90%8D%E7%A7%B0%EF%BC%89"><span class="nav-number">1.</span> <span class="nav-text">measurement（测量名称）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Tag-Set%EF%BC%88%E6%A0%87%E7%AD%BE%E9%9B%86%EF%BC%89"><span class="nav-number">2.</span> <span class="nav-text">Tag Set（标签集）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Field-Set%EF%BC%88%E5%AD%97%E6%AE%B5%E9%9B%86%EF%BC%89"><span class="nav-number">3.</span> <span class="nav-text">Field Set（字段集）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Timestamp%EF%BC%88%E6%97%B6%E9%97%B4%E6%88%B3%EF%BC%89"><span class="nav-number">4.</span> <span class="nav-text">Timestamp（时间戳）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%A9%BA%E6%A0%BC"><span class="nav-number">5.</span> <span class="nav-text">空格</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8D%8F%E8%AE%AE%E4%B8%AD%E7%9A%84%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B%E5%8F%8A%E5%85%B6%E6%A0%BC%E5%BC%8F"><span class="nav-number">6.</span> <span class="nav-text">协议中的数据类型及其格式</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Float%EF%BC%88%E6%B5%AE%E7%82%B9%E6%95%B0%EF%BC%89"><span class="nav-number">6.1.</span> <span class="nav-text">Float（浮点数）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Integer%EF%BC%88%E6%95%B4%E6%95%B0%EF%BC%89"><span class="nav-number">6.2.</span> <span class="nav-text">Integer（整数）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#UInteger%EF%BC%88%E6%97%A0%E7%AC%A6%E5%8F%B7%E6%95%B4%E6%95%B0%EF%BC%89"><span class="nav-number">6.3.</span> <span class="nav-text">UInteger（无符号整数）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#String%EF%BC%88%E5%AD%97%E7%AC%A6%E4%B8%B2%EF%BC%89"><span class="nav-number">6.4.</span> <span class="nav-text">String（字符串）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Boolean%EF%BC%88%E5%B8%83%E5%B0%94%E5%80%BC%EF%BC%89"><span class="nav-number">6.5.</span> <span class="nav-text">Boolean（布尔值）</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#False-f-F-false-False-FALSE"><span class="nav-number">7.</span> <span class="nav-text">  False                               f, F, false, False, FALSE</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Unix-Timestamp%EF%BC%88Unix-%E6%97%B6%E9%97%B4%E6%88%B3%EF%BC%89"><span class="nav-number">7.1.</span> <span class="nav-text">Unix Timestamp（Unix 时间戳）</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%B3%A8%E9%87%8A"><span class="nav-number">8.</span> <span class="nav-text">注释</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Telegraf%E5%91%BD%E4%BB%A4%E8%A1%8C%E7%9A%84%E4%BD%BF%E7%94%A8"><span class="nav-number"></span> <span class="nav-text">Telegraf命令行的使用</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%91%BD%E4%BB%A4"><span class="nav-number">1.</span> <span class="nav-text">命令</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#version-%E5%B0%86%E7%89%88%E6%9C%AC%E5%8F%B7%E6%89%93%E5%8D%B0%E5%88%B0%E6%A0%87%E5%87%86%E8%BE%93%E5%87%BA%EF%BC%88stdout-%E6%8E%A7%E5%88%B6%E5%8F%B0%EF%BC%89"><span class="nav-number">2.</span> <span class="nav-text">  version   将版本号打印到标准输出（stdout 控制台）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%80%89%E9%A1%B9"><span class="nav-number">3.</span> <span class="nav-text">选项</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#version-%E6%89%93%E5%8D%B0Telegraf%E7%9A%84%E7%89%88%E6%9C%AC%E5%8F%B7"><span class="nav-number">4.</span> <span class="nav-text">  --version                         打印Telegraf的版本号</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%A4%BA%E4%BE%8B%EF%BC%9ATelegraf%E5%91%BD%E4%BB%A4%E8%A1%8C%E7%94%A8%E6%B3%95"><span class="nav-number">5.</span> <span class="nav-text">示例：Telegraf命令行用法</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%94%9F%E6%88%90Telegraf%E7%9A%84%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6"><span class="nav-number">5.1.</span> <span class="nav-text">生成Telegraf的配置文件</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%94%9F%E6%88%90%E4%BB%85%E5%AE%9A%E4%B9%89%E4%BA%86CPU%E8%BE%93%E5%85%A5%E5%92%8CInfluxDB%E8%BE%93%E5%87%BA%E7%9A%84%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6"><span class="nav-number">5.2.</span> <span class="nav-text">生成仅定义了CPU输入和InfluxDB输出的配置文件</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%BF%90%E8%A1%8C%E5%8D%95%E4%B8%AA%E7%9A%84Telegraf%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6%E5%B9%B6%E6%89%93%E5%8D%B0%E5%88%B0%E6%8E%A7%E5%88%B6%E5%8F%B0"><span class="nav-number">5.3.</span> <span class="nav-text">运行单个的Telegraf配置文件并打印到控制台</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%BF%90%E8%A1%8C%E4%B8%80%E4%B8%AA%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6%E4%B8%AD%E7%9A%84%E6%89%80%E6%9C%89%E6%8F%92%E4%BB%B6"><span class="nav-number">5.4.</span> <span class="nav-text">运行一个配置文件中的所有插件</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%BF%90%E8%A1%8C%E4%B8%80%E4%B8%AA%E5%8C%85%E5%90%ABCPU%E5%92%8C%E5%86%85%E5%AD%98%E8%BE%93%E5%85%A5%E6%8F%92%E4%BB%B6%E4%BB%A5%E5%8F%8AInfluxDB%E8%BE%93%E5%87%BA%E6%8F%92%E4%BB%B6%E7%9A%84Telegraf%E5%AE%9E%E4%BE%8B"><span class="nav-number">5.5.</span> <span class="nav-text">运行一个包含CPU和内存输入插件以及InfluxDB输出插件的Telegraf实例</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%BF%90%E8%A1%8CTelegraf%E6%97%B6%E5%BC%80%E5%90%AFpprof"><span class="nav-number">5.6.</span> <span class="nav-text">运行Telegraf时开启pprof</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%A4%BA%E4%BE%8B3%EF%BC%9A%E4%BD%BF%E7%94%A8%E8%BF%9C%E7%A8%8B%E9%85%8D%E7%BD%AE"><span class="nav-number"></span> <span class="nav-text">示例3：使用远程配置</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8python%E8%87%AA%E5%B8%A6%E7%9A%84http-server%E5%BF%AB%E9%80%9F%E6%90%AD%E5%BB%BA%E9%9D%99%E6%80%81%E6%96%87%E4%BB%B6%E6%9C%8D%E5%8A%A1"><span class="nav-number">1.</span> <span class="nav-text">使用python自带的http.server快速搭建静态文件服务</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%BF%90%E8%A1%8CTelegraf"><span class="nav-number">2.</span> <span class="nav-text">运行Telegraf</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6%E5%8F%82%E6%95%B0"><span class="nav-number"></span> <span class="nav-text">配置文件参数</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Agent%E9%85%8D%E7%BD%AE"><span class="nav-number">1.</span> <span class="nav-text">Agent配置</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Input-%E8%BE%93%E5%85%A5%E6%8F%92%E4%BB%B6%E9%80%9A%E7%94%A8%E9%85%8D%E7%BD%AE"><span class="nav-number">2.</span> <span class="nav-text">Input 输入插件通用配置</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Output-%E8%BE%93%E5%87%BA%E6%8F%92%E4%BB%B6%E9%80%9A%E7%94%A8%E9%85%8D%E7%BD%AE"><span class="nav-number">3.</span> <span class="nav-text">Output 输出插件通用配置</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#name-suffix-%E5%90%8D%E7%A7%B0%E5%90%8E%E7%BC%80-%E6%8C%87%E6%A0%87%E5%90%8D%E7%A7%B0%E7%9A%84%E5%90%8E%E7%BC%80"><span class="nav-number">4.</span> <span class="nav-text">  name_suffix           名称后缀         指标名称的后缀</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Aggregator-%E8%81%9A%E5%90%88%E6%8F%92%E4%BB%B6%E9%80%9A%E7%94%A8%E9%85%8D%E7%BD%AE"><span class="nav-number">5.</span> <span class="nav-text">Aggregator 聚合插件通用配置</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#tags-%E6%A0%87%E8%AE%B0-%E6%B7%BB%E5%8A%A0%E9%A2%9D%E5%A4%96%E7%9A%84%E6%A0%87%E7%AD%BE%E9%9B%86"><span class="nav-number">6.</span> <span class="nav-text">  tags            标记       添加额外的标签集</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Processor-%E5%A4%84%E7%90%86%E6%8F%92%E4%BB%B6%E9%80%9A%E7%94%A8%E9%85%8D%E7%BD%AE"><span class="nav-number">7.</span> <span class="nav-text">Processor 处理插件通用配置</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#order-%E9%A1%BA%E5%BA%8F-%E8%BF%99%E6%98%AF%E5%A4%84%E7%90%86%E5%99%A8%E7%9A%84%E6%89%A7%E8%A1%8C%E9%A1%BA%E5%BA%8F%EF%BC%8C%E5%A6%82%E6%9E%9C%E6%B2%A1%E6%9C%89%E5%88%B6%E5%AE%9A%EF%BC%8C%E9%82%A3%E4%B9%88%E6%89%A7%E8%A1%8C%E5%99%A8%E7%9A%84%E9%A1%BA%E5%BA%8F%E5%B0%B1%E6%98%AF%E9%9A%8F%E6%9C%BA%E7%9A%84%E3%80%82%E6%B3%A8%E6%84%8F%EF%BC%81%E4%B8%8D%E6%98%AF%E6%8C%89%E7%85%A7%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6%E7%9A%84%E5%85%88%E5%90%8E%E9%A1%BA%E5%BA%8F%E6%9D%A5%E7%9A%84%EF%BC%8C%E8%80%8C%E6%98%AF%E9%9A%8F%E6%9C%BA%E3%80%82"><span class="nav-number">8.</span> <span class="nav-text">  order         顺序     这是处理器的执行顺序，如果没有制定，那么执行器的顺序就是随机的。注意！不是按照配置文件的先后顺序来的，而是随机。</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Metric-filtering-%E6%8C%87%E6%A0%87%E8%BF%87%E6%BB%A4%E5%99%A8%E9%80%9A%E7%94%A8%E9%85%8D%E7%BD%AE"><span class="nav-number">9.</span> <span class="nav-text">Metric filtering 指标过滤器通用配置</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#tagexclude-%E6%A0%87%E7%AD%BE%E4%B8%8D%E5%90%AB-tageinclude%E7%9A%84%E5%8F%8D%E5%87%BD%E6%95%B0"><span class="nav-number">10.</span> <span class="nav-text">  tagexclude     标签不含   tageinclude的反函数</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Glob%E7%94%A8%E6%B3%95%EF%BC%88%E5%8F%82%E8%80%83%E8%B5%84%E6%96%99%EF%BC%89"><span class="nav-number">11.</span> <span class="nav-text">Glob用法（参考资料）</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%9F%BA%E7%A1%80%E8%AF%AD%E6%B3%95"><span class="nav-number">11.1.</span> <span class="nav-text">基础语法</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#a-z-%E6%88%96-a-z-%E5%8C%B9%E9%85%8D%E6%8B%AC%E5%8F%B7%E5%86%85%E5%AD%97%E7%AC%A6%E8%8C%83%E5%9B%B4%E4%B8%AD%E7%9A%84%E5%8D%95%E4%B8%AA%E5%AD%97%E7%AC%A6-a-z-at-aat-bat-zat-at-bcat-Bat"><span class="nav-number">12.</span> <span class="nav-text">  [^a-z]或[!a-z]   匹配括号内字符范围中的单个字符   [a-z]at   aat, bat, zat      at, bcat, Bat</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%89%A9%E5%B1%95%E8%AF%AD%E6%B3%95"><span class="nav-number">12.1.</span> <span class="nav-text">扩展语法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%8Eregexp%E7%9A%84%E5%B7%AE%E5%BC%82"><span class="nav-number">12.2.</span> <span class="nav-text">与regexp的差异</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#a-z-a-z-a-z"><span class="nav-number">13.</span> <span class="nav-text">  [a-z]          [a-z]             ^[a-z]$</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Telegraf%E6%9E%B6%E6%9E%84"><span class="nav-number"></span> <span class="nav-text">Telegraf架构</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%B4%A3%E4%BB%BB%E9%93%BE%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F"><span class="nav-number">1.</span> <span class="nav-text">责任链设计模式</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Pipeline%E6%9E%B6%E6%9E%84"><span class="nav-number">2.</span> <span class="nav-text">Pipeline架构</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Telegraf%E7%9A%84%E5%AE%9E%E7%8E%B0"><span class="nav-number">3.</span> <span class="nav-text">Telegraf的实现</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%9E%B6%E6%9E%84%E8%A7%92%E5%BA%A6"><span class="nav-number">3.1.</span> <span class="nav-text">架构角度</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Chen Yu"
+      src="/images/head.jpeg">
+  <p class="site-author-name" itemprop="name">Chen Yu</p>
+  <div class="site-description" itemprop="description">自律给我自由</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">123</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">20</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">84</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2025</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Chen Yu</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v6.3.0
+  </div>
+  <span class="post-meta-divider">|</span>
+  <div class="theme-info">主题 – <a href="https://theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a> v7.7.0
+  </div>
+
+<div>
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<span id="busuanzi_container_site_pv" style='display:none'>
+    本站总访问量 <span id="busuanzi_value_site_pv"></span> 次
+    <span class="post-meta-divider">|</span>
+</span>
+<span id="busuanzi_container_site_uv" style='display:none'>
+    有<span id="busuanzi_value_site_uv"></span>人看过我的博客啦
+</span>
+</div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>

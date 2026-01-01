@@ -210,70 +210,6 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://phpdi.github.io/2024/07/25/python/py%E8%B8%A9%E5%9D%91%E6%97%A5%E8%AE%B0/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/head.jpeg">
-      <meta itemprop="name" content="Chen Yu">
-      <meta itemprop="description" content="自律给我自由">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="goeoeo">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2024/07/25/python/py%E8%B8%A9%E5%9D%91%E6%97%A5%E8%AE%B0/" class="post-title-link" itemprop="url">未命名</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-              
-
-              <time title="创建时间：2024-07-25 15:43:10 / 修改时间：16:04:58" itemprop="dateCreated datePublished" datetime="2024-07-25T15:43:10+08:00">2024-07-25</time>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h1 id="mac-pip安装psycopg2报错"><a href="#mac-pip安装psycopg2报错" class="headerlink" title="mac pip安装psycopg2报错"></a>mac pip安装psycopg2报错</h1><p> Error: pg_config executable not found.   </p>
-<ol>
-<li>安装 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"># 记得换源 </span><br><span class="line">brew install postgresql</span><br></pre></td></tr></table></figure></li>
-<li>vim ~&#x2F;.zshrc <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">export PATH=&quot;/opt/homebrew/opt/apr-util/bin:$PATH&quot;</span><br><span class="line">export LDFLAGS=&quot;-L/opt/homebrew/opt/apr-util/lib&quot;</span><br><span class="line">export CPPFLAGS=&quot;-I/opt/homebrew/opt/apr-util/include&quot;</span><br><span class="line">export PKG_CONFIG_PATH=&quot;/opt/homebrew/opt/apr-util/lib/pkgconfig&quot;</span><br><span class="line"></span><br></pre></td></tr></table></figure></li>
-<li>pip install psycopg2&#x3D;&#x3D;2.9.9</li>
-</ol>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-        
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="https://phpdi.github.io/2024/06/22/python/spark%E8%8F%9C%E9%B8%9F%E6%95%99%E7%A8%8B/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -343,7 +279,7 @@
 <h2 id="Python-on-Spark-执行原理"><a href="#Python-on-Spark-执行原理" class="headerlink" title="Python on Spark 执行原理"></a>Python on Spark 执行原理</h2><p>PySpark宗旨在不破坏已有的运行架构，在Spark架构外层包装一层Python API,借助Py4j实现Python和java交互，进而实现Python编写Spark应用程序，其<br>运行时架构如下：<br><img src="/2024/06/22/python/spark%E8%8F%9C%E9%B8%9F%E6%95%99%E7%A8%8B/img.png"></p>
 <p>Python On Spark Driver端由JVM执行，Executor端由JVM命令转发，底层由Python解释器进行工作。  </p>
 <h2 id="分布式代码执行的流程"><a href="#分布式代码执行的流程" class="headerlink" title="分布式代码执行的流程"></a>分布式代码执行的流程</h2><p>代码在集群上运行，是被分布式执行的。<br>在Spark中，非任务处理部分由Driver执行（非RDD代码）。<br>任务处理部分由Executor执行（RDD代码）<br>Executor的数量可以很多，所以任务的计算是分布式运行的。  </p>
-<h1 id="spark使用遇到的问题问题"><a href="#spark使用遇到的问题问题" class="headerlink" title="spark使用遇到的问题问题"></a>spark使用遇到的问题问题</h1><h2 id="java账号"><a href="#java账号" class="headerlink" title="java账号"></a>java账号</h2><p><a href="mailto:&#x6f;&#x72;&#97;&#x63;&#108;&#101;&#x5f;&#x74;&#101;&#x73;&#116;&#x40;&#x66;&#101;&#120;&#x62;&#111;&#120;&#46;&#x6f;&#x72;&#x67;">&#x6f;&#x72;&#97;&#x63;&#108;&#101;&#x5f;&#x74;&#101;&#x73;&#116;&#x40;&#x66;&#101;&#120;&#x62;&#111;&#120;&#46;&#x6f;&#x72;&#x67;</a> Java001@@@</p>
+<h1 id="spark使用遇到的问题问题"><a href="#spark使用遇到的问题问题" class="headerlink" title="spark使用遇到的问题问题"></a>spark使用遇到的问题问题</h1><h2 id="java账号"><a href="#java账号" class="headerlink" title="java账号"></a>java账号</h2><p><a href="mailto:&#x6f;&#114;&#97;&#99;&#x6c;&#101;&#x5f;&#x74;&#101;&#115;&#116;&#64;&#102;&#101;&#120;&#98;&#x6f;&#120;&#x2e;&#111;&#114;&#x67;">&#x6f;&#114;&#97;&#99;&#x6c;&#101;&#x5f;&#x74;&#101;&#115;&#116;&#64;&#102;&#101;&#120;&#98;&#x6f;&#120;&#x2e;&#111;&#114;&#x67;</a> Java001@@@</p>
 <h2 id="py4j-protocol-Py4JError-org-apache-spark-api-python-PythonUtils-isEncryptionEnabled-does-not-exist-in-the-JVM"><a href="#py4j-protocol-Py4JError-org-apache-spark-api-python-PythonUtils-isEncryptionEnabled-does-not-exist-in-the-JVM" class="headerlink" title="py4j.protocol.Py4JError: org.apache.spark.api.python.PythonUtils.isEncryptionEnabled does not exist in the JVM"></a>py4j.protocol.Py4JError: org.apache.spark.api.python.PythonUtils.isEncryptionEnabled does not exist in the JVM</h2><p>pyspark版本高了当前是3.0.3 降级为2.3.2 </p>
 <h2 id="java-net-BindException-Can’t-assign-requested-address-Service-‘sparkDriver’-failed-after-16-retries"><a href="#java-net-BindException-Can’t-assign-requested-address-Service-‘sparkDriver’-failed-after-16-retries" class="headerlink" title="java.net.BindException: Can’t assign requested address: Service ‘sparkDriver’ failed after 16 retries"></a>java.net.BindException: Can’t assign requested address: Service ‘sparkDriver’ failed after 16 retries</h2><p>切换vpn后报错。 vim &#x2F;opt&#x2F;spark&#x2F;conf&#x2F;spark-env.sh</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">export SPARK_LOCAL_IP=&quot;127.0.0.1&quot;</span><br></pre></td></tr></table></figure>
@@ -1662,6 +1598,157 @@
   
   
 
+        
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://phpdi.github.io/2024/02/04/interview/%E7%BB%BC%E5%90%88%E9%9D%A2%E8%AF%95%E9%A2%98/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/head.jpeg">
+      <meta itemprop="name" content="Chen Yu">
+      <meta itemprop="description" content="自律给我自由">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="goeoeo">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2024/02/04/interview/%E7%BB%BC%E5%90%88%E9%9D%A2%E8%AF%95%E9%A2%98/" class="post-title-link" itemprop="url">综合面试题</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2024-02-04 17:19:28" itemprop="dateCreated datePublished" datetime="2024-02-04T17:19:28+08:00">2024-02-04</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2024-03-09 08:43:50" itemprop="dateModified" datetime="2024-03-09T08:43:50+08:00">2024-03-09</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/interview/" itemprop="url" rel="index">
+                    <span itemprop="name">interview</span>
+                  </a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="rpc微服务框架"><a href="#rpc微服务框架" class="headerlink" title="rpc微服务框架"></a>rpc微服务框架</h1><h2 id="微服务之间如何进行通信？"><a href="#微服务之间如何进行通信？" class="headerlink" title="微服务之间如何进行通信？"></a>微服务之间如何进行通信？</h2><ul>
+<li>单体项目时：一次服务调用发生在同一台机器上的同一个进程内部，也就是说调用发生在本机内部，因此也被叫作本地方法调用。</li>
+<li>微服务项目时：服务提供者和服务消费者运行在两台不同物理机上的不同进程内，它们之间的调用相比于本地方法调用，可称之为远程方法调用，简称 RPC</li>
+</ul>
+<h2 id="RPC了解多少？都有哪些？"><a href="#RPC了解多少？都有哪些？" class="headerlink" title="RPC了解多少？都有哪些？"></a>RPC了解多少？都有哪些？</h2><ul>
+<li>GRPC：Google 2015 年开源，支持多种语言</li>
+<li>Thrift：最初Facebook 开发的内部框架，2007 年贡献给了 Apache 基金，成为 Apache 开源项目之一，支持多种语言。</li>
+<li>RPCX</li>
+</ul>
+<h2 id="RPC包含哪些部分？"><a href="#RPC包含哪些部分？" class="headerlink" title="RPC包含哪些部分？"></a>RPC包含哪些部分？</h2><ul>
+<li>客户端和服务端建立网络连接模块( server模块、client模块 )</li>
+<li>服务端处理请求模块</li>
+<li>协议模块</li>
+<li>序列化和反序列模块</li>
+</ul>
+<h2 id="设计一个RPC会考虑哪些问题"><a href="#设计一个RPC会考虑哪些问题" class="headerlink" title="设计一个RPC会考虑哪些问题?"></a>设计一个RPC会考虑哪些问题?</h2><ul>
+<li>客户端和服务端如何建立网络连接？</li>
+<li>服务端如何处理请求？</li>
+<li>数据传输采用什么协议？</li>
+<li>数据该如何序列化和反序列化？</li>
+</ul>
+<h2 id="服务端如何处理请求？有哪些方式？"><a href="#服务端如何处理请求？有哪些方式？" class="headerlink" title="服务端如何处理请求？有哪些方式？"></a>服务端如何处理请求？有哪些方式？</h2><p>服务端接收到客户端的请求后，常见的处理方式有三种，分别是BIO、NIO和AIO。  </p>
+<ul>
+<li><strong>同步阻塞方式（BIO）</strong> 客户端发一次请求，服务端生成一个对应线程去处理。当客户端同时发起的请求很多时，服务端需要创建多个线程去处理每一个请求，当达到了系统最大的线程数时，新来的请求就无法处理了。</li>
+<li><strong>同步非阻塞方式 (NIO)</strong>  客户端发一次请求，服务端并不是每次都创建一个新线程来处理，而是通过 I&#x2F;O 多路复用技术进行处理。就是把多个 I&#x2F;O 的阻塞复用到同一个 select 的阻塞上，从而使系统在单线程的情况下可以同时处理多个客户端请求。这种方式的优势是开销小，不用为每个请求创建一个线程，可以节省系统开销。</li>
+<li><strong>异步非阻塞方式（AIO）</strong>  客户端发起一个 I&#x2F;O 操作然后立即返回，等 I&#x2F;O 操作真正完成以后，客户端会得到 I&#x2F;O 操作完成的通知，此时客户端只需要对数据进行处理就好了，不需要进行实际的 I&#x2F;O 读写操作，因为真正的 I&#x2F;O 读取或者写入操作已经由内核完成了。这种方式的优势是客户端无需等待，不存在阻塞等待问题。</li>
+</ul>
+<blockquote>
+<p>BIO 适用于连接数比较小的业务场景，这样的话不至于系统中没有可用线程去处理请求。这种方式写的程序也比较简单直观，易于理解。<br>NIO 适用于连接数比较多并且请求消耗比较轻的业务场景，比如聊天服务器。这种方式相比 BIO，相对来说编程比较复杂。<br>AIO 适用于连接数比较多而且请求消耗比较重的业务场景，比如涉及 I&#x2F;O 操作的相册服务器。这种方式相比另外两种，编程难度最大，程序也不易于理解。 【来自网络】</p>
+</blockquote>
+<h2 id="IO多路复用"><a href="#IO多路复用" class="headerlink" title="IO多路复用"></a>IO多路复用</h2><p>多个的进程的IO可以注册到一个复用器（select）上，然后用一个进程调用该select， select会监听所有注册进来的IO；<br>如果select没有监听的IO在内核缓冲区都没有可读数据，select调用进程会被阻塞；而当任一IO在内核缓冲区中有可数据时，select调用就会返回；<br>而后select调用进程可以自己或通知另外的进程（注册进程）来再次发起读取IO，读取内核中准备好的数据。<br>多个进程注册IO后，只有另一个select调用进程被阻塞。</p>
+<p>IO多路复用实现有三种方案：select、poll、epoll   </p>
+<h3 id="select"><a href="#select" class="headerlink" title="select"></a>select</h3><p>select 的fd_set通过bitmap 1024位的方式存储fd<br>bitmap从用户态拷贝到内核态，由内核态来判断，没有数据变化，select会阻塞，有变化，bitmap的fd会被置位</p>
+<p>缺点：</p>
+<ol>
+<li>1024的大小限制</li>
+<li>fdset不可重用</li>
+<li>rset(bitmap) 用户态到内核态的开销</li>
+<li>复杂度为O(n)</li>
+</ol>
+<h3 id="poll"><a href="#poll" class="headerlink" title="poll"></a>poll</h3><p>poll将要监听的对象存到数组中，且数组中的元素是结构体</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">struct pollfd</span><br><span class="line">&#123;</span><br><span class="line">    int fd;</span><br><span class="line">    short events;//事件</span><br><span class="line">    short revents;//有变化被置位，什么事件，置为什么事件，最后要将revents重新置为0</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p>解决了select中 的两个问题</p>
+<ol>
+<li>1024的大小限制</li>
+<li>fdset不可重用</li>
+</ol>
+<h3 id="epoll"><a href="#epoll" class="headerlink" title="epoll"></a>epoll</h3><p>在epoll机制中，Linux内核会创建一个eventpoll结构体，其中包含了红黑树和双向链表两种数据结构。红黑树用于fd，而双向链表则用于存储就绪的fd。</p>
+<p>当程序调用epoll_create函数时，会创建一个epoll对象，并返回一个文件描述符。然后，程序可以通过epoll_ctl函数向epoll对象中添加或删除需要监听的套接字。这些套接字会与设备驱动程序建立回调关系，一旦有事件发生（如数据可读、可写等），就会调用内核中的回调函数，将事件添加到双向链表中。</p>
+<p>当程序需要收集发生的事件时，可以调用epoll_wait函数。该函数会检查eventpoll对象中的双向链表，如果链表不为空，则将发生的事件复制到用户空间，并清空链表。同时，epoll_wait函数还会返回事件的数量。</p>
+<p>epoll机制有两种工作模式：水平触发和边缘触发。在水平触发模式下，只要文件描述符处于就绪状态，epoll就会持续通知应用程序进行I&#x2F;O操作。而在边缘触发模式下，只有在文件描述符从未就绪状态转换为就绪状态时，epoll才会通知应用程序进行I&#x2F;O操作。通常情况下，推荐使用边缘触发模式，因为它能更高效地利用CPU资源</p>
+<h4 id="监视socket索引-红黑树"><a href="#监视socket索引-红黑树" class="headerlink" title="监视socket索引-红黑树"></a>监视socket索引-红黑树</h4><p>为什么采用红黑树呢？因为和epoll的工作机制有关。epoll在添加一个socket或者删除一个socket或者修改一个socket的时候，它需要查询速度更快，操作效率最高，因此需要一个更加优秀的数据结构能够管理这些socket。</p>
+<p>我们想到的比如链表，数组，二叉搜索树，B+树等都无法满足要求:</p>
+<ul>
+<li>因为链表在查询，删除的时候毫无疑问时间复杂度是O(n)；</li>
+<li>数组查询很快，但是删除和新增时间复杂度是O(n)；</li>
+<li>二叉搜索树虽然查询效率是lgn，但是如果不是平衡的，那么就会退化为线性查找，复杂度直接来到O(n)；</li>
+<li>B+树是平衡多路查找树，主要是通过降低树的高度来存储上亿级别的数据，但是它的应用场景是内存放不下的时候能够用最少的IO访问次数从磁盘获取数据。</li>
+</ul>
+<p>因为我们处理上万级的fd，它们本身的存储空间并不会很大，所以倾向于在内存中去实现管理，而红黑树是一种非常优秀的平衡树，它完全是在内存中操作，而且查找，删除和新增时间复杂度都是lgn，效率非常高，因此选择用红黑树实现epoll是最佳的选择。</p>
+<p>当然不选择用AVL树是因为红黑树是不符合AVL树的平衡条件的，红黑是用非严格的平衡来换取增删节点时候旋转次数的降低，任何不平衡都会在三次旋转之内解决；而AVL树是严格平衡树，在增加或者删除节点的时候，根据不同情况，旋转的次数比红黑树要多。所以红黑树的插入效率更高。</p>
+<h4 id="就绪socket列表-双向链表"><a href="#就绪socket列表-双向链表" class="headerlink" title="就绪socket列表-双向链表"></a>就绪socket列表-双向链表</h4><p>就绪列表存储的是就绪的socket，所以它应能够快速的插入数据。</p>
+<p>程序可能随时调用epoll_ctl添加监视socket，也可能随时删除。当删除时，若该socket已经存放在就绪列表中，它也应该被移除。（事实上，每个epoll_item既是红黑树节点，也是链表节点，删除红黑树节点，自然删除了链表节点）</p>
+<p>所以就绪列表应是一种能够快速插入和删除的数据结构。双向链表就是这样一种数据结构，epoll使用双向链表来实现就绪队列（rdllist）</p>
+<h4 id="epoll为什么比select-poll快，快在什么地方"><a href="#epoll为什么比select-poll快，快在什么地方" class="headerlink" title="epoll为什么比select&#x2F;poll快，快在什么地方"></a>epoll为什么比select&#x2F;poll快，快在什么地方</h4><ol>
+<li>epoll只是在调用epoll_ctl的时候才会把fd从用户态拷贝的内核态，而select&#x2F;poll每次执行的时候都会把fd全部拷贝到内核态</li>
+<li>调用epoll_wait时候，只会拷贝已就绪的事件到用户态</li>
+<li>epoll采用事件回调机制，将已就绪的fd加入到链表中，而不是像select&#x2F;poll主动轮询的方式获取就绪事件</li>
+</ol>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2024/02/04/interview/%E7%BB%BC%E5%90%88%E9%9D%A2%E8%AF%95%E9%A2%98/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
   </div>
 
   
@@ -1747,7 +1834,7 @@
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">89</span>
+        <span class="site-state-item-count">93</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>

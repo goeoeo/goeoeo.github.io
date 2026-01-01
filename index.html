@@ -210,121 +210,6 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://phpdi.github.io/2025/11/24/linux/trae%E6%97%A5%E5%B8%B8%E4%BD%BF%E7%94%A8/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/head.jpeg">
-      <meta itemprop="name" content="Chen Yu">
-      <meta itemprop="description" content="自律给我自由">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="goeoeo">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2025/11/24/linux/trae%E6%97%A5%E5%B8%B8%E4%BD%BF%E7%94%A8/" class="post-title-link" itemprop="url">未命名</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2025-11-24 16:18:20" itemprop="dateCreated datePublished" datetime="2025-11-24T16:18:20+08:00">2025-11-24</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2026-01-01 20:37:10" itemprop="dateModified" datetime="2026-01-01T20:37:10+08:00">2026-01-01</time>
-              </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h1 id="快捷键"><a href="#快捷键" class="headerlink" title="快捷键"></a>快捷键</h1><ul>
-<li>选中当前单词后，按 Command + D 可依次选中文档中下一个相同的单词</li>
-<li>要一次性选中所有相同单词，按 Command + Shift + L</li>
-<li>全局搜索的快捷键是 Command + Shift + F</li>
-<li>搜索文件快捷键是 Command + P</li>
-<li>AI侧边栏 Command + U</li>
-<li>跳转到函数定义 Ctrl + 鼠标左键</li>
-<li>重命名重构 F2</li>
-<li>面板快捷键 Command + J</li>
-<li>左边面板快捷键 Command + B</li>
-<li>跳到指定的行 Ctrl + G</li>
-<li>打开最近项目 Ctrl + R</li>
-<li>单词转大写 Command + Shift + U</li>
-<li>打开设置 Command + ,</li>
-<li>跳转至文件中的下一个错误 F8</li>
-</ul>
-<h1 id="python"><a href="#python" class="headerlink" title="python"></a>python</h1><h2 id="配置解释器"><a href="#配置解释器" class="headerlink" title="配置解释器"></a>配置解释器</h2><p>使用.pyenv 添加的新环境不能直接被trae感知到需要<br>Command + Shift + P -&gt; Python: Select Interpreter<br>添加后，后面其它工作区就可以选择到新的解释器了</p>
-<h2 id="配置PYTHONPATH"><a href="#配置PYTHONPATH" class="headerlink" title="配置PYTHONPATH"></a>配置PYTHONPATH</h2><p>配置终端设置 -&gt; Env:Osx -&gt; PYTHONPATH</p>
-<h1 id="golang"><a href="#golang" class="headerlink" title="golang"></a>golang</h1><h2 id="环境配置"><a href="#环境配置" class="headerlink" title="环境配置"></a>环境配置</h2><p>command + shift + p -&gt; go: install&#x2F;upgrade tools<br>选中需要的工具  </p>
-<h3 id="Go-开发工具列表"><a href="#Go-开发工具列表" class="headerlink" title="Go 开发工具列表"></a>Go 开发工具列表</h3><ol>
-<li><p><strong>gotests（未安装）</strong></p>
-<ul>
-<li>作用：自动生成 Go 代码的测试用例（比如为函数、方法生成 <code>*_test.go</code> 文件），节省手动编写测试的时间</li>
-<li>举例：执行 <code>gotests -all -w myfile.go</code>，会为 <code>myfile.go</code> 中的所有函数生成对应的单元测试代码</li>
-</ul>
-</li>
-<li><p><strong>impl（未安装）</strong></p>
-<ul>
-<li>作用：自动生成 Go 接口的实现代码</li>
-<li>举例：定义接口 <code>type Reader interface &#123; Read() string &#125;</code> 后，运行 <code>impl &#39;type MyStruct struct&#123;&#125;&#39; Reader</code>，会自动生成 <code>MyStruct</code> 对 <code>Reader</code> 接口的实现方法</li>
-</ul>
-</li>
-<li><p><strong>goplay（未安装）</strong></p>
-<ul>
-<li>作用：本地启动 Go 代码的 “playground” 环境，支持快速运行&#x2F;测试小段 Go 代码（类似在线 Go Playground，但在本地运行）</li>
-</ul>
-</li>
-<li><p><strong>dlv（已安装，版本 v1.26.0）</strong></p>
-<ul>
-<li>作用：Golang 官方调试工具（全称 Delve），是 Go 程序断点调试的核心工具（Trae&#x2F;GoLand 等 IDE 的调试功能底层基于 dlv）</li>
-<li>功能：支持断点、单步执行、查看变量、查看调用栈等调试操作</li>
-</ul>
-</li>
-<li><p><strong>gopls（已安装，版本 v0.21.0）</strong></p>
-<ul>
-<li>作用：Golang 语言服务器（全称 Go Language Server），是 IDE（如 Trae、VS Code）实现代码补全、语法检查、跳转定义、重构等功能的核心依赖</li>
-<li>说明：你在 Trae 中看到的 Go 代码语法高亮、包导入提示等，都是 gopls 在后台提供的支持</li>
-</ul>
-</li>
-</ol>
-<h2 id="配置golang项目的运行与调试"><a href="#配置golang项目的运行与调试" class="headerlink" title="配置golang项目的运行与调试"></a>配置golang项目的运行与调试</h2><p>点击运行与调试 -&gt; 点击创建launch.json文件 -&gt; 选择go -&gt; 配置launch.json文件<br>会在.vscode目录下生成launch.json文件 </p>
-<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">    <span class="comment">// 使用 IntelliSense 了解相关属性。 </span></span><br><span class="line">    <span class="comment">// 悬停以查看现有属性的描述。</span></span><br><span class="line">    <span class="comment">// 欲了解更多信息，请访问: https://go.microsoft.com/fwlink/?linkid=830387</span></span><br><span class="line">    <span class="attr">&quot;version&quot;</span><span class="punctuation">:</span> <span class="string">&quot;0.2.0&quot;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;configurations&quot;</span><span class="punctuation">:</span> <span class="punctuation">[</span></span><br><span class="line">        <span class="punctuation">&#123;</span></span><br><span class="line">            <span class="attr">&quot;name&quot;</span><span class="punctuation">:</span> <span class="string">&quot;gateway&quot;</span><span class="punctuation">,</span></span><br><span class="line">            <span class="attr">&quot;type&quot;</span><span class="punctuation">:</span> <span class="string">&quot;go&quot;</span><span class="punctuation">,</span></span><br><span class="line">            <span class="attr">&quot;request&quot;</span><span class="punctuation">:</span> <span class="string">&quot;launch&quot;</span><span class="punctuation">,</span></span><br><span class="line">            <span class="attr">&quot;mode&quot;</span><span class="punctuation">:</span> <span class="string">&quot;auto&quot;</span><span class="punctuation">,</span></span><br><span class="line">            <span class="attr">&quot;program&quot;</span><span class="punctuation">:</span> <span class="string">&quot;$&#123;workspaceFolder&#125;/cmd/gateway/main.go&quot;</span></span><br><span class="line">        <span class="punctuation">&#125;</span><span class="punctuation">,</span></span><br><span class="line">        <span class="punctuation">&#123;</span></span><br><span class="line">            <span class="attr">&quot;name&quot;</span><span class="punctuation">:</span> <span class="string">&quot;product&quot;</span><span class="punctuation">,</span></span><br><span class="line">            <span class="attr">&quot;type&quot;</span><span class="punctuation">:</span> <span class="string">&quot;go&quot;</span><span class="punctuation">,</span></span><br><span class="line">            <span class="attr">&quot;request&quot;</span><span class="punctuation">:</span> <span class="string">&quot;launch&quot;</span><span class="punctuation">,</span></span><br><span class="line">            <span class="attr">&quot;mode&quot;</span><span class="punctuation">:</span> <span class="string">&quot;auto&quot;</span><span class="punctuation">,</span></span><br><span class="line">            <span class="attr">&quot;program&quot;</span><span class="punctuation">:</span> <span class="string">&quot;$&#123;workspaceFolder&#125;/cmd/product/main.go&quot;</span></span><br><span class="line">        <span class="punctuation">&#125;</span><span class="punctuation">,</span></span><br><span class="line">        <span class="punctuation">&#123;</span></span><br><span class="line">            <span class="attr">&quot;name&quot;</span><span class="punctuation">:</span> <span class="string">&quot;cooperate&quot;</span><span class="punctuation">,</span></span><br><span class="line">            <span class="attr">&quot;type&quot;</span><span class="punctuation">:</span> <span class="string">&quot;go&quot;</span><span class="punctuation">,</span></span><br><span class="line">            <span class="attr">&quot;request&quot;</span><span class="punctuation">:</span> <span class="string">&quot;launch&quot;</span><span class="punctuation">,</span></span><br><span class="line">            <span class="attr">&quot;mode&quot;</span><span class="punctuation">:</span> <span class="string">&quot;auto&quot;</span><span class="punctuation">,</span></span><br><span class="line">            <span class="attr">&quot;program&quot;</span><span class="punctuation">:</span> <span class="string">&quot;$&#123;workspaceFolder&#125;/cmd/cooperate/main.go&quot;</span><span class="punctuation">,</span></span><br><span class="line">            <span class="attr">&quot;args&quot;</span><span class="punctuation">:</span> <span class="punctuation">[</span><span class="punctuation">]</span></span><br><span class="line">        <span class="punctuation">&#125;</span></span><br><span class="line"></span><br><span class="line">    <span class="punctuation">]</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-        
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="https://phpdi.github.io/2025/08/21/db/cassandra%E5%85%A5%E9%97%A8/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1277,6 +1162,98 @@
   
   
 
+        
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://phpdi.github.io/2025/01/10/db/doris/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/head.jpeg">
+      <meta itemprop="name" content="Chen Yu">
+      <meta itemprop="description" content="自律给我自由">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="goeoeo">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2025/01/10/db/doris/" class="post-title-link" itemprop="url">doris</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2025-01-10 15:08:37 / 修改时间：16:06:31" itemprop="dateCreated datePublished" datetime="2025-01-10T15:08:37+08:00">2025-01-10</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/db/" itemprop="url" rel="index">
+                    <span itemprop="name">db</span>
+                  </a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h1><p>由百度大数据部研发，之前叫百度Palo,2018年贡献到Apache社区，更名Doris  </p>
+<p>一个现代化的MPP分析型数据库产品。 </p>
+<ul>
+<li>亚秒级响应</li>
+<li>架构非常简洁，易于运维</li>
+<li>支持10PB以上的超大数据集</li>
+</ul>
+<p>满足多种数据分析需求</p>
+<ul>
+<li>固定历史报表</li>
+<li>实时数据分析</li>
+<li>交互式数据分析</li>
+<li>探索式数据分析</li>
+</ul>
+<p><img src="/2025/01/10/db/doris/img.png"></p>
+<p>特性：<br><img src="/2025/01/10/db/doris/img_1.png"></p>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2025/01/10/db/doris/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
   </div>
 
   
@@ -1362,7 +1339,7 @@
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">89</span>
+        <span class="site-state-item-count">93</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>

@@ -210,6 +210,499 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://phpdi.github.io/2025/11/24/linux/trae%E6%97%A5%E5%B8%B8%E4%BD%BF%E7%94%A8/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/head.jpeg">
+      <meta itemprop="name" content="Chen Yu">
+      <meta itemprop="description" content="自律给我自由">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="goeoeo">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2025/11/24/linux/trae%E6%97%A5%E5%B8%B8%E4%BD%BF%E7%94%A8/" class="post-title-link" itemprop="url">未命名</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2025-11-24 16:18:20" itemprop="dateCreated datePublished" datetime="2025-11-24T16:18:20+08:00">2025-11-24</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2026-01-01 20:37:10" itemprop="dateModified" datetime="2026-01-01T20:37:10+08:00">2026-01-01</time>
+              </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="快捷键"><a href="#快捷键" class="headerlink" title="快捷键"></a>快捷键</h1><ul>
+<li>选中当前单词后，按 Command + D 可依次选中文档中下一个相同的单词</li>
+<li>要一次性选中所有相同单词，按 Command + Shift + L</li>
+<li>全局搜索的快捷键是 Command + Shift + F</li>
+<li>搜索文件快捷键是 Command + P</li>
+<li>AI侧边栏 Command + U</li>
+<li>跳转到函数定义 Ctrl + 鼠标左键</li>
+<li>重命名重构 F2</li>
+<li>面板快捷键 Command + J</li>
+<li>左边面板快捷键 Command + B</li>
+<li>跳到指定的行 Ctrl + G</li>
+<li>打开最近项目 Ctrl + R</li>
+<li>单词转大写 Command + Shift + U</li>
+<li>打开设置 Command + ,</li>
+<li>跳转至文件中的下一个错误 F8</li>
+</ul>
+<h1 id="python"><a href="#python" class="headerlink" title="python"></a>python</h1><h2 id="配置解释器"><a href="#配置解释器" class="headerlink" title="配置解释器"></a>配置解释器</h2><p>使用.pyenv 添加的新环境不能直接被trae感知到需要<br>Command + Shift + P -&gt; Python: Select Interpreter<br>添加后，后面其它工作区就可以选择到新的解释器了</p>
+<h2 id="配置PYTHONPATH"><a href="#配置PYTHONPATH" class="headerlink" title="配置PYTHONPATH"></a>配置PYTHONPATH</h2><p>配置终端设置 -&gt; Env:Osx -&gt; PYTHONPATH</p>
+<h1 id="golang"><a href="#golang" class="headerlink" title="golang"></a>golang</h1><h2 id="环境配置"><a href="#环境配置" class="headerlink" title="环境配置"></a>环境配置</h2><p>command + shift + p -&gt; go: install&#x2F;upgrade tools<br>选中需要的工具  </p>
+<h3 id="Go-开发工具列表"><a href="#Go-开发工具列表" class="headerlink" title="Go 开发工具列表"></a>Go 开发工具列表</h3><ol>
+<li><p><strong>gotests（未安装）</strong></p>
+<ul>
+<li>作用：自动生成 Go 代码的测试用例（比如为函数、方法生成 <code>*_test.go</code> 文件），节省手动编写测试的时间</li>
+<li>举例：执行 <code>gotests -all -w myfile.go</code>，会为 <code>myfile.go</code> 中的所有函数生成对应的单元测试代码</li>
+</ul>
+</li>
+<li><p><strong>impl（未安装）</strong></p>
+<ul>
+<li>作用：自动生成 Go 接口的实现代码</li>
+<li>举例：定义接口 <code>type Reader interface &#123; Read() string &#125;</code> 后，运行 <code>impl &#39;type MyStruct struct&#123;&#125;&#39; Reader</code>，会自动生成 <code>MyStruct</code> 对 <code>Reader</code> 接口的实现方法</li>
+</ul>
+</li>
+<li><p><strong>goplay（未安装）</strong></p>
+<ul>
+<li>作用：本地启动 Go 代码的 “playground” 环境，支持快速运行&#x2F;测试小段 Go 代码（类似在线 Go Playground，但在本地运行）</li>
+</ul>
+</li>
+<li><p><strong>dlv（已安装，版本 v1.26.0）</strong></p>
+<ul>
+<li>作用：Golang 官方调试工具（全称 Delve），是 Go 程序断点调试的核心工具（Trae&#x2F;GoLand 等 IDE 的调试功能底层基于 dlv）</li>
+<li>功能：支持断点、单步执行、查看变量、查看调用栈等调试操作</li>
+</ul>
+</li>
+<li><p><strong>gopls（已安装，版本 v0.21.0）</strong></p>
+<ul>
+<li>作用：Golang 语言服务器（全称 Go Language Server），是 IDE（如 Trae、VS Code）实现代码补全、语法检查、跳转定义、重构等功能的核心依赖</li>
+<li>说明：你在 Trae 中看到的 Go 代码语法高亮、包导入提示等，都是 gopls 在后台提供的支持</li>
+</ul>
+</li>
+</ol>
+<h2 id="配置golang项目的运行与调试"><a href="#配置golang项目的运行与调试" class="headerlink" title="配置golang项目的运行与调试"></a>配置golang项目的运行与调试</h2><p>点击运行与调试 -&gt; 点击创建launch.json文件 -&gt; 选择go -&gt; 配置launch.json文件<br>会在.vscode目录下生成launch.json文件 </p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">    <span class="comment">// 使用 IntelliSense 了解相关属性。 </span></span><br><span class="line">    <span class="comment">// 悬停以查看现有属性的描述。</span></span><br><span class="line">    <span class="comment">// 欲了解更多信息，请访问: https://go.microsoft.com/fwlink/?linkid=830387</span></span><br><span class="line">    <span class="attr">&quot;version&quot;</span><span class="punctuation">:</span> <span class="string">&quot;0.2.0&quot;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;configurations&quot;</span><span class="punctuation">:</span> <span class="punctuation">[</span></span><br><span class="line">        <span class="punctuation">&#123;</span></span><br><span class="line">            <span class="attr">&quot;name&quot;</span><span class="punctuation">:</span> <span class="string">&quot;gateway&quot;</span><span class="punctuation">,</span></span><br><span class="line">            <span class="attr">&quot;type&quot;</span><span class="punctuation">:</span> <span class="string">&quot;go&quot;</span><span class="punctuation">,</span></span><br><span class="line">            <span class="attr">&quot;request&quot;</span><span class="punctuation">:</span> <span class="string">&quot;launch&quot;</span><span class="punctuation">,</span></span><br><span class="line">            <span class="attr">&quot;mode&quot;</span><span class="punctuation">:</span> <span class="string">&quot;auto&quot;</span><span class="punctuation">,</span></span><br><span class="line">            <span class="attr">&quot;program&quot;</span><span class="punctuation">:</span> <span class="string">&quot;$&#123;workspaceFolder&#125;/cmd/gateway/main.go&quot;</span></span><br><span class="line">        <span class="punctuation">&#125;</span><span class="punctuation">,</span></span><br><span class="line">        <span class="punctuation">&#123;</span></span><br><span class="line">            <span class="attr">&quot;name&quot;</span><span class="punctuation">:</span> <span class="string">&quot;product&quot;</span><span class="punctuation">,</span></span><br><span class="line">            <span class="attr">&quot;type&quot;</span><span class="punctuation">:</span> <span class="string">&quot;go&quot;</span><span class="punctuation">,</span></span><br><span class="line">            <span class="attr">&quot;request&quot;</span><span class="punctuation">:</span> <span class="string">&quot;launch&quot;</span><span class="punctuation">,</span></span><br><span class="line">            <span class="attr">&quot;mode&quot;</span><span class="punctuation">:</span> <span class="string">&quot;auto&quot;</span><span class="punctuation">,</span></span><br><span class="line">            <span class="attr">&quot;program&quot;</span><span class="punctuation">:</span> <span class="string">&quot;$&#123;workspaceFolder&#125;/cmd/product/main.go&quot;</span></span><br><span class="line">        <span class="punctuation">&#125;</span><span class="punctuation">,</span></span><br><span class="line">        <span class="punctuation">&#123;</span></span><br><span class="line">            <span class="attr">&quot;name&quot;</span><span class="punctuation">:</span> <span class="string">&quot;cooperate&quot;</span><span class="punctuation">,</span></span><br><span class="line">            <span class="attr">&quot;type&quot;</span><span class="punctuation">:</span> <span class="string">&quot;go&quot;</span><span class="punctuation">,</span></span><br><span class="line">            <span class="attr">&quot;request&quot;</span><span class="punctuation">:</span> <span class="string">&quot;launch&quot;</span><span class="punctuation">,</span></span><br><span class="line">            <span class="attr">&quot;mode&quot;</span><span class="punctuation">:</span> <span class="string">&quot;auto&quot;</span><span class="punctuation">,</span></span><br><span class="line">            <span class="attr">&quot;program&quot;</span><span class="punctuation">:</span> <span class="string">&quot;$&#123;workspaceFolder&#125;/cmd/cooperate/main.go&quot;</span><span class="punctuation">,</span></span><br><span class="line">            <span class="attr">&quot;args&quot;</span><span class="punctuation">:</span> <span class="punctuation">[</span><span class="punctuation">]</span></span><br><span class="line">        <span class="punctuation">&#125;</span></span><br><span class="line"></span><br><span class="line">    <span class="punctuation">]</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+        
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://phpdi.github.io/2025/08/21/db/cassandra%E5%85%A5%E9%97%A8/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/head.jpeg">
+      <meta itemprop="name" content="Chen Yu">
+      <meta itemprop="description" content="自律给我自由">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="goeoeo">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2025/08/21/db/cassandra%E5%85%A5%E9%97%A8/" class="post-title-link" itemprop="url">cassandra入门</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2025-08-21 09:33:33" itemprop="dateCreated datePublished" datetime="2025-08-21T09:33:33+08:00">2025-08-21</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2025-09-06 13:01:51" itemprop="dateModified" datetime="2025-09-06T13:01:51+08:00">2025-09-06</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/db/" itemprop="url" rel="index">
+                    <span itemprop="name">db</span>
+                  </a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h1><h2 id="cassandra-端口"><a href="#cassandra-端口" class="headerlink" title="cassandra 端口"></a>cassandra 端口</h2><table>
+<thead>
+<tr>
+<th>端口</th>
+<th>协议</th>
+<th>功能</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>7000</td>
+<td>thrift</td>
+<td>节点之间通信</td>
+</tr>
+<tr>
+<td>7001</td>
+<td>ssl thrift</td>
+<td>节点之间通信</td>
+</tr>
+<tr>
+<td>9042</td>
+<td>cql</td>
+<td>客户端通信</td>
+</tr>
+<tr>
+<td>9160</td>
+<td>thrift</td>
+<td>客户端通信</td>
+</tr>
+</tbody></table>
+<h2 id="cassandra-yaml-内容介绍"><a href="#cassandra-yaml-内容介绍" class="headerlink" title="cassandra.yaml 内容介绍"></a>cassandra.yaml 内容介绍</h2><ul>
+<li>cluster_name: 集群的名称  </li>
+<li>seed_provider: 种子节点  </li>
+<li>listen_address: 节点的监听地址  </li>
+<li>rpc_address: 节点的rpc地址  </li>
+<li>endpoint_snitch: 节点的snitch  </li>
+<li>num_tokens: 节点的token数量  </li>
+<li>disk_failure_policy: 磁盘失败策略  </li>
+<li>commitlog_sync: 提交日志同步策略  </li>
+<li>commitlog_sync_batch_window_in_ms: 提交日志同步批量窗口时间  </li>
+<li>commitlog_segment_size_in_mb: 提交日志分段大小  </li>
+<li>commitlog_total_space_in_mb: 提交日志总大小  </li>
+<li>commitlog_roll_when_full: 提交日志满了是否滚动  </li>
+<li>commitlog_roll_when_full_in_mb: 提交日志满了滚动的大小  </li>
+<li>commitlog_roll_when_full_in_ms: 提交日志满了滚动的时间  </li>
+<li>commitlog_roll_when_full_in_bytes: 提交日志满了滚动的字节数</li>
+</ul>
+<h1 id="Casssandra基本概念"><a href="#Casssandra基本概念" class="headerlink" title="Casssandra基本概念"></a>Casssandra基本概念</h1><h2 id="数据模型"><a href="#数据模型" class="headerlink" title="数据模型"></a>数据模型</h2><h3 id="列"><a href="#列" class="headerlink" title="列"></a>列</h3><p>列是cassandra的基本单位，具有三个值：名称，值，时间戳<br>在Casssandra中不需要预先定义列，只需要在KeySpace中定义列族，然后就可以开始写数据了。 </p>
+<h3 id="列族-ColumnFamily"><a href="#列族-ColumnFamily" class="headerlink" title="列族 ColumnFamily"></a>列族 ColumnFamily</h3><p>列族相当于关系型数据库的表，包含了多个列的容器</p>
+<p>列族的2种类型：</p>
+<ul>
+<li>静态列族 字段名是固定的</li>
+<li>动态列族 字段名是动态的</li>
+</ul>
+<p>Row key:列族中每一行都是一个key，key是唯一的，用来标识这一行数据。 </p>
+<p>主键：</p>
+<ul>
+<li>主键是用来唯一标识一行数据的</li>
+<li>主键可以由一列组成，也可以由多列组成</li>
+</ul>
+<h3 id="键空间-KeySpace"><a href="#键空间-KeySpace" class="headerlink" title="键空间 KeySpace"></a>键空间 KeySpace</h3><p>键空间是cassandra中最外层的容器，相当于关系型数据库中的数据库。<br>键空间中包含了多个列族，每个列族中包含了多行数据。<br>每个键空间中都有一个默认的列族，列族的名称为default。  </p>
+<p>键空间创建的时候可以指定一些属性：副本因子，副本策略，Durable_write(是否启用commitLog机制)  </p>
+<p>副本因子：</p>
+<ul>
+<li>副本因子是用来指定每个键空间中副本的数量的</li>
+<li>副本因子的默认值是1</li>
+<li>副本因子可以在键空间创建的时候指定，也可以在键空间创建之后修改</li>
+</ul>
+<p>副本策略：</p>
+<ul>
+<li>副本策略是用来指定每个键空间中副本的分布策略的</li>
+<li>副本策略的默认值是SimpleStrategy</li>
+<li>副本策略可以在键空间创建的时候指定，也可以在键空间创建之后修改</li>
+</ul>
+<p>Durable_write：</p>
+<ul>
+<li>Durable_write是用来指定每个键空间中是否启用commitLog机制的</li>
+<li>Durable_write的默认值是true</li>
+<li>Durable_write可以在键空间创建的时候指定，也可以在键空间创建之后修改</li>
+</ul>
+<h3 id="副本"><a href="#副本" class="headerlink" title="副本"></a>副本</h3><p>副本就是把数据存储到多个节点上，来提高容错性</p>
+<h3 id="节点"><a href="#节点" class="headerlink" title="节点"></a>节点</h3><p>存储数据的机器</p>
+<h3 id="数据中心"><a href="#数据中心" class="headerlink" title="数据中心"></a>数据中心</h3><p>多台机器组成一个数据中心</p>
+<h3 id="集群"><a href="#集群" class="headerlink" title="集群"></a>集群</h3><p>Cassandra数据库是为跨越多条主机共同工作，对用户呈现为一个整体的分布式系统设计的。Cassandra最外层容器被称为集群。<br>Cassandra将集群中的节点组成一个环（ring）,然后把数据分配到集群中的节点上</p>
+<h2 id="数据类型"><a href="#数据类型" class="headerlink" title="数据类型"></a>数据类型</h2><ul>
+<li>数值类型</li>
+<li>文本类型</li>
+<li>时间类型</li>
+<li>标识符类型 例如UUID</li>
+<li>集合类型 例如set,list,map</li>
+<li>其它基本类型 例如boolean,blob,inet,counter</li>
+<li>用户自定义类型</li>
+</ul>
+<h2 id="CQL-Shell客户端"><a href="#CQL-Shell客户端" class="headerlink" title="CQL Shell客户端"></a>CQL Shell客户端</h2><p>CQL Shell是Cassandra提供的一个命令行客户端，用于执行CQL语句。<br>CQL Shell可以在Cassandra的安装目录下的bin目录中找到。<br>CQL Shell的使用方法如下：</p>
+<ol>
+<li>进入Cassandra的安装目录下的bin目录</li>
+<li>执行cqlsh命令</li>
+<li>输入用户名和密码</li>
+<li>执行CQL语句</li>
+<li>退出CQL Shell</li>
+</ol>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cqlsh dev01-zoocassa0 9042</span><br></pre></td></tr></table></figure>
+
+
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+        
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://phpdi.github.io/2025/07/26/webfront/vue%E5%85%A5%E9%97%A8/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/head.jpeg">
+      <meta itemprop="name" content="Chen Yu">
+      <meta itemprop="description" content="自律给我自由">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="goeoeo">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2025/07/26/webfront/vue%E5%85%A5%E9%97%A8/" class="post-title-link" itemprop="url">vue入门</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2025-07-26 07:46:44" itemprop="dateCreated datePublished" datetime="2025-07-26T07:46:44+08:00">2025-07-26</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2025-07-27 07:56:35" itemprop="dateModified" datetime="2025-07-27T07:56:35+08:00">2025-07-27</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/webfront/" itemprop="url" rel="index">
+                    <span itemprop="name">webfront</span>
+                  </a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h1><h2 id="安装nodejs环境"><a href="#安装nodejs环境" class="headerlink" title="安装nodejs环境"></a>安装nodejs环境</h2><ol>
+<li><p>通过nvm安装指定版本nodejs</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">brew install nvm </span><br><span class="line">nvm install v22.12</span><br><span class="line">nvm use v22.12</span><br></pre></td></tr></table></figure></li>
+<li><p>安装yarn</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm install -g yarn</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>设置yarn代理</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">yarn config set npmRegistryServer https://registry.npmmirror.com</span><br></pre></td></tr></table></figure></li>
+</ol>
+<h2 id="通过vite创建项目"><a href="#通过vite创建项目" class="headerlink" title="通过vite创建项目"></a>通过vite创建项目</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">yarn create vite</span><br></pre></td></tr></table></figure>
+
+<p>创建项目后，拉取依赖</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">yarn</span><br></pre></td></tr></table></figure>
+<p>webstorm 配置运行参数<br><img src="/2025/07/26/webfront/vue%E5%85%A5%E9%97%A8/img.png"></p>
+<h2 id="通过yarn安装其它依赖"><a href="#通过yarn安装其它依赖" class="headerlink" title="通过yarn安装其它依赖"></a>通过yarn安装其它依赖</h2><h3 id="安装bootstrap4"><a href="#安装bootstrap4" class="headerlink" title="安装bootstrap4"></a>安装bootstrap4</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">yarn add bootstrap@4</span><br><span class="line">yarn add -D sass-embedded # 添加sass支持</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="安装vue路由"><a href="#安装vue路由" class="headerlink" title="安装vue路由"></a>安装vue路由</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">yarn add vue-router@4</span><br><span class="line">yarn add -D @types/node # 解决路径别名类型问题</span><br></pre></td></tr></table></figure>
+<p>在 tsconfig.json 中添加:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  &quot;compilerOptions&quot;: &#123;</span><br><span class="line">    &quot;baseUrl&quot;: &quot;.&quot;,</span><br><span class="line">    &quot;paths&quot;: &#123;</span><br><span class="line">      &quot;@/*&quot;: [&quot;src/*&quot;]</span><br><span class="line">    &#125;,</span><br><span class="line">    &quot;types&quot;: [</span><br><span class="line">      &quot;vite/client&quot;,</span><br><span class="line">      &quot;vue-router&quot;</span><br><span class="line">    ]</span><br><span class="line">  &#125;,</span><br><span class="line">  &quot;include&quot;: [</span><br><span class="line">    &quot;src/**/*.ts&quot;,</span><br><span class="line">    &quot;src/**/*.d.ts&quot;,</span><br><span class="line">    &quot;src/**/*.vue&quot;</span><br><span class="line">  ]</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>配置路径别名</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">import &#123; defineConfig &#125; from &#x27;vite&#x27;</span><br><span class="line">import vue from &#x27;@vitejs/plugin-vue&#x27;</span><br><span class="line">import path from &#x27;path&#x27; // 确保已安装 @types/node</span><br><span class="line"></span><br><span class="line">export default defineConfig(&#123;</span><br><span class="line">  plugins: [vue()],</span><br><span class="line">  resolve: &#123;</span><br><span class="line">    alias: &#123;</span><br><span class="line">      &#x27;@&#x27;: path.resolve(__dirname, &#x27;./src&#x27;),</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;)</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h2 id="安装axios-发送ajax"><a href="#安装axios-发送ajax" class="headerlink" title="安装axios 发送ajax"></a>安装axios 发送ajax</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">yarn add axios</span><br></pre></td></tr></table></figure>
+
+<h2 id="安装事件总线-mitt-用于组件之间的通信"><a href="#安装事件总线-mitt-用于组件之间的通信" class="headerlink" title="安装事件总线 mitt 用于组件之间的通信"></a>安装事件总线 mitt 用于组件之间的通信</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">yarn add mitt</span><br></pre></td></tr></table></figure>
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+        
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://phpdi.github.io/2025/07/19/webfront/react%E5%85%A5%E9%97%A8/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/head.jpeg">
+      <meta itemprop="name" content="Chen Yu">
+      <meta itemprop="description" content="自律给我自由">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="goeoeo">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2025/07/19/webfront/react%E5%85%A5%E9%97%A8/" class="post-title-link" itemprop="url">react入门</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2025-07-19 09:48:17" itemprop="dateCreated datePublished" datetime="2025-07-19T09:48:17+08:00">2025-07-19</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2025-07-25 17:19:27" itemprop="dateModified" datetime="2025-07-25T17:19:27+08:00">2025-07-25</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/webfront/" itemprop="url" rel="index">
+                    <span itemprop="name">webfront</span>
+                  </a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="前端工程化"><a href="#前端工程化" class="headerlink" title="前端工程化"></a>前端工程化</h1><p>模块化：指将一个文件拆分成多个相互依赖的文件，最后进行统一的打包和加载，这样能够很好的保证高效的多人协作。模块化是对文件、对代码和资源拆分。<br>组件化：在功能实现的设计层面上，按功能或业务来把UI界面进行拆分一个个包含模板（HTML）+样式（CSS）+逻辑（JS）的功能完备的结构单元。<br>规范化：是指在项目开发初期以及开发期间制定的一系列规范，包括文件目录规范，命名规范，代码规范等等。<br>自动化：是指代利用自动化工具来完成项目开发过程中的重复性，机械化，简单性的工作。   </p>
+<h1 id="react"><a href="#react" class="headerlink" title="react"></a>react</h1><p>React是一个用于构建UI（User Interface，用户界面）的JavaSgript库，也是目前全世界最流行的web前端框架之一，由Facebook在2013年5月开源的前端项目，<br>因为Facebook对市场上所有Javascript MVC框架都不满意，所以就自己写了一个前端框架用来架设Instagram网站。</p>
+<p>React官方并不认可MVC开发模式，所以React不是一个完整的MVC前端框架，只能说是一个轻量级的视图框架（MVC中的View）。<br>具有如下特点：</p>
+<ol>
+<li>声明式设计<br>React为应用的每一个状态设计简洁的视图，当数据改变时 React 能有效地更新并正确地渲染组件。</li>
+<li>高效<br>React采用Virtual DOM（虚拟DOM），极大的提升了UI渲染（更新）效率。<br>3.灵活<br>React 允许你结合其他框架或库一起使用，而且有大量的开发者围绕着React去开发各种各样的工具库。</li>
+<li>JSX<br>JSX是React框架基于JavaScript的语法扩展，可以很好地描述 UI 应该呈现出它应有交互的本质形式。<br>5.组件<br>通过 React 构建组件，使得代码更加容易得到复用，能够很好的应用在大项目的开发中。</li>
+<li>单向响应的数据流<br>React 采用了单向响应的数据流，使组件状态更容易维护，组件模块化更易于快速开发。</li>
+</ol>
+<h2 id="关键包"><a href="#关键包" class="headerlink" title="关键包"></a>关键包</h2><ol>
+<li>react核心包</li>
+<li>react-dom web开发使用</li>
+<li>react-native app开发使用</li>
+</ol>
+<h2 id="JSX"><a href="#JSX" class="headerlink" title="JSX"></a>JSX</h2><p>JSX （JavaScript Xml）是React框架基于JavaScript+XML实现的语法扩展，类似模板语言，但具有 JavaScript 的全部功能。<br>JSX提供了在 JavaScript 代码中写 XML（HTML）代码的功能，让项目中的用户界面代码变得更加直观、结构清晰，从而提升开发效率，所以React推荐开发者使用JSX来声明描述用户界面。<br>JSX本质上就是ReactcreateElement（componentprops,children）函数的语法糖，使用babel编译后，JSX会变成虚拟DOM对象。 </p>
+<p>需要使用Babel转码器，将JSX代码转换成js代码</p>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2025/07/19/webfront/react%E5%85%A5%E9%97%A8/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+        
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="https://phpdi.github.io/2025/06/24/go/%E8%A7%A3%E5%86%B3%E6%9C%8D%E5%8A%A1%E5%8D%87%E7%BA%A7%E6%9C%9F%E9%97%B4%E7%9F%AD%E6%9A%82%E4%B8%8D%E5%8F%AF%E7%94%A8%E7%9A%84%E9%97%AE%E9%A2%98/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -528,7 +1021,7 @@
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
           
-            <a href="/2025/04/12/micro/IT%E8%80%81%E9%BD%90%E6%9E%B6%E6%9E%84900%E8%AE%B2/" class="post-title-link" itemprop="url">分布式改造理论与实战</a>
+            <a href="/2025/04/12/micro/IT%E8%80%81%E9%BD%90%E6%9E%B6%E6%9E%84900%E8%AE%B2/" class="post-title-link" itemprop="url">IT老齐架构900讲</a>
         </h2>
 
         <div class="post-meta">
@@ -545,7 +1038,7 @@
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2025-06-24 14:33:13" itemprop="dateModified" datetime="2025-06-24T14:33:13+08:00">2025-06-24</time>
+                <time title="修改时间：2025-07-18 15:58:08" itemprop="dateModified" datetime="2025-07-18T15:58:08+08:00">2025-07-18</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -732,571 +1225,16 @@
                 <i class="fa fa-calendar-o"></i>
               </span>
               <span class="post-meta-item-text">发表于</span>
-              
 
-              <time title="创建时间：2025-03-27 10:36:22 / 修改时间：10:38:50" itemprop="dateCreated datePublished" datetime="2025-03-27T10:36:22+08:00">2025-03-27</time>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <p>尚硅谷大数据技术之Telegraf</p>
-<hr>
-<p>title: telegraf</p>
-<p>categories:</p>
-<ul>
-<li>cloud</li>
-</ul>
-<h2 id="tags-云监控-指标采集"><a href="#tags-云监控-指标采集" class="headerlink" title="tags:- 云监控- 指标采集"></a>tags:<br>- 云监控<br>- 指标采集</h2><h1 id="认识Telegraf"><a href="#认识Telegraf" class="headerlink" title="认识Telegraf"></a>认识Telegraf</h1><h2 id="什么是Telegraf"><a href="#什么是Telegraf" class="headerlink" title="什么是Telegraf"></a>什么是Telegraf</h2><p>Telegraf是一个基于插件的开源指标采集工具。本身是为InfluxDB（一款时序数据库）量身打造的数据收集器，但是它过于优秀，能够将抓取的数据写到很多地方，尤其在时序数据库领域，很多时序数据库都能够与它配合使用。通常，它每隔一段时间抓取一批指标数据（比如机器的CPU使用情况，磁盘的IO，网络情况，MySQL服务端的的会话数等等）并将他们发送到时序数据库、消息队列中或者自定义导出到某个地方。供下游的应用处理（比如报警）。Telegraf也能够对外提供一个服务，等待客户端推送数据。</p>
-<p>它与logstash类似，只不过logstash是收集日志的。telegraf是收集指标的。</p>
-<h2 id="Telegraf的能力与社区"><a href="#Telegraf的能力与社区" class="headerlink" title="Telegraf的能力与社区"></a>Telegraf的能力与社区</h2><p>截至文档撰写时，它在github上已有11.7k stars。</p>
-<p><img src="/2025/03/27/cloud/telegraf/media/image1.png" alt="图形用户界面, 文本, 应用程序, 电子邮件, 网站
-描述已自动生成">{width&#x3D;”5.768055555555556in”<br>height&#x3D;”2.3194444444444446in”}</p>
-<p>而且官方还提供了300多个可选的插件，另外Telegraf是易于拓展的，如果官方的插件无法满足你的需求，你随时可以在Telegraf的基础上写出自己的插件。</p>
-<h1 id="安装部署Telegraf"><a href="#安装部署Telegraf" class="headerlink" title="安装部署Telegraf"></a>安装部署Telegraf</h1><p>访问下载页面：<a target="_blank" rel="noopener" href="https://portal.influxdata.com/downloads/">https://portal.influxdata.com/downloads/</a></p>
-<p>右边的Platform是你对应的系统，选择与你的平台相对应的，下载的网址会自动更改。</p>
-<p><img src="/2025/03/27/cloud/telegraf/media/image2.png" alt="图形用户界面, 文本, 应用程序, 电子邮件
-描述已自动生成">{width&#x3D;”5.768055555555556in”<br>height&#x3D;”2.5819444444444444in”}</p>
-<p>这里要去你去写一个yum文件，页面上给出的命令有点问题，需要改成下面这样，红色处是我们的修改</p>
-<p>cat &lt;&lt;EOF | sudo tee &#x2F;etc&#x2F;yum.repos.d&#x2F;influxdata.repo</p>
-<p>[influxdata]</p>
-<p>name &#x3D; InfluxData Repository - Stable</p>
-<p>baseurl &#x3D; <a target="_blank" rel="noopener" href="https://repos.influxdata.com/stable////$basearch/main">https://repos.influxdata.com/stable/\\\$basearch/main</a></p>
-<p>enabled &#x3D; 1</p>
-<p>gpgcheck &#x3D; 1</p>
-<p>gpgkey &#x3D; <a target="_blank" rel="noopener" href="https://repos.influxdata.com/influxdb.key">https://repos.influxdata.com/influxdb.key</a></p>
-<p>EOF</p>
-<p>这段代码运行完，在&#x2F;etc&#x2F;yum.repose.d&#x2F;目录下会变出来一个influxdata.repo文件。里面的内容就是你代码上的中间部分。</p>
-<p><img src="/2025/03/27/cloud/telegraf/media/image3.png" alt="文本
-描述已自动生成">{width&#x3D;”5.768055555555556in”<br>height&#x3D;”1.4680555555555554in”}</p>
-<p>然后，使用yum在线安装。</p>
-<p>sudo yum install telegraf</p>
-<p>使用systemctl查看一下telegraf是否安装成功。</p>
-<p>systemctl status telegraf</p>
-<p><img src="/2025/03/27/cloud/telegraf/media/image4.png" alt="文本
-描述已自动生成">{width&#x3D;”5.768055555555556in”<br>height&#x3D;”0.7673611111111112in”}</p>
-<p>如图所示，安装成功。</p>
-<h1 id="示例1：Telegraf快速入门（单输入单输出工作流）"><a href="#示例1：Telegraf快速入门（单输入单输出工作流）" class="headerlink" title="示例1：Telegraf快速入门（单输入单输出工作流）"></a>示例1：Telegraf快速入门（单输入单输出工作流）</h1><h2 id="编写Telegraf配置文件"><a href="#编写Telegraf配置文件" class="headerlink" title="编写Telegraf配置文件"></a>编写Telegraf配置文件</h2><p>创建一个目录，专门放telegraf的配置文件。</p>
-<p>mkdir &#x2F;opt&#x2F;module&#x2F;telegraf_conf</p>
-<p>创建配置文件example01.conf。</p>
-<p>vim example01.conf</p>
-<p>并键入以下内容。</p>
-<p>[agent]</p>
-<p>interval &#x3D; &quot;3s&quot;</p>
-<p>[[inputs.cpu]]</p>
-<p>percpu &#x3D; true</p>
-<p>totalcpu &#x3D; true</p>
-<p>collect_cpu_time &#x3D; false</p>
-<p>report_active &#x3D; false</p>
-<p>core_tags &#x3D; false</p>
-<p>[[outputs.file]]</p>
-<p>files &#x3D; [&quot;stdout&quot;]</p>
-<h2 id="运行Telegraf程序"><a href="#运行Telegraf程序" class="headerlink" title="运行Telegraf程序"></a>运行Telegraf程序</h2><p>使用下述命令启动telegraf，观察控制台的情况。s</p>
-<p>telegraf --config .&#x2F;example01.conf</p>
-<p>如图所示：控制台出现了以下输出。</p>
-<p><img src="/2025/03/27/cloud/telegraf/media/image5.png" alt="电脑屏幕截图
-描述已自动生成">{width&#x3D;”5.768055555555556in”<br>height&#x3D;”1.3743055555555554in”}</p>
-<h2 id="知识点讲解"><a href="#知识点讲解" class="headerlink" title="知识点讲解"></a>知识点讲解</h2><h3 id="配置文件的含义"><a href="#配置文件的含义" class="headerlink" title="配置文件的含义"></a>配置文件的含义</h3><p>example01.conf配置文件涉及到3个配置块。</p>
-<p>[ agent ]<br>这里面是一些涉及全局的配置。此处我们设置interval&#x3D;&quot;3s&quot;，意思是让配置文件中的所有input插件每隔3秒去采集一次指标。interval的默认值是10秒。</p>
-<p>[[ inputs.cpu ]]<br>这是一个input输入组件，这里的配置是说我们导出的指标会包含每一个CPU核的使用情况，而且还包含所有CPU总的使用情况。</p>
-<p>[[ outputs.file ]]<br>这是一个output输出组件，这里我们用了一个名为file的输出组件，不过files参数设为了<br>stdout<br>（标准输出）也就是控制台，这样程序运行起来我们应该可以看到数据打印在控制台上。</p>
-<h3 id="控制台输出内容"><a href="#控制台输出内容" class="headerlink" title="控制台输出内容"></a>控制台输出内容</h3><p><strong>进程设置与插件加载信息</strong></p>
-<p>首先控制台会输出一段日志内容，这里面包含了我们一个Telegraf进程的描述信息。s</p>
-<p><img src="/2025/03/27/cloud/telegraf/media/image6.png" alt="文本
-描述已自动生成">{width&#x3D;”5.768055555555556in”<br>height&#x3D;”0.8729166666666667in”}</p>
-<ol>
-<li><p>当前Telegraf的版本号为1.23.2</p>
-</li>
-<li><p>加载的input插件列表（目前就1个）：cpu</p>
-</li>
-<li><p>加载的aggregator插件列表（目前没有）</p>
-</li>
-<li><p>加载的processors插件列表（目前没有）</p>
-</li>
-<li><p>加载的output插件列表（目前就1个）：file</p>
-</li>
-<li><p>Tags<br>enable，开启了全局的标签集，全局的指标数据都会加上host&#x3D;hadoop102这个标签</p>
-</li>
-<li><p>agent Config，全局配置</p>
-<p>a)  Interval : 3s，所有的input组件每3s采集一次指标数据，</p>
-<p>b)  Quiet：false，不使用安静模式运行。</p>
-<p>c)  Hostname：&quot;hadoop102&quot;，机器名称hadoop102</p>
-<p>d)  Flush Interval：10s<br>所有的output组件每10s输出一次指标数据。所以，telegraf运行后，你应该每隔10秒，看到控制台上有一批输出。</p>
-</li>
-</ol>
-<p><strong>数据输出</strong></p>
-<p>在Telegraf的配置内容输出完毕后，我们可以看到一堆密密麻麻的数据。你会发现它不像json，也不像csv。这其实是Telegraf内置的数据结构，叫做InfluxDB行协议。后面会专门讲解这种数据结构。</p>
-<p><img src="/2025/03/27/cloud/telegraf/media/image7.png" alt="电脑屏幕的照片上有文字
-中度可信度描述已自动生成">{width&#x3D;”5.768055555555556in”<br>height&#x3D;”1.2479166666666666in”}</p>
-<h3 id="我们声明了一个什么样的工作流"><a href="#我们声明了一个什么样的工作流" class="headerlink" title="我们声明了一个什么样的工作流"></a>我们声明了一个什么样的工作流</h3><p>最后说一下我们的配置文件在Telegraf中起到了什么效果。</p>
-<p>如下图所示，exampl01.conf文件声明了一个仅有一个输入插件和一个输出插件的工作流。当然，Telegraf的组件和概念还有很多，随着课程的深入，这张图也会丰富起来。</p>
-<p><img src="/2025/03/27/cloud/telegraf/media/image8.png" alt="文本
-低可信度描述已自动生成">{width&#x3D;”5.768055555555556in”<br>height&#x3D;”1.9916666666666667in”}</p>
-<h1 id="示例2：启用处理插件"><a href="#示例2：启用处理插件" class="headerlink" title="示例2：启用处理插件"></a>示例2：启用处理插件</h1><p>这一节，我们通过一个更复杂的示例，来学习Telegraf中的processor（处理）插件是如何使用的。</p>
-<h2 id="编写Telegraf配置文件-1"><a href="#编写Telegraf配置文件-1" class="headerlink" title="编写Telegraf配置文件"></a>编写Telegraf配置文件</h2><p>接下来，我们在example01.conf的基础上稍作改进，编写一个新的配置文件example02.conf。</p>
-<p>cp example01.conf example02.conf</p>
-<p>编辑example02.conf文件。</p>
-<p>vim example02.conf</p>
-<p>键入以下内容（红色部分是我们相对example01.conf新增的内容）</p>
-<p>[agent]</p>
-<p>interval &#x3D; &quot;3s&quot;</p>
-<p>flush_interval &#x3D; &quot;5s&quot;</p>
-<p>[global_tags]</p>
-<p>user&#x3D;&quot;atguigu&quot;</p>
-<p>[[inputs.cpu]]</p>
-<p>percpu &#x3D; true</p>
-<p>totalcpu &#x3D; true</p>
-<p>collect_cpu_time &#x3D; false</p>
-<p>report_active &#x3D; false</p>
-<p>core_tags &#x3D; false</p>
-<p>[[processors.converter]]</p>
-<p>[processors.converter.tags]</p>
-<p>measurement &#x3D; [&quot;cpu&quot;]</p>
-<p>[[outputs.file]]</p>
-<p>files &#x3D; [&quot;stdout&quot;]</p>
-<h2 id="运行Telegraf程序-1"><a href="#运行Telegraf程序-1" class="headerlink" title="运行Telegraf程序"></a>运行Telegraf程序</h2><p>执行下面的命令，开启一个配置文件为example02.conf的telegraf进程</p>
-<p>telegraf --conf .&#x2F;example02.conf</p>
-<p>控制台能够正常输出，说明一切正常。</p>
-<p><img src="/2025/03/27/cloud/telegraf/media/image9.png" alt="文本
-描述已自动生成">{width&#x3D;”5.768055555555556in”<br>height&#x3D;”2.047222222222222in”}</p>
-<h2 id="看看和示例1的输出有什么不同"><a href="#看看和示例1的输出有什么不同" class="headerlink" title="看看和示例1的输出有什么不同"></a>看看和示例1的输出有什么不同</h2><h3 id="加载的插件不同"><a href="#加载的插件不同" class="headerlink" title="加载的插件不同"></a>加载的插件不同</h3><p>通过比较两次运行telegraf控制台输出的头部信息。我们可以发现example02.conf文件让我们的telegraf程序多加载了一个converter（转换器）插件。</p>
-<p><img src="/2025/03/27/cloud/telegraf/media/image10.png" alt="屏幕上有字
-描述已自动生成">{width&#x3D;”5.768055555555556in”<br>height&#x3D;”0.8569444444444444in”}</p>
-<h3 id="数据的输出发生了变化"><a href="#数据的输出发生了变化" class="headerlink" title="数据的输出发生了变化"></a>数据的输出发生了变化</h3><p>截至目前，我们还没有讲解Telegraf内部的数据格式。不过我们可以暂时只关注两个示例输出数据的头部。</p>
-<p>如下图所示：</p>
-<p><img src="/2025/03/27/cloud/telegraf/media/image11.png" alt="日程表
-描述已自动生成">{width&#x3D;”5.768055555555556in”<br>height&#x3D;”1.7958333333333334in”}</p>
-<p>一条数据的头部由两部分构成。</p>
-<p>measurement（测量名称）。此处，我们使用CPU<br>input插件来测量CPU的使用情况，所以测量的名称就叫做cpu是很合适的。</p>
-<p>tags（标签集）。因为telegraf是InfluxData公司为InfluxDB开发指标收集组件，这里的tags其实是为了InfluxDB建立索引的方便。关于索引的详细只是后面会说到。</p>
-<p><img src="/2025/03/27/cloud/telegraf/media/image12.png" alt="图示
-描述已自动生成">{width&#x3D;”4.886973972003499in”<br>height&#x3D;”1.5838834208223973in”}</p>
-<p>比较上图的数据可以发现，在我们加了一个processor插件后，数据的格式发生的改变。原本标签集上的内容被拿来替换了measurement（指标名称）。这也体现了processor插件操作、转换、处理数据的功能。</p>
-<ol start="3">
-<li><strong>示例2的工作流</strong></li>
-</ol>
-<p>综上，我们可以总结一下示例2对应的工作流。如下图所示：</p>
-<p><img src="/2025/03/27/cloud/telegraf/media/image13.png" alt="图示
-描述已自动生成">{width&#x3D;”5.768055555555556in”<br>height&#x3D;”2.8055555555555554in”}</p>
-<p>1个Input组件，1个Processor组件，1个Output组件。</p>
-<h1 id="学会使用插件文档"><a href="#学会使用插件文档" class="headerlink" title="学会使用插件文档"></a>学会使用插件文档</h1><p>通过上面的两个示例，我们可以发现，3个插件（1个input，1个processor，1个output）的配置文件，各自有各自的写法。那么作为使用者的你，怎么知道每个配件应该怎么去写配置呢？</p>
-<p>这必须借助文档！</p>
-<p>接来下，我们尝试通过官方文档来了解刚才Processor插件的用法。s</p>
-<h2 id="如何使用插件文档"><a href="#如何使用插件文档" class="headerlink" title="如何使用插件文档"></a>如何使用插件文档</h2><h3 id="不同版本的Telegraf支持的插件不同"><a href="#不同版本的Telegraf支持的插件不同" class="headerlink" title="不同版本的Telegraf支持的插件不同"></a>不同版本的Telegraf支持的插件不同</h3><p>首先注意，如果你正在使用Telegraf的1.23版本，那么你看插件文档的时候，也应该去看1.23版本的文档。这是因为Go语言开发的项目，会把整个项目涉及的东西编译到一个单独的二进制可执行文件中。</p>
-<p>而且这个可执行文件里面写的全部都是本地码（native-code），不需要专门的Go语言执行环境，操作系统环境直接可以让它运行起来。</p>
-<p>介于此，Telegraf的插件和框架核心代码是编译在一块的，它们都在一个可执行文件中。</p>
-<p><img src="/2025/03/27/cloud/telegraf/media/image14.png" alt="图示
-描述已自动生成">{width&#x3D;”4.52830271216098in”<br>height&#x3D;”1.5881233595800526in”}</p>
-<p>因此v1.23中特有的插件，前面的版本就不会有，除非把旧版本的Telegraf源码下下来，然后把想要的插件源码写进去再重新编译。</p>
-<p>注意！上面说的是Telegraf的内置插件，Telegraf还为我们留了一个exec<br>Input插件，通过这个插件，我们可以和外部的捕捉指标数据的插件进行集成，后面的课程涉及详细的案例。</p>
-<h3 id="Telegraf插件目录"><a href="#Telegraf插件目录" class="headerlink" title="Telegraf插件目录"></a>Telegraf插件目录</h3><p>首先，在Telegraf的官方文档上，有一栏叫做Plugin<br>directory（插件目录），在这里，你可以看到对应Telegraf版本上所有可用的插件。</p>
-<p>下面给出的链接，是Telegraf v1.23的插件目录。</p>
-<p><a target="_blank" rel="noopener" href="https://docs.influxdata.com/telegraf/v1.23/plugins/">https://docs.influxdata.com/telegraf/v1.23/plugins/</a></p>
-<p><img src="/2025/03/27/cloud/telegraf/media/image15.png" alt="图形用户界面, 应用程序
-描述已自动生成">{width&#x3D;”5.768055555555556in”<br>height&#x3D;”3.6354166666666665in”}</p>
-<h3 id="插件过滤"><a href="#插件过滤" class="headerlink" title="插件过滤"></a>插件过滤</h3><p>页面的顶部是一组过滤器，你可以勾选想要查看的插件类别，这样页面下方的插件列表就会短很多，方便你快速找到目标。</p>
-<p><img src="/2025/03/27/cloud/telegraf/media/image16.png" alt="图形用户界面, 应用程序, 电子邮件
-描述已自动生成">{width&#x3D;”5.768055555555556in”<br>height&#x3D;”3.134027777777778in”}</p>
-<p>此处，点击Processor选项，这样页面的下方就只剩27个组件供我们浏览了。</p>
-<h3 id="找到相应插件的帮助文档"><a href="#找到相应插件的帮助文档" class="headerlink" title="找到相应插件的帮助文档"></a>找到相应插件的帮助文档</h3><p>将页面向下滚动，我们可以看到一个插件列表，这些就是我们过滤出来的插件。</p>
-<p><img src="/2025/03/27/cloud/telegraf/media/image17.png" alt="图形用户界面, 应用程序
-描述已自动生成">{width&#x3D;”5.768055555555556in”<br>height&#x3D;”3.6743055555555557in”}</p>
-<p>其中第二个卡片，就是我们示例2中使用的Converter插件。如下图所示，卡片上会有一些帮助信息。点击右上角的view按钮，可以看到更加详细的使用说明。</p>
-<p><img src="/2025/03/27/cloud/telegraf/media/image18.png" alt="文本
-描述已自动生成">{width&#x3D;”5.768055555555556in”<br>height&#x3D;”2.0993055555555555in”}</p>
-<p>首先，你可以看到完整的插件配置可以包含那些选项。</p>
-<p><img src="/2025/03/27/cloud/telegraf/media/image19.png">{width&#x3D;”5.768055555555556in”<br>height&#x3D;”3.4131944444444446in”}</p>
-<p>最重要的是，插件的作者通常会给你列出几个示例，方便你理解插件的工作方式。</p>
-<p><img src="/2025/03/27/cloud/telegraf/media/image20.png" alt="图形用户界面, 应用程序
-描述已自动生成">{width&#x3D;”5.768055555555556in”<br>height&#x3D;”2.797222222222222in”}</p>
-<h2 id="在示例配置中也可以获取有帮助的信息"><a href="#在示例配置中也可以获取有帮助的信息" class="headerlink" title="在示例配置中也可以获取有帮助的信息"></a>在示例配置中也可以获取有帮助的信息</h2><p>上述是通过官网查看插件的使用方式。另外，你还可以使用telegraf命令来查看一个插件的示例配置。</p>
-<p>下面的命令可以打印Telegraf中所有内置插件的示例配置。</p>
-<p>telegraf config</p>
-<p>不过打印到控制台的用处不大。将它导出到文件中用编辑器搜索查看才是正确实践。</p>
-<p>telegraf config &gt; tmp.conf</p>
-<p>如图所示，使用vim编辑器打开后，直接用正则表达式找你想要的插件。里面包含这个插件所有可用的配置项，以及各个配置项的说明。但是没有结合数据的使用案例。</p>
-<p><img src="/2025/03/27/cloud/telegraf/media/image21.png">{width&#x3D;”5.768055555555556in”<br>height&#x3D;”2.8694444444444445in”}</p>
-<h1 id="Telegraf内部数据结构（InfluxDB行协议）"><a href="#Telegraf内部数据结构（InfluxDB行协议）" class="headerlink" title="Telegraf内部数据结构（InfluxDB行协议）"></a>Telegraf内部数据结构（InfluxDB行协议）</h1><p>Telegraf的内部数据结构叫做InfluxDB行协议。如下图所示：</p>
-<p><img src="/2025/03/27/cloud/telegraf/media/image22.png">{width&#x3D;”5.768055555555556in”<br>height&#x3D;”0.6673611111111111in”}</p>
-<p>Telegraf本身是InfluxData公司专门为InfluxDB开发的数据采集器。上面这种数据格式是InfluxDB数据库使用的，只要数据符合上面这种格式，就能通过InfluxDB的API将数据导入数据库。所以，自家的插件当然支持自家的生态了，InfluxDB</p>
-<p>接下来介绍一下它的几个构成部分。</p>
-<h2 id="measurement（测量名称）"><a href="#measurement（测量名称）" class="headerlink" title="measurement（测量名称）"></a>measurement（测量名称）</h2><p>随着后面的学习，你会逐渐深入理解这个概念。目前，你可以将它理解为关系型数据库中的一张表。</p>
-<p>必需</p>
-<p>测量的名称。每个数据点都必须声明自己是哪个测量里面的 ，不可省略。</p>
-<p>大小写敏感</p>
-<p>不可以下划线 _ 开头</p>
-<h2 id="Tag-Set（标签集）"><a href="#Tag-Set（标签集）" class="headerlink" title="Tag Set（标签集）"></a>Tag Set（标签集）</h2><p>标签应该用在一些值的范围有限的，不太会变动的属性上。比如传感器的类型和id等等。在InfluxDB中一个Tag相当于一个索引。给数据点加上Tag有利于将来对数据进行检索。但是如果索引太多了，就会减慢数据的插入速度。</p>
-<p>可选</p>
-<p>键值关系使用 &#x3D; 表示</p>
-<p>多个键值对之间使用英文逗号 , 分隔</p>
-<p>标签的键和值都区分大小写</p>
-<p>标签的键不能以下划线 _ 开头</p>
-<p>键的数据类型：字符串</p>
-<p>值的数据类型：字符串</p>
-<h2 id="Field-Set（字段集）"><a href="#Field-Set（字段集）" class="headerlink" title="Field Set（字段集）"></a>Field Set（字段集）</h2><p>必需</p>
-<p>一个数据点上所有的字段键值对，键是字段名，值是数据点的值。</p>
-<p>一个数据点至少要有一个字段。</p>
-<p>字段集的键是大小写敏感的。</p>
-<p>字段</p>
-<p>键的数据类型：字符串</p>
-<p>值的数据类型：浮点数 | 整数 | 无符号整数 | 字符串 | 布尔值</p>
-<h2 id="Timestamp（时间戳）"><a href="#Timestamp（时间戳）" class="headerlink" title="Timestamp（时间戳）"></a>Timestamp（时间戳）</h2><p>可选</p>
-<p>数据点的Unix时间戳，每个数据点都可以指定自己的时间戳。</p>
-<p>如果时间戳没有指定。那么InfluxDB就使用当前系统的时间戳。</p>
-<p>数据类型：Unix timestamp</p>
-<p>如果你的数据里的时间戳不是以纳秒为单位的，那么需要在数据写入时指定时间戳的精度。</p>
-<h2 id="空格"><a href="#空格" class="headerlink" title="空格"></a>空格</h2><p>行协议中的空格决定了InfluxDB如何解释数据点。第一个未转义的空格将测量值&amp;Tag<br>Set （标签集）与 Field Set（字段集） 分开。第二个未转义空格将Field<br>Set（字段级）和时间戳分开。</p>
-<p><img src="/2025/03/27/cloud/telegraf/media/image23.png" alt="日程表
-中度可信度描述已自动生成">{width&#x3D;”5.768055555555556in”<br>height&#x3D;”1.5326388888888889in”}</p>
-<h2 id="协议中的数据类型及其格式"><a href="#协议中的数据类型及其格式" class="headerlink" title="协议中的数据类型及其格式"></a>协议中的数据类型及其格式</h2><h3 id="Float（浮点数）"><a href="#Float（浮点数）" class="headerlink" title="Float（浮点数）"></a>Float（浮点数）</h3><p>IEEE-754标准的64位浮点数。这是默认的数据类型。</p>
-<p>示例：字段级值类型为浮点数的行协议</p>
-<p>myMeasurement fieldKey&#x3D;1.0</p>
-<p>myMeasurement fieldKey&#x3D;1</p>
-<p>myMeasurement fieldKey&#x3D;-1.234456e+78</p>
-<h3 id="Integer（整数）"><a href="#Integer（整数）" class="headerlink" title="Integer（整数）"></a>Integer（整数）</h3><p>有符号64位整数。需要在数字的尾部加上一个小写数字 i 。</p>
-<hr>
-<p>  整数最小值                          整数最大值</p>
-<hr>
-<p>  -9223372036854775808i               9223372036854775807i</p>
-<hr>
-<p>示例：字段值类型为有整数的</p>
-<h3 id="UInteger（无符号整数）"><a href="#UInteger（无符号整数）" class="headerlink" title="UInteger（无符号整数）"></a>UInteger（无符号整数）</h3><p>无符号64位整数。需要在数字的尾部加上一个小写数字 u 。</p>
-<hr>
-<p>  无符号整数最小值                    无符号整数最大值</p>
-<hr>
-<p>  0u                                  18446744073709551615u</p>
-<hr>
-<p>示例：字段值类型为无符号整数的航协议</p>
-<p>myMeasurement fieldKey&#x3D;1u</p>
-<p>myMeasurement fieldKey&#x3D;12485903u</p>
-<h3 id="String（字符串）"><a href="#String（字符串）" class="headerlink" title="String（字符串）"></a>String（字符串）</h3><p>普通文本字符串，长度不能超过64KB</p>
-<p>示例：</p>
-<p># String measurement name, field key, and field value</p>
-<p>myMeasurement fieldKey&#x3D;&quot;this is a string&quot;</p>
-<h3 id="Boolean（布尔值）"><a href="#Boolean（布尔值）" class="headerlink" title="Boolean（布尔值）"></a>Boolean（布尔值）</h3><p>true或者false。</p>
-<p>示例：</p>
-<hr>
-<p>  布尔值                              支持的语法</p>
-<hr>
-<p>  True                                t, T, true, True, TRUE</p>
-<h2 id="False-f-F-false-False-FALSE"><a href="#False-f-F-false-False-FALSE" class="headerlink" title="  False                               f, F, false, False, FALSE"></a>  False                               f, F, false, False, FALSE</h2><p>示例：</p>
-<p>myMeasurement fieldKey&#x3D;true</p>
-<p>myMeasurement fieldKey&#x3D;false</p>
-<p>myMeasurement fieldKey&#x3D;t</p>
-<p>myMeasurement fieldKey&#x3D;f</p>
-<p>myMeasurement fieldKey&#x3D;TRUE</p>
-<p>myMeasurement fieldKey&#x3D;FALSE</p>
-<p>不要对布尔值使用引号，否则会被解释为字符串</p>
-<h3 id="Unix-Timestamp（Unix-时间戳）"><a href="#Unix-Timestamp（Unix-时间戳）" class="headerlink" title="Unix Timestamp（Unix 时间戳）"></a>Unix Timestamp（Unix 时间戳）</h3><p>如果你写时间戳，</p>
-<p>myMeasurementName fieldKey&#x3D;&quot;fieldValue&quot; 1556813561098000000</p>
-<h2 id="注释"><a href="#注释" class="headerlink" title="注释"></a>注释</h2><p>以井号 # 开头的一行会被当做注释。</p>
-<p>示例：</p>
-<p># 这是一行数据</p>
-<p>myMeasurement fieldKey&#x3D;&quot;string value&quot; 1556813561098000000</p>
-<h1 id="Telegraf命令行的使用"><a href="#Telegraf命令行的使用" class="headerlink" title="Telegraf命令行的使用"></a>Telegraf命令行的使用</h1><p>Telegraf安装好之后，就可以使用telegraf命令了。</p>
-<p>用法：</p>
-<p>telegraf [ 命令 ]</p>
-<p>telegraf [ 选项 ]</p>
-<h2 id="命令"><a href="#命令" class="headerlink" title="命令"></a>命令</h2><hr>
-<p>  命令      描述</p>
-<hr>
-<p>  config    将完整的示例配置打印到标准输出（stdout 控制台）</p>
-<h2 id="version-将版本号打印到标准输出（stdout-控制台）"><a href="#version-将版本号打印到标准输出（stdout-控制台）" class="headerlink" title="  version   将版本号打印到标准输出（stdout 控制台）"></a>  version   将版本号打印到标准输出（stdout 控制台）</h2><h2 id="选项"><a href="#选项" class="headerlink" title="选项"></a>选项</h2><hr>
-<p>  参数                               描述</p>
-<hr>
-<p>  --aggregator-filter &lt;filter&gt;    筛选要启用聚合器，分隔符为</p>
-<p>  --config &lt;file&gt;                 要加载的配置文件</p>
-<p>  --config-directory&lt;directory&gt;   包含其他配置文件的目录。其中的配置文件名需要以.conf收尾</p>
-<p>  --deprecation-list                打印所有已弃用的插件或插件选项。</p>
-<p>  --watch-config                    在本地的配置文件更改时，重启Telegraf进程，监听方式使用的是文件系统的通知或者轮询文件。--watch-config功能默认是关闭的。</p>
-<p>  --plugin-directory &lt;directory&gt;  插件目录，会以递归的方式搜索这个目录，来找到可用的插件，找到的插件会被加载。插件文件的后缀是.so</p>
-<p>  --debug                           启动debug级别的日志文件</p>
-<p>  --input-filter &lt;filter&gt;         过滤要启用的输入插件，分隔符为 : 。</p>
-<p>  --input-list                      打印可用的输入插件</p>
-<p>  --output-filter                   过滤要启用的输出插件，分隔符为 : 。</p>
-<p>  --output-list                     打印可用的输出插件</p>
-<p>  --pidfile &lt;file&gt;                要将pid写入到哪个文件。</p>
-<p>  --pprof-addr &lt;address&gt;          pprof地址，默认情况下禁用。pprof是Go中分析程序运行性的工具，它能够提供各种性能数据。比如，内存分配情况的采样信息、对上内存的使用情况采样信息等。</p>
-<p>  --processor-filter &lt;filter&gt;     筛选要启用的filter插件，插件之间使用 : 分隔。</p>
-<p>  --quiet                           在安静模式下运行</p>
-<p>  --section-filter &lt;filter&gt;       这个参数和config命令一起使用才有意义。过滤要打印的配置段（agent，global_tags，outputs，processors，aggregators和inputs）。配置段之间用 : 分隔。</p>
-<p>  --sample-config                   打印完整的示例配置（和config命令的作用一样）</p>
-<p>  --once                            收集一次指标，写出，然后退出进程。</p>
-<p>  --test                            收集一次指标并打印一次，然后退出进程。</p>
-<p>  --test-wait                       telegraf进程在test或once模式下，进行一次input所需要的秒数。</p>
-<p>  --usage &lt;plugin&gt;                打印插件的用法。（比如：telegraf --usage mysql）</p>
-<h2 id="version-打印Telegraf的版本号"><a href="#version-打印Telegraf的版本号" class="headerlink" title="  --version                         打印Telegraf的版本号"></a>  --version                         打印Telegraf的版本号</h2><h2 id="示例：Telegraf命令行用法"><a href="#示例：Telegraf命令行用法" class="headerlink" title="示例：Telegraf命令行用法"></a>示例：Telegraf命令行用法</h2><h3 id="生成Telegraf的配置文件"><a href="#生成Telegraf的配置文件" class="headerlink" title="生成Telegraf的配置文件"></a>生成Telegraf的配置文件</h3><p>使用config命令，打印输出配置配置文件（也可以使用--sample-config参数），将输出重定向到一个文件中。</p>
-<p>telegraf config &gt; telegraf.conf</p>
-<h3 id="生成仅定义了CPU输入和InfluxDB输出的配置文件"><a href="#生成仅定义了CPU输入和InfluxDB输出的配置文件" class="headerlink" title="生成仅定义了CPU输入和InfluxDB输出的配置文件"></a>生成仅定义了CPU输入和InfluxDB输出的配置文件</h3><p>telegraf --input-filter cpu --output-filter influxdb config</p>
-<h3 id="运行单个的Telegraf配置文件并打印到控制台"><a href="#运行单个的Telegraf配置文件并打印到控制台" class="headerlink" title="运行单个的Telegraf配置文件并打印到控制台"></a>运行单个的Telegraf配置文件并打印到控制台</h3><p>使用test模式，output插件不会被启用。</p>
-<p>telegraf --config example01.conf --test</p>
-<p><img src="/2025/03/27/cloud/telegraf/media/image24.png" alt="图片包含 图形用户界面
-描述已自动生成">{width&#x3D;”5.768055555555556in”<br>height&#x3D;”1.2319444444444445in”}</p>
-<h3 id="运行一个配置文件中的所有插件"><a href="#运行一个配置文件中的所有插件" class="headerlink" title="运行一个配置文件中的所有插件"></a>运行一个配置文件中的所有插件</h3><p>telegraf --config telegraf.conf</p>
-<h3 id="运行一个包含CPU和内存输入插件以及InfluxDB输出插件的Telegraf实例"><a href="#运行一个包含CPU和内存输入插件以及InfluxDB输出插件的Telegraf实例" class="headerlink" title="运行一个包含CPU和内存输入插件以及InfluxDB输出插件的Telegraf实例"></a>运行一个包含CPU和内存输入插件以及InfluxDB输出插件的Telegraf实例</h3><p>telegraf --input-filter cpu:mem --output-filter influxdb</p>
-<h3 id="运行Telegraf时开启pprof"><a href="#运行Telegraf时开启pprof" class="headerlink" title="运行Telegraf时开启pprof"></a>运行Telegraf时开启pprof</h3><p>telegraf --config telegraf.conf --pprof-addr localhost:6060</p>
-<p>运行上述代码后，可在浏览器访问hadoop102:6060来观察进程运行的性能信息。</p>
-<p><img src="/2025/03/27/cloud/telegraf/media/image25.png" alt="图片包含 图形用户界面
-描述已自动生成">{width&#x3D;”5.768055555555556in”<br>height&#x3D;”2.3201388888888888in”}</p>
-<h1 id="示例3：使用远程配置"><a href="#示例3：使用远程配置" class="headerlink" title="示例3：使用远程配置"></a>示例3：使用远程配置</h1><p>Telegraf的--cofnig参数还能指定一个URL，让telegraf通过网络远程获取配置文件。</p>
-<h2 id="使用python自带的http-server快速搭建静态文件服务"><a href="#使用python自带的http-server快速搭建静态文件服务" class="headerlink" title="使用python自带的http.server快速搭建静态文件服务"></a>使用python自带的http.server快速搭建静态文件服务</h2><p>cd 到我们放配置文件的目录 &#x2F;opt&#x2F;module&#x2F;telegraf_conf<br>使用下面的命令，快速开启一个静态文件服务。</p>
-<p>python3 -m http.server</p>
-<p>默认情况下，它监听8000端口，并允许外部访问。</p>
-<p><img src="/2025/03/27/cloud/telegraf/media/image26.png">{width&#x3D;”5.768055555555556in”<br>height&#x3D;”0.3972222222222222in”}</p>
-<h2 id="运行Telegraf"><a href="#运行Telegraf" class="headerlink" title="运行Telegraf"></a>运行Telegraf</h2><p>接下来，我们可以尝试使用这个服务来获取配置文件。</p>
-<p>使用下面的命令运行Telegraf</p>
-<p>telegraf --config <a target="_blank" rel="noopener" href="http://hadoop102:8080/example01.conf">http://hadoop102:8080/example01.conf</a></p>
-<p>可以看到，我们成功获取了配置文件，而且数据也能够正常输出。</p>
-<p><img src="/2025/03/27/cloud/telegraf/media/image27.png" alt="文本
-描述已自动生成">{width&#x3D;”5.768055555555556in”<br>height&#x3D;”1.7354166666666666in”}</p>
-<p>但是这种方式不能监听配置的变化。</p>
-<h1 id="配置文件参数"><a href="#配置文件参数" class="headerlink" title="配置文件参数"></a>配置文件参数</h1><h2 id="Agent配置"><a href="#Agent配置" class="headerlink" title="Agent配置"></a>Agent配置</h2><p>+———————–+————+——————————–+<br>| 配置名                | 直译       | 解释                           |<br>+&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;+&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;+:&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;+<br>| interval              | 间隔       | 所有                           |<br>|                       |            | 的input组件采集数据的间隔时间  |<br>+———————–+————+——————————–+<br>| round_interval        | 间隔取整   | 将采集的间隔时                 |<br>|                       |            | 间取整。比如，如果interval设置 |<br>|                       |            | 为10s，但我们在1分02秒启动了te |<br>|                       |            | legraf服务，那么采集的时间会取 |<br>|                       |            | 整到1分10秒，1分20秒，1分30秒  |<br>+———————–+————+——————————–+<br>| metric_batch_size     | 指标       | telegraf一批次                 |<br>|                       | 批大小     | 从output组件向外发送数据的大小 |<br>|                       |            | ，网络不稳定时可以减小此参数。 |<br>+———————–+————+——————————–+<br>| metric_buffer_limit   | 指标       | tele                           |<br>|                       | 缓冲区     | graf会为每个output插件创建一个 |<br>|                       |            | 缓冲区，来缓存指标数据，并在ou |<br>|                       |            | tput成功将数据发送后，将成功发 |<br>|                       |            | 送的数据从缓冲区删除。所以，me |<br>|                       |            | triac_buffer_limit参数应该至少 |<br>|                       |            | 是metric_batch_size参数的两倍  |<br>+———————–+————+——————————–+<br>| collection_jetter     | 采集抖动   | 这个参数会                     |<br>|                       |            | 在采集的时间点上加一个随机的抖 |<br>|                       |            | 动，这样可以避免很多插件同时查 |<br>|                       |            | 询一些消耗资源的指标，从而对被 |<br>|                       |            | 观测的系统产生不可忽视的影响。 |<br>+———————–+————+——————————–+<br>| flush_interval        | 刷新间隔   | 所有output的输出               |<br>|                       |            | 间隔，这个参数不应该设的比int  |<br>|                       |            | erval（所有input组件的采集间隔 |<br>|                       |            | ）小。最大的实际发送间隔将会是 |<br>+———————–+————+——————————–+<br>| flush_jitter          | 刷新抖动   | 对output的输出时间加上一个随   |<br>|                       |            | 机的抖动，这主要是为了避免大量 |<br>|                       |            | 的Telegraf实例在同样的时间同时 |<br>|                       |            | 执行写入操作，出现较大的写入峰 |<br>|                       |            | 值。比如，flush_jitter设为5s， |<br>|                       |            | flush_interval设为10s意味着会  |<br>|                       |            | 在10~15秒的时候进行一次输出。 |<br>+———————–+————+——————————–+<br>| precision             | 精度       | 精度配置确定从输入插件         |<br>|                       |            | 接收的点中保留多少时间戳精度。 |<br>|                       |            | 所有传入的时间戳都被阶段为给定 |<br>|                       |            | 的精度。然后Telegraf用零填充截 |<br>|                       |            | 断的时间戳以创建纳秒时间戳，输 |<br>|                       |            | 出插件将以纳秒为单位发出时间戳 |<br>|                       |            | 。有效的精度为ns，us，ms和s。  |<br>|                       |            |                                |<br>|                       |            | 例如：如果精                   |<br>|                       |            | 度设置为ms，则纳秒时间戳14800  |<br>|                       |            | 00000123456789将被截断为148000 |<br>|                       |            | 0000123毫秒精度，然后用0填充以 |<br>|                       |            | 生成新的，不太精确的纳秒时间戳 |<br>|                       |            | 1480000000123000000。输出插件  |<br>|                       |            | 不会进一步更改时间戳。如果是服 |<br>|                       |            | 务型的输出插件会忽略这个设置。 |<br>+———————–+————+——————————–+<br>| logfile               | 日志文件   | 自定义的日志名称，             |<br>+———————–+————+——————————–+<br>| debug                 | 调试       | 使用debug模式运行Telegraf      |<br>+———————–+————+——————————–+<br>| quiet                 | 安静       | 安静地                         |<br>|                       |            | 运行Telegraf，只会提示错误信息 |<br>+———————–+————+——————————–+<br>| logtarget             | 日志目标   | 该配置用来空值日志             |<br>|                       |            | 的目标。它可以是&quot;file&quot;，&quot;s  |<br>|                       |            | tderr&quot;之一，如果是在Windows系 |<br>|                       |            | 统上，它还可以设为&quot;eventlog&quot; |<br>|                       |            | 。设置为&quot;file&quot;时，输入文件由 |<br>|                       |            | logfile 配置项决定。           |<br>+———————–+————+——————————–+<br>| logfile               | 日志文件   | 指定logtarget指定为&quot;fi        |<br>|                       |            | le&quot;时的日志文件名。如果设置为 |<br>|                       |            | 空，那么日志会输出到stderr上。 |<br>+———————–+————+——————————–+<br>| logf                  | 日         | 日志轮转间隔，多长时间         |<br>| ile_rotation_interval | 志轮转间隔 | 开启一个新的日志文件，如果设置 |<br>|                       |            | 为0，那么就不按时间进行轮转。  |<br>+———————–+————+——————————–+<br>| logf                  | 日         | 当正在使用的日志文件           |<br>| ile_rotation_max_size | 志轮转大小 | 的大小超过该值时，开启一个新的 |<br>|                       |            | 日志文件。当设置为0，表示不按  |<br>|                       |            | 照日志文件的大小进行日志轮转。 |<br>+———————–+————+——————————–+<br>| logfile_              | 最大       | 最大的日志归档数量，每一       |<br>| rotation_max_archives | 轮转存档数 | 次日志轮转发生时，都会产生一个 |<br>|                       |            | 新的正在使用的日志文件，和一个 |<br>|                       |            | 归档（旧的不再使用的日志文件） |<br>+———————–+————+——————————–+<br>| log_with_timezone     | 日志时区   | 设置日志记录要使用的时区，或   |<br>|                       |            | 者设为&quot;local&quot;即为本地时间。  |<br>+———————–+————+——————————–+<br>| hostname              | 主机名     | 覆盖默认的主机名，             |<br>|                       |            | 如果不设该值，那么os.Hostname( |<br>|                       |            | )的返回值。（o                 |<br>|                       |            | s.Hostname）是Go语言标准库中的 |<br>|                       |            | 方法，可以获取当前机器的名称。 |<br>+———————–+————+——————————–+<br>| omit_hostname         | 忽略主机名 | telegraf                       |<br>|                       |            | 输出的指标数据中，有一个默认的 |<br>+———————–+————+——————————–+</p>
-<h2 id="Input-输入插件通用配置"><a href="#Input-输入插件通用配置" class="headerlink" title="Input 输入插件通用配置"></a>Input 输入插件通用配置</h2><p>+————-+———+———————————————+<br>| 配置名      | 直译    | 解释                                        |<br>+&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;+&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;+&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;+<br>| alias       | 别名    | 给一个input插件实例进行命名。               |<br>+————-+———+———————————————+<br>| interval    | 间隔    | 单                                          |<br>|             |         | 个Input组件收集指标的间隔时间，插件中的int  |<br>|             |         | erval配置比全局的interval配置的优先级要高。 |<br>+————-+———+———————————————+<br>| precision   | 精度    | 单个Input组件的时间精度，覆盖[agent\       |<br>|             |         | ]中的配置。精度配置确定从输出插件接收的点中 |<br>|             |         | 保留多少时间戳精度。所有传入的时间戳都被阶  |<br>|             |         | 段为给定的精度。然后Telegraf用零填充截断的  |<br>|             |         | 时间戳以创建纳秒时间戳，输出插件将以纳秒为  |<br>|             |         | 单位发出时间戳。有效的精度为ns，us，ms和s。 |<br>|             |         |                                             |<br>|             |         | 例如：                                      |<br>|             |         | 如果精度设置为ms，则纳秒时间戳1480000000123 |<br>|             |         | 456789将被截断为1480000000123毫秒精度，然后 |<br>|             |         | 用0填充以生成新的，不太精确的纳秒时间戳1480 |<br>|             |         | 000000123000000。输出插件不会进一步更改时间 |<br>|             |         | 戳。如果是服务型的输出插件会忽略这个设置。  |<br>+————-+———+———————————————+<br>| collec      | 采      | 单个Input组件的采集抖动                     |<br>| tion_jitter | 集抖动  |                                             |<br>+————-+———+———————————————+<br>| na          | 重命名  | 覆盖原来的指标名称，默认值为input组件的名称 |<br>| me_override |         |                                             |<br>+————-+———+———————————————+<br>| name_prefix | 名      | 指定要附加到度量值名称的前缀                |<br>|             | 称前缀  |                                             |<br>+————-+———+———————————————+<br>| name_suffix | 名      | 指定要附加到度量值名称的后缀                |<br>|             | 称后缀  |                                             |<br>+————-+———+———————————————+<br>| tags        | 标签集  | 给当前input数据添加新的标签集。             |<br>+————-+———+———————————————+</p>
-<h2 id="Output-输出插件通用配置"><a href="#Output-输出插件通用配置" class="headerlink" title="Output 输出插件通用配置"></a>Output 输出插件通用配置</h2><hr>
-<p>  配置名                直译             解释</p>
-<hr>
-<p>  alias                 别名             给一个output插件起一个别名</p>
-<p>  flush_interval        刷新间隔         单个output插件的输出间隔（覆盖全局配置）</p>
-<p>  flush_jitter          刷新抖动         单个output插件的输出时间抖动（覆盖全局配置）</p>
-<p>  metric_batch_size     指标批次大小     一次最多发送多少条数据（会覆盖全局配置）</p>
-<p>  metric_buffer_limit   指标缓冲区上限   未发送数据的缓冲区（会覆盖全局配置）</p>
-<p>  name_override         重命名           覆盖原来的指标名称，默认值为output的名称（我怀疑官网说错了）</p>
-<p>  name_prefix           名称前缀         指标名称的前缀</p>
-<h2 id="name-suffix-名称后缀-指标名称的后缀"><a href="#name-suffix-名称后缀-指标名称的后缀" class="headerlink" title="  name_suffix           名称后缀         指标名称的后缀"></a>  name_suffix           名称后缀         指标名称的后缀</h2><h2 id="Aggregator-聚合插件通用配置"><a href="#Aggregator-聚合插件通用配置" class="headerlink" title="Aggregator 聚合插件通用配置"></a>Aggregator 聚合插件通用配置</h2><hr>
-<p>  配置名          直译       解释</p>
-<hr>
-<p>  alias           别名       给一个Aggregator插件的实例命名</p>
-<p>  period          期间       聚合器对从now-period 到now 之间的数据进行聚合。</p>
-<p>  delay           延迟       聚合时进行一个小的延迟，防止在对时间戳为1000的数据进行聚合时，上游还在正在发送时间戳为1000的数据</p>
-<p>  grace           宽限       迟到多久的数据可以进入下一个聚合周期。</p>
-<p>  drop_original   删除源     默认为false，如果设置为true，袁术的指标数据就会从流水线上删除，不会发给下游的output插件</p>
-<p>  name_override   名称覆盖   给数据的指标名称重新命名</p>
-<p>  name_prefix     名称前缀   给指标名称加一个前缀</p>
-<p>  name_suffix     名称后缀   给指标名称加一个后缀</p>
-<h2 id="tags-标记-添加额外的标签集"><a href="#tags-标记-添加额外的标签集" class="headerlink" title="  tags            标记       添加额外的标签集"></a>  tags            标记       添加额外的标签集</h2><h2 id="Processor-处理插件通用配置"><a href="#Processor-处理插件通用配置" class="headerlink" title="Processor 处理插件通用配置"></a>Processor 处理插件通用配置</h2><hr>
-<p>  配置名        直译     解释</p>
-<hr>
-<p>  alias         别名     给Processor插件的示例起一个名字</p>
-<h2 id="order-顺序-这是处理器的执行顺序，如果没有制定，那么执行器的顺序就是随机的。注意！不是按照配置文件的先后顺序来的，而是随机。"><a href="#order-顺序-这是处理器的执行顺序，如果没有制定，那么执行器的顺序就是随机的。注意！不是按照配置文件的先后顺序来的，而是随机。" class="headerlink" title="  order         顺序     这是处理器的执行顺序，如果没有制定，那么执行器的顺序就是随机的。注意！不是按照配置文件的先后顺序来的，而是随机。"></a>  order         顺序     这是处理器的执行顺序，如果没有制定，那么执行器的顺序就是随机的。注意！不是按照配置文件的先后顺序来的，而是随机。</h2><h2 id="Metric-filtering-指标过滤器通用配置"><a href="#Metric-filtering-指标过滤器通用配置" class="headerlink" title="Metric filtering 指标过滤器通用配置"></a>Metric filtering 指标过滤器通用配置</h2><p>指标过滤器的配置可以卸载input，output</p>
-<hr>
-<p>  配置名         直译       解释</p>
-<hr>
-<p>  namepass       名称通过   一个glob模式的字符串数组，仅有measurement名称与这个配置的参数能匹配的指标数据可以进入此插件。</p>
-<p>  namedrop       名称删除   一个glob模式的字符串数组，能匹配上measurement的数据直接删除。</p>
-<p>  fieldpass      字段通过   一个glob模式的字符串数组，只有能匹配上的字段才能通过</p>
-<p>  fielddrop      字段删除   一个glob模式的字符串数组，如果匹配上了就删除这个资源。</p>
-<p>  tagpass        标签通过   一个glob模式的字符串数组，tag能匹配上的数据才能通过</p>
-<p>  tagdrop        标签删除   一个glob模式的字符串数组，tag能匹配上的数据会被删除</p>
-<p>  taginclude     标签包含   一个glob模式的字符串数据，能匹配到其中一个的整条数据才能通过。</p>
-<h2 id="tagexclude-标签不含-tageinclude的反函数"><a href="#tagexclude-标签不含-tageinclude的反函数" class="headerlink" title="  tagexclude     标签不含   tageinclude的反函数"></a>  tagexclude     标签不含   tageinclude的反函数</h2><p>注意！由于YOML的解析方式，过滤器参数必须在插件定义的末尾来进行定义，负责后续的插件配置项将被截石位<br>tagpass或者tagdrop的一部分。</p>
-<h2 id="Glob用法（参考资料）"><a href="#Glob用法（参考资料）" class="headerlink" title="Glob用法（参考资料）"></a>Glob用法（参考资料）</h2><blockquote>
-<p>glob起源于Unix上的bash shell。我们知道的bash<br>shell中的一个功能强大的命令，rm-rf &#x2F;* 其中 *<br>就是glob风格的模式匹配，通常<br>glob最常用的地方就是匹配文件名称。它在某些方面与正则表达式相同，但是他们各自有着不同的语法和约定。</p>
-<p>详细内容可以参考:<br>[<a target="_blank" rel="noopener" href="https://github.com/whinc/whinc.github.io/issues/18]%7B.underline%7D">https://github.com/whinc/whinc.github.io/issues/18]{.underline}</a></p>
-</blockquote>
-<p>以下是表达式的说明。</p>
-<h3 id="基础语法"><a href="#基础语法" class="headerlink" title="基础语法"></a>基础语法</h3><p>相比正则表达式大量的元字符，glob模式中元字符极少，所以掌握起来很快，glob默认不匹配隐藏文件（以点<br>. 开头的文件或目录），下面是glob的语法</p>
-<hr>
-<p>  <strong>通配符</strong>            <strong>描述</strong>                         <strong>示例</strong>    <strong>匹配</strong>           <strong>不匹配</strong></p>
-<hr>
-<p>  *                    匹配0个或多个字符，包含空串      Law*       Law, Laws和Lawer   La, aw</p>
-<p>  ?                     匹配1个字符                      ?at         cat, bat           at</p>
-<p>  [abc]               匹配括号内字符集合中的单个字符   [cb]at    cat, bat           at, bcat</p>
-<p>  [a-z]               匹配括号内字符范围中的单个字符   [a-z]at   aat, bat, zat      at, bcat, Bat</p>
-<p>  [^abc]或[!abc]   匹配括号内字符集合中的单个字符   [cb]at    cat, bat           at, bcat</p>
-<h2 id="a-z-或-a-z-匹配括号内字符范围中的单个字符-a-z-at-aat-bat-zat-at-bcat-Bat"><a href="#a-z-或-a-z-匹配括号内字符范围中的单个字符-a-z-at-aat-bat-zat-at-bcat-Bat" class="headerlink" title="  [^a-z]或[!a-z]   匹配括号内字符范围中的单个字符   [a-z]at   aat, bat, zat      at, bcat, Bat"></a>  [^a-z]或[!a-z]   匹配括号内字符范围中的单个字符   [a-z]at   aat, bat, zat      at, bcat, Bat</h2><p>在bash命令行中 [!abc]需要转义成[\!abc]</p>
-<h3 id="扩展语法"><a href="#扩展语法" class="headerlink" title="扩展语法"></a>扩展语法</h3><p>除了基础语法外，bash还支持glob的一些扩展语法，主要包含三种。</p>
-<p>Brace Expansion</p>
-<p>globstar</p>
-<p>extglob</p>
-<blockquote>
-<p>三种拓展语法的定义和描述如下：</p>
-</blockquote>
-<p>+————–+———-+—————+———–+————–+<br>| <strong>通配符</strong>   | <strong>描述</strong> | <strong>示例</strong>      | <strong>匹配</strong>  | <strong>不匹配</strong>   |<br>+:&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;+:&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;+:&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;+:&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;+:&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;+<br>| {x, y, ...} | Brace    | a.            | a.png,    |              |<br>|              | Exp      | {png,jp{,e}g} |           |              |<br>|              | ansion， |               | a.jpg,    |              |<br>|              | 展开花括 |               |           |              |<br>|              | 号内容， |               | a.jpeg    |              |<br>|              | 支持展开 |               |           |              |<br>|              | 嵌套括号 |               |           |              |<br>+————–+———-+—————+———–+————–+<br>| **         | gl       | src&#x2F;**      | s         | sr           |<br>|              | obstar， |               | rc&#x2F;a.js,  | c&#x2F;.hide&#x2F;a.js |<br>|              | 匹配所有 |               |           |              |<br>|              | 文件和任 |               | src       |              |<br>|              | 意层目录 |               | &#x2F;b&#x2F;a.js,  |              |<br>|              | ，如果* |               |           |              |<br>|              | *后面紧 |               | src&#x2F;b&#x2F;    |              |<br>|              | 接着&#x2F;则  |               |           |              |<br>|              | 只匹配目 |               |           |              |<br>|              | 录，不含 |               |           |              |<br>|              | 隐藏目录 |               |           |              |<br>+————–+———-+—————+———–+————–+<br>| ?(p          | 匹配0次  | a.?(txt|bin) | a.,       | a            |<br>| attern-list) | 或1次给  |               |           |              |<br>|              | 定的模式 |               | a.txt,    |              |<br>|              |          |               |           |              |<br>|              |          |               | a.bin     |              |<br>+————–+———-+—————+———–+————–+<br>| *(p         | 匹配0次  | a             | a.,       | a            |<br>| attern-list) | 或多次给 | .*(txt|bin) |           |              |<br>|              | 定的模式 |               | a.txt,    |              |<br>|              |          |               |           |              |<br>|              |          |               | a.bin,    |              |<br>|              |          |               |           |              |<br>|              |          |               | a.txtbin  |              |<br>+————–+———-+—————+———–+————–+<br>| +(p          | 匹配1次  | a.+(txt|bin) | a.txt,    | a., a        |<br>| attern-list) | 或多次给 |               |           |              |<br>|              | 定的模式 |               | a.bin,    |              |<br>|              |          |               |           |              |<br>|              |          |               | a.txtbin  |              |<br>+————–+———-+—————+———–+————–+<br>| @(p          | 匹配给   | a.@(txt|bin) | a.txt,    | a.,          |<br>| attern-list) | 定的模式 |               |           |              |<br>|              |          |               | a.bin     |  a.txtbin    |<br>+————–+———-+—————+———–+————–+<br>| !(p          | 匹配非给 | a.!(txt|bin) | a.,       | a.txt,       |<br>| attern-list) | 定的模式 |               |           |              |<br>|              |          |               | a.txtbin  |  a.bin       |<br>+————–+———-+—————+———–+————–+</p>
-<p>pattern-list是一组以 | 作分隔符的模式集合，例如 abc | a?c | ac*</p>
-<h3 id="与regexp的差异"><a href="#与regexp的差异" class="headerlink" title="与regexp的差异"></a>与regexp的差异</h3><p>glob<br>模式主要用于匹配文件路径，当然也可以用于匹配字符串，不过在匹配字符串的能力上比<br>regexp 要弱很多。由于 glob 模式和 regexp<br>存在相同的元字符，但是含义却不同，容易导致混淆，为了避免混淆，下面将<br>glob 模式转换成对应的 regexp 表示，以便区分他们的异同点。</p>
-<hr>
-<p>  <strong>glob</strong>         <strong>regexp</strong>          <strong>精确的 regexp</strong></p>
-<hr>
-<p>  *               .*                 ^(?!\.)[^\&#x2F;]*?$</p>
-<p>  ?                .                   ^(?!\.)[^\&#x2F;]$</p>
-<h2 id="a-z-a-z-a-z"><a href="#a-z-a-z-a-z" class="headerlink" title="  [a-z]          [a-z]             ^[a-z]$"></a>  [a-z]          [a-z]             ^[a-z]$</h2><p>glob匹配的是整个字符串，而regexp默认匹配的是子串，regexp如果要匹配整个字符串需显式指定^<br>和 $。正则表达式中的(?!\.)，其表示不匹配隐藏文件。</p>
-<h1 id="Telegraf架构"><a href="#Telegraf架构" class="headerlink" title="Telegraf架构"></a>Telegraf架构</h1><h2 id="责任链设计模式"><a href="#责任链设计模式" class="headerlink" title="责任链设计模式"></a>责任链设计模式</h2><p>Telegraf是典型的Pipeline（流水线或者管道）架构，这种架构使用了责任链设计模式的思想。</p>
-<p><img src="/2025/03/27/cloud/telegraf/media/image28.jpeg" alt="preview">{width&#x3D;”4.851562773403325in”<br>height&#x3D;”3.0320811461067367in”}</p>
-<p>简单来说，这种设计模式的关键点就在”链”这个字上，代码的功能被拆分成一个一个独立的组件，而且能够根据需求，灵活地进行组合。</p>
-<p>设计模式是针对代码来说的，在这里，我们还是把关注点放到Telegraf的Pipeline架构上。</p>
-<h2 id="Pipeline架构"><a href="#Pipeline架构" class="headerlink" title="Pipeline架构"></a>Pipeline架构</h2><p>Telegraf将输出的处理流程抽象为由多个插件组成的流水线。插件和插件之间用管道相连（可以理解为一个先进先出的队列）。这种架构至少能体现出两种优势。</p>
-<ul>
-<li><p>插件和插件之间实现了松耦合，下一个插件可以不用管上一个插件的内部逻辑是怎么实现的。他们只要按照约定好的格式传递数据就行。</p>
-</li>
-<li><p>流程配置化，谁和谁组合的决定可以推迟到运行时决定，而不是开发人员必须在开发时就把各种处理流程写死，相当于交给了用户一堆积木。</p>
-</li>
-</ul>
-<p>通常的pipeline架构，除了要配置插件和组合顺序外，还会包括一层上下文配置，所以最终的常见Pipeline架构是如下图所示的。</p>
-<p><img src="/2025/03/27/cloud/telegraf/media/image29.png" alt="图示
-描述已自动生成">{width&#x3D;”5.768055555555556in”<br>height&#x3D;”1.961111111111111in”}</p>
-<h2 id="Telegraf的实现"><a href="#Telegraf的实现" class="headerlink" title="Telegraf的实现"></a>Telegraf的实现</h2><h3 id="架构角度"><a href="#架构角度" class="headerlink" title="架构角度"></a>架构角度</h3>
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-        
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://phpdi.github.io/2025/01/10/db/doris/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/head.jpeg">
-      <meta itemprop="name" content="Chen Yu">
-      <meta itemprop="description" content="自律给我自由">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="goeoeo">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2025/01/10/db/doris/" class="post-title-link" itemprop="url">doris</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-              
-
-              <time title="创建时间：2025-01-10 15:08:37 / 修改时间：16:06:31" itemprop="dateCreated datePublished" datetime="2025-01-10T15:08:37+08:00">2025-01-10</time>
-            </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/db/" itemprop="url" rel="index">
-                    <span itemprop="name">db</span>
-                  </a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h1 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h1><p>由百度大数据部研发，之前叫百度Palo,2018年贡献到Apache社区，更名Doris  </p>
-<p>一个现代化的MPP分析型数据库产品。 </p>
-<ul>
-<li>亚秒级响应</li>
-<li>架构非常简洁，易于运维</li>
-<li>支持10PB以上的超大数据集</li>
-</ul>
-<p>满足多种数据分析需求</p>
-<ul>
-<li>固定历史报表</li>
-<li>实时数据分析</li>
-<li>交互式数据分析</li>
-<li>探索式数据分析</li>
-</ul>
-<p><img src="/2025/01/10/db/doris/img.png"></p>
-<p>特性：<br><img src="/2025/01/10/db/doris/img_1.png"></p>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2025/01/10/db/doris/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-        
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://phpdi.github.io/2024/12/27/db/greenplum/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/head.jpeg">
-      <meta itemprop="name" content="Chen Yu">
-      <meta itemprop="description" content="自律给我自由">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="goeoeo">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2024/12/27/db/greenplum/" class="post-title-link" itemprop="url">greenplum</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2024-12-27 14:18:40" itemprop="dateCreated datePublished" datetime="2024-12-27T14:18:40+08:00">2024-12-27</time>
+              <time title="创建时间：2025-03-27 10:36:22" itemprop="dateCreated datePublished" datetime="2025-03-27T10:36:22+08:00">2025-03-27</time>
             </span>
               <span class="post-meta-item">
                 <span class="post-meta-item-icon">
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2025-01-06 15:09:34" itemprop="dateModified" datetime="2025-01-06T15:09:34+08:00">2025-01-06</time>
+                <time title="修改时间：2025-06-24 15:35:31" itemprop="dateModified" datetime="2025-06-24T15:35:31+08:00">2025-06-24</time>
               </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/db/" itemprop="url" rel="index">
-                    <span itemprop="name">db</span>
-                  </a>
-                </span>
-            </span>
 
           
 
@@ -1309,299 +1247,22 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <h1 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h1><h2 id="MPP架构"><a href="#MPP架构" class="headerlink" title="MPP架构"></a>MPP架构</h2><p>MPP(Massively Parallel Processing，大规模并行处理) 架构是一种用于处理大规模数据的计算架构，它通过将任务分配给多个处理单元并行执行，以提高处理速度和性能。  </p>
+          <hr>
+<p>title: 尚硅谷大数据技术之Telegraf</p>
+<p>categories:</p>
 <ul>
-<li>分布式存储： MPP数据库通常使用分布式存储架构，将数据分散存储在多个节点上。每个节点都有自己的存储单元，这样可以提高数据的读取速度和写入速度。  </li>
-<li>并行处理：MPP架构通过将任务拆分成小块，并同时在多个处理单元上执行这些任务来实现并行处理。每个处理单元负责处理数据的一个子集然后将结果合并以生成最终的输出</li>
-<li>共享无状态架构：MPP系统通常采用共享无状态的架构，即每个节点之间没有共享的状态，这使得系统更容易水平扩展，因为可以简单地添加更多的节点，而不需要共享状态的复杂管理</li>
-<li>负载均衡：MPP数据库通常具有负载均衡机制，确保任务在各个节点上均匀分布，避免某些节点成为性能瓶颈</li>
-<li>高可用性：为了提高系统的可用性，MPP架构通常设计成具有容错和故障恢复机制。如果一个节点出现故障，系统可以继续运行下去，而不会丢失数据和中断服务</li>
+<li>cloud</li>
 </ul>
-<p>一些知名的MPP架构的数据库包括：Teradata,Greenplum,Amazon Redshift等。<br>MPP架构通过将任务分布到多个节点并行执行，以及有效地利用分布式存储和处理的方式，提供了一种高性能，可伸缩的数据处理方案，是用于处理大规模数据的场景</p>
-<h2 id="什么是GreenPlum"><a href="#什么是GreenPlum" class="headerlink" title="什么是GreenPlum"></a>什么是GreenPlum</h2><p>GreenPlum是基于开源PostgreSQL的分布式数据库，采用shared-nothing架构，即主机，操作系统，内存，存储，都是每台服务器独立自我控制，不存在共享。  </p>
-<p>GreenPlum本质上是一个关系型数据库集群，实际上是由多个独立的数据库服务组合而成的一个逻辑数据库。这种数据库采取的是MPP架构</p>
-<h2 id="GreenPlum组成"><a href="#GreenPlum组成" class="headerlink" title="GreenPlum组成"></a>GreenPlum组成</h2><p><img src="/2024/12/27/db/greenplum/img.png">   </p>
-<p>GreenPlum数据库是由Master Server,Segment Server和Interconnect 三部分组成，Master Server和Segment Server的互联使用的是Interconnect   </p>
-<p>GreenPlum是一个关系型数据库，由数个独立的数据服务组合成逻辑数据库，整个集群由多个数据节点（Segment Host）和控制节点（Master Host）组成。<br>在典型的Shared-Nothing中，每个节点上所有的资源的CPU，内存，磁盘都是独立的，每个节点都只有全部数据的一部分，也只能使用本节点的数据资源。<br>在GreenPlum中，需要存储的数据在进入到表时，将先进行数据分布的处理工作，将一个表中的数据平均分布到每个节点上，并为每个表指定一个分布列（Distribute Column），<br>之后便根据Hash来分布数据，基于Shared-Nothing的原则，GreenPlum这样处理可以充分发挥每个节点IO的处理能力</p>
-<h3 id="Master节点"><a href="#Master节点" class="headerlink" title="Master节点"></a>Master节点</h3><p>整个系统的控制中心和对外服务接入点，它负责接收用户的SQL请求，将SQL生成的查询计划进行并行处理优化，然后将查询计划分配到所有的Segment节点并进行处理，<br>协调组织各个Segment节点按查询计划进行并行处理，最后获取到Segment的计算结果，再返回给客户端。<br>从用户的角度看GreenPlum集群,看到的只是Master节点,无须关心集群内部的机制，所有的并行处理都是在Master控制下自动完成的。<br>Master节点一般只有一个或二个</p>
-<h3 id="Segment节点"><a href="#Segment节点" class="headerlink" title="Segment节点"></a>Segment节点</h3><p>是GreenPlum执行并行任务的并行计算节点，它接收Master的指令进行MPP并行计算，因此所有Segment节点的计算性总和就是整个集群的性能，通过增加Segment节点，<br>可以线性化的增加集群的处理性能和存储容量Segment节点可以是1～10000个节点</p>
-<h3 id="Interconnect"><a href="#Interconnect" class="headerlink" title="Interconnect"></a>Interconnect</h3><p>是Master节点和Segment节点之间进行数据传输的组件，它基于千兆交换机或者万兆交换机实现数据在节点间的高速传输<br>外部数据在加载到Segment时，采用并行数据流进行加载，直接加载到Segment节点，这项独特的技术是GreenPlum的专有技术，保证数据在最短的时间内加载到数据库中</p>
-<h2 id="GreenPlum的优缺点"><a href="#GreenPlum的优缺点" class="headerlink" title="GreenPlum的优缺点"></a>GreenPlum的优缺点</h2><h3 id="优点"><a href="#优点" class="headerlink" title="优点"></a>优点</h3><ul>
-<li>数据存储 当今是个数据不断膨胀的时代，采取MPP架构的数据库系统可以对海量数据进行管理</li>
-<li>高并发 GreenPlum利用强大并行处理能力提供并发支持</li>
-<li>线性扩展 GreenPlum线性扩展支持为数据分析系统将来的拓展给予了技术上的保障，用户可根据实施需要进行容量和性能的扩展</li>
-<li>高性价比 基于业界各种开放式平台，在普通的X86 Server上就能达到很高的性能 </li>
-<li>反应速度  通过准实时，实时的数据加载方式，实现数据仓库的实时更新，进而实现动态的数据仓库（ADW）</li>
-<li>高可用性 对于主节点，GreenPlum提供了Master&#x2F;Stand by机制进行主节点容错，当主节点发生错误时，可以切换到StandBy节点继续服务</li>
-<li>系统易用 GreenPlum基于流行的PostgreSQL之上开发，几乎所有的PostgreSQL客户端工具及PostgresSQL应用都能运行在GreenPlum平台上</li>
-</ul>
-<h3 id="缺点"><a href="#缺点" class="headerlink" title="缺点"></a>缺点</h3><ul>
-<li>主从双层架构，并非真正的扁平架构，存在性能瓶颈和SPOF单点故障</li>
-<li>无法支持数据压缩状态下的DML操作，不易于数据的更新和维护</li>
-<li>单个节点上的数据库没有并行和大内存使用能力，必须通过部署多个实例（segment server）来充分利用系统资源，造成使用和部署很复杂</li>
-</ul>
-<h1 id="GreenPlum安装部署"><a href="#GreenPlum安装部署" class="headerlink" title="GreenPlum安装部署"></a>GreenPlum安装部署</h1><h2 id="安装地址"><a href="#安装地址" class="headerlink" title="安装地址"></a>安装地址</h2><ol>
-<li>官网地址 <a target="_blank" rel="noopener" href="https://greenplum.org/">https://greenplum.org/</a></li>
-<li>文档地址 <a target="_blank" rel="noopener" href="https://docs-cn.greenplum.org/v6/utility_guide/admin_utilities/gpinitsystem.html">https://docs-cn.greenplum.org/v6/utility_guide/admin_utilities/gpinitsystem.html</a></li>
-<li>下载地址 <a target="_blank" rel="noopener" href="https://support.broadcom.com/group/ecx/productdownloads?subfamily=VMware%20Tanzu%20Greenplum">https://support.broadcom.com/group/ecx/productdownloads?subfamily=VMware%20Tanzu%20Greenplum</a></li>
-</ol>
-<h2 id="环境准备"><a href="#环境准备" class="headerlink" title="环境准备"></a>环境准备</h2><p>准备3个节点centos7：  </p>
-<ul>
-<li>hadoop102 (master)</li>
-<li>hadoop103 (segment1)</li>
-<li>hadoop104 (segment2)</li>
-</ul>
-<h2 id="安装前配置"><a href="#安装前配置" class="headerlink" title="安装前配置"></a>安装前配置</h2><h3 id="检查安装依赖包"><a href="#检查安装依赖包" class="headerlink" title="检查安装依赖包"></a>检查安装依赖包</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"># 换源</span><br><span class="line">rpm -ivh https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm</span><br><span class="line"></span><br><span class="line">yum install -y coreutils glib2 lrzsz mpstat dstat sysstat e4fsprogs xfsprogs ntp readline-devel zlib-devel openssl-devel pam-devel libxml2-devel libxslt-devel python-devel tcl-devel gcc make smartmontools flex bison perl-devel perl-ExtUtils* openldap-devel jadetex  openjade bzip2 curl-devel curl apr-devel apr cmake3 python git iotop perf gcc-c++ dstat bzip2-devel krb5-devel libcurl-devel libevent-devel libkadm5 libyaml-devel libxml2-devel openssl-devel perl-ExtUtils-Embed python-devel sysstat python-pip xerces-c-devel</span><br></pre></td></tr></table></figure>
-
-<h3 id="关闭SElinux"><a href="#关闭SElinux" class="headerlink" title="关闭SElinux"></a>关闭SElinux</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">vim /etc/selinux/config</span><br><span class="line">SELINUX=disabled</span><br></pre></td></tr></table></figure>
-
-<h3 id="关闭防火墙"><a href="#关闭防火墙" class="headerlink" title="关闭防火墙"></a>关闭防火墙</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">systemctl stop firewalld</span><br><span class="line">systemctl disable firewalld</span><br></pre></td></tr></table></figure>
-<h3 id="操作系统参数配置"><a href="#操作系统参数配置" class="headerlink" title="操作系统参数配置"></a>操作系统参数配置</h3><p>修改操作系统参数（&#x2F;etc&#x2F;sysctl.conf）<br>vim &#x2F;etc&#x2F;sysctl.conf</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line">kernel.shmal1 = 1019650</span><br><span class="line">kernel.shmmax = 4176486400</span><br><span class="line">＃设置系统范围内共享内存段的最大数量，默认 4096</span><br><span class="line">kernel.shmmni = 4096</span><br><span class="line"># See Segment Host Memory</span><br><span class="line"># 主机内存</span><br><span class="line">vm.overcommit_memory = 2</span><br><span class="line"># See Segment Host Memory</span><br><span class="line">vm.overcommit_ratio = 95</span><br><span class="line"># See Port Settings 端口设定</span><br><span class="line">net.ipv4.ip_local_port_range = 10000 65535</span><br><span class="line">kernel.sem = 500 2048000 200 40960</span><br><span class="line">kernel.sysrq = 1</span><br><span class="line">kernel.core_uses_pid = 1</span><br><span class="line">kernel.msgmnb = 65536</span><br><span class="line">kernel.msgmax = 65536</span><br><span class="line">kernel.msgmni = 2048</span><br><span class="line">net.ipv4.tcp_syncookies = 1</span><br><span class="line">net.ipv4.conf.default.accept_source_route = 0</span><br><span class="line">net.ipv4.tcp max syn backlog = 4096</span><br><span class="line">net.ipv4.conf.all.arp_filter = 1</span><br><span class="line">net.core.netdev_max backlog = 10000</span><br><span class="line">net.core.rmem_max = 2097152</span><br><span class="line">net.core.wmem_max = 2097152</span><br><span class="line">vm.swappiness = 10</span><br><span class="line">vm.zone_reclaim_mode = 0</span><br><span class="line">vm.dirty_expire_centisecs = 500</span><br><span class="line">vm.dirty_writeback_centisecs = 100</span><br><span class="line"># See System Memory</span><br><span class="line"># 系统内存</span><br><span class="line">vm.dirty_background_ratio = 3</span><br><span class="line">vm.dirty_ratio = 10</span><br></pre></td></tr></table></figure>
-
-<h4 id="共享内存-（每台节点需要单独计算）"><a href="#共享内存-（每台节点需要单独计算）" class="headerlink" title="共享内存 （每台节点需要单独计算）"></a>共享内存 （每台节点需要单独计算）</h4><p>kernel.shmall&#x3D;_PHYS_PAGES&#x2F;2 系统可用的内存页总量的一半，可以用getconf _PHYS_PAGES 查看系统可用的内存页总量。  </p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">echo $(expr $(getconf _PHYS_PAGES) / 2)</span><br></pre></td></tr></table></figure>
-<p>kernel.shmmax&#x3D;kernel.shmall * PAGE_SIZE ,用getconf PAGE_SIZE获取页大小</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">echo $(expr $(getconf _PHYS_PAGES) / 2 \* $(getconf PAGE_SIZE))</span><br></pre></td></tr></table></figure>
-
-<h4 id="主机内存"><a href="#主机内存" class="headerlink" title="主机内存"></a>主机内存</h4><p>vm.overcommit_memory 系统使用该参数来确定可以为进程分配多少内存，对于GP数据库，此参数应该设置为2。<br>vm.overcommit_ratio 以为进程分配内存的百分比，其余部分留给操作系统，默认为50 ，建议设置为95</p>
-<h4 id="端口设定"><a href="#端口设定" class="headerlink" title="端口设定"></a>端口设定</h4><p>为避免在Greenplum初始化期间与其它应用程序端口冲突，指定的端口范围 net.ipv4.ip_local_port_range<br>使用gpinitsystem初始化GreenPlum时，请不要在该范围内指定GreenPlum数据库端口。  </p>
-<h4 id="系统内存"><a href="#系统内存" class="headerlink" title="系统内存"></a>系统内存</h4><p>系统内存大于64G,建议一下配置：<br>vm.dirty_background_ratio&#x3D;0<br>vm.dirty_ratio&#x3D;0<br>vm.ditry_background_bytes&#x3D;1610612736 #1.5GB<br>vm.ditry_bytes&#x3D;4294967296 #4GB   </p>
-<p>系统内存&lt;&#x3D;64GB,移除vm.ditry_background_bytes,并设置以下参数：<br>vm.dirty_background_ratio&#x3D;3<br>vm.dirty_ratio&#x3D;10   </p>
-<h4 id="系统资源限制"><a href="#系统资源限制" class="headerlink" title="系统资源限制"></a>系统资源限制</h4><p>修改系统资源限制配置文件（&#x2F;etc&#x2F;security&#x2F;limits.conf） ,添加以下参数：</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">* soft nofile 65536</span><br><span class="line">* hard nofile 65536</span><br><span class="line">* soft nproc 131072</span><br><span class="line">* hard nproc 131072</span><br></pre></td></tr></table></figure>
-<p>“*” 代表所有用户。<br>noproc 最大进程数。<br>nofile 最大文件打开数。   </p>
-<p>针对centos7 还需要修改 &#x2F;etc&#x2F;security&#x2F;limits.d&#x2F;20-nproc.conf</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">* soft nofile 65536</span><br><span class="line">* hard nofile 65536</span><br><span class="line">* soft nproc 131072</span><br><span class="line">* hard nproc 131072</span><br></pre></td></tr></table></figure>
-
-<p>退出登录， ulimit -u 验证最大进程数，值为131072。  </p>
-<h4 id="ssh连接阀值"><a href="#ssh连接阀值" class="headerlink" title="ssh连接阀值"></a>ssh连接阀值</h4><p>GreenPlum 数据库管理程序中的 gpexpand,gpinitsystem,gpaddmirrors 使用SSH连接来执行任务。在较大规模的GreenPlum集群中，程序的ssh连接数可能会超出<br>主机的未认证连接的最大限制，发生这种情况时，会收到以下错误：ssh_exchange_identification: Connection closed by remote host<br>为避免这种情况，可以更新&#x2F;etc&#x2F;ssh&#x2F;sshd_config 或者 &#x2F;etc&#x2F;sshd_config的MaxStartups和MaxSessions参数。 </p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">vim /etc/ssh/sshd_config  </span><br><span class="line">MasSessions 200</span><br><span class="line">MaxStartups 100:30:1000</span><br></pre></td></tr></table></figure>
-
-<h4 id="修改字符集"><a href="#修改字符集" class="headerlink" title="修改字符集"></a>修改字符集</h4><p>检查主机的字符集，字符集必须是en_US.UTF-8<br>echo $LANG</p>
-<p>设置字符集：localectl set-locale LANG&#x3D;en_US.UTF-8</p>
-<h4 id="确保集群时钟同步"><a href="#确保集群时钟同步" class="headerlink" title="确保集群时钟同步"></a>确保集群时钟同步</h4><p>如果集群时间不一致，每台节点执行：</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ntpdate cn.pool.ntp.org</span><br></pre></td></tr></table></figure>
-
-<h2 id="安装GreenPlum"><a href="#安装GreenPlum" class="headerlink" title="安装GreenPlum"></a>安装GreenPlum</h2><h3 id="创建gpadmin组以及用户"><a href="#创建gpadmin组以及用户" class="headerlink" title="创建gpadmin组以及用户"></a>创建gpadmin组以及用户</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">groupadd gpadmin</span><br><span class="line">useradd gpadmin -r -m -g gpadmin</span><br><span class="line">passwd gpadmin</span><br></pre></td></tr></table></figure>
-<h3 id="给gpadmin设置用户具有root权限，方便后期添加sudo执行root权限的命令"><a href="#给gpadmin设置用户具有root权限，方便后期添加sudo执行root权限的命令" class="headerlink" title="给gpadmin设置用户具有root权限，方便后期添加sudo执行root权限的命令"></a>给gpadmin设置用户具有root权限，方便后期添加sudo执行root权限的命令</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">vim /etc/sudoers</span><br><span class="line">gpadmin ALL=(ALL) NOPASSWD:ALL</span><br></pre></td></tr></table></figure>
-<h3 id="配置节点间的免密登录，每台节点生成ssh-key-在gpadmin下执行"><a href="#配置节点间的免密登录，每台节点生成ssh-key-在gpadmin下执行" class="headerlink" title="配置节点间的免密登录，每台节点生成ssh key,在gpadmin下执行"></a>配置节点间的免密登录，每台节点生成ssh key,在gpadmin下执行</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">ssh-keygen -t rsa</span><br><span class="line">ssh-copy-id hadoop102</span><br><span class="line">ssh-copy-id hadoop103</span><br><span class="line">ssh-copy-id hadoop104</span><br></pre></td></tr></table></figure>
-
-
-<h3 id="配置GreenPlum的ssh权限互通设置（在master节点配置）"><a href="#配置GreenPlum的ssh权限互通设置（在master节点配置）" class="headerlink" title="配置GreenPlum的ssh权限互通设置（在master节点配置）"></a>配置GreenPlum的ssh权限互通设置（在master节点配置）</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">mkdir -p /home/gpadmin/conf</span><br><span class="line"></span><br><span class="line">vim /home/gpadmin/conf/hostlist</span><br><span class="line">hadoop102</span><br><span class="line">hadoop103</span><br><span class="line">hadoop104</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">vim /home/gpadmin/conf/seg_hosts</span><br><span class="line">hadoop103</span><br><span class="line">hadoop104</span><br><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure>
-<h3 id="先上传GreenPlum软件安装包，然后执行rpm安装，"><a href="#先上传GreenPlum软件安装包，然后执行rpm安装，" class="headerlink" title="先上传GreenPlum软件安装包，然后执行rpm安装，"></a>先上传GreenPlum软件安装包，然后执行rpm安装，</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"># 上传到这个目录</span><br><span class="line">mkdir -p /home/gpadmin/software</span><br><span class="line"></span><br><span class="line"># 安装</span><br><span class="line">sudo yum install •/open-source-greenplum-db-6.25.3-rhe17-x86_64.rpm</span><br><span class="line"></span><br><span class="line"># 将安装完的程序目录赋予gpadmin</span><br><span class="line">sudo chown -R gpadmin:gpadmin /usr/local/greenplum-db*</span><br></pre></td></tr></table></figure>
-
-<h3 id="使用gpssh-exkeys-打通所有服务器（master节点操作）"><a href="#使用gpssh-exkeys-打通所有服务器（master节点操作）" class="headerlink" title="使用gpssh-exkeys 打通所有服务器（master节点操作）"></a>使用gpssh-exkeys 打通所有服务器（master节点操作）</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">cd /usr/local/greenplum-db-6.25.3</span><br><span class="line">source /usr/local/greenplum-db-6.25.3/greenplum_path.sh</span><br><span class="line"></span><br><span class="line">gpssh-exkeys -f /home/greenplum/conf/hostlist</span><br></pre></td></tr></table></figure>
-
-<h3 id="环境变量配置-bashrc-所有节点gpadmin用户操作"><a href="#环境变量配置-bashrc-所有节点gpadmin用户操作" class="headerlink" title="环境变量配置.bashrc (所有节点gpadmin用户操作)"></a>环境变量配置.bashrc (所有节点gpadmin用户操作)</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"># 创建greenplum主节点数据</span><br><span class="line">mkdir -p /home/gpadmin/data/master </span><br><span class="line"></span><br><span class="line"></span><br><span class="line">cat &lt;&lt;EOF &gt;&gt; /home/gpadmin/.bashrc</span><br><span class="line">source /usr/local/greenplum-db/greenplum_path.sh</span><br><span class="line">export PGPORT=5432</span><br><span class="line">export PUSER=gpadmin</span><br><span class="line">export MASTER_DATA_DIRECTORY=/home/gpadmin/data/master/gpseg-1</span><br><span class="line">export PGDATABASE=gp_sydb</span><br><span class="line">export LD_PRELOAD=/1ib64/libz.so.1 ps</span><br><span class="line">EOF</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<p>source &#x2F;home&#x2F;gpadmin&#x2F;.bashrc</p>
-<h3 id="配置GPHOME"><a href="#配置GPHOME" class="headerlink" title="配置GPHOME"></a>配置GPHOME</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">vim /usr/local/greenplum-db/greenplum_path.sh</span><br><span class="line">GPHOME=/usr/local/greenplum-db</span><br></pre></td></tr></table></figure>
-
-<h3 id="创建数据文件夹"><a href="#创建数据文件夹" class="headerlink" title="创建数据文件夹"></a>创建数据文件夹</h3><p>创建各个节点的数据文件夹，该步骤之后 hostlist文件包含机器下都会创建data目录，data目录下都会创建mater,primary,mirror文件夹。<br>gpssh -f &#x2F;home&#x2F;gpadmin&#x2F;conf&#x2F;hostlist<br>&#x3D;&gt; mkdir data<br>&#x3D;&gt; cd data<br>&#x3D;&gt; mkdir master<br>&#x3D;&gt; mkdir primary<br>&#x3D;&gt; mkdir mirror</p>
-<h3 id="连通性检查（主节点gpadmin用户操作）"><a href="#连通性检查（主节点gpadmin用户操作）" class="headerlink" title="连通性检查（主节点gpadmin用户操作）"></a>连通性检查（主节点gpadmin用户操作）</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">gpcheckperf -f /home/gpadmin/conf/hostlist -r N -d /tmp</span><br></pre></td></tr></table></figure>
-
-<h2 id="初始化集群"><a href="#初始化集群" class="headerlink" title="初始化集群"></a>初始化集群</h2><h3 id="创建初始化配置文件（master节点gpadmin用户操作）"><a href="#创建初始化配置文件（master节点gpadmin用户操作）" class="headerlink" title="创建初始化配置文件（master节点gpadmin用户操作）"></a>创建初始化配置文件（master节点gpadmin用户操作）</h3><ol>
-<li>创建gpinitsystem_config<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">mkdir /home/gpadmin/gpconfigs</span><br><span class="line"></span><br><span class="line">cp /usr/local/greenplum-db/docs/cli_help/gpconfigs/gpinitsystem_config  /home/gpadmin/gpconfigs/gpinitsystem_config</span><br><span class="line"></span><br><span class="line">vim /home/gpadmin/gpconfigs/gpinitsystem_config </span><br><span class="line"># 设置主数据节点存储位置，括号里面有几个代表每台主机创建几个postgreSQL数据库实例，即segment的实例数量</span><br><span class="line">declare -a DATA_DIRECTORY=(/home/gpadmin/data/primary /home/gpadmin/data/primary)</span><br><span class="line"># 主节点hostname</span><br><span class="line">MASTER_HOMENAME=hadoop2</span><br><span class="line"># master数据目录</span><br><span class="line">MASTER_DIRECTORY=/home/gpadmin/data/master  </span><br><span class="line"># greenplum数据分主节点和备份节点，主节点挂掉时备份节点数据为启用</span><br><span class="line">declare -a MIRROR_DATA_DIRECTORY=(/home/gpadmin/data/mirror /home/gpadmin/data/mirror)</span><br><span class="line"># 默认连接的数据库名称</span><br><span class="line">DATABASE_NAME=gp_sydb</span><br><span class="line"></span><br></pre></td></tr></table></figure></li>
-<li>创建hostfile_gpinitsystem<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">vim  /home/gpadmin/gpconfigs/hostfile_gpinitsystem</span><br><span class="line">hadoop103</span><br><span class="line">hadoop104</span><br></pre></td></tr></table></figure></li>
-</ol>
-<h3 id="初始化"><a href="#初始化" class="headerlink" title="初始化"></a>初始化</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">gpinitsystem -c /home/gpadmin/gpconfigs/gpinitsystem_config -h /home/gpadmin/gpconfigs/hostfile_gpinitsystem</span><br></pre></td></tr></table></figure>
-
-
-<h1 id="GreenPlum基本操作"><a href="#GreenPlum基本操作" class="headerlink" title="GreenPlum基本操作"></a>GreenPlum基本操作</h1><ul>
-<li>gpstart 启动集群</li>
-<li>gpstop 停止集群</li>
-<li>gpstate 集群状态</li>
-<li>help 查看相关命令</li>
-</ul>
-<h1 id="常用运维操作"><a href="#常用运维操作" class="headerlink" title="常用运维操作"></a>常用运维操作</h1><h2 id="添加镜像"><a href="#添加镜像" class="headerlink" title="添加镜像"></a>添加镜像</h2><p>将镜像Segment添加到最初没有配置镜像的Greenplum数据库系统。</p>
-<h3 id="编辑配置文件sample-mirror-config"><a href="#编辑配置文件sample-mirror-config" class="headerlink" title="编辑配置文件sample_mirror_config"></a>编辑配置文件sample_mirror_config</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">vim sample_mirror_config</span><br><span class="line"></span><br><span class="line">mirror0=0:gp6-2:29000:/data01/gp-mirror/gp0</span><br><span class="line">mirror1=1:gp6-2:29001:/data01/gp-mirror/gp1</span><br><span class="line">mirror2=2:gp6-2:29002:/data01/gp-mirror/gp2</span><br><span class="line">mirror3=3:gp6-3:29000:/data01/gp-mirror/gp3</span><br><span class="line">mirror4=4:gp6-3:29001:/data01/gp-mirror/gp4</span><br><span class="line">mirror5=5:gp6-3:29002:/data01/gp-mirror/gp5</span><br><span class="line">mirror6=6:gp6-1:29000:/data01/gp-mirror/gp6</span><br><span class="line">mirror7=7:gp6-1:29001:/data01/gp-mirror/gp7</span><br><span class="line">mirror8=8:gp6-1:29002:/data01/gp-mirror/gp8</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-<h3 id="添加镜像-1"><a href="#添加镜像-1" class="headerlink" title="添加镜像"></a>添加镜像</h3><p>gpaddmirrors -i sample_mirror_config<br>输出如下,等待复制完成:<br><img src="/2024/12/27/db/greenplum/img_2.png"></p>
-<h2 id="standby节点"><a href="#standby节点" class="headerlink" title="standby节点"></a>standby节点</h2><h3 id="添加standy节点"><a href="#添加standy节点" class="headerlink" title="添加standy节点"></a>添加standy节点</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">gpinitstandby -s gp6-2 -S /data01/gpdb6/master</span><br></pre></td></tr></table></figure>
-<p>gp命令检查从节点状态：</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">gpstate -f</span><br></pre></td></tr></table></figure>
-<p><img src="/2024/12/27/db/greenplum/img_3.png"></p>
-<p>数据库层面检查数据同步状态： </p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">SELECT * FROM pg_stat_replication</span><br></pre></td></tr></table></figure>
-<p><img src="/2024/12/27/db/greenplum/img_4.png"></p>
-<h2 id="删除数据库"><a href="#删除数据库" class="headerlink" title="删除数据库"></a>删除数据库</h2><p>删除一个使用gpinitsystem初始化的Greenplum数据库系统gpinitsystem。</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">gpdeletesystem -d /data01/gpdb6/master/gp-1</span><br></pre></td></tr></table></figure>
-<p>getSegmentsByHostName</p>
-<h1 id="故障处理"><a href="#故障处理" class="headerlink" title="故障处理"></a>故障处理</h1><h2 id="Standby-host-DOWN"><a href="#Standby-host-DOWN" class="headerlink" title="Standby host DOWN"></a>Standby host DOWN</h2><p>通过 gpstate -s 命令发现有错误：gpstate:prod-gp6-1:gpadmin-[WARNING]:-Standby master state           &#x3D; Standby host DOWN<br>Standby节点挂了   </p>
-<h2 id="ERROR-permission-denied-“gp-segment-configuration”-is-a-system-catalog"><a href="#ERROR-permission-denied-“gp-segment-configuration”-is-a-system-catalog" class="headerlink" title="ERROR:  permission denied: “gp_segment_configuration” is a system catalog"></a>ERROR:  permission denied: “gp_segment_configuration” is a system catalog</h2><p>测试环境master端口错误，手动修改数据。<br>set allow_system_table_mods&#x3D;true;<br>update gp_segment_configuration set port&#x3D;5432  where dbid&#x3D;1;</p>
-<h2 id="开启gp命令debug日志"><a href="#开启gp命令debug日志" class="headerlink" title="开启gp命令debug日志"></a>开启gp命令debug日志</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vim /opt/gpdb6/lib/python/gppylib/gplog.py</span><br></pre></td></tr></table></figure>
-<p><img src="/2024/12/27/db/greenplum/img_1.png"></p>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
+<h2 id="tags-云监控-指标采集"><a href="#tags-云监控-指标采集" class="headerlink" title="tags:- 云监控- 指标采集"></a>tags:<br>- 云监控<br>- 指标采集</h2><h1 id="认识Telegraf"><a href="#认识Telegraf" class="headerlink" title="认识Telegraf"></a>认识Telegraf</h1><h2 id="什么是Telegraf"><a href="#什么是Telegraf" class="headerlink" title="什么是Telegraf"></a>什么是Telegraf</h2><p>Telegraf是一个基于插件的开源指标采集工具。本身是为InfluxDB（一款时序数据库）量身打造的数据收集器，但是它过于优秀，能够将抓取的数据写到很多地方，尤其在时序数据库领域，很多时序数据库都能够与它配合使用。通常，它每隔一段时间抓取一批指标数据（比如机器的CPU使用情况，磁盘的IO，网络情况，MySQL服务端的的会话数等等）并将他们发送到时序数据库、消息队列中或者自定义导出到某个地方。供下游的应用处理（比如报警）。Telegraf也能够对外提供一个服务，等待客户端推送数据。</p>
+<p>它与logstash类似，只不过logstash是收集日志的。telegraf是收集指标的。</p>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2025/03/27/cloud/telegraf/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
         
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://phpdi.github.io/2024/10/09/db/pgpool%E6%8A%A5%E9%94%99%E8%BF%9E%E6%8E%A5%E6%95%B0%E6%BB%A1/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/head.jpeg">
-      <meta itemprop="name" content="Chen Yu">
-      <meta itemprop="description" content="自律给我自由">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="goeoeo">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2024/10/09/db/pgpool%E6%8A%A5%E9%94%99%E8%BF%9E%E6%8E%A5%E6%95%B0%E6%BB%A1/" class="post-title-link" itemprop="url">pgpool2 报错Sorry, too many clients already</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-              
-
-              <time title="创建时间：2024-10-09 19:09:27 / 修改时间：19:28:33" itemprop="dateCreated datePublished" datetime="2024-10-09T19:09:27+08:00">2024-10-09</time>
-            </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/db/" itemprop="url" rel="index">
-                    <span itemprop="name">db</span>
-                  </a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h1 id="排查过程"><a href="#排查过程" class="headerlink" title="排查过程"></a>排查过程</h1><p>pgpool4.1.4</p>
-<p>当时查的线索，和 pgpool 修复的 commit</p>
-<ol>
-<li><a target="_blank" rel="noopener" href="https://stackoverflow.com/questions/64615097/pgpool-ii-sorry-too-many-clients-already">https://stackoverflow.com/questions/64615097/pgpool-ii-sorry-too-many-clients-already</a></li>
-<li><a target="_blank" rel="noopener" href="https://git.postgresql.org/gitweb/?p=pgpool2.git;a=commitdiff;h=6d6e4cc3d7ce0cdfcf9b2b6ea3ac5dc04b366aec">https://git.postgresql.org/gitweb/?p=pgpool2.git;a=commitdiff;h=6d6e4cc3d7ce0cdfcf9b2b6ea3ac5dc04b366aec</a></li>
-</ol>
-<p>20.04 和 16.04 pgpool 的源码</p>
-<ol>
-<li><a target="_blank" rel="noopener" href="https://git.launchpad.net/ubuntu/+source/pgpool2/tree/src/protocol/child.c?h=applied/ubuntu/focal">https://git.launchpad.net/ubuntu/+source/pgpool2/tree/src/protocol/child.c?h=applied/ubuntu/focal</a></li>
-<li><a target="_blank" rel="noopener" href="https://git.launchpad.net/ubuntu/+source/pgpool2/tree/src/protocol/child.c?h=applied/ubuntu/xenial">https://git.launchpad.net/ubuntu/+source/pgpool2/tree/src/protocol/child.c?h=applied/ubuntu/xenial</a></li>
-</ol>
-<p>复现步骤，以 20.04 节点测试：  </p>
-<ol>
-<li><p>首先开启 pgpool 的 debug 日志</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">vim /etc/pgpool2/pgpool.conf</span><br><span class="line">log_min_messages = &#x27;DEBUG5&#x27;</span><br><span class="line">log_client_messages = 1</span><br><span class="line"></span><br><span class="line">service pgpool2 reload</span><br><span class="line"></span><br></pre></td></tr></table></figure></li>
-<li><p>运行 pg_cancel.py, 在 pgpool 节点上查看 pgpool 日志，当 connection_count_down: number of connected children 连接数达到 pgpool max connection 就能触发</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#!/usr/bin/env python</span></span><br><span class="line"><span class="comment"># -*- coding: utf-8 -*-</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> psycopg2</span><br><span class="line"><span class="keyword">import</span> time</span><br><span class="line"><span class="keyword">import</span> threading</span><br><span class="line"></span><br><span class="line"><span class="comment"># PostgreSQL/Pgpool-II 配置</span></span><br><span class="line">PGPOOL_HOST = <span class="string">&#x27;dev01-pgpool1&#x27;</span>  <span class="comment"># pgpool 或 PostgreSQL 服务器的 IP 地址</span></span><br><span class="line">PGPOOL_PORT = <span class="number">5432</span>              <span class="comment"># pgpool 或 PostgreSQL 服务器的端口</span></span><br><span class="line">DB_NAME = <span class="string">&#x27;postgres&#x27;</span>            <span class="comment"># 数据库名称</span></span><br><span class="line">USER = <span class="string">&#x27;yunify&#x27;</span>                 <span class="comment"># 用户名</span></span><br><span class="line">PASSWORD = <span class="string">&#x27;cX5TpQ9K&#x27;</span>          <span class="comment"># 用户密码</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">long_running_query</span>(<span class="params">conn</span>):</span><br><span class="line">    <span class="keyword">try</span>:</span><br><span class="line">        cursor = conn.cursor()</span><br><span class="line">        <span class="built_in">print</span> <span class="string">&quot;开始执行长查询...&quot;</span></span><br><span class="line">        <span class="comment"># 一个模拟长时间运行的查询，例如等待 100 秒</span></span><br><span class="line">        cursor.execute(<span class="string">&quot;SELECT pg_sleep(100);&quot;</span>)</span><br><span class="line">        cursor.close()</span><br><span class="line">    <span class="keyword">except</span> Exception <span class="keyword">as</span> e:</span><br><span class="line">        <span class="built_in">print</span> <span class="string">&quot;查询时发生错误: &#123;&#125;&quot;</span>.<span class="built_in">format</span>(e)</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">cancel_query</span>(<span class="params">conn</span>):</span><br><span class="line">    <span class="comment"># 等待一段时间后取消查询</span></span><br><span class="line">    time.sleep(<span class="number">0.5</span>)  <span class="comment"># 等待 5 秒</span></span><br><span class="line">    <span class="built_in">print</span> <span class="string">&quot;尝试取消查询...&quot;</span></span><br><span class="line">    conn.cancel()  <span class="comment"># 取消当前的查询</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">main</span>():</span><br><span class="line">    <span class="comment"># 连接到 Pgpool-II</span></span><br><span class="line">    conn = psycopg2.connect(</span><br><span class="line">        host=PGPOOL_HOST,    <span class="comment"># 使用配置的 PGPOOL_HOST</span></span><br><span class="line">        port=PGPOOL_PORT,    <span class="comment"># 使用配置的 PGPOOL_PORT</span></span><br><span class="line">        database=DB_NAME,    <span class="comment"># 使用配置的 DB_NAME</span></span><br><span class="line">        user=USER,           <span class="comment"># 使用配置的 USER</span></span><br><span class="line">        password=PASSWORD    <span class="comment"># 使用配置的 PASSWORD</span></span><br><span class="line">    )</span><br><span class="line"></span><br><span class="line">    <span class="comment"># 创建一个线程来执行长时间运行的查询</span></span><br><span class="line">    query_thread = threading.Thread(target=long_running_query, args=(conn,))</span><br><span class="line">    query_thread.start()</span><br><span class="line"></span><br><span class="line">    <span class="comment"># 创建一个线程来取消查询</span></span><br><span class="line">    cancel_thread = threading.Thread(target=cancel_query, args=(conn,))</span><br><span class="line">    cancel_thread.start()</span><br><span class="line"></span><br><span class="line">    <span class="comment"># 等待线程完成</span></span><br><span class="line">    query_thread.join()</span><br><span class="line">    cancel_thread.join()</span><br><span class="line"></span><br><span class="line">    <span class="comment"># 关闭连接</span></span><br><span class="line">    conn.close()</span><br><span class="line">    <span class="built_in">print</span> <span class="string">&quot;连接已关闭。&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&quot;__main__&quot;</span>:</span><br><span class="line">    i = <span class="number">0</span></span><br><span class="line">    <span class="keyword">while</span> <span class="literal">True</span>:</span><br><span class="line">        main()</span><br><span class="line">        i += <span class="number">1</span></span><br><span class="line">        <span class="built_in">print</span> i</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-</li>
-<li><p>查看日志</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">tail -f pgpool.log | grep connection_count_down</span><br></pre></td></tr></table></figure>
-<p><img src="/2024/10/09/db/pgpool%E6%8A%A5%E9%94%99%E8%BF%9E%E6%8E%A5%E6%95%B0%E6%BB%A1/img.png"></p>
-</li>
-</ol>
-<p>测试结论: </p>
-<ol>
-<li>20.04 pgpool 复现 bug</li>
-<li>16.04 pgpool 无法复现</li>
-</ol>
-<h1 id="staging-global-问题排查"><a href="#staging-global-问题排查" class="headerlink" title="staging global 问题排查"></a>staging global 问题排查</h1><p>已经查到 pgpool 出现问题的根本原因，即有 client 发起过 cancel request 请求，剩下的就是找到是什么服务发起的 cancel request 请求。</p>
-<p>在 proxy 节点抓包  </p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">tcpdump -w dump.pcap &quot;tcp port 5432&quot;</span><br></pre></td></tr></table></figure>
-<p>在 pgpool 节点查看 pgpool 日志，只要发现有 Cancel message from frontend 日志表明触发了一次 cancel request 请求   </p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">tail -F pgpool.log | grep &quot;Cancel message from frontend&quot;</span><br></pre></td></tr></table></figure>
-<p><img src="/2024/10/09/db/pgpool%E6%8A%A5%E9%94%99%E8%BF%9E%E6%8E%A5%E6%95%B0%E6%BB%A1/img_1.png"></p>
-<p>触发之后，在 dump.pcap 中，查到发起 cancel request 的节点 ip，查到是 webservice 节点<br><img src="/2024/10/09/db/pgpool%E6%8A%A5%E9%94%99%E8%BF%9E%E6%8E%A5%E6%95%B0%E6%BB%A1/img_2.png"><br><img src="/2024/10/09/db/pgpool%E6%8A%A5%E9%94%99%E8%BF%9E%E6%8E%A5%E6%95%B0%E6%BB%A1/img_3.png"></p>
-<p>在 webservice 节点上，每 0.1 秒记录下连接 proxy 5432 的 TCP 连接的进程和端口号   </p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">while true; do ss -antp | grep ES | grep :5432 &gt;&gt; ss.log; python -c &quot;import time; time.sleep(0.1)&quot;; done</span><br></pre></td></tr></table></figure>
-
-<p>多抓一段时间的包，和 webservice 上的 ss.log 里端口号印证，查出是 qke_apiserver<br><img src="/2024/10/09/db/pgpool%E6%8A%A5%E9%94%99%E8%BF%9E%E6%8E%A5%E6%95%B0%E6%BB%A1/img_4.png"><br><img src="/2024/10/09/db/pgpool%E6%8A%A5%E9%94%99%E8%BF%9E%E6%8E%A5%E6%95%B0%E6%BB%A1/img_5.png"></p>
-<ol>
-<li>将 qke_apiserver 都 stop，观察 pgpool 日志，发现 “Cancel message from frontend” 日志没有了。</li>
-<li>将 qke_apiserver 再 start，观察 pgpool 日志，发现 “Cancel message from frontend” 日志再次出现。问题确认。</li>
-</ol>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-        
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://phpdi.github.io/2024/09/27/docker/cassandra/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/head.jpeg">
-      <meta itemprop="name" content="Chen Yu">
-      <meta itemprop="description" content="自律给我自由">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="goeoeo">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2024/09/27/docker/cassandra/" class="post-title-link" itemprop="url">未命名</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-              
-
-              <time title="创建时间：2024-09-27 14:51:10 / 修改时间：15:30:11" itemprop="dateCreated datePublished" datetime="2024-09-27T14:51:10+08:00">2024-09-27</time>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h1 id="docker-安装cassandra"><a href="#docker-安装cassandra" class="headerlink" title="docker 安装cassandra"></a>docker 安装cassandra</h1><h2 id="单机版"><a href="#单机版" class="headerlink" title="单机版"></a>单机版</h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">docker run --name my-cassandra -d   --restart=always --network=compose_redis-sentinel --ip=172.15.12.22 cassandra:2.0.14</span><br></pre></td></tr></table></figure>
       
     </div>
 
@@ -1688,20 +1349,20 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">123</span>
+          <span class="site-state-item-count">128</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
             <a href="/categories/">
           
-        <span class="site-state-item-count">20</span>
+        <span class="site-state-item-count">21</span>
         <span class="site-state-item-name">分类</span></a>
       </div>
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">84</span>
+        <span class="site-state-item-count">89</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
@@ -1726,7 +1387,7 @@
 <div class="copyright">
   
   &copy; 
-  <span itemprop="copyrightYear">2025</span>
+  <span itemprop="copyrightYear">2026</span>
   <span class="with-love">
     <i class="fa fa-user"></i>
   </span>

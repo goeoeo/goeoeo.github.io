@@ -1,0 +1,584 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 6.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+  <meta name="baidu-site-verification" content="D033aiBRFi">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+
+
+<script id="hexo-configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    hostname: new URL('https://phpdi.github.io').hostname,
+    root: '/',
+    scheme: 'Gemini',
+    version: '7.7.0',
+    exturl: false,
+    sidebar: {"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},
+    copycode: {"enable":false,"show_result":false,"style":null},
+    back2top: {"enable":true,"sidebar":false,"scrollpercent":false},
+    bookmark: {"enable":false,"color":"#222","save":"auto"},
+    fancybox: false,
+    mediumzoom: false,
+    lazyload: false,
+    pangu: false,
+    comments: {"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},
+    algolia: {
+      appID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    },
+    localsearch: {"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},
+    path: 'search.xml',
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}
+  };
+</script>
+
+  <meta name="description" content="Kubernetes 中 Traefik + HTTPRoute + Metallb 的使用指南一、概述在 Kubernetes 集群中，这三个组件共同构成了一个完整的、生产级的外部流量管理解决方案，实现了从集群外部到内部服务的完整流量路径管理。它们的协同工作解决了 Kubernetes 原生网络模型在外部流量管理方面的局限性，具体完成的核心任务是： 将集群外部的 HTTP&#x2F;HTTPS">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Kubernetes 中 Traefik + HTTPRoute + Metallb 的使用指南">
+<meta property="og:url" content="https://phpdi.github.io/2023/10/24/k8s/k8s%E4%B8%AD%E4%BD%BF%E7%94%A8traefik+httproute+metallb%E7%9A%84%E5%AE%8C%E6%95%B4%E6%8C%87%E5%8D%97/index.html">
+<meta property="og:site_name" content="goeoeo">
+<meta property="og:description" content="Kubernetes 中 Traefik + HTTPRoute + Metallb 的使用指南一、概述在 Kubernetes 集群中，这三个组件共同构成了一个完整的、生产级的外部流量管理解决方案，实现了从集群外部到内部服务的完整流量路径管理。它们的协同工作解决了 Kubernetes 原生网络模型在外部流量管理方面的局限性，具体完成的核心任务是： 将集群外部的 HTTP&#x2F;HTTPS">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2023-10-24T02:00:00.000Z">
+<meta property="article:modified_time" content="2026-01-01T12:52:31.485Z">
+<meta property="article:author" content="Chen Yu">
+<meta property="article:tag" content="k8s">
+<meta property="article:tag" content="traefik">
+<meta property="article:tag" content="httproute">
+<meta property="article:tag" content="metallb">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="https://phpdi.github.io/2023/10/24/k8s/k8s%E4%B8%AD%E4%BD%BF%E7%94%A8traefik+httproute+metallb%E7%9A%84%E5%AE%8C%E6%95%B4%E6%8C%87%E5%8D%97/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome: false,
+    isPost: true
+  };
+</script>
+
+  <title>Kubernetes 中 Traefik + HTTPRoute + Metallb 的使用指南 | goeoeo</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-meta">
+
+    <div>
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">goeoeo</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+        <h1 class="site-subtitle" itemprop="description">会吃鱼</h1>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+</div>
+
+
+<nav class="site-nav">
+  
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>归档</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-fw fa-th"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-fw fa-user"></i>关于</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+
+</nav>
+  <div class="site-search">
+    <div class="popup search-popup">
+    <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocorrect="off" autocapitalize="none"
+           placeholder="搜索..." spellcheck="false"
+           type="text" id="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result"></div>
+
+</div>
+<div class="search-pop-overlay"></div>
+
+  </div>
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content">
+            
+
+  <div class="posts-expand">
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://phpdi.github.io/2023/10/24/k8s/k8s%E4%B8%AD%E4%BD%BF%E7%94%A8traefik+httproute+metallb%E7%9A%84%E5%AE%8C%E6%95%B4%E6%8C%87%E5%8D%97/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/head.jpeg">
+      <meta itemprop="name" content="Chen Yu">
+      <meta itemprop="description" content="自律给我自由">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="goeoeo">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          Kubernetes 中 Traefik + HTTPRoute + Metallb 的使用指南
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2023-10-24 10:00:00" itemprop="dateCreated datePublished" datetime="2023-10-24T10:00:00+08:00">2023-10-24</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2026-01-01 20:52:31" itemprop="dateModified" datetime="2026-01-01T20:52:31+08:00">2026-01-01</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/k8s/" itemprop="url" rel="index">
+                    <span itemprop="name">k8s</span>
+                  </a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="Kubernetes-中-Traefik-HTTPRoute-Metallb-的使用指南"><a href="#Kubernetes-中-Traefik-HTTPRoute-Metallb-的使用指南" class="headerlink" title="Kubernetes 中 Traefik + HTTPRoute + Metallb 的使用指南"></a>Kubernetes 中 Traefik + HTTPRoute + Metallb 的使用指南</h1><h2 id="一、概述"><a href="#一、概述" class="headerlink" title="一、概述"></a>一、概述</h2><p>在 Kubernetes 集群中，这三个组件<strong>共同构成了一个完整的、生产级的外部流量管理解决方案</strong>，实现了从集群外部到内部服务的完整流量路径管理。它们的协同工作解决了 Kubernetes 原生网络模型在外部流量管理方面的局限性，具体完成的核心任务是：</p>
+<p><strong>将集群外部的 HTTP&#x2F;HTTPS 请求安全、高效、智能地路由到集群内部的相应服务，并提供高可用性和可扩展性保障</strong></p>
+<p>更具体地说，它们解决了以下关键问题：</p>
+<ol>
+<li>外部流量如何找到 Kubernetes 集群（Metallb 提供负载均衡 IP）</li>
+<li>流量如何进入集群并被正确处理（Traefik 作为入口控制器）</li>
+<li>流量如何根据规则路由到具体的微服务（HTTPRoute 定义路由规则）</li>
+</ol>
+<p>这个组合方案相比传统的 Ingress 资源具有更强的灵活性、扩展性和协作能力，是云原生环境中管理外部流量的现代最佳实践。</p>
+<p>在 Kubernetes 集群中，Ingress 控制器负责管理外部流量的入口，而 LoadBalancer 类型的服务则需要外部负载均衡器的支持。本文将介绍如何使用 Traefik（作为 Ingress 控制器）、HTTPRoute（Gateway API 的一部分）和 Metallb（作为内部负载均衡器）来构建一个完整的流量管理方案。</p>
+<h2 id="二、各组件的作用"><a href="#二、各组件的作用" class="headerlink" title="二、各组件的作用"></a>二、各组件的作用</h2><h3 id="1-Traefik"><a href="#1-Traefik" class="headerlink" title="1. Traefik"></a>1. Traefik</h3><ul>
+<li><strong>作用</strong>：现代、动态的反向代理和负载均衡器，专门为云原生环境设计</li>
+<li><strong>特点</strong>：<ul>
+<li>自动发现 Kubernetes 服务</li>
+<li>支持多种协议（HTTP、HTTPS、TCP、UDP）</li>
+<li>动态配置更新</li>
+<li>丰富的中间件功能</li>
+<li>集成 Let’s Encrypt 证书管理</li>
+</ul>
+</li>
+<li><strong>在方案中的角色</strong>：作为 Ingress 控制器，处理 HTTP&#x2F;HTTPS 流量的路由和转发</li>
+</ul>
+<h3 id="2-HTTPRoute"><a href="#2-HTTPRoute" class="headerlink" title="2. HTTPRoute"></a>2. HTTPRoute</h3><ul>
+<li><strong>作用</strong>：Gateway API 中的资源对象，用于定义 HTTP 流量的路由规则</li>
+<li><strong>特点</strong>：<ul>
+<li>提供更细粒度的流量控制</li>
+<li>支持多团队协作</li>
+<li>更灵活的匹配规则</li>
+<li>与 Kubernetes 原生资源无缝集成</li>
+</ul>
+</li>
+<li><strong>在方案中的角色</strong>：替代传统的 Ingress 资源，定义具体的 HTTP 路由规则</li>
+</ul>
+<h3 id="3-Metallb"><a href="#3-Metallb" class="headerlink" title="3. Metallb"></a>3. Metallb</h3><ul>
+<li><strong>作用</strong>：为 Kubernetes 集群提供内部负载均衡器支持</li>
+<li><strong>特点</strong>：<ul>
+<li>模拟云厂商的 LoadBalancer 服务</li>
+<li>支持 ARP&#x2F;NDP 和 BGP 模式</li>
+<li>自动分配可用 IP 地址</li>
+<li>轻量级且易于配置</li>
+</ul>
+</li>
+<li><strong>在方案中的角色</strong>：为 Traefik 服务提供外部访问 IP</li>
+</ul>
+<h2 id="三、安装与配置步骤"><a href="#三、安装与配置步骤" class="headerlink" title="三、安装与配置步骤"></a>三、安装与配置步骤</h2><h3 id="1-安装-Metallb"><a href="#1-安装-Metallb" class="headerlink" title="1. 安装 Metallb"></a>1. 安装 Metallb</h3><p>首先，我们需要安装 Metallb 到 Kubernetes 集群中。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 添加 Metallb Helm 仓库</span></span><br><span class="line">helm repo add metallb https://metallb.github.io/metallb</span><br><span class="line">helm repo update</span><br><span class="line"></span><br><span class="line"><span class="comment"># 安装 Metallb</span></span><br><span class="line">helm install metallb metallb/metallb -n metallb-system --create-namespace</span><br></pre></td></tr></table></figure>
+
+<p>配置 Metallb IP 地址池：</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">apiVersion:</span> <span class="string">metallb.io/v1beta1</span></span><br><span class="line"><span class="attr">kind:</span> <span class="string">IPAddressPool</span></span><br><span class="line"><span class="attr">metadata:</span></span><br><span class="line">  <span class="attr">name:</span> <span class="string">default</span></span><br><span class="line">  <span class="attr">namespace:</span> <span class="string">metallb-system</span></span><br><span class="line"><span class="attr">spec:</span></span><br><span class="line">  <span class="attr">addresses:</span></span><br><span class="line">  <span class="bullet">-</span> <span class="number">192.168</span><span class="number">.1</span><span class="number">.200</span><span class="number">-192.168</span><span class="number">.1</span><span class="number">.250</span>  <span class="comment"># 根据你的网络环境调整</span></span><br><span class="line"><span class="meta">---</span></span><br><span class="line"><span class="attr">apiVersion:</span> <span class="string">metallb.io/v1beta1</span></span><br><span class="line"><span class="attr">kind:</span> <span class="string">L2Advertisement</span></span><br><span class="line"><span class="attr">metadata:</span></span><br><span class="line">  <span class="attr">name:</span> <span class="string">default</span></span><br><span class="line">  <span class="attr">namespace:</span> <span class="string">metallb-system</span></span><br><span class="line"><span class="attr">spec:</span></span><br><span class="line">  <span class="attr">ipAddressPools:</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">default</span></span><br></pre></td></tr></table></figure>
+
+<p>应用配置：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">kubectl apply -f metallb-config.yaml</span><br></pre></td></tr></table></figure>
+
+<h3 id="2-安装-Traefik"><a href="#2-安装-Traefik" class="headerlink" title="2. 安装 Traefik"></a>2. 安装 Traefik</h3><p>接下来，我们安装 Traefik 作为 Ingress 控制器。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 添加 Traefik Helm 仓库</span></span><br><span class="line">helm repo add traefik https://traefik.github.io/charts</span><br><span class="line">helm repo update</span><br><span class="line"></span><br><span class="line"><span class="comment"># 安装 Traefik</span></span><br><span class="line">helm install traefik traefik/traefik -n traefik --create-namespace</span><br></pre></td></tr></table></figure>
+
+<h3 id="3-配置-Gateway-API"><a href="#3-配置-Gateway-API" class="headerlink" title="3. 配置 Gateway API"></a>3. 配置 Gateway API</h3><p>安装 Gateway API CRDs：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">kubectl apply -f https://github.com/kubernetes-sigs/gateway-api/releases/download/v0.8.1/standard-install.yaml</span><br></pre></td></tr></table></figure>
+
+<p>创建 Gateway 资源：</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">apiVersion:</span> <span class="string">gateway.networking.k8s.io/v1beta1</span></span><br><span class="line"><span class="attr">kind:</span> <span class="string">Gateway</span></span><br><span class="line"><span class="attr">metadata:</span></span><br><span class="line">  <span class="attr">name:</span> <span class="string">traefik-gateway</span></span><br><span class="line">  <span class="attr">namespace:</span> <span class="string">traefik</span></span><br><span class="line"><span class="attr">spec:</span></span><br><span class="line">  <span class="attr">gatewayClassName:</span> <span class="string">traefik</span></span><br><span class="line">  <span class="attr">listeners:</span></span><br><span class="line">  <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">http</span></span><br><span class="line">    <span class="attr">protocol:</span> <span class="string">HTTP</span></span><br><span class="line">    <span class="attr">port:</span> <span class="number">80</span></span><br><span class="line">    <span class="attr">allowedRoutes:</span></span><br><span class="line">      <span class="attr">namespaces:</span></span><br><span class="line">        <span class="attr">from:</span> <span class="string">All</span></span><br></pre></td></tr></table></figure>
+
+<p>应用配置：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">kubectl apply -f gateway.yaml</span><br></pre></td></tr></table></figure>
+
+<h3 id="4-创建-HTTPRoute"><a href="#4-创建-HTTPRoute" class="headerlink" title="4. 创建 HTTPRoute"></a>4. 创建 HTTPRoute</h3><p>现在，我们创建 HTTPRoute 资源来定义具体的路由规则。以下是两个常见的示例：</p>
+<h4 id="示例-1：基于路径的路由"><a href="#示例-1：基于路径的路由" class="headerlink" title="示例 1：基于路径的路由"></a>示例 1：基于路径的路由</h4><figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">apiVersion:</span> <span class="string">gateway.networking.k8s.io/v1beta1</span></span><br><span class="line"><span class="attr">kind:</span> <span class="string">HTTPRoute</span></span><br><span class="line"><span class="attr">metadata:</span></span><br><span class="line">  <span class="attr">name:</span> <span class="string">sample-route</span></span><br><span class="line">  <span class="attr">namespace:</span> <span class="string">default</span></span><br><span class="line"><span class="attr">spec:</span></span><br><span class="line">  <span class="attr">parentRefs:</span></span><br><span class="line">  <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">traefik-gateway</span></span><br><span class="line">    <span class="attr">namespace:</span> <span class="string">traefik</span></span><br><span class="line">  <span class="attr">rules:</span></span><br><span class="line">  <span class="bullet">-</span> <span class="attr">matches:</span></span><br><span class="line">    <span class="bullet">-</span> <span class="attr">path:</span></span><br><span class="line">        <span class="attr">type:</span> <span class="string">PathPrefix</span></span><br><span class="line">        <span class="attr">value:</span> <span class="string">/sample</span></span><br><span class="line">    <span class="attr">backendRefs:</span></span><br><span class="line">    <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">sample-service</span></span><br><span class="line">      <span class="attr">port:</span> <span class="number">80</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="示例-2：基于不同域名的路由"><a href="#示例-2：基于不同域名的路由" class="headerlink" title="示例 2：基于不同域名的路由"></a>示例 2：基于不同域名的路由</h4><figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">apiVersion:</span> <span class="string">gateway.networking.k8s.io/v1beta1</span></span><br><span class="line"><span class="attr">kind:</span> <span class="string">HTTPRoute</span></span><br><span class="line"><span class="attr">metadata:</span></span><br><span class="line">  <span class="attr">name:</span> <span class="string">domain-based-routes</span></span><br><span class="line">  <span class="attr">namespace:</span> <span class="string">default</span></span><br><span class="line"><span class="attr">spec:</span></span><br><span class="line">  <span class="attr">parentRefs:</span></span><br><span class="line">  <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">traefik-gateway</span></span><br><span class="line">    <span class="attr">namespace:</span> <span class="string">traefik</span></span><br><span class="line">  <span class="attr">hostnames:</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">&quot;api.example.com&quot;</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">&quot;web.example.com&quot;</span></span><br><span class="line">  <span class="attr">rules:</span></span><br><span class="line">  <span class="comment"># 规则 1：api.example.com 路由到 API 服务</span></span><br><span class="line">  <span class="bullet">-</span> <span class="attr">matches:</span></span><br><span class="line">    <span class="bullet">-</span> <span class="attr">hostname:</span></span><br><span class="line">        <span class="attr">type:</span> <span class="string">Exact</span></span><br><span class="line">        <span class="attr">value:</span> <span class="string">&quot;api.example.com&quot;</span></span><br><span class="line">    <span class="attr">backendRefs:</span></span><br><span class="line">    <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">api-service</span></span><br><span class="line">      <span class="attr">port:</span> <span class="number">80</span></span><br><span class="line">  <span class="comment"># 规则 2：web.example.com 路由到 Web 服务</span></span><br><span class="line">  <span class="bullet">-</span> <span class="attr">matches:</span></span><br><span class="line">    <span class="bullet">-</span> <span class="attr">hostname:</span></span><br><span class="line">        <span class="attr">type:</span> <span class="string">Exact</span></span><br><span class="line">        <span class="attr">value:</span> <span class="string">&quot;web.example.com&quot;</span></span><br><span class="line">    <span class="attr">backendRefs:</span></span><br><span class="line">    <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">web-service</span></span><br><span class="line">      <span class="attr">port:</span> <span class="number">80</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="示例-3：复杂路由规则（同时基于域名和路径）"><a href="#示例-3：复杂路由规则（同时基于域名和路径）" class="headerlink" title="示例 3：复杂路由规则（同时基于域名和路径）"></a>示例 3：复杂路由规则（同时基于域名和路径）</h4><figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">apiVersion:</span> <span class="string">gateway.networking.k8s.io/v1beta1</span></span><br><span class="line"><span class="attr">kind:</span> <span class="string">HTTPRoute</span></span><br><span class="line"><span class="attr">metadata:</span></span><br><span class="line">  <span class="attr">name:</span> <span class="string">complex-routes</span></span><br><span class="line">  <span class="attr">namespace:</span> <span class="string">default</span></span><br><span class="line"><span class="attr">spec:</span></span><br><span class="line">  <span class="attr">parentRefs:</span></span><br><span class="line">  <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">traefik-gateway</span></span><br><span class="line">    <span class="attr">namespace:</span> <span class="string">traefik</span></span><br><span class="line">  <span class="attr">hostnames:</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">&quot;app.example.com&quot;</span></span><br><span class="line">  <span class="attr">rules:</span></span><br><span class="line">  <span class="comment"># app.example.com/api 路由到 API 服务</span></span><br><span class="line">  <span class="bullet">-</span> <span class="attr">matches:</span></span><br><span class="line">    <span class="bullet">-</span> <span class="attr">hostname:</span></span><br><span class="line">        <span class="attr">type:</span> <span class="string">Exact</span></span><br><span class="line">        <span class="attr">value:</span> <span class="string">&quot;app.example.com&quot;</span></span><br><span class="line">    <span class="bullet">-</span> <span class="attr">path:</span></span><br><span class="line">        <span class="attr">type:</span> <span class="string">PathPrefix</span></span><br><span class="line">        <span class="attr">value:</span> <span class="string">/api</span></span><br><span class="line">    <span class="attr">backendRefs:</span></span><br><span class="line">    <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">app-api-service</span></span><br><span class="line">      <span class="attr">port:</span> <span class="number">80</span></span><br><span class="line">  <span class="comment"># app.example.com/ 路由到前端服务</span></span><br><span class="line">  <span class="bullet">-</span> <span class="attr">matches:</span></span><br><span class="line">    <span class="bullet">-</span> <span class="attr">hostname:</span></span><br><span class="line">        <span class="attr">type:</span> <span class="string">Exact</span></span><br><span class="line">        <span class="attr">value:</span> <span class="string">&quot;app.example.com&quot;</span></span><br><span class="line">    <span class="bullet">-</span> <span class="attr">path:</span></span><br><span class="line">        <span class="attr">type:</span> <span class="string">PathPrefix</span></span><br><span class="line">        <span class="attr">value:</span> <span class="string">/</span></span><br><span class="line">    <span class="attr">backendRefs:</span></span><br><span class="line">    <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">app-frontend-service</span></span><br><span class="line">      <span class="attr">port:</span> <span class="number">80</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="5-验证配置"><a href="#5-验证配置" class="headerlink" title="5. 验证配置"></a>5. 验证配置</h3><p>检查各组件的状态：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 检查 Metallb</span></span><br><span class="line">kubectl get pods -n metallb-system</span><br><span class="line">kubectl get ipaddresspools.metallb.io -n metallb-system</span><br><span class="line"></span><br><span class="line"><span class="comment"># 检查 Traefik</span></span><br><span class="line">kubectl get pods -n traefik</span><br><span class="line">kubectl get services -n traefik</span><br><span class="line"></span><br><span class="line"><span class="comment"># 检查 Gateway 和 HTTPRoute</span></span><br><span class="line">kubectl get gateways.gateway.networking.k8s.io -n traefik</span><br><span class="line">kubectl get httproutes.gateway.networking.k8s.io -n default</span><br></pre></td></tr></table></figure>
+
+<h2 id="四、常见问题与调试"><a href="#四、常见问题与调试" class="headerlink" title="四、常见问题与调试"></a>四、常见问题与调试</h2><h3 id="1-无法访问服务"><a href="#1-无法访问服务" class="headerlink" title="1. 无法访问服务"></a>1. 无法访问服务</h3><ul>
+<li>检查 Metallb IP 地址池是否配置正确</li>
+<li>检查 Traefik 服务是否获取到外部 IP</li>
+<li>检查 HTTPRoute 规则是否匹配</li>
+</ul>
+<h3 id="2-证书问题"><a href="#2-证书问题" class="headerlink" title="2. 证书问题"></a>2. 证书问题</h3><ul>
+<li>Traefik 集成 Let’s Encrypt 需要正确配置 DNS 或 HTTP 挑战</li>
+<li>确保域名正确指向 Metallb 分配的 IP</li>
+</ul>
+<h3 id="3-性能优化"><a href="#3-性能优化" class="headerlink" title="3. 性能优化"></a>3. 性能优化</h3><ul>
+<li>根据实际需求调整 Metallb 的 IP 地址池</li>
+<li>配置 Traefik 的资源限制</li>
+<li>使用适当的负载均衡算法</li>
+</ul>
+<h2 id="五、总结"><a href="#五、总结" class="headerlink" title="五、总结"></a>五、总结</h2><p>通过组合使用 Traefik（作为动态 Ingress 控制器）、HTTPRoute（作为灵活的路由规则定义）和 Metallb（作为内部负载均衡器），我们可以在 Kubernetes 集群中构建一个功能强大且高度灵活的流量管理系统。这种方案不仅提供了传统 Ingress 的所有功能，还增加了更好的扩展性、协作性和动态配置能力，非常适合云原生环境的需求。</p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/k8s/" rel="tag"># k8s</a>
+              <a href="/tags/traefik/" rel="tag"># traefik</a>
+              <a href="/tags/httproute/" rel="tag"># httproute</a>
+              <a href="/tags/metallb/" rel="tag"># metallb</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2023/09/13/go/goland%E5%8F%91%E9%80%81HTTP%E8%AF%B7%E6%B1%82/" rel="prev" title="goland发送HTTP请求">
+      <i class="fa fa-chevron-left"></i> goland发送HTTP请求
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2023/12/08/python/python3%E9%AB%98%E7%BA%A7%E6%A0%B8%E5%BF%83%E6%8A%80%E6%9C%AF97%E8%AE%B2/" rel="next" title="python3高级核心技术97讲">
+      python3高级核心技术97讲 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+  </div>
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let activeClass = CONFIG.comments.activeClass;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Kubernetes-%E4%B8%AD-Traefik-HTTPRoute-Metallb-%E7%9A%84%E4%BD%BF%E7%94%A8%E6%8C%87%E5%8D%97"><span class="nav-number">1.</span> <span class="nav-text">Kubernetes 中 Traefik + HTTPRoute + Metallb 的使用指南</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%80%E3%80%81%E6%A6%82%E8%BF%B0"><span class="nav-number">1.1.</span> <span class="nav-text">一、概述</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%8C%E3%80%81%E5%90%84%E7%BB%84%E4%BB%B6%E7%9A%84%E4%BD%9C%E7%94%A8"><span class="nav-number">1.2.</span> <span class="nav-text">二、各组件的作用</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-Traefik"><span class="nav-number">1.2.1.</span> <span class="nav-text">1. Traefik</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-HTTPRoute"><span class="nav-number">1.2.2.</span> <span class="nav-text">2. HTTPRoute</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-Metallb"><span class="nav-number">1.2.3.</span> <span class="nav-text">3. Metallb</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%89%E3%80%81%E5%AE%89%E8%A3%85%E4%B8%8E%E9%85%8D%E7%BD%AE%E6%AD%A5%E9%AA%A4"><span class="nav-number">1.3.</span> <span class="nav-text">三、安装与配置步骤</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-%E5%AE%89%E8%A3%85-Metallb"><span class="nav-number">1.3.1.</span> <span class="nav-text">1. 安装 Metallb</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-%E5%AE%89%E8%A3%85-Traefik"><span class="nav-number">1.3.2.</span> <span class="nav-text">2. 安装 Traefik</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-%E9%85%8D%E7%BD%AE-Gateway-API"><span class="nav-number">1.3.3.</span> <span class="nav-text">3. 配置 Gateway API</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-%E5%88%9B%E5%BB%BA-HTTPRoute"><span class="nav-number">1.3.4.</span> <span class="nav-text">4. 创建 HTTPRoute</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%A4%BA%E4%BE%8B-1%EF%BC%9A%E5%9F%BA%E4%BA%8E%E8%B7%AF%E5%BE%84%E7%9A%84%E8%B7%AF%E7%94%B1"><span class="nav-number">1.3.4.1.</span> <span class="nav-text">示例 1：基于路径的路由</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%A4%BA%E4%BE%8B-2%EF%BC%9A%E5%9F%BA%E4%BA%8E%E4%B8%8D%E5%90%8C%E5%9F%9F%E5%90%8D%E7%9A%84%E8%B7%AF%E7%94%B1"><span class="nav-number">1.3.4.2.</span> <span class="nav-text">示例 2：基于不同域名的路由</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%A4%BA%E4%BE%8B-3%EF%BC%9A%E5%A4%8D%E6%9D%82%E8%B7%AF%E7%94%B1%E8%A7%84%E5%88%99%EF%BC%88%E5%90%8C%E6%97%B6%E5%9F%BA%E4%BA%8E%E5%9F%9F%E5%90%8D%E5%92%8C%E8%B7%AF%E5%BE%84%EF%BC%89"><span class="nav-number">1.3.4.3.</span> <span class="nav-text">示例 3：复杂路由规则（同时基于域名和路径）</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-%E9%AA%8C%E8%AF%81%E9%85%8D%E7%BD%AE"><span class="nav-number">1.3.5.</span> <span class="nav-text">5. 验证配置</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9B%9B%E3%80%81%E5%B8%B8%E8%A7%81%E9%97%AE%E9%A2%98%E4%B8%8E%E8%B0%83%E8%AF%95"><span class="nav-number">1.4.</span> <span class="nav-text">四、常见问题与调试</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-%E6%97%A0%E6%B3%95%E8%AE%BF%E9%97%AE%E6%9C%8D%E5%8A%A1"><span class="nav-number">1.4.1.</span> <span class="nav-text">1. 无法访问服务</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-%E8%AF%81%E4%B9%A6%E9%97%AE%E9%A2%98"><span class="nav-number">1.4.2.</span> <span class="nav-text">2. 证书问题</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96"><span class="nav-number">1.4.3.</span> <span class="nav-text">3. 性能优化</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%94%E3%80%81%E6%80%BB%E7%BB%93"><span class="nav-number">1.5.</span> <span class="nav-text">五、总结</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Chen Yu"
+      src="/images/head.jpeg">
+  <p class="site-author-name" itemprop="name">Chen Yu</p>
+  <div class="site-description" itemprop="description">自律给我自由</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">128</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">21</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">89</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2026</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Chen Yu</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v6.3.0
+  </div>
+  <span class="post-meta-divider">|</span>
+  <div class="theme-info">主题 – <a href="https://theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a> v7.7.0
+  </div>
+
+<div>
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<span id="busuanzi_container_site_pv" style='display:none'>
+    本站总访问量 <span id="busuanzi_value_site_pv"></span> 次
+    <span class="post-meta-divider">|</span>
+</span>
+<span id="busuanzi_container_site_uv" style='display:none'>
+    有<span id="busuanzi_value_site_uv"></span>人看过我的博客啦
+</span>
+</div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>

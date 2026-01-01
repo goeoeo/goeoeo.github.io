@@ -1,0 +1,593 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 6.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+  <meta name="baidu-site-verification" content="D033aiBRFi">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+
+
+<script id="hexo-configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    hostname: new URL('https://phpdi.github.io').hostname,
+    root: '/',
+    scheme: 'Gemini',
+    version: '7.7.0',
+    exturl: false,
+    sidebar: {"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},
+    copycode: {"enable":false,"show_result":false,"style":null},
+    back2top: {"enable":true,"sidebar":false,"scrollpercent":false},
+    bookmark: {"enable":false,"color":"#222","save":"auto"},
+    fancybox: false,
+    mediumzoom: false,
+    lazyload: false,
+    pangu: false,
+    comments: {"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},
+    algolia: {
+      appID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    },
+    localsearch: {"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},
+    path: 'search.xml',
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}
+  };
+</script>
+
+  <meta name="description" content="简介cassandra 端口   端口 协议 功能    7000 thrift 节点之间通信   7001 ssl thrift 节点之间通信   9042 cql 客户端通信   9160 thrift 客户端通信   cassandra.yaml 内容介绍 cluster_name: 集群的名称   seed_provider: 种子节点   listen_address: 节点的监听地址">
+<meta property="og:type" content="article">
+<meta property="og:title" content="cassandra入门">
+<meta property="og:url" content="https://phpdi.github.io/2025/08/21/db/cassandra%E5%85%A5%E9%97%A8/index.html">
+<meta property="og:site_name" content="goeoeo">
+<meta property="og:description" content="简介cassandra 端口   端口 协议 功能    7000 thrift 节点之间通信   7001 ssl thrift 节点之间通信   9042 cql 客户端通信   9160 thrift 客户端通信   cassandra.yaml 内容介绍 cluster_name: 集群的名称   seed_provider: 种子节点   listen_address: 节点的监听地址">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2025-08-21T01:33:33.607Z">
+<meta property="article:modified_time" content="2025-09-06T05:01:51.773Z">
+<meta property="article:author" content="Chen Yu">
+<meta property="article:tag" content="cassandra">
+<meta property="article:tag" content="大数据">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="https://phpdi.github.io/2025/08/21/db/cassandra%E5%85%A5%E9%97%A8/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome: false,
+    isPost: true
+  };
+</script>
+
+  <title>cassandra入门 | goeoeo</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-meta">
+
+    <div>
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">goeoeo</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+        <h1 class="site-subtitle" itemprop="description">会吃鱼</h1>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+</div>
+
+
+<nav class="site-nav">
+  
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>归档</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-fw fa-th"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-fw fa-user"></i>关于</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+
+</nav>
+  <div class="site-search">
+    <div class="popup search-popup">
+    <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocorrect="off" autocapitalize="none"
+           placeholder="搜索..." spellcheck="false"
+           type="text" id="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result"></div>
+
+</div>
+<div class="search-pop-overlay"></div>
+
+  </div>
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content">
+            
+
+  <div class="posts-expand">
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://phpdi.github.io/2025/08/21/db/cassandra%E5%85%A5%E9%97%A8/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/head.jpeg">
+      <meta itemprop="name" content="Chen Yu">
+      <meta itemprop="description" content="自律给我自由">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="goeoeo">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          cassandra入门
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2025-08-21 09:33:33" itemprop="dateCreated datePublished" datetime="2025-08-21T09:33:33+08:00">2025-08-21</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2025-09-06 13:01:51" itemprop="dateModified" datetime="2025-09-06T13:01:51+08:00">2025-09-06</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/db/" itemprop="url" rel="index">
+                    <span itemprop="name">db</span>
+                  </a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h1><h2 id="cassandra-端口"><a href="#cassandra-端口" class="headerlink" title="cassandra 端口"></a>cassandra 端口</h2><table>
+<thead>
+<tr>
+<th>端口</th>
+<th>协议</th>
+<th>功能</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>7000</td>
+<td>thrift</td>
+<td>节点之间通信</td>
+</tr>
+<tr>
+<td>7001</td>
+<td>ssl thrift</td>
+<td>节点之间通信</td>
+</tr>
+<tr>
+<td>9042</td>
+<td>cql</td>
+<td>客户端通信</td>
+</tr>
+<tr>
+<td>9160</td>
+<td>thrift</td>
+<td>客户端通信</td>
+</tr>
+</tbody></table>
+<h2 id="cassandra-yaml-内容介绍"><a href="#cassandra-yaml-内容介绍" class="headerlink" title="cassandra.yaml 内容介绍"></a>cassandra.yaml 内容介绍</h2><ul>
+<li>cluster_name: 集群的名称  </li>
+<li>seed_provider: 种子节点  </li>
+<li>listen_address: 节点的监听地址  </li>
+<li>rpc_address: 节点的rpc地址  </li>
+<li>endpoint_snitch: 节点的snitch  </li>
+<li>num_tokens: 节点的token数量  </li>
+<li>disk_failure_policy: 磁盘失败策略  </li>
+<li>commitlog_sync: 提交日志同步策略  </li>
+<li>commitlog_sync_batch_window_in_ms: 提交日志同步批量窗口时间  </li>
+<li>commitlog_segment_size_in_mb: 提交日志分段大小  </li>
+<li>commitlog_total_space_in_mb: 提交日志总大小  </li>
+<li>commitlog_roll_when_full: 提交日志满了是否滚动  </li>
+<li>commitlog_roll_when_full_in_mb: 提交日志满了滚动的大小  </li>
+<li>commitlog_roll_when_full_in_ms: 提交日志满了滚动的时间  </li>
+<li>commitlog_roll_when_full_in_bytes: 提交日志满了滚动的字节数</li>
+</ul>
+<h1 id="Casssandra基本概念"><a href="#Casssandra基本概念" class="headerlink" title="Casssandra基本概念"></a>Casssandra基本概念</h1><h2 id="数据模型"><a href="#数据模型" class="headerlink" title="数据模型"></a>数据模型</h2><h3 id="列"><a href="#列" class="headerlink" title="列"></a>列</h3><p>列是cassandra的基本单位，具有三个值：名称，值，时间戳<br>在Casssandra中不需要预先定义列，只需要在KeySpace中定义列族，然后就可以开始写数据了。 </p>
+<h3 id="列族-ColumnFamily"><a href="#列族-ColumnFamily" class="headerlink" title="列族 ColumnFamily"></a>列族 ColumnFamily</h3><p>列族相当于关系型数据库的表，包含了多个列的容器</p>
+<p>列族的2种类型：</p>
+<ul>
+<li>静态列族 字段名是固定的</li>
+<li>动态列族 字段名是动态的</li>
+</ul>
+<p>Row key:列族中每一行都是一个key，key是唯一的，用来标识这一行数据。 </p>
+<p>主键：</p>
+<ul>
+<li>主键是用来唯一标识一行数据的</li>
+<li>主键可以由一列组成，也可以由多列组成</li>
+</ul>
+<h3 id="键空间-KeySpace"><a href="#键空间-KeySpace" class="headerlink" title="键空间 KeySpace"></a>键空间 KeySpace</h3><p>键空间是cassandra中最外层的容器，相当于关系型数据库中的数据库。<br>键空间中包含了多个列族，每个列族中包含了多行数据。<br>每个键空间中都有一个默认的列族，列族的名称为default。  </p>
+<p>键空间创建的时候可以指定一些属性：副本因子，副本策略，Durable_write(是否启用commitLog机制)  </p>
+<p>副本因子：</p>
+<ul>
+<li>副本因子是用来指定每个键空间中副本的数量的</li>
+<li>副本因子的默认值是1</li>
+<li>副本因子可以在键空间创建的时候指定，也可以在键空间创建之后修改</li>
+</ul>
+<p>副本策略：</p>
+<ul>
+<li>副本策略是用来指定每个键空间中副本的分布策略的</li>
+<li>副本策略的默认值是SimpleStrategy</li>
+<li>副本策略可以在键空间创建的时候指定，也可以在键空间创建之后修改</li>
+</ul>
+<p>Durable_write：</p>
+<ul>
+<li>Durable_write是用来指定每个键空间中是否启用commitLog机制的</li>
+<li>Durable_write的默认值是true</li>
+<li>Durable_write可以在键空间创建的时候指定，也可以在键空间创建之后修改</li>
+</ul>
+<h3 id="副本"><a href="#副本" class="headerlink" title="副本"></a>副本</h3><p>副本就是把数据存储到多个节点上，来提高容错性</p>
+<h3 id="节点"><a href="#节点" class="headerlink" title="节点"></a>节点</h3><p>存储数据的机器</p>
+<h3 id="数据中心"><a href="#数据中心" class="headerlink" title="数据中心"></a>数据中心</h3><p>多台机器组成一个数据中心</p>
+<h3 id="集群"><a href="#集群" class="headerlink" title="集群"></a>集群</h3><p>Cassandra数据库是为跨越多条主机共同工作，对用户呈现为一个整体的分布式系统设计的。Cassandra最外层容器被称为集群。<br>Cassandra将集群中的节点组成一个环（ring）,然后把数据分配到集群中的节点上</p>
+<h2 id="数据类型"><a href="#数据类型" class="headerlink" title="数据类型"></a>数据类型</h2><ul>
+<li>数值类型</li>
+<li>文本类型</li>
+<li>时间类型</li>
+<li>标识符类型 例如UUID</li>
+<li>集合类型 例如set,list,map</li>
+<li>其它基本类型 例如boolean,blob,inet,counter</li>
+<li>用户自定义类型</li>
+</ul>
+<h2 id="CQL-Shell客户端"><a href="#CQL-Shell客户端" class="headerlink" title="CQL Shell客户端"></a>CQL Shell客户端</h2><p>CQL Shell是Cassandra提供的一个命令行客户端，用于执行CQL语句。<br>CQL Shell可以在Cassandra的安装目录下的bin目录中找到。<br>CQL Shell的使用方法如下：</p>
+<ol>
+<li>进入Cassandra的安装目录下的bin目录</li>
+<li>执行cqlsh命令</li>
+<li>输入用户名和密码</li>
+<li>执行CQL语句</li>
+<li>退出CQL Shell</li>
+</ol>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cqlsh dev01-zoocassa0 9042</span><br></pre></td></tr></table></figure>
+
+
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/cassandra/" rel="tag"># cassandra</a>
+              <a href="/tags/%E5%A4%A7%E6%95%B0%E6%8D%AE/" rel="tag"># 大数据</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2025/07/26/webfront/vue%E5%85%A5%E9%97%A8/" rel="prev" title="vue入门">
+      <i class="fa fa-chevron-left"></i> vue入门
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2025/11/24/linux/trae%E6%97%A5%E5%B8%B8%E4%BD%BF%E7%94%A8/" rel="next" title="">
+       <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+  </div>
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let activeClass = CONFIG.comments.activeClass;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%AE%80%E4%BB%8B"><span class="nav-number">1.</span> <span class="nav-text">简介</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#cassandra-%E7%AB%AF%E5%8F%A3"><span class="nav-number">1.1.</span> <span class="nav-text">cassandra 端口</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#cassandra-yaml-%E5%86%85%E5%AE%B9%E4%BB%8B%E7%BB%8D"><span class="nav-number">1.2.</span> <span class="nav-text">cassandra.yaml 内容介绍</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Casssandra%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5"><span class="nav-number">2.</span> <span class="nav-text">Casssandra基本概念</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%95%B0%E6%8D%AE%E6%A8%A1%E5%9E%8B"><span class="nav-number">2.1.</span> <span class="nav-text">数据模型</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%88%97"><span class="nav-number">2.1.1.</span> <span class="nav-text">列</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%88%97%E6%97%8F-ColumnFamily"><span class="nav-number">2.1.2.</span> <span class="nav-text">列族 ColumnFamily</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%94%AE%E7%A9%BA%E9%97%B4-KeySpace"><span class="nav-number">2.1.3.</span> <span class="nav-text">键空间 KeySpace</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%89%AF%E6%9C%AC"><span class="nav-number">2.1.4.</span> <span class="nav-text">副本</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%8A%82%E7%82%B9"><span class="nav-number">2.1.5.</span> <span class="nav-text">节点</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%95%B0%E6%8D%AE%E4%B8%AD%E5%BF%83"><span class="nav-number">2.1.6.</span> <span class="nav-text">数据中心</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%9B%86%E7%BE%A4"><span class="nav-number">2.1.7.</span> <span class="nav-text">集群</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B"><span class="nav-number">2.2.</span> <span class="nav-text">数据类型</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#CQL-Shell%E5%AE%A2%E6%88%B7%E7%AB%AF"><span class="nav-number">2.3.</span> <span class="nav-text">CQL Shell客户端</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Chen Yu"
+      src="/images/head.jpeg">
+  <p class="site-author-name" itemprop="name">Chen Yu</p>
+  <div class="site-description" itemprop="description">自律给我自由</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">128</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">21</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">89</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2026</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Chen Yu</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v6.3.0
+  </div>
+  <span class="post-meta-divider">|</span>
+  <div class="theme-info">主题 – <a href="https://theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a> v7.7.0
+  </div>
+
+<div>
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<span id="busuanzi_container_site_pv" style='display:none'>
+    本站总访问量 <span id="busuanzi_value_site_pv"></span> 次
+    <span class="post-meta-divider">|</span>
+</span>
+<span id="busuanzi_container_site_uv" style='display:none'>
+    有<span id="busuanzi_value_site_uv"></span>人看过我的博客啦
+</span>
+</div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>

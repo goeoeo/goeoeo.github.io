@@ -50,45 +50,45 @@
   <meta name="description" content="字符串字符串结构: 指向数据地址的指针(8字节)+字符串长度变量(8字节) 1.string 不可修改,因为在字符串会被分配到只读内存段。2.将字符串转换为slice([]byte) ,是重新分配了内存，不会修改原有字符串。3.使用unsafe包 将slice 指向原字符串的内存，也不能修改，强制修改会包 panic">
 <meta property="og:type" content="article">
 <meta property="og:title" content="go硬核干货">
-<meta property="og:url" content="https://phpdi.github.io/2023/01/11/go/go%E7%A1%AC%E6%A0%B8%E5%B9%B2%E8%B4%A7/index.html">
+<meta property="og:url" content="https://phpdi.github.io/2026/08/09/go/go%E7%A1%AC%E6%A0%B8%E5%B9%B2%E8%B4%A7/index.html">
 <meta property="og:site_name" content="goeoeo">
 <meta property="og:description" content="字符串字符串结构: 指向数据地址的指针(8字节)+字符串长度变量(8字节) 1.string 不可修改,因为在字符串会被分配到只读内存段。2.将字符串转换为slice([]byte) ,是重新分配了内存，不会修改原有字符串。3.使用unsafe包 将slice 指向原字符串的内存，也不能修改，强制修改会包 panic">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="https://phpdi.github.io/2023/01/11/go/go%E7%A1%AC%E6%A0%B8%E5%B9%B2%E8%B4%A7/bmap.png">
-<meta property="og:image" content="https://phpdi.github.io/2023/01/11/go/go%E7%A1%AC%E6%A0%B8%E5%B9%B2%E8%B4%A7/img.png">
-<meta property="og:image" content="https://phpdi.github.io/2023/01/11/go/go%E7%A1%AC%E6%A0%B8%E5%B9%B2%E8%B4%A7/img_1.png">
-<meta property="og:image" content="https://phpdi.github.io/2023/01/11/go/go%E7%A1%AC%E6%A0%B8%E5%B9%B2%E8%B4%A7/img_2.png">
-<meta property="og:image" content="https://phpdi.github.io/2023/01/11/go/go%E7%A1%AC%E6%A0%B8%E5%B9%B2%E8%B4%A7/img_3.png">
-<meta property="og:image" content="https://phpdi.github.io/2023/01/11/go/go%E7%A1%AC%E6%A0%B8%E5%B9%B2%E8%B4%A7/img_4.png">
-<meta property="og:image" content="https://phpdi.github.io/2023/01/11/go/go%E7%A1%AC%E6%A0%B8%E5%B9%B2%E8%B4%A7/img_5.png">
-<meta property="og:image" content="https://phpdi.github.io/2023/01/11/go/go%E7%A1%AC%E6%A0%B8%E5%B9%B2%E8%B4%A7/img_6.png">
-<meta property="og:image" content="https://phpdi.github.io/2023/01/11/go/go%E7%A1%AC%E6%A0%B8%E5%B9%B2%E8%B4%A7/img_7.png">
-<meta property="og:image" content="https://phpdi.github.io/2023/01/11/go/go%E7%A1%AC%E6%A0%B8%E5%B9%B2%E8%B4%A7/img_8.png">
-<meta property="og:image" content="https://phpdi.github.io/2023/01/11/go/go%E7%A1%AC%E6%A0%B8%E5%B9%B2%E8%B4%A7/img_9.png">
-<meta property="og:image" content="https://phpdi.github.io/2023/01/11/go/go%E7%A1%AC%E6%A0%B8%E5%B9%B2%E8%B4%A7/img_10.png">
-<meta property="og:image" content="https://phpdi.github.io/2023/01/11/go/go%E7%A1%AC%E6%A0%B8%E5%B9%B2%E8%B4%A7/img_11.png">
-<meta property="og:image" content="https://phpdi.github.io/2023/01/11/go/go%E7%A1%AC%E6%A0%B8%E5%B9%B2%E8%B4%A7/img_12.png">
-<meta property="og:image" content="https://phpdi.github.io/2023/01/11/go/go%E7%A1%AC%E6%A0%B8%E5%B9%B2%E8%B4%A7/img_13.png">
-<meta property="og:image" content="https://phpdi.github.io/2023/01/11/go/go%E7%A1%AC%E6%A0%B8%E5%B9%B2%E8%B4%A7/img_14.png">
-<meta property="og:image" content="https://phpdi.github.io/2023/01/11/go/go%E7%A1%AC%E6%A0%B8%E5%B9%B2%E8%B4%A7/img_15.png">
-<meta property="og:image" content="https://phpdi.github.io/2023/01/11/go/go%E7%A1%AC%E6%A0%B8%E5%B9%B2%E8%B4%A7/img_16.png">
-<meta property="og:image" content="https://phpdi.github.io/2023/01/11/go/go%E7%A1%AC%E6%A0%B8%E5%B9%B2%E8%B4%A7/img_17.png">
-<meta property="og:image" content="https://phpdi.github.io/2023/01/11/go/go%E7%A1%AC%E6%A0%B8%E5%B9%B2%E8%B4%A7/img_18.png">
-<meta property="og:image" content="https://phpdi.github.io/2023/01/11/go/go%E7%A1%AC%E6%A0%B8%E5%B9%B2%E8%B4%A7/img_19.png">
-<meta property="og:image" content="https://phpdi.github.io/2023/01/11/go/go%E7%A1%AC%E6%A0%B8%E5%B9%B2%E8%B4%A7/img_20.png">
-<meta property="og:image" content="https://phpdi.github.io/2023/01/11/go/go%E7%A1%AC%E6%A0%B8%E5%B9%B2%E8%B4%A7/img_21.png">
-<meta property="og:image" content="https://phpdi.github.io/2023/01/11/go/go%E7%A1%AC%E6%A0%B8%E5%B9%B2%E8%B4%A7/img_22.png">
-<meta property="og:image" content="https://phpdi.github.io/2023/01/11/go/go%E7%A1%AC%E6%A0%B8%E5%B9%B2%E8%B4%A7/img_23.png">
-<meta property="og:image" content="https://phpdi.github.io/2023/01/11/go/go%E7%A1%AC%E6%A0%B8%E5%B9%B2%E8%B4%A7/img_24.png">
-<meta property="og:image" content="https://phpdi.github.io/2023/01/11/go/go%E7%A1%AC%E6%A0%B8%E5%B9%B2%E8%B4%A7/img_25.png">
-<meta property="og:image" content="https://phpdi.github.io/2023/01/11/go/go%E7%A1%AC%E6%A0%B8%E5%B9%B2%E8%B4%A7/img_26.png">
-<meta property="article:published_time" content="2023-01-11T14:59:23.574Z">
-<meta property="article:modified_time" content="2024-03-05T09:18:22.172Z">
+<meta property="og:image" content="https://phpdi.github.io/2026/08/09/go/go%E7%A1%AC%E6%A0%B8%E5%B9%B2%E8%B4%A7/bmap.png">
+<meta property="og:image" content="https://phpdi.github.io/2026/08/09/go/go%E7%A1%AC%E6%A0%B8%E5%B9%B2%E8%B4%A7/img.png">
+<meta property="og:image" content="https://phpdi.github.io/2026/08/09/go/go%E7%A1%AC%E6%A0%B8%E5%B9%B2%E8%B4%A7/img_1.png">
+<meta property="og:image" content="https://phpdi.github.io/2026/08/09/go/go%E7%A1%AC%E6%A0%B8%E5%B9%B2%E8%B4%A7/img_2.png">
+<meta property="og:image" content="https://phpdi.github.io/2026/08/09/go/go%E7%A1%AC%E6%A0%B8%E5%B9%B2%E8%B4%A7/img_3.png">
+<meta property="og:image" content="https://phpdi.github.io/2026/08/09/go/go%E7%A1%AC%E6%A0%B8%E5%B9%B2%E8%B4%A7/img_4.png">
+<meta property="og:image" content="https://phpdi.github.io/2026/08/09/go/go%E7%A1%AC%E6%A0%B8%E5%B9%B2%E8%B4%A7/img_5.png">
+<meta property="og:image" content="https://phpdi.github.io/2026/08/09/go/go%E7%A1%AC%E6%A0%B8%E5%B9%B2%E8%B4%A7/img_6.png">
+<meta property="og:image" content="https://phpdi.github.io/2026/08/09/go/go%E7%A1%AC%E6%A0%B8%E5%B9%B2%E8%B4%A7/img_7.png">
+<meta property="og:image" content="https://phpdi.github.io/2026/08/09/go/go%E7%A1%AC%E6%A0%B8%E5%B9%B2%E8%B4%A7/img_8.png">
+<meta property="og:image" content="https://phpdi.github.io/2026/08/09/go/go%E7%A1%AC%E6%A0%B8%E5%B9%B2%E8%B4%A7/img_9.png">
+<meta property="og:image" content="https://phpdi.github.io/2026/08/09/go/go%E7%A1%AC%E6%A0%B8%E5%B9%B2%E8%B4%A7/img_10.png">
+<meta property="og:image" content="https://phpdi.github.io/2026/08/09/go/go%E7%A1%AC%E6%A0%B8%E5%B9%B2%E8%B4%A7/img_11.png">
+<meta property="og:image" content="https://phpdi.github.io/2026/08/09/go/go%E7%A1%AC%E6%A0%B8%E5%B9%B2%E8%B4%A7/img_12.png">
+<meta property="og:image" content="https://phpdi.github.io/2026/08/09/go/go%E7%A1%AC%E6%A0%B8%E5%B9%B2%E8%B4%A7/img_13.png">
+<meta property="og:image" content="https://phpdi.github.io/2026/08/09/go/go%E7%A1%AC%E6%A0%B8%E5%B9%B2%E8%B4%A7/img_14.png">
+<meta property="og:image" content="https://phpdi.github.io/2026/08/09/go/go%E7%A1%AC%E6%A0%B8%E5%B9%B2%E8%B4%A7/img_15.png">
+<meta property="og:image" content="https://phpdi.github.io/2026/08/09/go/go%E7%A1%AC%E6%A0%B8%E5%B9%B2%E8%B4%A7/img_16.png">
+<meta property="og:image" content="https://phpdi.github.io/2026/08/09/go/go%E7%A1%AC%E6%A0%B8%E5%B9%B2%E8%B4%A7/img_17.png">
+<meta property="og:image" content="https://phpdi.github.io/2026/08/09/go/go%E7%A1%AC%E6%A0%B8%E5%B9%B2%E8%B4%A7/img_18.png">
+<meta property="og:image" content="https://phpdi.github.io/2026/08/09/go/go%E7%A1%AC%E6%A0%B8%E5%B9%B2%E8%B4%A7/img_19.png">
+<meta property="og:image" content="https://phpdi.github.io/2026/08/09/go/go%E7%A1%AC%E6%A0%B8%E5%B9%B2%E8%B4%A7/img_20.png">
+<meta property="og:image" content="https://phpdi.github.io/2026/08/09/go/go%E7%A1%AC%E6%A0%B8%E5%B9%B2%E8%B4%A7/img_21.png">
+<meta property="og:image" content="https://phpdi.github.io/2026/08/09/go/go%E7%A1%AC%E6%A0%B8%E5%B9%B2%E8%B4%A7/img_22.png">
+<meta property="og:image" content="https://phpdi.github.io/2026/08/09/go/go%E7%A1%AC%E6%A0%B8%E5%B9%B2%E8%B4%A7/img_23.png">
+<meta property="og:image" content="https://phpdi.github.io/2026/08/09/go/go%E7%A1%AC%E6%A0%B8%E5%B9%B2%E8%B4%A7/img_24.png">
+<meta property="og:image" content="https://phpdi.github.io/2026/08/09/go/go%E7%A1%AC%E6%A0%B8%E5%B9%B2%E8%B4%A7/img_25.png">
+<meta property="og:image" content="https://phpdi.github.io/2026/08/09/go/go%E7%A1%AC%E6%A0%B8%E5%B9%B2%E8%B4%A7/img_26.png">
+<meta property="article:published_time" content="2026-08-09T12:35:17.483Z">
+<meta property="article:modified_time" content="2026-08-09T12:35:17.484Z">
 <meta property="article:author" content="Chen Yu">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://phpdi.github.io/2023/01/11/go/go%E7%A1%AC%E6%A0%B8%E5%B9%B2%E8%B4%A7/bmap.png">
+<meta name="twitter:image" content="https://phpdi.github.io/2026/08/09/go/go%E7%A1%AC%E6%A0%B8%E5%B9%B2%E8%B4%A7/bmap.png">
 
-<link rel="canonical" href="https://phpdi.github.io/2023/01/11/go/go%E7%A1%AC%E6%A0%B8%E5%B9%B2%E8%B4%A7/">
+<link rel="canonical" href="https://phpdi.github.io/2026/08/09/go/go%E7%A1%AC%E6%A0%B8%E5%B9%B2%E8%B4%A7/">
 
 
 <script id="page-configurations">
@@ -241,7 +241,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://phpdi.github.io/2023/01/11/go/go%E7%A1%AC%E6%A0%B8%E5%B9%B2%E8%B4%A7/">
+    <link itemprop="mainEntityOfPage" href="https://phpdi.github.io/2026/08/09/go/go%E7%A1%AC%E6%A0%B8%E5%B9%B2%E8%B4%A7/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/head.jpeg">
@@ -264,15 +264,8 @@
               </span>
               <span class="post-meta-item-text">发表于</span>
 
-              <time title="创建时间：2023-01-11 22:59:23" itemprop="dateCreated datePublished" datetime="2023-01-11T22:59:23+08:00">2023-01-11</time>
+              <time title="创建时间：2026-08-09 20:35:17" itemprop="dateCreated datePublished" datetime="2026-08-09T20:35:17+08:00">2026-08-09</time>
             </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2024-03-05 17:18:22" itemprop="dateModified" datetime="2024-03-05T17:18:22+08:00">2024-03-05</time>
-              </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
                 <i class="fa fa-folder-o"></i>
@@ -329,7 +322,7 @@
 <li>拉链法，编号为2的桶被占用了，在2后面链一个新桶，当前桶找不到，去链接的桶里面寻找。<br>hash的发送会影响哈希表的读写效率，选择散列均匀的hash函数可以减少hash冲突的发生，适时的对哈希表进行扩容也是保证读写效率的有效手段</li>
 </ol>
 <h2 id="hash扩容"><a href="#hash扩容" class="headerlink" title="hash扩容"></a>hash扩容</h2><p>通常会吧存储键值对的数据与桶数目的比值作为是否需要扩容的判断依据，这个比值叫<strong>负载因子(LoadFactor)</strong><br>数据迁移，把旧桶里存储的键值对都迁移到新桶里。如果哈希表存储的键值对较多，一次性迁移所有桶花费的时间比较显著，所以通常会在哈希表扩容时，先分配足够多的新桶 然后用一个字段记录旧桶的位置，再增加一个字段记录旧桶迁移的进度(<br>如记录下一个需要迁移的旧桶编号)，如果hash表每次在进行读写操作时，如果检测到当前处于扩容阶段<br>就完成一部分键值对迁移任务，直到所有的旧桶迁移完成，旧桶不在使用，才算真正完成一次哈希表的扩容，像这样把键值对迁移的时间分摊到多次哈希表操作的方式，叫做渐进式扩容。<br>渐进式扩容，可以避免一次性扩容的瞬时抖动。</p>
-<h2 id="go语言中Map类型的底层实现就是哈希表"><a href="#go语言中Map类型的底层实现就是哈希表" class="headerlink" title="go语言中Map类型的底层实现就是哈希表"></a>go语言中Map类型的底层实现就是哈希表</h2><p>Map 类型的变量本质上是一个指针, 指向hmap<br>一个桶里可以放8个键值对，但是为了让内存更加紧凑，8个key放一起，8个value放一起，在8个key前面是8个tophash<br>每个tophash都是对应hash值的高8位 ,overflow 存的是溢出桶<br>实际上如果哈希表要分配桶的数据大于2^4次方，就会认为使用溢出桶的几率比较大，就会预分配2^(B-4)个溢出桶备用<br><img src="/2023/01/11/go/go%E7%A1%AC%E6%A0%B8%E5%B9%B2%E8%B4%A7/bmap.png"></p>
+<h2 id="go语言中Map类型的底层实现就是哈希表"><a href="#go语言中Map类型的底层实现就是哈希表" class="headerlink" title="go语言中Map类型的底层实现就是哈希表"></a>go语言中Map类型的底层实现就是哈希表</h2><p>Map 类型的变量本质上是一个指针, 指向hmap<br>一个桶里可以放8个键值对，但是为了让内存更加紧凑，8个key放一起，8个value放一起，在8个key前面是8个tophash<br>每个tophash都是对应hash值的高8位 ,overflow 存的是溢出桶<br>实际上如果哈希表要分配桶的数据大于2^4次方，就会认为使用溢出桶的几率比较大，就会预分配2^(B-4)个溢出桶备用<br><img src="/2026/08/09/go/go%E7%A1%AC%E6%A0%B8%E5%B9%B2%E8%B4%A7/bmap.png"></p>
 <figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> Map</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> <span class="string">&quot;unsafe&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">//Map 底层结构体</span></span><br><span class="line"><span class="keyword">type</span> hmap <span class="keyword">struct</span> &#123;</span><br><span class="line">	count      <span class="type">int</span> <span class="comment">//键值对数目</span></span><br><span class="line">	flags      <span class="type">uint8</span></span><br><span class="line">	B          <span class="type">uint8</span>  <span class="comment">//B 记录桶的数目的幂，桶数=2^B，因为选择桶用的是与运算的方法</span></span><br><span class="line">	noverflow  <span class="type">uint16</span> <span class="comment">//使用溢出桶的数量</span></span><br><span class="line">	hash0      <span class="type">uint32</span></span><br><span class="line">	buckets    unsafe.Pointer <span class="comment">//当前桶</span></span><br><span class="line">	oldbuckets unsafe.Pointer <span class="comment">//旧桶</span></span><br><span class="line">	nevacuate  <span class="type">uintptr</span>        <span class="comment">//渐进式扩容阶段，即将迁移的旧桶编号</span></span><br><span class="line">	extra      *mapextra</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//记录溢出桶的相关信息</span></span><br><span class="line"><span class="keyword">type</span> mapextra <span class="keyword">struct</span> &#123;</span><br><span class="line">	overflow     unsafe.Pointer <span class="comment">//已经使用的溢出桶</span></span><br><span class="line">	oldoverflow  unsafe.Pointer <span class="comment">//用于在扩容阶段存储旧通用到的那些溢出桶的地址</span></span><br><span class="line">	nextoverflow unsafe.Pointer <span class="comment">//下一个空闲溢出桶</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//桶</span></span><br><span class="line"><span class="keyword">type</span> bmap <span class="keyword">struct</span> &#123;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
 
 <h2 id="go-Map的扩容规则"><a href="#go-Map的扩容规则" class="headerlink" title="go Map的扩容规则"></a>go Map的扩容规则</h2><ul>
@@ -354,7 +347,7 @@
 <blockquote>
 <p>闭包：要包括自由变量（在函数外部定义但在函数内部引用）；脱离了形成闭包的上下文，闭包也能正常使用这些自由变量</p>
 </blockquote>
-<p><img src="/2023/01/11/go/go%E7%A1%AC%E6%A0%B8%E5%B9%B2%E8%B4%A7/img.png"><br>函数create 的返回值是一个函数，但这个函数内部使用了外部定义的变量c，即使create执行结束，通过f1，f2也能正常执行这个闭包函数，并使用定义<br>在create函数内部的局部变量c，所以这里符合闭包的定义，通常称这个变量c为捕获变量。<br>闭包函数的指令自然也在编译阶段生成，但因为每个闭包对象都要保存自己的捕获变量，所以要到执行阶段才创建对应的闭包对象。<br>到执行阶段，main函数栈帧有两个局部变量，然后是返回值空间，到create函数栈帧这里，有一个局部变量c等于2，create函数会在堆上分配一个fucval<br>结构体，fn指向闭包函数入口，除此之外还有一个捕获列表，这里只捕获了一个变量c，然后这个结构体的起始地址就作为返回值，写入返回值空间。<br>通过f1、f2，对应的闭包函数就会找到各自对应的funcval结构体，拿到同一个函数入口，但是会使用不同的捕获列表，这就是称闭包为有状态函数的原因</p>
+<p><img src="/2026/08/09/go/go%E7%A1%AC%E6%A0%B8%E5%B9%B2%E8%B4%A7/img.png"><br>函数create 的返回值是一个函数，但这个函数内部使用了外部定义的变量c，即使create执行结束，通过f1，f2也能正常执行这个闭包函数，并使用定义<br>在create函数内部的局部变量c，所以这里符合闭包的定义，通常称这个变量c为捕获变量。<br>闭包函数的指令自然也在编译阶段生成，但因为每个闭包对象都要保存自己的捕获变量，所以要到执行阶段才创建对应的闭包对象。<br>到执行阶段，main函数栈帧有两个局部变量，然后是返回值空间，到create函数栈帧这里，有一个局部变量c等于2，create函数会在堆上分配一个fucval<br>结构体，fn指向闭包函数入口，除此之外还有一个捕获列表，这里只捕获了一个变量c，然后这个结构体的起始地址就作为返回值，写入返回值空间。<br>通过f1、f2，对应的闭包函数就会找到各自对应的funcval结构体，拿到同一个函数入口，但是会使用不同的捕获列表，这就是称闭包为有状态函数的原因</p>
 <h2 id="闭包函数是如何找到对应的捕获列表呢？"><a href="#闭包函数是如何找到对应的捕获列表呢？" class="headerlink" title="闭包函数是如何找到对应的捕获列表呢？"></a>闭包函数是如何找到对应的捕获列表呢？</h2><p>go语言中通过一个funcval 调用函数时，会把对应的funcval结构体地址存入特定寄存器，例如amd64平台使用的是dx寄存器，这样在闭包函数中就可以通<br>过寄存器取出funcval结构体的地址，然后加上响应的偏移来找到每一个被捕获的变量。<br>所以go语言中，闭包就是有捕获列表的funcval，而没有捕获列表的funcval，直接忽略这个寄存器的值就好了。  </p>
 <h2 id="捕获列表"><a href="#捕获列表" class="headerlink" title="捕获列表"></a>捕获列表</h2><p>捕获列表 不单单只是拷贝变量值。需要分情况。被闭包捕获的变量，在外层函数与闭包函数中表现一致，好像他们在使用同一个变量，为此go语言的编译器<br>针对不同情况做了不同的处理</p>
 <h3 id="情况1"><a href="#情况1" class="headerlink" title="情况1"></a>情况1</h3><p>被捕获的变量除了初始化复制外，在其它任何地方都没有修改过<br>直接拷贝值到捕获列表中</p>
@@ -365,25 +358,25 @@
 <h3 id="情况3"><a href="#情况3" class="headerlink" title="情况3"></a>情况3</h3><p>如果修改并被捕获的是参数，涉及到函数原型，就不能像局部变量那样处理了<br>参数依然通过调用者栈帧传入，但是编译器会把栈上这个参数拷贝到堆上一份，然后外层函数和闭包函数都使用堆上分配的这一个，</p>
 <h3 id="情况4"><a href="#情况4" class="headerlink" title="情况4"></a>情况4</h3><p>如果被捕获的是返回值<br>调用者栈帧上依然会分配返回值空间，不过闭包的外层函数会在堆上也分配一个，外层函数和闭包函数都使用堆上分配的这一个，在外层函数返回前，需要<br>把堆上的返回值拷贝到栈上的返回值空间</p>
 <p>处理方式虽然多样，但目的只有一个，就是保持捕获变量在外层函数与闭包函数的一致性。  </p>
-<h1 id="方法"><a href="#方法" class="headerlink" title="方法"></a>方法</h1><p>如果我们定义一个类型A,并给它定义一个方法Name,然后就可以使用 a.Name 或者 A.Name(a) 来调用Name方法，实际上a.Name是调用语法糖<br><img src="/2023/01/11/go/go%E7%A1%AC%E6%A0%B8%E5%B9%B2%E8%B4%A7/img_1.png"><br>go语言中 函数只和参数类型与返回值相关，方法就是普通的函数，方法的接受者是隐含的第一个参数</p>
-<h2 id="方法表达式与方法变量"><a href="#方法表达式与方法变量" class="headerlink" title="方法表达式与方法变量"></a>方法表达式与方法变量</h2><p><img src="/2023/01/11/go/go%E7%A1%AC%E6%A0%B8%E5%B9%B2%E8%B4%A7/img_2.png"><br>方法表达和方法变量 本质上都是一个funcval，方法变量会捕获方法接受者a形成闭包,但这里的f2仅作为局部变量，它与a的生命周期是一致的，所以编译器<br>会做出优化，把它转换为类型A的方法调用并传入a作为参数 A.Name(a),</p>
+<h1 id="方法"><a href="#方法" class="headerlink" title="方法"></a>方法</h1><p>如果我们定义一个类型A,并给它定义一个方法Name,然后就可以使用 a.Name 或者 A.Name(a) 来调用Name方法，实际上a.Name是调用语法糖<br><img src="/2026/08/09/go/go%E7%A1%AC%E6%A0%B8%E5%B9%B2%E8%B4%A7/img_1.png"><br>go语言中 函数只和参数类型与返回值相关，方法就是普通的函数，方法的接受者是隐含的第一个参数</p>
+<h2 id="方法表达式与方法变量"><a href="#方法表达式与方法变量" class="headerlink" title="方法表达式与方法变量"></a>方法表达式与方法变量</h2><p><img src="/2026/08/09/go/go%E7%A1%AC%E6%A0%B8%E5%B9%B2%E8%B4%A7/img_2.png"><br>方法表达和方法变量 本质上都是一个funcval，方法变量会捕获方法接受者a形成闭包,但这里的f2仅作为局部变量，它与a的生命周期是一致的，所以编译器<br>会做出优化，把它转换为类型A的方法调用并传入a作为参数 A.Name(a),</p>
 <h1 id="defer"><a href="#defer" class="headerlink" title="defer"></a>defer</h1><p>关于defer 我们知道它会在函数返回之前倒叙执行。<br>先通过deferproc函数注册defer函数，然后在return之前调用。<br>defer信息会注册到一个链表，而当前执行的goroutine持有这个链表的头指针，每个goroutine在执行时都有一个对应的结构体g，其中有一个字段_defer指向<br>defer链表的头，_defer 链表链起来的是一个一个defer结构体，新注册的defer会添加到链表的头部。执行时也是从头开始，所以defer才会表现为倒叙执行。  </p>
-<p>defer 结构体<br><img src="/2023/01/11/go/go%E7%A1%AC%E6%A0%B8%E5%B9%B2%E8%B4%A7/img_3.png"></p>
+<p>defer 结构体<br><img src="/2026/08/09/go/go%E7%A1%AC%E6%A0%B8%E5%B9%B2%E8%B4%A7/img_3.png"></p>
 <h2 id="go1-12defer-的问题"><a href="#go1-12defer-的问题" class="headerlink" title="go1.12defer 的问题"></a>go1.12defer 的问题</h2><ol>
 <li>_defer在堆上分配 ，即使有预分配的deferpool,也需要去堆上获取与释放，而且参数还要在堆栈间来回拷贝  </li>
 <li>使用链表注册defer信息，而链表本身操作比较慢</li>
 </ol>
 <h2 id="go1-13和go1-14对defer的改进"><a href="#go1-13和go1-14对defer的改进" class="headerlink" title="go1.13和go1.14对defer的改进"></a>go1.13和go1.14对defer的改进</h2><p>go1.14的defer，通过在编译阶段插入代码, 把defer函数的执行逻辑展开在所属函数内，open code defer，和1.13一样不适用于循环中的defer，循环中<br>defer，由于在编译阶段无法确定数量，所以只能在堆分配。<br>go1.14defer 性能提升了一个数量级，open codeed defer 未注册到defer连表中，所以在发生panic和runtime.Goexit的时候，需要额外进行栈扫描来<br>执行未注册到链表中的defer。所以panic变慢了。  </p>
-<h1 id="panic和recover"><a href="#panic和recover" class="headerlink" title="panic和recover"></a>panic和recover</h1><p>当前执行的goroutine 中有一个defer链表的头指针，同时也有个以panic链表的头指针，panic连起来的是一个个panic结构体，当发生新的panic的时候，<br>也是在链表的头上插入新的panic结构体。<br>panic 结构体<br><img src="/2023/01/11/go/go%E7%A1%AC%E6%A0%B8%E5%B9%B2%E8%B4%A7/img_4.png" alt="go硬核干货"><br>panic触发defer执行，最后从连表尾部打印异常信息。  </p>
+<h1 id="panic和recover"><a href="#panic和recover" class="headerlink" title="panic和recover"></a>panic和recover</h1><p>当前执行的goroutine 中有一个defer链表的头指针，同时也有个以panic链表的头指针，panic连起来的是一个个panic结构体，当发生新的panic的时候，<br>也是在链表的头上插入新的panic结构体。<br>panic 结构体<br><img src="/2026/08/09/go/go%E7%A1%AC%E6%A0%B8%E5%B9%B2%E8%B4%A7/img_4.png" alt="go硬核干货"><br>panic触发defer执行，最后从连表尾部打印异常信息。  </p>
 <h2 id="panic-两点重要信息"><a href="#panic-两点重要信息" class="headerlink" title="panic 两点重要信息"></a>panic 两点重要信息</h2><ul>
 <li>panic执行defer函数的方式为先标记后释放，目的是为了终止之前发生的panic  </li>
 <li>所有还在panic链表上的项都会被输出，顺序与panic发生的顺序一致</li>
 </ul>
 <h1 id="类型系统"><a href="#类型系统" class="headerlink" title="类型系统"></a>类型系统</h1><p>方法本质上就是函数，只不过在调用时，接受者会作为第一个参数传入<br>在定义方法的时候不能为内置类型和接口定义方法。<br>内置类型和自定义类型，都有其对应的描述信息，称为他的“类型元数据”，每种类型元数据都是全局唯一的,这些类型元数据共同构成了go语言的“类型系统”</p>
-<h1 id="接口"><a href="#接口" class="headerlink" title="接口"></a>接口</h1><h2 id="空接口-interface"><a href="#空接口-interface" class="headerlink" title="空接口 interface{}"></a>空接口 interface{}</h2><p><img src="/2023/01/11/go/go%E7%A1%AC%E6%A0%B8%E5%B9%B2%E8%B4%A7/img_5.png" alt="img.png">  </p>
+<h1 id="接口"><a href="#接口" class="headerlink" title="接口"></a>接口</h1><h2 id="空接口-interface"><a href="#空接口-interface" class="headerlink" title="空接口 interface{}"></a>空接口 interface{}</h2><p><img src="/2026/08/09/go/go%E7%A1%AC%E6%A0%B8%E5%B9%B2%E8%B4%A7/img_5.png" alt="img.png">  </p>
 <p>未被赋值前，_type&#x3D;nil,data&#x3D;nil 赋值后，_type指向类型元数据 ，data指向数据</p>
-<h2 id="非空接口"><a href="#非空接口" class="headerlink" title="非空接口"></a>非空接口</h2><p>一个变量想要赋值给一个非空接口类型，必须要实现这个非空接口类型的所有方法。<br><img src="/2023/01/11/go/go%E7%A1%AC%E6%A0%B8%E5%B9%B2%E8%B4%A7/img_6.png" alt="img.png">    </p>
-<p><img src="/2023/01/11/go/go%E7%A1%AC%E6%A0%B8%E5%B9%B2%E8%B4%A7/img_7.png" alt="img.png"><br>如果我们声明一个io.ReadWriter类型的变量rw,它被赋值以前data&#x3D;nil,tab&#x3D;nil,吧一个<em>os.File的类型变量f 赋值给rw,此时rw的动态值就是f,而tab<br>会指向一个itab结构体，他的接口类型为io.ReadWriter,动态类型为</em>os.File ,同时注意itab这里的fun，它会从动态类型元数据中拷贝接口要求的那些<br>方法的地址，以便通过rw快速定位到方法而无需再去类型元数据那里查找。  </p>
+<h2 id="非空接口"><a href="#非空接口" class="headerlink" title="非空接口"></a>非空接口</h2><p>一个变量想要赋值给一个非空接口类型，必须要实现这个非空接口类型的所有方法。<br><img src="/2026/08/09/go/go%E7%A1%AC%E6%A0%B8%E5%B9%B2%E8%B4%A7/img_6.png" alt="img.png">    </p>
+<p><img src="/2026/08/09/go/go%E7%A1%AC%E6%A0%B8%E5%B9%B2%E8%B4%A7/img_7.png" alt="img.png"><br>如果我们声明一个io.ReadWriter类型的变量rw,它被赋值以前data&#x3D;nil,tab&#x3D;nil,吧一个<em>os.File的类型变量f 赋值给rw,此时rw的动态值就是f,而tab<br>会指向一个itab结构体，他的接口类型为io.ReadWriter,动态类型为</em>os.File ,同时注意itab这里的fun，它会从动态类型元数据中拷贝接口要求的那些<br>方法的地址，以便通过rw快速定位到方法而无需再去类型元数据那里查找。  </p>
 <p>关于itab 还要额外关注一点，一旦接口类型确定了，动态类型确定了，那么itab的内容就不会改变了。那这个itab结构体也就确定了。所以这个itab结构体是可以复用的<br>实际上go语言会吧itab结构体缓存起来，并且以接口类型和动态类型的组合为key，以itab结构体指针为value,构造一个hash表，用于存储和查询itab缓存信息，<br>这里的hash表和map底层的hash表不同，是一种更为简便的设计，需要一个itab结构体是，会首先去这里查找，用接口类型的hash值和动态类型的hash值，进行异或运算得到<br>key的hash值，如果已经有对应的itab指针就直接拿来使用，如果没有就创建一个itab结构体，然后添加到这个hash表中。</p>
 <h1 id="类型断言"><a href="#类型断言" class="headerlink" title="类型断言"></a>类型断言</h1><p>抽象类型： 空接口、非空接口<br>具体类型：int、string、slice、map、struct。。。<br>类型断言作用在接口值之上，可以是空接口，也可以是非空接口，断言的目标类型可以是非空接口类型、也可以是具体类型。</p>
 <ul>
@@ -421,7 +414,7 @@
 <li>占用空间小，4kb,可大量开辟</li>
 <li>灵活调度 切换成本底</li>
 </ul>
-<h2 id="GMP模型设计思想"><a href="#GMP模型设计思想" class="headerlink" title="GMP模型设计思想"></a>GMP模型设计思想</h2><p><img src="/2023/01/11/go/go%E7%A1%AC%E6%A0%B8%E5%B9%B2%E8%B4%A7/img_8.png" alt="img.png"></p>
+<h2 id="GMP模型设计思想"><a href="#GMP模型设计思想" class="headerlink" title="GMP模型设计思想"></a>GMP模型设计思想</h2><p><img src="/2026/08/09/go/go%E7%A1%AC%E6%A0%B8%E5%B9%B2%E8%B4%A7/img_8.png" alt="img.png"></p>
 <h3 id="GMP模型简介"><a href="#GMP模型简介" class="headerlink" title="GMP模型简介"></a>GMP模型简介</h3><h4 id="GMP含义"><a href="#GMP含义" class="headerlink" title="GMP含义"></a>GMP含义</h4><ul>
 <li>G 携程</li>
 <li>P 处理器 通过GOMAXPROCS 设置<blockquote>
@@ -464,14 +457,14 @@
 </li>
 </ul>
 <h4 id="利用并行"><a href="#利用并行" class="headerlink" title="利用并行"></a>利用并行</h4><p>GOMAXPROCS 设置P的数量，最多有GOMAXPROCS个线程分布在多个CPU上同时运行  </p>
-<h4 id="抢占"><a href="#抢占" class="headerlink" title="抢占"></a>抢占</h4><p>在coroutine中要等待一个协程主动让出CPU才执行下一个协程，在GO中，一个goroutine最多占用CPU 10 ms,防止其他goroutine被饿死<br><img src="/2023/01/11/go/go%E7%A1%AC%E6%A0%B8%E5%B9%B2%E8%B4%A7/img_9.png" alt="img.png"></p>
+<h4 id="抢占"><a href="#抢占" class="headerlink" title="抢占"></a>抢占</h4><p>在coroutine中要等待一个协程主动让出CPU才执行下一个协程，在GO中，一个goroutine最多占用CPU 10 ms,防止其他goroutine被饿死<br><img src="/2026/08/09/go/go%E7%A1%AC%E6%A0%B8%E5%B9%B2%E8%B4%A7/img_9.png" alt="img.png"></p>
 <h4 id="全局G队列"><a href="#全局G队列" class="headerlink" title="全局G队列"></a>全局G队列</h4><p>当M执行work stealing从其它P偷不到G时，它可以从全局队列获取G</p>
 <h3 id="go-fun-经历了什么过程"><a href="#go-fun-经历了什么过程" class="headerlink" title="go fun() 经历了什么过程"></a>go fun() 经历了什么过程</h3><p>我们通过go func 来创建一个goroutine;  </p>
 <p>有多个存储G的队列，一个是局部调度器P的本地队列，一个是全局G队列。新创建的G会先保存在P的本地队列中，如果P的本地队列已经满了<br>就会保存在全局的队列中  </p>
 <p>G只能运行在M中，一个M必须持有一个P,M与P是1:1的关系，M会从P的本地队列弹出一个可执行状态的G来执行，如果P的本地队列为空，就会<br>想其它的MP组合偷取一个可执行的G来执行  </p>
 <p>一个M调度G执行的过程是一个循环机制</p>
 <p>当M执行某一个G时候如果发生了syscall或则其余的阻塞操作，M会阻塞，如果当前有一些G在执行，runtime会把这个线程M从P中摘除（detach），<br>然后再创建一个新的操作系统的线程（如果有空闲的线程可用就复用空闲线程）来服务于这个P</p>
-<p><img src="/2023/01/11/go/go%E7%A1%AC%E6%A0%B8%E5%B9%B2%E8%B4%A7/img_10.png" alt="img.png"></p>
+<p><img src="/2026/08/09/go/go%E7%A1%AC%E6%A0%B8%E5%B9%B2%E8%B4%A7/img_10.png" alt="img.png"></p>
 <h3 id="调度器的生命周期"><a href="#调度器的生命周期" class="headerlink" title="调度器的生命周期"></a>调度器的生命周期</h3><h4 id="M0"><a href="#M0" class="headerlink" title="M0"></a>M0</h4><p>M0 是启动程序后的编号为0的主线程，这个M对应的实例会在全局变量runtime.m0中，不需要在heap上分配，M0负责执行初始化操作和启动<br>第一个G，在之后M0就和其他的M一样了。  </p>
 <h4 id="G0"><a href="#G0" class="headerlink" title="G0"></a>G0</h4><p>G0是每次启动一个M都会第一个创建的goroutine,GO仅用于负责调度G,G0不指向任何可执行的函数，每个M都会有一个自己的G0。在调度或者系统<br>调用时会使用G0的栈空间，全局变量的G0是M0的G0</p>
 <h3 id="可视化的GMP编程"><a href="#可视化的GMP编程" class="headerlink" title="可视化的GMP编程"></a>可视化的GMP编程</h3><h4 id="trance编程"><a href="#trance编程" class="headerlink" title="trance编程"></a>trance编程</h4><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> main</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> (</span><br><span class="line">   <span class="string">&quot;fmt&quot;</span></span><br><span class="line">   <span class="string">&quot;os&quot;</span></span><br><span class="line">   <span class="string">&quot;runtime/trace&quot;</span></span><br><span class="line">)</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span> &#123;</span><br><span class="line">   f, err := os.Create(<span class="string">&quot;trace.out&quot;</span>)</span><br><span class="line">   <span class="keyword">if</span> err != <span class="literal">nil</span> &#123;</span><br><span class="line">      <span class="built_in">panic</span>(err)</span><br><span class="line">   &#125;</span><br><span class="line">   <span class="keyword">defer</span> f.Close()</span><br><span class="line">   trace.Start(f)</span><br><span class="line"></span><br><span class="line">   fmt.Println(<span class="string">&quot;hello world&quot;</span>)</span><br><span class="line">   </span><br><span class="line">   trace.Stop()</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
@@ -532,7 +525,7 @@
 <h3 id="并发垃圾回收"><a href="#并发垃圾回收" class="headerlink" title="并发垃圾回收"></a>并发垃圾回收</h3><p>指的时用户程序和垃圾回收程序并发执行，并发场景下，会存在用户程序和垃圾回收程序并行执行。这和并行垃圾回收中只考虑垃圾回收程序的执行时不同的<br>拿写屏障来说，用户程序和垃圾回收器可能会同时使用写屏障，那就需要考虑用户程序之间以及用户程序和垃圾回收器之间的竞争问题，如果没有任何stw的时间<br>那么垃圾回收开始的消息便很难准时准确的通知到所有线程，可能导致某些线程开启写屏障的动作有所延迟而发生错误，</p>
 <h3 id="主体并发式垃圾回收"><a href="#主体并发式垃圾回收" class="headerlink" title="主体并发式垃圾回收"></a>主体并发式垃圾回收</h3><p>在实际应用中在某些开启stw，在其它阶段支持并发的 “主体并发式垃圾回收” 更容易实现，</p>
 <h3 id="主体并发增量式回收"><a href="#主体并发增量式回收" class="headerlink" title="主体并发增量式回收"></a>主体并发增量式回收</h3><p>在主体并发回收的基础上，实现增量式回收</p>
-<p><img src="/2023/01/11/go/go%E7%A1%AC%E6%A0%B8%E5%B9%B2%E8%B4%A7/img_11.png" alt="img.png"></p>
+<p><img src="/2026/08/09/go/go%E7%A1%AC%E6%A0%B8%E5%B9%B2%E8%B4%A7/img_11.png" alt="img.png"></p>
 <h2 id="GC过程"><a href="#GC过程" class="headerlink" title="GC过程"></a>GC过程</h2><ol>
 <li><p>GC准备阶段,为每个p创建MarkWorker协程（很快会休眠，_Gwaiting）</p>
 </li>
@@ -622,8 +615,8 @@
 </ol>
 <p>在实际业务场景中加锁的时间是不确定的，如果加锁时先经过自旋，但限制最大自旋次数，若在有限次数内，不能加锁成功，再通过调度器对象将线程挂起 也是如今主流的<br>锁实现思路   </p>
 <h3 id="runtime-mutex"><a href="#runtime-mutex" class="headerlink" title="runtime.mutex"></a>runtime.mutex</h3><p>go语言中runtime.mutex 就是这个思路，结合自旋锁和调度器对象优化过后的锁，针对线程设计</p>
-<h3 id="sync-Mutex"><a href="#sync-Mutex" class="headerlink" title="sync.Mutex"></a>sync.Mutex</h3><p>协程如果要等待一个锁时，要如何休眠等待和唤醒呢？<br>需要通过 runtime.semaphone来实现， semaphone 是供协程使用的信号量，runtime内部通过一个 大小为251的semaTable,来管理所有的semaphone<br>semaTable 存储的是251棵平衡数的根，平衡树中每个节点都是一个sudog的对象，要使用一个信号量时需要提供一个记录信号量数值的变量，根据变量地址进行计算<br>映射到semaTable中的一棵平衡树上，找到对应的节点就找到了改信号量的等待队列。<br><img src="/2023/01/11/go/go%E7%A1%AC%E6%A0%B8%E5%B9%B2%E8%B4%A7/img_12.png" alt="img.png"><br>如果有协程要等待mutex,就会根据sync.Muxtex.sema 的地址映射到semaTable中的某棵平衡树上，找到对应的sudog类型的节点，也就找到了这个Mutex的等待队列<br>所以sync.Mutex是通过信号量来实现排队的，<br>而channel需要有读等待队列和写等待队列，还要支持缓冲区功能，所以并没有直接使用信号量来排队，而是自己实现一套排队逻辑   </p>
-<p>不管是 sync.Mutex还是channel 底层实现都离不开 runtime.mutex,他们对需要保证在面临多线程并发时，不会出现同步问题。<br><img src="/2023/01/11/go/go%E7%A1%AC%E6%A0%B8%E5%B9%B2%E8%B4%A7/img_13.png" alt="img.png"></p>
+<h3 id="sync-Mutex"><a href="#sync-Mutex" class="headerlink" title="sync.Mutex"></a>sync.Mutex</h3><p>协程如果要等待一个锁时，要如何休眠等待和唤醒呢？<br>需要通过 runtime.semaphone来实现， semaphone 是供协程使用的信号量，runtime内部通过一个 大小为251的semaTable,来管理所有的semaphone<br>semaTable 存储的是251棵平衡数的根，平衡树中每个节点都是一个sudog的对象，要使用一个信号量时需要提供一个记录信号量数值的变量，根据变量地址进行计算<br>映射到semaTable中的一棵平衡树上，找到对应的节点就找到了改信号量的等待队列。<br><img src="/2026/08/09/go/go%E7%A1%AC%E6%A0%B8%E5%B9%B2%E8%B4%A7/img_12.png" alt="img.png"><br>如果有协程要等待mutex,就会根据sync.Muxtex.sema 的地址映射到semaTable中的某棵平衡树上，找到对应的sudog类型的节点，也就找到了这个Mutex的等待队列<br>所以sync.Mutex是通过信号量来实现排队的，<br>而channel需要有读等待队列和写等待队列，还要支持缓冲区功能，所以并没有直接使用信号量来排队，而是自己实现一套排队逻辑   </p>
+<p>不管是 sync.Mutex还是channel 底层实现都离不开 runtime.mutex,他们对需要保证在面临多线程并发时，不会出现同步问题。<br><img src="/2026/08/09/go/go%E7%A1%AC%E6%A0%B8%E5%B9%B2%E8%B4%A7/img_13.png" alt="img.png"></p>
 <h1 id="方法集"><a href="#方法集" class="headerlink" title="方法集"></a>方法集</h1><p>T 和 <em>T 是两种类型分别有自己的类型元数据<br>自定义类型的类型元数据可以找到该类型关联的方法列表，T和</em>T各有各的方法集</p>
 <h2 id="为什么要限制T和-T不能定义同名方法-？"><a href="#为什么要限制T和-T不能定义同名方法-？" class="headerlink" title="为什么要限制T和*T不能定义同名方法 ？"></a>为什么要限制T和*T不能定义同名方法 ？</h2><p>T类型的方法集里包含的是全部有明确定义的方法<br>*T的方法集里面，除了有明确定义的方法，还会有编译器生成的包装方法， 包装方法是对接受者为T类型的同名方法的包装  </p>
 <p>为什么编译器会为接受者为T的方法包装一个*T的同名方法呢？</p>
@@ -752,7 +745,7 @@
 <li>C&#x2F;C++等编程语言的堆内存由工程师主动申请和释放；</li>
 <li>Go、Java等编程语言由工程师和编译器&#x2F;运行时共同管理，其内存由内存分配器分配，由垃圾回收器回收。</li>
 </ul>
-<h2 id="Go内存分配设计原理"><a href="#Go内存分配设计原理" class="headerlink" title="Go内存分配设计原理"></a>Go内存分配设计原理</h2><p>Go内存分配器的设计思想来源于TCMalloc，全称是Thread-Caching Malloc，核心思想是把内存分为多级管理，利用缓存的思想提升内存使用效率，降低锁的粒度。<br><img src="/2023/01/11/go/go%E7%A1%AC%E6%A0%B8%E5%B9%B2%E8%B4%A7/img_14.png">  </p>
+<h2 id="Go内存分配设计原理"><a href="#Go内存分配设计原理" class="headerlink" title="Go内存分配设计原理"></a>Go内存分配设计原理</h2><p>Go内存分配器的设计思想来源于TCMalloc，全称是Thread-Caching Malloc，核心思想是把内存分为多级管理，利用缓存的思想提升内存使用效率，降低锁的粒度。<br><img src="/2026/08/09/go/go%E7%A1%AC%E6%A0%B8%E5%B9%B2%E8%B4%A7/img_14.png">  </p>
 <p>如上图所示，是Go的内存管理模型示意图，在堆内存管理上分为三个内存级别：</p>
 <ul>
 <li>线程缓存（MCache）：作为线程独立的内存池，与线程的第一交互内存，访问无需加锁；</li>
@@ -768,28 +761,28 @@
 <li>allocBits 和 gcmarkBits — 分别用于标记内存的占用和回收情况；</li>
 <li>allocCache — allocBits 的补码，可以用于快速查找内存中未被使用的内存；</li>
 </ul>
-<p>注意使用&#x2F;&#x2F;go:notinheap标记次结构体mspan为非堆上类型，保证此类型对象不会逃逸到堆上。<br><img src="/2023/01/11/go/go%E7%A1%AC%E6%A0%B8%E5%B9%B2%E8%B4%A7/img_15.png">  </p>
+<p>注意使用&#x2F;&#x2F;go:notinheap标记次结构体mspan为非堆上类型，保证此类型对象不会逃逸到堆上。<br><img src="/2026/08/09/go/go%E7%A1%AC%E6%A0%B8%E5%B9%B2%E8%B4%A7/img_15.png">  </p>
 <h3 id="跨度类-spanClass"><a href="#跨度类-spanClass" class="headerlink" title="跨度类 spanClass"></a>跨度类 spanClass</h3><p>在mspan中有一个字段是spanclass，称为跨度类，是对mspan大小级别的划分，每个mspan能够存放指定范围大小的对象，32KB以内的小对象在Go中，会对应<br>不同大小的内存刻度Size Class，Size Class和Object Size是一一对应的，前者指序号 0、1、2、3，后者指具体对象大小 0B、8B、16B、24B</p>
 <figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//go:notinheap</span></span><br><span class="line"><span class="keyword">type</span> mspan <span class="keyword">struct</span> &#123;</span><br><span class="line">   ...</span><br><span class="line">   spanclass   spanClass     <span class="comment">// size class and noscan (uint8)</span></span><br><span class="line">   ...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>spanClass 高7位标记内存块大小规格编号，1-67（8B-32KB）,编号0留出来，对应大于32K的大块内存，一共68种，然后每种规格会按照是否需要gc扫描，用<br>最低位来标识，分为包含指针的需要gc扫描的scannable和不含指针的noscan 两类，所以有68*2&#x3D;136种 span</p>
-<p>Go 语言的内存管理模块中一共包含 67 种跨度类，每一个跨度类都会存储特定大小的对象并且包含特定数量的页数以及对象，所有的数据都会被预选计算好并存储<br>在runtime.class_to_size和runtime.class_to_allocnpages等变量中：<br><img src="/2023/01/11/go/go%E7%A1%AC%E6%A0%B8%E5%B9%B2%E8%B4%A7/img_16.png">  </p>
-<p>上表展示了对象大小从 8B 到 32KB，总共 67 种跨度类的大小、存储的对象数以及浪费的内存空间，以表中的第四个跨度类为例，跨度类为 5 的runtime.mspan中<br>对象的大小上限为 48 字节、管理 1 个页、最多可以存储 170 个对象。因为内存需要按照页进行管理，所以在尾部会浪费 32 字节的内存，当页中存储的对象都是 33 字节时，最多会浪费 31.52% 的资源：<br>((48−33)∗170+32)&#x2F;8192&#x3D;0.31518<br><img src="/2023/01/11/go/go%E7%A1%AC%E6%A0%B8%E5%B9%B2%E8%B4%A7/img_17.png"><br>除了上述 67 个跨度类之外，运行时中还包含 ID 为 0 的特殊跨度类，它能够管理大于 32KB 的特殊对象。  </p>
+<p>Go 语言的内存管理模块中一共包含 67 种跨度类，每一个跨度类都会存储特定大小的对象并且包含特定数量的页数以及对象，所有的数据都会被预选计算好并存储<br>在runtime.class_to_size和runtime.class_to_allocnpages等变量中：<br><img src="/2026/08/09/go/go%E7%A1%AC%E6%A0%B8%E5%B9%B2%E8%B4%A7/img_16.png">  </p>
+<p>上表展示了对象大小从 8B 到 32KB，总共 67 种跨度类的大小、存储的对象数以及浪费的内存空间，以表中的第四个跨度类为例，跨度类为 5 的runtime.mspan中<br>对象的大小上限为 48 字节、管理 1 个页、最多可以存储 170 个对象。因为内存需要按照页进行管理，所以在尾部会浪费 32 字节的内存，当页中存储的对象都是 33 字节时，最多会浪费 31.52% 的资源：<br>((48−33)∗170+32)&#x2F;8192&#x3D;0.31518<br><img src="/2026/08/09/go/go%E7%A1%AC%E6%A0%B8%E5%B9%B2%E8%B4%A7/img_17.png"><br>除了上述 67 个跨度类之外，运行时中还包含 ID 为 0 的特殊跨度类，它能够管理大于 32KB 的特殊对象。  </p>
 <h3 id="线程缓存（mcache）"><a href="#线程缓存（mcache）" class="headerlink" title="线程缓存（mcache）"></a>线程缓存（mcache）</h3><p>runtime.mcache是Go语言中的线程缓存，它会与线程上的处理器一一绑定，用于缓存用户程序申请的微小对象。每一个线程缓存都持有numSpanClasses个（68*2）个mspan，<br>存储在mcache的alloc字段中：</p>
 <figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//go:notinheap</span></span><br><span class="line"><span class="keyword">type</span> mcache <span class="keyword">struct</span> &#123;</span><br><span class="line">   ...</span><br><span class="line"></span><br><span class="line">   alloc [numSpanClasses]*mspan <span class="comment">// spans to allocate from, indexed by spanClass</span></span><br><span class="line"></span><br><span class="line">   ...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>68*2 这里之所以乘以2的目的是 mspan划分了2类，一类是需要gc扫描的scanable，另一类是不需要gc的noscanable类 </p>
 <p>其图示如下：</p>
-<p><img src="/2023/01/11/go/go%E7%A1%AC%E6%A0%B8%E5%B9%B2%E8%B4%A7/img_18.png">  </p>
+<p><img src="/2026/08/09/go/go%E7%A1%AC%E6%A0%B8%E5%B9%B2%E8%B4%A7/img_18.png">  </p>
 <h3 id="中心缓存（mcentral）"><a href="#中心缓存（mcentral）" class="headerlink" title="中心缓存（mcentral）"></a>中心缓存（mcentral）</h3><p>每个中心缓存都会管理某个跨度类的内存管理单元，它会同时持有两个runtime.spanSet，分别存储包含空闲对象和不包含空闲对象的内存管理单元，访问中心缓<br>存中的内存管理单元需要使用互斥锁。</p>
 <figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//go:notinheap</span></span><br><span class="line"><span class="keyword">type</span> mcentral <span class="keyword">struct</span> &#123;</span><br><span class="line">   spanclass spanClass</span><br><span class="line">   partial [<span class="number">2</span>]spanSet <span class="comment">// list of spans with a free object 有空闲对象</span></span><br><span class="line">   full    [<span class="number">2</span>]spanSet <span class="comment">// list of spans with no free objects 无空闲对象</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>spanSet有两种，1是已清扫的，2是未清扫的<br><img src="/2023/01/11/go/go%E7%A1%AC%E6%A0%B8%E5%B9%B2%E8%B4%A7/img_19.png">  </p>
+<p>spanSet有两种，1是已清扫的，2是未清扫的<br><img src="/2026/08/09/go/go%E7%A1%AC%E6%A0%B8%E5%B9%B2%E8%B4%A7/img_19.png">  </p>
 <h3 id="页堆（mheap）"><a href="#页堆（mheap）" class="headerlink" title="页堆（mheap）"></a>页堆（mheap）</h3><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//go:notinheap</span></span><br><span class="line"><span class="keyword">type</span> mheap <span class="keyword">struct</span> &#123;</span><br><span class="line">   ...</span><br><span class="line">   arenas [<span class="number">1</span> &lt;&lt; arenaL1Bits]*[<span class="number">1</span> &lt;&lt; arenaL2Bits]*heapArena</span><br><span class="line">   ...</span><br><span class="line">   central [numSpanClasses]<span class="keyword">struct</span> &#123;</span><br><span class="line">      mcentral mcentral</span><br><span class="line">      pad      [cpu.CacheLinePadSize - unsafe.Sizeof(mcentral&#123;&#125;)%cpu.CacheLinePadSize]<span class="type">byte</span></span><br><span class="line">   &#125;</span><br><span class="line">   ...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>runtime.mheap是内存分配的核心结构体，其最重要的两个字段如上。</p>
 <p>在Go中其被作为全局变量mheap_存储：</p>
 <figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> mheap_ mheap</span><br></pre></td></tr></table></figure>
 
 <p>页堆中包含一个长度为numSpanClasses个 (68*2) 个的runtime.mcentral数组，其中 68 个为跨度类需要 scan 的中心缓存，另外的 68 个是 noscan<br>（没有指针，无需扫描）的中心缓存。</p>
-<p>arenas是heapArena的二维数组的集合。如下：<br><img src="/2023/01/11/go/go%E7%A1%AC%E6%A0%B8%E5%B9%B2%E8%B4%A7/img_20.png">  </p>
-<p>其中二维数组占用8192*64M&#x3D;512G的空间<br><img src="/2023/01/11/go/go%E7%A1%AC%E6%A0%B8%E5%B9%B2%E8%B4%A7/img_21.png"><br>预申请的内存为：  </p>
+<p>arenas是heapArena的二维数组的集合。如下：<br><img src="/2026/08/09/go/go%E7%A1%AC%E6%A0%B8%E5%B9%B2%E8%B4%A7/img_20.png">  </p>
+<p>其中二维数组占用8192*64M&#x3D;512G的空间<br><img src="/2026/08/09/go/go%E7%A1%AC%E6%A0%B8%E5%B9%B2%E8%B4%A7/img_21.png"><br>预申请的内存为：  </p>
 <ul>
 <li>spans 存放span的指针对应page的位置，共需要（512G&#x2F;8KB）*8byte&#x3D;512M</li>
 <li>bitmap 主要用于gc，其中一个字节可以用来标记4个指针大小的位置，低4位用于标记是指针还是标量，高4位用于标记这块内存空间后续是否需要gc扫描，（512G&#x2F;(4*8)）&#x3D;16G</li>
@@ -798,7 +791,7 @@
 <h2 id="内存分配过程"><a href="#内存分配过程" class="headerlink" title="内存分配过程"></a>内存分配过程</h2><p>mallocgc负责堆分配的关键函数，runtime的new和make都依赖它， 主要逻辑分为4个部分</p>
 <h3 id="辅助gc"><a href="#辅助gc" class="headerlink" title="辅助gc"></a>辅助gc</h3><p>如果程序申请堆内存时正处于gc标记阶段，当下分配的堆内存还没标记完，又要分配新的堆内存，如果内存申请的速度超过gc标记的速度，那就有问题。<br>申请一字节内存空间，需要做多少扫描工作，或者说完成一字节扫描工作后可以分配多大的内存空间，是根据gc扫描的进度更新计算的。<br>每次执行辅助gc 最少要扫描64KB，协程每次执行辅助扫描gc时多出来的部分会作为信用存储到当前G中，下次分配内存时，有额度可以直接使用，不用再辅助gc    </p>
 <p>窃取信用<br>后台的gc mark worker 执行扫描任务，会在全局的gcController这里积累信用，如果能够窃取足够多的信用值，来抵消当前协程背负的债务，那就不用执行<br>辅助gc了</p>
-<h3 id="空间分配"><a href="#空间分配" class="headerlink" title="空间分配"></a>空间分配</h3><p><img src="/2023/01/11/go/go%E7%A1%AC%E6%A0%B8%E5%B9%B2%E8%B4%A7/img_22.png"></p>
+<h3 id="空间分配"><a href="#空间分配" class="headerlink" title="空间分配"></a>空间分配</h3><p><img src="/2026/08/09/go/go%E7%A1%AC%E6%A0%B8%E5%B9%B2%E8%B4%A7/img_22.png"></p>
 <ul>
 <li>小于16B并且是noscan类型的内存分配请求会执行 tiny allocator</li>
 <li>大于32KB包括 noscan和scannable类型 都会采用大块内存分配器</li>
@@ -808,14 +801,14 @@
 <p>tiny allocator 为了减少浪费,如果需要连续分配16次1字节的内存，tiny allocator能够将几个小块的内存分配请求合并，16次1字节的内存分配请求可以<br>合并到1个16字节的内存块中，可以提高内存使用率   </p>
 <p>每个P的mcache中有专门用于tiny allocator的内存，是一个16字节大小的内存单元 </p>
 <h3 id="位图标记"><a href="#位图标记" class="headerlink" title="位图标记"></a>位图标记</h3><p>通过一个堆内存地址，如何找到对应的heapArea和msapn  </p>
-<h4 id="已知内存地址p，arenaBaseOffset-求arena的编号"><a href="#已知内存地址p，arenaBaseOffset-求arena的编号" class="headerlink" title="已知内存地址p，arenaBaseOffset,求arena的编号"></a>已知内存地址p，arenaBaseOffset,求arena的编号</h4><p><img src="/2023/01/11/go/go%E7%A1%AC%E6%A0%B8%E5%B9%B2%E8%B4%A7/img_23.png"></p>
-<h4 id="已知-amd64架构的linux环境，一个arena大小和对其边界64M，虚拟地址空间中的线性地址有48位，求这么大的空间可以划分为多少个arena"><a href="#已知-amd64架构的linux环境，一个arena大小和对其边界64M，虚拟地址空间中的线性地址有48位，求这么大的空间可以划分为多少个arena" class="headerlink" title="已知 amd64架构的linux环境，一个arena大小和对其边界64M，虚拟地址空间中的线性地址有48位，求这么大的空间可以划分为多少个arena?"></a>已知 amd64架构的linux环境，一个arena大小和对其边界64M，虚拟地址空间中的线性地址有48位，求这么大的空间可以划分为多少个arena?</h4><p><img src="/2023/01/11/go/go%E7%A1%AC%E6%A0%B8%E5%B9%B2%E8%B4%A7/img_24.png"></p>
+<h4 id="已知内存地址p，arenaBaseOffset-求arena的编号"><a href="#已知内存地址p，arenaBaseOffset-求arena的编号" class="headerlink" title="已知内存地址p，arenaBaseOffset,求arena的编号"></a>已知内存地址p，arenaBaseOffset,求arena的编号</h4><p><img src="/2026/08/09/go/go%E7%A1%AC%E6%A0%B8%E5%B9%B2%E8%B4%A7/img_23.png"></p>
+<h4 id="已知-amd64架构的linux环境，一个arena大小和对其边界64M，虚拟地址空间中的线性地址有48位，求这么大的空间可以划分为多少个arena"><a href="#已知-amd64架构的linux环境，一个arena大小和对其边界64M，虚拟地址空间中的线性地址有48位，求这么大的空间可以划分为多少个arena" class="headerlink" title="已知 amd64架构的linux环境，一个arena大小和对其边界64M，虚拟地址空间中的线性地址有48位，求这么大的空间可以划分为多少个arena?"></a>已知 amd64架构的linux环境，一个arena大小和对其边界64M，虚拟地址空间中的线性地址有48位，求这么大的空间可以划分为多少个arena?</h4><p><img src="/2026/08/09/go/go%E7%A1%AC%E6%A0%B8%E5%B9%B2%E8%B4%A7/img_24.png"></p>
 <p>如果我们直接把<em>heapArea放到一个数组中，并用arena的编号作为索引那这个数组的大小就是4M个</em>8B&#x3D;32M<br>但是在amd64架构的windows环境下一个arena的大小只有4M（arena的大小和MMA,虚拟内存管理的页大小有关）那就有2^48&#x2F;4M&#x3D;64M个arena，那这个数组的<br>大小就是 : 64M个*8B&#x3D;512M者就有点大了  </p>
 <p>所以go的开发者将*heapArea 放到了一个二维数组里，所以寻址arena不能直接使用arena的编号直接索引，而需要根据arena编号计算出一个arenaIdx<br>它本质上是个uint, amd64 windows下，areans数组第一维有64个元素，所以arenaIdx第一维有6位，第二维的数组长度为1M&#x3D;2^20  </p>
 <blockquote>
 <p>这样处理后，数组只用找8M的空间来存，512M的连续空间有点不好找</p>
 </blockquote>
-<p><img src="/2023/01/11/go/go%E7%A1%AC%E6%A0%B8%E5%B9%B2%E8%B4%A7/img_25.png"></p>
+<p><img src="/2026/08/09/go/go%E7%A1%AC%E6%A0%B8%E5%B9%B2%E8%B4%A7/img_25.png"></p>
 <h3 id="收尾工作"><a href="#收尾工作" class="headerlink" title="收尾工作"></a>收尾工作</h3><ul>
 <li>如果当前处于gc标记阶段，需要对新分配的对象进行gc标记</li>
 <li>如果这次内存分配达到来gc的触发条件，还会触发新一轮的gc</li>
@@ -832,7 +825,7 @@
 </ul>
 <p>同堆内存分配一样，每个p也有用于栈分配的本地缓存，相当于是stackpool的本地缓存，在linux环境下同样由4种规格的空闲内存块链表<br>对于栈内存分配时，对于小于32KB的栈分配，会优先使用当前p的本地缓存<br>对于大于等于32KB的内存分配，就计算需要的page数，并以2为低求对数，将得到的结果作为stacklarge数组的下标，找到对应的mspan，如果链表为空就拿一个过来用<br>如果链表不为空，就直接从堆内存中拿一个过来用</p>
 <h2 id="栈增长"><a href="#栈增长" class="headerlink" title="栈增长"></a>栈增长</h2><p>栈内存初始分配发生在goroutine创建时，初始的栈大小都是2KB，在实际的业务中可能不够用，所以需要实现一种在运行阶段动态增长栈的机制<br>goroutine的栈增长时通过编译器和runtime合作实现的，编译器会在函数头部安插检测代码，检查当前剩余的栈空间是否够用，不够用的时候，就调用runtime<br>中的相关函数来增长栈空间（runtime.morestack_noctxt）,栈空间是成倍增长的，需要增长时，就把当前的栈空间大小乘以2，并把协程状态置为_Gcopystack<br>接下来调用copystack函数分配新的栈空间，拷贝旧栈上的数据，释放旧栈空间，最后恢复协程运行_Gruning </p>
-<h2 id="栈收缩"><a href="#栈收缩" class="headerlink" title="栈收缩"></a>栈收缩</h2><p>栈不仅能增长，还能收缩，收缩到最小2KB<br>发起栈收缩的地方是gc ,gc寻找标记root节点时，如果发现可以安全的收缩栈，就会执行栈收缩，<br><img src="/2023/01/11/go/go%E7%A1%AC%E6%A0%B8%E5%B9%B2%E8%B4%A7/img_26.png"><br>不能马上执行时，就设置栈收缩标识（g.preemptShrink&#x3D;true），等到协程检测到抢占标识（stackPreempt）,在让出cpu之前，会检查这个栈收缩标识,为true<br>的话会进行栈收缩，再让出cpu</p>
+<h2 id="栈收缩"><a href="#栈收缩" class="headerlink" title="栈收缩"></a>栈收缩</h2><p>栈不仅能增长，还能收缩，收缩到最小2KB<br>发起栈收缩的地方是gc ,gc寻找标记root节点时，如果发现可以安全的收缩栈，就会执行栈收缩，<br><img src="/2026/08/09/go/go%E7%A1%AC%E6%A0%B8%E5%B9%B2%E8%B4%A7/img_26.png"><br>不能马上执行时，就设置栈收缩标识（g.preemptShrink&#x3D;true），等到协程检测到抢占标识（stackPreempt）,在让出cpu之前，会检查这个栈收缩标识,为true<br>的话会进行栈收缩，再让出cpu</p>
 <p>栈收缩可以减少运行协程堆栈空间的浪费，结束运行的那些栈空间如何利用<br>常规goroutine在运行结束时会被放到调度器对象这里的空闲G队列中（sched.gFree）,这里的协程分两种，一种有协程栈，一种没有协程栈,如果协程栈没有增长<br>就放入有栈队列，增栈过就吧栈释放掉放到无栈队列<br>有栈的空闲协程，在gc执行 markroot时也会释放栈，同时放到无栈队列中 </p>
 <h3 id="栈释放"><a href="#栈释放" class="headerlink" title="栈释放"></a>栈释放</h3><p>小于32KB的栈在释放时会先放回到本地缓存中，如果本地缓存对应链表中栈空间总和大于32KB，就把一部分放回到stackpool中，如果本地缓存不可用也会直接<br>返回到stackpool中，如果发现stackpool的mspan所有的内存块都被释放了，就会把它归还给堆内存  </p>
 <p>大于等于32KB的栈释放，如果当前处于gc清理阶段，就直接释放到堆内存，否则就把它释放到stackLarge这里</p>
@@ -851,13 +844,10 @@
         
     <div class="post-nav">
       <div class="post-nav-item">
-    <a href="/2023/01/11/go/go%E5%AD%A6%E4%B9%A0%E4%B9%A6%E7%B1%8D/" rel="prev" title="go学习书籍">
-      <i class="fa fa-chevron-left"></i> go学习书籍
+    <a href="/2026/01/11/linux/mac%E4%B8%8B%E4%BD%BF%E7%94%A8colima%E8%BF%90%E8%A1%8C%E5%AE%B9%E5%99%A8/" rel="prev" title="mac下使用colima运行容器">
+      <i class="fa fa-chevron-left"></i> mac下使用colima运行容器
     </a></div>
-      <div class="post-nav-item">
-    <a href="/2023/01/11/go/grpc%E7%AC%94%E8%AE%B0/" rel="next" title="grpc笔记">
-      grpc笔记 <i class="fa fa-chevron-right"></i>
-    </a></div>
+      <div class="post-nav-item"></div>
     </div>
       </footer>
     
@@ -933,7 +923,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">128</span>
+          <span class="site-state-item-count">129</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -946,7 +936,7 @@
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">93</span>
+        <span class="site-state-item-count">95</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>

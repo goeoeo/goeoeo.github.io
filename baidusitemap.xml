@@ -1,12 +1,24 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
+    <loc>https://phpdi.github.io/2026/08/09/go/go%E7%A1%AC%E6%A0%B8%E5%B9%B2%E8%B4%A7/</loc>
+    <lastmod>2026-08-09</lastmod>
+  </url>
+  <url>
     <loc>https://phpdi.github.io/2023/10/24/linux/trae%E6%97%A5%E5%B8%B8%E4%BD%BF%E7%94%A8/</loc>
-    <lastmod>2026-01-01</lastmod>
+    <lastmod>2026-04-08</lastmod>
+  </url>
+  <url>
+    <loc>https://phpdi.github.io/2023/01/11/go/%E5%B7%A5%E4%BD%9C%E4%B8%AD%E9%81%87%E5%88%B0%E7%9A%84%E9%97%AE%E9%A2%98/</loc>
+    <lastmod>2026-04-06</lastmod>
+  </url>
+  <url>
+    <loc>https://phpdi.github.io/2026/01/11/linux/mac%E4%B8%8B%E4%BD%BF%E7%94%A8colima%E8%BF%90%E8%A1%8C%E5%AE%B9%E5%99%A8/</loc>
+    <lastmod>2026-01-12</lastmod>
   </url>
   <url>
     <loc>https://phpdi.github.io/2023/10/24/k8s/k8s%E4%B8%AD%E4%BD%BF%E7%94%A8traefik+httproute+metallb%E7%9A%84%E5%AE%8C%E6%95%B4%E6%8C%87%E5%8D%97/</loc>
-    <lastmod>2026-01-01</lastmod>
+    <lastmod>2026-01-10</lastmod>
   </url>
   <url>
     <loc>https://phpdi.github.io/2023/01/12/linux/mac%E6%97%A5%E5%B8%B8%E4%BD%BF%E7%94%A8/</loc>
@@ -50,10 +62,6 @@
   </url>
   <url>
     <loc>https://phpdi.github.io/2025/06/24/go/%E4%BD%BF%E7%94%A8unsafe%E5%8C%85%E5%AF%BC%E8%87%B4%E7%BA%BF%E4%B8%8A%E6%9C%8D%E5%8A%A1%E5%81%B6%E5%B0%94%E9%87%8D%E5%90%AF%E7%9A%84%E9%97%AE%E9%A2%98/</loc>
-    <lastmod>2025-06-24</lastmod>
-  </url>
-  <url>
-    <loc>https://phpdi.github.io/2023/01/11/go/%E5%B7%A5%E4%BD%9C%E4%B8%AD%E9%81%87%E5%88%B0%E7%9A%84%E9%97%AE%E9%A2%98/</loc>
     <lastmod>2025-06-24</lastmod>
   </url>
   <url>
@@ -183,10 +191,6 @@
   <url>
     <loc>https://phpdi.github.io/2024/02/29/interview/%E5%88%86%E5%B8%83%E5%BC%8F%E9%9D%A2%E8%AF%95%E9%A2%98/</loc>
     <lastmod>2024-03-06</lastmod>
-  </url>
-  <url>
-    <loc>https://phpdi.github.io/2023/01/11/go/go%E7%A1%AC%E6%A0%B8%E5%B9%B2%E8%B4%A7/</loc>
-    <lastmod>2024-03-05</lastmod>
   </url>
   <url>
     <loc>https://phpdi.github.io/2023/01/11/interview/Rabbitmq%E9%9D%A2%E8%AF%95%E9%A2%98/</loc>

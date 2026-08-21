@@ -210,6 +210,177 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://phpdi.github.io/2025/03/27/cloud/telegraf/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/head.jpeg">
+      <meta itemprop="name" content="Chen Yu">
+      <meta itemprop="description" content="自律给我自由">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="goeoeo">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2025/03/27/cloud/telegraf/" class="post-title-link" itemprop="url">未命名</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2025-03-27 10:36:22" itemprop="dateCreated datePublished" datetime="2025-03-27T10:36:22+08:00">2025-03-27</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2025-06-24 15:35:31" itemprop="dateModified" datetime="2025-06-24T15:35:31+08:00">2025-06-24</time>
+              </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <hr>
+<p>title: 尚硅谷大数据技术之Telegraf</p>
+<p>categories:</p>
+<ul>
+<li>cloud</li>
+</ul>
+<h2 id="tags-云监控-指标采集"><a href="#tags-云监控-指标采集" class="headerlink" title="tags:- 云监控- 指标采集"></a>tags:<br>- 云监控<br>- 指标采集</h2><h1 id="认识Telegraf"><a href="#认识Telegraf" class="headerlink" title="认识Telegraf"></a>认识Telegraf</h1><h2 id="什么是Telegraf"><a href="#什么是Telegraf" class="headerlink" title="什么是Telegraf"></a>什么是Telegraf</h2><p>Telegraf是一个基于插件的开源指标采集工具。本身是为InfluxDB（一款时序数据库）量身打造的数据收集器，但是它过于优秀，能够将抓取的数据写到很多地方，尤其在时序数据库领域，很多时序数据库都能够与它配合使用。通常，它每隔一段时间抓取一批指标数据（比如机器的CPU使用情况，磁盘的IO，网络情况，MySQL服务端的的会话数等等）并将他们发送到时序数据库、消息队列中或者自定义导出到某个地方。供下游的应用处理（比如报警）。Telegraf也能够对外提供一个服务，等待客户端推送数据。</p>
+<p>它与logstash类似，只不过logstash是收集日志的。telegraf是收集指标的。</p>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2025/03/27/cloud/telegraf/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+        
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://phpdi.github.io/2025/01/10/db/doris/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/head.jpeg">
+      <meta itemprop="name" content="Chen Yu">
+      <meta itemprop="description" content="自律给我自由">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="goeoeo">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2025/01/10/db/doris/" class="post-title-link" itemprop="url">doris</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2025-01-10 15:08:37 / 修改时间：16:06:31" itemprop="dateCreated datePublished" datetime="2025-01-10T15:08:37+08:00">2025-01-10</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/db/" itemprop="url" rel="index">
+                    <span itemprop="name">db</span>
+                  </a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h1><p>由百度大数据部研发，之前叫百度Palo,2018年贡献到Apache社区，更名Doris  </p>
+<p>一个现代化的MPP分析型数据库产品。 </p>
+<ul>
+<li>亚秒级响应</li>
+<li>架构非常简洁，易于运维</li>
+<li>支持10PB以上的超大数据集</li>
+</ul>
+<p>满足多种数据分析需求</p>
+<ul>
+<li>固定历史报表</li>
+<li>实时数据分析</li>
+<li>交互式数据分析</li>
+<li>探索式数据分析</li>
+</ul>
+<p><img src="/2025/01/10/db/doris/img.png"></p>
+<p>特性：<br><img src="/2025/01/10/db/doris/img_1.png"></p>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2025/01/10/db/doris/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+        
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="https://phpdi.github.io/2024/12/27/db/greenplum/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1017,136 +1188,6 @@
   
   
 
-        
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://phpdi.github.io/2024/07/29/python/python%E9%85%8D%E7%BD%AEblack/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/head.jpeg">
-      <meta itemprop="name" content="Chen Yu">
-      <meta itemprop="description" content="自律给我自由">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="goeoeo">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2024/07/29/python/python%E9%85%8D%E7%BD%AEblack/" class="post-title-link" itemprop="url">未命名</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-              
-
-              <time title="创建时间：2024-07-29 11:13:43 / 修改时间：11:20:33" itemprop="dateCreated datePublished" datetime="2024-07-29T11:13:43+08:00">2024-07-29</time>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h1 id="安装Black"><a href="#安装Black" class="headerlink" title="安装Black"></a>安装Black</h1><p>在虚拟环境中安装Black。</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pip install black</span><br></pre></td></tr></table></figure>
-
-<h1 id="Black基本设置"><a href="#Black基本设置" class="headerlink" title="Black基本设置"></a>Black基本设置</h1><p>设置目录 Preference &gt; Tools &gt; External Tools。</p>
-<p><img src="/2024/07/29/python/python%E9%85%8D%E7%BD%AEblack/img.png"></p>
-<h1 id="配置File-Watcher"><a href="#配置File-Watcher" class="headerlink" title="配置File Watcher"></a>配置File Watcher</h1><p>设置目录 Preference &gt; Tools &gt; External Tools。</p>
-<p><img src="/2024/07/29/python/python%E9%85%8D%E7%BD%AEblack/img_1.png"></p>
-<p>点击应用 </p>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-        
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://phpdi.github.io/2024/07/25/python/py%E8%B8%A9%E5%9D%91%E6%97%A5%E8%AE%B0/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/head.jpeg">
-      <meta itemprop="name" content="Chen Yu">
-      <meta itemprop="description" content="自律给我自由">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="goeoeo">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2024/07/25/python/py%E8%B8%A9%E5%9D%91%E6%97%A5%E8%AE%B0/" class="post-title-link" itemprop="url">未命名</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-              
-
-              <time title="创建时间：2024-07-25 15:43:10 / 修改时间：16:04:58" itemprop="dateCreated datePublished" datetime="2024-07-25T15:43:10+08:00">2024-07-25</time>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h1 id="mac-pip安装psycopg2报错"><a href="#mac-pip安装psycopg2报错" class="headerlink" title="mac pip安装psycopg2报错"></a>mac pip安装psycopg2报错</h1><p> Error: pg_config executable not found.   </p>
-<ol>
-<li>安装 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"># 记得换源 </span><br><span class="line">brew install postgresql</span><br></pre></td></tr></table></figure></li>
-<li>vim ~&#x2F;.zshrc <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">export PATH=&quot;/opt/homebrew/opt/apr-util/bin:$PATH&quot;</span><br><span class="line">export LDFLAGS=&quot;-L/opt/homebrew/opt/apr-util/lib&quot;</span><br><span class="line">export CPPFLAGS=&quot;-I/opt/homebrew/opt/apr-util/include&quot;</span><br><span class="line">export PKG_CONFIG_PATH=&quot;/opt/homebrew/opt/apr-util/lib/pkgconfig&quot;</span><br><span class="line"></span><br></pre></td></tr></table></figure></li>
-<li>pip install psycopg2&#x3D;&#x3D;2.9.9</li>
-</ol>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
   </div>
 
   
@@ -1219,7 +1260,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">128</span>
+          <span class="site-state-item-count">129</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -1232,7 +1273,7 @@
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">93</span>
+        <span class="site-state-item-count">95</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>

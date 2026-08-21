@@ -210,6 +210,532 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://phpdi.github.io/2026/08/09/dev/opencode%E4%BD%BF%E7%94%A8%E6%95%99%E7%A8%8B/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/head.jpeg">
+      <meta itemprop="name" content="Chen Yu">
+      <meta itemprop="description" content="自律给我自由">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="goeoeo">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2026/08/09/dev/opencode%E4%BD%BF%E7%94%A8%E6%95%99%E7%A8%8B/" class="post-title-link" itemprop="url">opencode 使用教程</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2026-08-09 20:36:35" itemprop="dateCreated datePublished" datetime="2026-08-09T20:36:35+08:00">2026-08-09</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2026-08-21 17:41:28" itemprop="dateModified" datetime="2026-08-21T17:41:28+08:00">2026-08-21</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/dev/" itemprop="url" rel="index">
+                    <span itemprop="name">dev</span>
+                  </a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="OpenCode-MCP-服务器功能介绍"><a href="#OpenCode-MCP-服务器功能介绍" class="headerlink" title="OpenCode MCP 服务器功能介绍"></a>OpenCode MCP 服务器功能介绍</h1><p>本文档介绍 opencode 中已接入的 MCP（Model Context Protocol）服务器及其各自的作用。MCP 是开放协议，让 AI 助手能够对接外部工具、代码、文档和知识库。</p>
+<h2 id="MCP-列表"><a href="#MCP-列表" class="headerlink" title="MCP 列表"></a>MCP 列表</h2><table>
+<thead>
+<tr>
+<th>编号</th>
+<th>名称</th>
+<th>状态</th>
+<th>来源</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>1</td>
+<td><code>ast_grep</code></td>
+<td>Connected</td>
+<td>内置</td>
+</tr>
+<tr>
+<td>2</td>
+<td><code>codebase-memory-mcp</code></td>
+<td>Connected</td>
+<td>用户安装</td>
+</tr>
+<tr>
+<td>3</td>
+<td><code>confluence</code></td>
+<td>Connected</td>
+<td>用户安装</td>
+</tr>
+<tr>
+<td>4</td>
+<td><code>context7</code></td>
+<td>Connected</td>
+<td>内置</td>
+</tr>
+<tr>
+<td>5</td>
+<td><code>grep_app</code></td>
+<td>Connected</td>
+<td>内置</td>
+</tr>
+<tr>
+<td>6</td>
+<td><code>lsp</code></td>
+<td>Connected</td>
+<td>内置</td>
+</tr>
+<tr>
+<td>7</td>
+<td><code>vision-ocr-mcp</code></td>
+<td>Connected</td>
+<td>用户安装</td>
+</tr>
+<tr>
+<td>8</td>
+<td><code>websearch</code></td>
+<td>Connected</td>
+<td>内置</td>
+</tr>
+<tr>
+<td>9</td>
+<td><code>wechat-devtools</code></td>
+<td>Disabled</td>
+<td>用户安装</td>
+</tr>
+</tbody></table>
+<hr>
+<h2 id="1-ast-grep-—-代码结构化搜索与改写"><a href="#1-ast-grep-—-代码结构化搜索与改写" class="headerlink" title="1. ast_grep — 代码结构化搜索与改写"></a>1. ast_grep — 代码结构化搜索与改写</h2><p><strong>是什么</strong>：基于 AST（抽象语法树）的代码搜索和批量改写工具，不是简单的文本正则匹配。</p>
+<p><strong>典型用途</strong>：</p>
+<ul>
+<li>按语法结构调整代码模式，例如把 <code>console.log($MSG)</code> 批量改成 <code>logger.info($MSG)</code>；</li>
+<li>支持 25 种编程语言，元变量（<code>$VAR</code> &#x2F; <code>$$$</code>）匹配整个语法节点而非子字符串；</li>
+<li>干跑（dry-run）模式可先预览改动再应用，适合安全重构。</li>
+</ul>
+<hr>
+<h2 id="2-codebase-memory-mcp-—-代码库知识图谱"><a href="#2-codebase-memory-mcp-—-代码库知识图谱" class="headerlink" title="2. codebase-memory-mcp — 代码库知识图谱"></a>2. codebase-memory-mcp — 代码库知识图谱</h2><p><strong>是什么</strong>：为代码库建立索引的知识图谱工具，能理解函数、类、路由、模块之间的调用与依赖关系。</p>
+<p><strong>安装</strong>（源码：GitHub <code>DeusData/codebase-memory-mcp</code>）：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># --skip-config：只装二进制，不要自动修改 agent 配置（自行手动改 opencode.json）</span></span><br><span class="line">curl -fsSL https://raw.githubusercontent.com/DeusData/codebase-memory-mcp/main/install.sh | bash -s -- --skip-config</span><br></pre></td></tr></table></figure>
+
+<p>脚本默认安装到 <code>~/.local/bin</code>（可用 <code>--dir=&lt;path&gt;</code> 自定义）。默认会自动修改 agent 配置文件，推荐加 <code>--skip-config</code> 手动控制。安装后在 <code>~/.config/opencode/opencode.json</code> 的 <code>mcp</code> 字段注册：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">&quot;codebase-memory-mcp&quot;: &#123;</span><br><span class="line">  &quot;enabled&quot;: true,</span><br><span class="line">  &quot;type&quot;: &quot;local&quot;,</span><br><span class="line">  &quot;command&quot;: [&quot;/Users/yu/.local/bin/codebase-memory-mcp&quot;],</span><br><span class="line">  &quot;environment&quot;: &#123;</span><br><span class="line">    &quot;CBM_CACHE_DIR&quot;: &quot;/Users/yu/.cache/codebase-memory-mcp/db&quot;,</span><br><span class="line">    &quot;CBM_PROJECT_ROOT&quot;: &quot;/Users/yu/.cache/codebase-memory-mcp/project-store&quot;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>典型用途</strong>：</p>
+<ul>
+<li><code>search_graph</code>：按名称&#x2F;语义搜索函数、类、变量；</li>
+<li><code>trace_path</code>：追踪「谁调用某函数」「某函数调用谁」、数据流向、跨服务调用；</li>
+<li><code>get_architecture</code>：查看项目模块划分、依赖、热点、架构边界；</li>
+<li><code>query_graph</code>：用 Cypher 查询复杂多跳关系、内聚度、复杂度分析。</li>
+</ul>
+<p><strong>适用场景</strong>：架构梳理、调用链追踪、影响面分析、死代码识别。</p>
+<hr>
+<h2 id="3-confluence-—-Jira-Confluence-协同平台"><a href="#3-confluence-—-Jira-Confluence-协同平台" class="headerlink" title="3. confluence — Jira &amp; Confluence 协同平台"></a>3. confluence — Jira &amp; Confluence 协同平台</h2><p><strong>是什么</strong>：对接 yunify 的 Jira 工单系统和 Confluence 知识库。</p>
+<p><strong>安装</strong>（源码：GitHub <code>sooperset/mcp-atlassian</code>，需先安装 <a target="_blank" rel="noopener" href="https://docs.astral.sh/uv/">uv</a>）：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">uv tool install mcp-atlassian</span><br></pre></td></tr></table></figure>
+
+<p>安装后可执行文件位于 <code>~/.local/bin/mcp-atlassian</code>（用 <code>uv tool list --show-paths</code> 确认）。安装后在 <code>~/.config/opencode/opencode.json</code> 的 <code>mcp</code> 字段注册：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">&quot;confluence&quot;: &#123;</span><br><span class="line">  &quot;enabled&quot;: true,</span><br><span class="line">  &quot;type&quot;: &quot;local&quot;,</span><br><span class="line">  &quot;command&quot;: [&quot;/Users/yu/.local/bin/mcp-atlassian&quot;],</span><br><span class="line">  &quot;environment&quot;: &#123;</span><br><span class="line">    &quot;JIRA_URL&quot;: &quot;https://track.yunify.com&quot;,</span><br><span class="line">    &quot;JIRA_PERSONAL_TOKEN&quot;: &quot;&lt;jira-pat&gt;&quot;,</span><br><span class="line">    &quot;CONFLUENCE_URL&quot;: &quot;https://cwiki.yunify.com&quot;,</span><br><span class="line">    &quot;CONFLUENCE_PERSONAL_TOKEN&quot;: &quot;&lt;confluence-pat&gt;&quot;,</span><br><span class="line">    &quot;TOOLSETS&quot;: &quot;all&quot;,</span><br><span class="line">    &quot;READ_ONLY_MODE&quot;: &quot;true&quot;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>PAT（Personal Access Token）在对应平台的用户设置中生成：Jira&#x2F;Confluence 右上角头像 → Profile → Personal Access Tokens。</p>
+<p><strong>典型用途</strong>：</p>
+<ul>
+<li><strong>Jira</strong>：查工单详情（<code>get_issue</code>）、搜索列表（<code>search</code>）、读字段&#x2F;评论&#x2F;附件（<code>download_attachments</code>）、查看工作流与阻塞关系；</li>
+<li><strong>Confluence</strong>：读页面内容（<code>get_page</code>）、搜索（<code>search</code>）、查子页面&#x2F;层级&#x2F;标签&#x2F;附件；</li>
+<li>认证依赖环境变量里的 <code>JIRA_URL</code> + <code>JIRA_PERSONAL_TOKEN</code>、<code>CONFLUENCE_URL</code> + <code>CONFLUENCE_PERSONAL_TOKEN</code>。</li>
+</ul>
+<hr>
+<h2 id="4-context7-—-库文档检索"><a href="#4-context7-—-库文档检索" class="headerlink" title="4. context7 — 库文档检索"></a>4. context7 — 库文档检索</h2><p><strong>是什么</strong>：检索最新、权威的第三方库 &#x2F; 框架 &#x2F; SDK 官方文档。</p>
+<p><strong>典型用途</strong>：</p>
+<ul>
+<li>查 API 语法、配置方式、版本迁移、库特定调试、安装说明；</li>
+<li>优先于凭记忆作答，避免训练数据过时；</li>
+<li><code>resolve-library-id</code> 先解析出库 ID，再用 <code>query-docs</code> 查具体问题。</li>
+</ul>
+<hr>
+<h2 id="5-grep-app-—-GitHub-真实代码检索"><a href="#5-grep-app-—-GitHub-真实代码检索" class="headerlink" title="5. grep_app — GitHub 真实代码检索"></a>5. grep_app — GitHub 真实代码检索</h2><p><strong>是什么</strong>：从超过百万个公开 GitHub 仓库中检索真实代码示例（可理解为 GitHub 全局 grep）。</p>
+<p><strong>典型用途</strong>：</p>
+<ul>
+<li>查某个库&#x2F;API 的真实用法、生产级实现范例；</li>
+<li>按语言、仓库、文件路径过滤；</li>
+<li>支持正则匹配跨行模式，适合「别人怎么实现某功能」的问题。</li>
+</ul>
+<hr>
+<h2 id="6-lsp-—-语言服务器协议集成"><a href="#6-lsp-—-语言服务器协议集成" class="headerlink" title="6. lsp — 语言服务器协议集成"></a>6. lsp — 语言服务器协议集成</h2><p><strong>是什么</strong>：通过 LSP（Language Server Protocol）提供编辑器级的代码智能能力。</p>
+<p><strong>典型用途</strong>：</p>
+<ul>
+<li>诊断：获取文件&#x2F;目录的错误、警告、提示（<code>diagnostics</code>）；</li>
+<li>跳转：找定义（<code>goto_definition</code>）、找引用（<code>find_references</code>）；</li>
+<li>重命名符号、查文档&#x2F;大纲符号；</li>
+<li>用于改码后验证语法、做安全重构。</li>
+</ul>
+<hr>
+<h2 id="7-vision-ocr-mcp-—-图片-PDF-剪贴板文字识别"><a href="#7-vision-ocr-mcp-—-图片-PDF-剪贴板文字识别" class="headerlink" title="7. vision-ocr-mcp — 图片 &#x2F; PDF &#x2F; 剪贴板文字识别"></a>7. vision-ocr-mcp — 图片 &#x2F; PDF &#x2F; 剪贴板文字识别</h2><p><strong>是什么</strong>：基于 macOS Vision Framework 的 OCR 工具，从图片、PDF、屏幕截图、剪贴板中提取文字。</p>
+<p><strong>安装</strong>（源码：GitHub <code>stelaino/vision-ocr-mcp</code>，macOS 原生离线 OCR，基于 Apple Vision）：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">curl -fsSL https://raw.githubusercontent.com/stelaino/vision-ocr-mcp/main/install.sh | bash</span><br></pre></td></tr></table></figure>
+
+<p>脚本会将最新 release 的 <code>vision-ocr-mcp</code> 二进制安装到 <code>/usr/local/bin</code>，需 macOS（自动识别 arm64&#x2F;amd64）。安装后在 <code>~/.config/opencode/opencode.json</code> 的 <code>mcp</code> 字段注册：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&quot;vision-ocr-mcp&quot;: &#123;</span><br><span class="line">  &quot;enabled&quot;: true,</span><br><span class="line">  &quot;type&quot;: &quot;local&quot;,</span><br><span class="line">  &quot;command&quot;: [&quot;/usr/local/bin/vision-ocr-mcp&quot;]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>典型用途</strong>：</p>
+<ul>
+<li><code>ocr_extract_text</code>（<code>file_path</code> &#x2F; <code>base64</code> &#x2F; <code>url</code>）解析图片或 PDF；</li>
+<li><code>ocr_clipboard</code> 读取系统剪贴板中的图片文字；</li>
+<li><code>ocr_screen_region</code> 截屏识别、<code>batch_ocr</code> 批量处理；</li>
+<li><code>analyze_document</code> &#x2F; <code>detect_text_regions</code> 获取文字位置与版面结构；</li>
+<li><code>detect_barcodes</code> 识别二维码&#x2F;条码；<code>watch_folder</code> 监控文件夹自动 OCR。</li>
+</ul>
+<p><strong>注意</strong>：AI 文本模型本身不具备视觉能力，遇到图片必须借助本工具解析，不能假装「看图」。</p>
+<hr>
+<h2 id="8-websearch-—-网页搜索与抓取"><a href="#8-websearch-—-网页搜索与抓取" class="headerlink" title="8. websearch — 网页搜索与抓取"></a>8. websearch — 网页搜索与抓取</h2><p><strong>是什么</strong>：联网搜索并按需抓取网页内容，转换为 Markdown 等格式供 AI 使用。</p>
+<p><strong>典型用途</strong>：</p>
+<ul>
+<li>搜索最新信息、新闻、事实、人物、公司；</li>
+<li>语义化描述理想页面来获得高质量结果（<code>websearch_web_search_exa</code>）；</li>
+<li><code>webfetch</code> 抓取指定 URL 内容并转 Markdown。</li>
+</ul>
+<hr>
+<h2 id="9-wechat-devtools-—-微信开发者工具（当前禁用）"><a href="#9-wechat-devtools-—-微信开发者工具（当前禁用）" class="headerlink" title="9. wechat-devtools — 微信开发者工具（当前禁用）"></a>9. wechat-devtools — 微信开发者工具（当前禁用）</h2><p><strong>是什么</strong>：对接微信小程序开发者工具的 MCP 服务。</p>
+<p><strong>当前状态</strong>：<strong>Disabled（未启用）</strong>。若需调试&#x2F;构建微信小程序，需先在 opencode 配置中启用并认证后使用。</p>
+<hr>
+<h1 id="OpenCode-Skills-功能说明"><a href="#OpenCode-Skills-功能说明" class="headerlink" title="OpenCode Skills 功能说明"></a>OpenCode Skills 功能说明</h1><p>Skill（技能）是预置的工作流&#x2F;专业指令，为特定任务注入领域知识和执行规范。调用 skill 后，AI 会加载对应的详细指令并按步骤执行。优先级：<strong>项目 &gt; 用户 &gt; opencode &gt; 内置</strong>。</p>
+<h2 id="一、用户自定义-Skills（最强优先级）"><a href="#一、用户自定义-Skills（最强优先级）" class="headerlink" title="一、用户自定义 Skills（最强优先级）"></a>一、用户自定义 Skills（最强优先级）</h2><table>
+<thead>
+<tr>
+<th>Skill</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>codebase-memory</code></td>
+<td>用代码知识图谱做结构化代码查询（架构、调用链、影响分析）。</td>
+</tr>
+</tbody></table>
+<h2 id="二、Superpowers-内置-Skills（工作流类）"><a href="#二、Superpowers-内置-Skills（工作流类）" class="headerlink" title="二、Superpowers 内置 Skills（工作流类）"></a>二、Superpowers 内置 Skills（工作流类）</h2><table>
+<thead>
+<tr>
+<th>分类</th>
+<th>Skill</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>流程</td>
+<td><code>using-superpowers</code></td>
+<td>会话启动时规范如何使用 skills。</td>
+</tr>
+<tr>
+<td>需求</td>
+<td><code>brainstorming</code></td>
+<td>任何创造性工作（建功能&#x2F;组件&#x2F;改行为）前先探索意图与需求。</td>
+</tr>
+<tr>
+<td>计划</td>
+<td><code>writing-plans</code></td>
+<td>有规格需求时，写多步实施计划。</td>
+</tr>
+<tr>
+<td>计划</td>
+<td><code>executing-plans</code></td>
+<td>分会话执行已写好的实施计划（含复核检查点）。</td>
+</tr>
+<tr>
+<td>计划</td>
+<td><code>dispatching-parallel-agents</code></td>
+<td>面对 2+ 个无共享状态&#x2F;无顺序依赖的独立任务时并行分发。</td>
+</tr>
+<tr>
+<td>计划</td>
+<td><code>subagent-driven-development</code></td>
+<td>在当前会话用子代理执行实施计划中的独立任务。</td>
+</tr>
+<tr>
+<td>开发</td>
+<td><code>test-driven-development</code></td>
+<td>实现功能&#x2F;修 bug 前先写测试（TDD）。</td>
+</tr>
+<tr>
+<td>开发</td>
+<td><code>using-git-worktrees</code></td>
+<td>特性开发前建立隔离的工作区（git worktree）。</td>
+</tr>
+<tr>
+<td>调试</td>
+<td><code>systematic-debugging</code></td>
+<td>遇到 bug&#x2F;测试失败&#x2F;异常行为时，系统化假设-验证-定位根因。</td>
+</tr>
+<tr>
+<td>完成</td>
+<td><code>verification-before-completion</code></td>
+<td>声称完成&#x2F;修复前先运行验证命令并确认输出，证据先于断言。</td>
+</tr>
+<tr>
+<td>完成</td>
+<td><code>finishing-a-development-branch</code></td>
+<td>实现完成、测试通过后，选择合并&#x2F;提 PR&#x2F;清理的收尾方式。</td>
+</tr>
+<tr>
+<td>评审</td>
+<td><code>requesting-code-review</code></td>
+<td>完成任务&#x2F;大功能&#x2F;合并前，验证工作符合需求。</td>
+</tr>
+<tr>
+<td>评审</td>
+<td><code>receiving-code-review</code></td>
+<td>收到评审反馈后，先验证质疑再进行修改。</td>
+</tr>
+<tr>
+<td>安全</td>
+<td><code>security-research</code> &#x2F; <code>security-review</code></td>
+<td>团队模式安全审计：并行猎人 + PoC 工程师验证可利用性、定级。</td>
+</tr>
+<tr>
+<td>沉淀</td>
+<td><code>writing-skills</code></td>
+<td>创建&#x2F;编辑&#x2F;验证新技能。</td>
+</tr>
+</tbody></table>
+<h2 id="三、常用内置命令（Slash-Commands）"><a href="#三、常用内置命令（Slash-Commands）" class="headerlink" title="三、常用内置命令（Slash Commands）"></a>三、常用内置命令（Slash Commands）</h2><table>
+<thead>
+<tr>
+<th>命令</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>/codebase-memory</code></td>
+<td>调用代码知识图谱 skill。</td>
+</tr>
+<tr>
+<td><code>/debugging</code></td>
+<td>任何语言的真实运行时调试（崩溃、静默失败、内存泄漏、卡死等）。</td>
+</tr>
+<tr>
+<td><code>/refactor</code></td>
+<td>智能重构（配合 LSP、AST-grep、TDD 验证）。</td>
+</tr>
+<tr>
+<td><code>/git-master</code></td>
+<td>任何 git 操作（原子提交、rebase&#x2F;squash、历史检索 blame&#x2F;bisect&#x2F;log -S）。</td>
+</tr>
+<tr>
+<td><code>/playwright</code></td>
+<td>浏览器自动化任务（验证、信息抓取、截图、测试）。</td>
+</tr>
+<tr>
+<td><code>/frontend-ui-ux</code></td>
+<td>无设计稿时也能产出精美 UI&#x2F;UX。</td>
+</tr>
+<tr>
+<td><code>/visual-qa</code></td>
+<td>构建&#x2F;改完 UI 后做严谨的可视化 QA（网页 &amp; 终端 UI）。</td>
+</tr>
+<tr>
+<td><code>/review-work</code></td>
+<td>并行 5 个子代理做目标&#x2F;质量&#x2F;安全&#x2F;QA&#x2F;上下文的全方位审查。</td>
+</tr>
+<tr>
+<td><code>/security-research</code> <code>/security-review</code></td>
+<td>团队模式安全审计。</td>
+</tr>
+<tr>
+<td><code>/remove-ai-slops</code></td>
+<td>移除 AI 生成代码的坏味道（AI slop）并按质量门槛验证。</td>
+</tr>
+<tr>
+<td><code>/handoff</code></td>
+<td>生成详细上下文摘要，便于在新会话继续工作。</td>
+</tr>
+<tr>
+<td><code>/hyperplan</code></td>
+<td>对抗式多代理规划（5 个对抗成员交叉批评，主导综合）。</td>
+</tr>
+<tr>
+<td><code>/start-work</code></td>
+<td>从 Prometheus 计划开始 Sisyphus 工作会话。</td>
+</tr>
+<tr>
+<td><code>/init-deep</code></td>
+<td>初始化分层 AGENTS.md 知识库。</td>
+</tr>
+<tr>
+<td><code>/ralph-loop</code> <code>/ulw-loop</code> <code>/cancel-ralph</code> <code>/stop-continuation</code></td>
+<td>自引用开发循环 &#x2F; 超长工作循环 &#x2F; 取消与停止。</td>
+</tr>
+</tbody></table>
+<hr>
+<hr>
+<h1 id="OpenCode-已安装插件"><a href="#OpenCode-已安装插件" class="headerlink" title="OpenCode 已安装插件"></a>OpenCode 已安装插件</h1><p>插件（Plugin）是 opencode 的功能扩展，提供额外的技能、命令、代理等工作流。在 <code>~/.config/opencode/opencode.jsonc</code> 的 <code>plugin</code> 字段中配置。</p>
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>插件</th>
+<th>来源</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>1</td>
+<td><code>superpowers</code></td>
+<td>GitHub 仓库 <code>jnMetaCode/superpowers-zh@v5.1.0</code></td>
+<td>Superpowers 系列工作流技能（上一章 Skills 中列出的 brainstorming、TDD、systematic-debugging 等均来自该插件）。</td>
+</tr>
+<tr>
+<td>2</td>
+<td><code>oh-my-openagent</code></td>
+<td>npm <code>@latest</code>（实际锁定 <code>4.19.4</code>）</td>
+<td>openagent 增强插件，提供额外的代理&#x2F;命令能力。</td>
+</tr>
+<tr>
+<td>3</td>
+<td><code>@devcxl/opencode-spec</code></td>
+<td>npm <code>@latest</code>（实际锁定 <code>0.2.0</code>），GitHub <code>devcxl/opencode-spec</code></td>
+<td>OpenSpec 工作流插件（spec-driven development）：基于 OpenSpec 规范的变更工作流，提供 12 个 <code>openspec-*</code> skills（<code>openspec-explore</code> &#x2F; <code>openspec-propose</code> &#x2F; <code>openspec-new-change</code> &#x2F; <code>openspec-continue-change</code> &#x2F; <code>openspec-apply</code> &#x2F; <code>openspec-verify-change</code> &#x2F; <code>openspec-archive</code> 等），覆盖从探索需求、提议变更、编写规格（specs&#x2F;delta）、逐步实施、验证到归档的完整闭环。</td>
+</tr>
+</tbody></table>
+<p><strong>补充</strong>：</p>
+<ul>
+<li><code>@devcxl/opencode-spec</code> 插件需配合<strong>本地 CLI</strong>（<code>openspec</code> 命令）使用，安装方式（GitHub <code>Fission-AI/OpenSpec</code>）：<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm install -g @fission-ai/openspec@latest</span><br></pre></td></tr></table></figure>
+安装后可执行文件位于 <code>$(npm prefix -g)/bin/openspec</code>（如 <code>~/.nvm/versions/node/v22.12.0/bin/openspec</code>）。</li>
+<li>以上插件的技能从各自包内加载：<code>superpowers/skills/</code>（详见 Skills 章节）、openspec 插件的 <code>openspec-*</code> skills（以 <code>/openspec-*</code> slash 命令形式使用，如 <code>/openspec-propose</code>、<code>/openspec-apply</code>）。</li>
+<li><code>package.json</code> 中还依赖 <code>oh-my-opencode</code>（版本 <code>^4.10.0</code>）与 <code>@opencode-ai/plugin</code>（<code>1.17.5</code>），服务于 opencode 的插件运行环境。</li>
+<li>查看命令入口：<code>opencode</code> 会话内的 slash 命令（<code>/debugging</code>、<code>/refactor</code>、<code>/visual-qa</code> 等）多由上述插件注册提供。</li>
+</ul>
+<h2 id="Skill-使用规则要点"><a href="#Skill-使用规则要点" class="headerlink" title="Skill 使用规则要点"></a>Skill 使用规则要点</h2><ol>
+<li><strong>判断是否该用</strong>：只要有一丁点可能适用，就必须调用 skill 检查，不能跳过。</li>
+<li><strong>流程类优先</strong>：先加载流程类 skill（如 brainstorming、debugging）决定「怎么做」，再加载实现类 skill 指导「怎么执行」。</li>
+<li><strong>来源优先级</strong>：项目 &gt; 用户 &gt; opencode &gt; 内置。用户安装的 skill 覆盖内置默认。</li>
+<li><strong>用户指令优先于 skill</strong>：用户明确的指示（CLAUDE.md&#x2F;AGENTS.md&#x2F;直接请求）始终优先级最高。</li>
+</ol>
+<hr>
+<hr>
+<h1 id="OpenCode-模型-Fallback-配置"><a href="#OpenCode-模型-Fallback-配置" class="headerlink" title="OpenCode 模型 Fallback 配置"></a>OpenCode 模型 Fallback 配置</h1><p>默认模型为第三方中转 <code>coreshub/DeepSeek-V4-Flash</code>（<code>openapi.coreshub.cn</code>），相比 DeepSeek 官方直连偶发不稳定（实测日志中出现多次 <code>Too Many Requests</code>(429) 与 <code>ProviderHeaderTimeoutError</code>）。为保证主模型不可用时自动降级到官方 deepseek，配置了运行时 fallback。</p>
+<h2 id="机制说明"><a href="#机制说明" class="headerlink" title="机制说明"></a>机制说明</h2><p>opencode <strong>原生不支持</strong> provider 自动 fallback。oh-my-openagent 插件（4.19+）内置两套机制：</p>
+<table>
+<thead>
+<tr>
+<th>机制</th>
+<th>fallback 目标来源</th>
+<th>适用性</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>model_fallback</code></td>
+<td><strong>硬编码链</strong>（<code>AGENT_MODEL_REQUIREMENTS</code>，如 sisyphus → claude-opus-5 &#x2F; kimi-k3 &#x2F; gpt-5.6-sol…）</td>
+<td>❌ 会切到本环境未接入的模型，不可达项被跳过</td>
+</tr>
+<tr>
+<td><code>runtime_fallback</code></td>
+<td><strong>用户配置</strong> <code>agents[].fallback_models</code></td>
+<td>✅ 采用</td>
+</tr>
+</tbody></table>
+<p>选用 <code>runtime_fallback</code>：主模型仍为 coreshub，失败时自动切换到用户指定的 deepseek 官方模型。</p>
+<h2 id="配置"><a href="#配置" class="headerlink" title="配置"></a>配置</h2><h3 id="1-coreshub-provider-能力声明（-config-opencode-opencode-jsonc）"><a href="#1-coreshub-provider-能力声明（-config-opencode-opencode-jsonc）" class="headerlink" title="1. coreshub provider 能力声明（~/.config/opencode/opencode.jsonc）"></a>1. coreshub provider 能力声明（<code>~/.config/opencode/opencode.jsonc</code>）</h3><p>经实测 coreshub 平台完整兼容 DeepSeek 官方接口（流式返回 <code>reasoning_content</code>、支持 <code>tool_calls</code>、<code>reasoning_effort</code>、<code>temperature</code>），因此补齐能力声明并调大超时，让 opencode 正确解析思维链、对齐官方直连体验：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line">&quot;provider&quot;: &#123;</span><br><span class="line">  &quot;coreshub&quot;: &#123;</span><br><span class="line">    &quot;npm&quot;: &quot;@ai-sdk/openai-compatible&quot;,</span><br><span class="line">    &quot;name&quot;: &quot;CoresHub&quot;,</span><br><span class="line">    &quot;options&quot;: &#123;</span><br><span class="line">      &quot;baseURL&quot;: &quot;https://openapi.coreshub.cn/v1&quot;,</span><br><span class="line">      &quot;apiKey&quot;: &quot;&lt;your-key&gt;&quot;,</span><br><span class="line">      &quot;timeout&quot;: 600000,        // 整请求超时 10 分钟</span><br><span class="line">      &quot;chunkTimeout&quot;: 120000,   // 流式块间隔 2 分钟（推理长思考留余量）</span><br><span class="line">      &quot;headerTimeout&quot;: 180000   // 响应头 3 分钟（原 60s 多次触发超时）</span><br><span class="line">    &#125;,</span><br><span class="line">    &quot;models&quot;: &#123;</span><br><span class="line">      &quot;DeepSeek-V4-Flash&quot;: &#123;</span><br><span class="line">        &quot;name&quot;: &quot;DeepSeek-V4-Flash&quot;,</span><br><span class="line">        &quot;contextWindow&quot;: 1048576,           // 模型原始能力 1M</span><br><span class="line">        &quot;reasoning&quot;: true,</span><br><span class="line">        &quot;temperature&quot;: true,</span><br><span class="line">        &quot;tool_call&quot;: true,</span><br><span class="line">        &quot;interleaved&quot;: &#123; &quot;field&quot;: &quot;reasoning_content&quot; &#125;,  // 关键：解析流式思维链</span><br><span class="line">        &quot;limit&quot;: &#123;</span><br><span class="line">          &quot;context&quot;: 200000,                // opencode 请求保护上限（超此自动压缩）</span><br><span class="line">          &quot;output&quot;: 384000</span><br><span class="line">        &#125;</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="2-runtime-fallback（-config-opencode-oh-my-openagent-jsonc）"><a href="#2-runtime-fallback（-config-opencode-oh-my-openagent-jsonc）" class="headerlink" title="2. runtime_fallback（~/.config/opencode/oh-my-openagent.jsonc）"></a>2. runtime_fallback（<code>~/.config/opencode/oh-my-openagent.jsonc</code>）</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  &quot;$schema&quot;: &quot;https://raw.githubusercontent.com/code-yeongyu/oh-my-openagent/dev/assets/oh-my-opencode.schema.json&quot;,</span><br><span class="line">  &quot;runtime_fallback&quot;: &#123;</span><br><span class="line">    &quot;enabled&quot;: true,</span><br><span class="line">    &quot;retry_on_errors&quot;: [429, 500, 502, 503, 504],</span><br><span class="line">    &quot;max_fallback_attempts&quot;: 3,</span><br><span class="line">    &quot;cooldown_seconds&quot;: 120,</span><br><span class="line">    &quot;timeout_seconds&quot;: 60,</span><br><span class="line">    &quot;notify_on_fallback&quot;: true,</span><br><span class="line">    &quot;restore_primary_after_cooldown&quot;: true</span><br><span class="line">  &#125;,</span><br><span class="line">  &quot;agents&quot;: &#123;</span><br><span class="line">    &quot;build&quot;:    &#123; &quot;fallback_models&quot;: [&quot;deepseek/deepseek-v4-flash&quot;] &#125;,</span><br><span class="line">    &quot;sisyphus&quot;: &#123; &quot;fallback_models&quot;: [&quot;deepseek/deepseek-v4-flash&quot;] &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>字段说明：</p>
+<table>
+<thead>
+<tr>
+<th>字段</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>enabled</code></td>
+<td>总开关。也可简写为 <code>&quot;runtime_fallback&quot;: true</code></td>
+</tr>
+<tr>
+<td><code>retry_on_errors</code></td>
+<td>触发 fallback 的 HTTP 错误码，覆盖 coreshub 常见的 429 限流</td>
+</tr>
+<tr>
+<td><code>max_fallback_attempts</code></td>
+<td>单个会话最大 fallback 尝试次数（1–20），防死循环</td>
+</tr>
+<tr>
+<td><code>cooldown_seconds</code></td>
+<td>失败模型的冷却时间，冷却期内不再尝试它</td>
+</tr>
+<tr>
+<td><code>timeout_seconds</code></td>
+<td>无响应&#x2F;超时场景的兜底判定</td>
+</tr>
+<tr>
+<td><code>notify_on_fallback</code></td>
+<td>切换模型时弹出 toast 提示</td>
+</tr>
+<tr>
+<td><code>restore_primary_after_cooldown</code></td>
+<td>冷却期过后自动恢复主模型 coreshub（保证「默认还是用它」）</td>
+</tr>
+<tr>
+<td><code>agents[].fallback_models</code></td>
+<td>该 agent 的 fallback 候选列表（<code>string</code> &#x2F; <code>string[]</code> &#x2F; <code>[&#123;model, reasoning, ...&#125;]</code>），按实际使用的 agent（build &#x2F; sisyphus）配置</td>
+</tr>
+</tbody></table>
+<h2 id="行为与触发流程"><a href="#行为与触发流程" class="headerlink" title="行为与触发流程"></a>行为与触发流程</h2><ol>
+<li>检测到可重试错误（默认 429&#x2F;500&#x2F;502&#x2F;503&#x2F;504，可自定义）或超时；</li>
+<li>中止当前请求，从 <code>fallback_models</code> 中取<strong>下一可达且非冷却中</strong>的模型重发，并 toast 提示「Model fallback」；</li>
+<li>若仍失败则继续取下一个候选（自动跳过与当前模型等价、以及被 <code>disabled_providers</code> 禁用的条目）；</li>
+<li>达到 <code>max_fallback_attempts</code> 后停止，不再无限重试；</li>
+<li>冷却期（<code>cooldown_seconds</code>）过后自动恢复主模型。</li>
+</ol>
+<h2 id="验证与注意事项"><a href="#验证与注意事项" class="headerlink" title="验证与注意事项"></a>验证与注意事项</h2><ul>
+<li>校验方式：JSON 语法 + 插件 schema（<code>oh-my-opencode.schema.json</code>，注意其 <code>required: [&#39;git_master&#39;]</code> 是生成文件的 bug，插件实际用 zod 校验且全部字段可选）+ <code>opencode models</code> 启动加载无报错；</li>
+<li>端到端可用：<code>opencode run -m coreshub/DeepSeek-V4-Flash &quot;hi&quot;</code> 正常响应即配置生效；</li>
+<li>配置在 opencode 启动时加载，<strong>修改后需重启 opencode</strong> 生效；</li>
+<li>注意：<code>model_fallback</code> 使用硬编码链，不读用户 <code>fallback_models</code>，本方案刻意<strong>未启用</strong>它，避免主会话 fallback 到不可达模型。</li>
+</ul>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+        
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="https://phpdi.github.io/2026/08/09/go/go%E7%A1%AC%E6%A0%B8%E5%B9%B2%E8%B4%A7/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1189,89 +1715,6 @@
   
   
 
-        
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://phpdi.github.io/2025/04/03/k8s/k8s%E4%B8%AD%E5%AF%B9grpc%E6%9C%8D%E5%8A%A1%E8%BF%9B%E8%A1%8C%E5%81%A5%E5%BA%B7%E6%A3%80%E6%9F%A5/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/head.jpeg">
-      <meta itemprop="name" content="Chen Yu">
-      <meta itemprop="description" content="自律给我自由">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="goeoeo">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2025/04/03/k8s/k8s%E4%B8%AD%E5%AF%B9grpc%E6%9C%8D%E5%8A%A1%E8%BF%9B%E8%A1%8C%E5%81%A5%E5%BA%B7%E6%A3%80%E6%9F%A5/" class="post-title-link" itemprop="url">k8s中对grpc服务进行健康检查</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-              
-
-              <time title="创建时间：2025-04-03 14:37:34 / 修改时间：15:00:58" itemprop="dateCreated datePublished" datetime="2025-04-03T14:37:34+08:00">2025-04-03</time>
-            </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/k8s/" itemprop="url" rel="index">
-                    <span itemprop="name">k8s</span>
-                  </a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h1 id="健康检查"><a href="#健康检查" class="headerlink" title="健康检查"></a>健康检查</h1><p>健康检查（Health Check）是一种用于探测应用或服务是否处于正常运行状态的机制，通常通过预设规则主动检测系统组件（如容器、微服务、数据库等）的可用性，是保障应用高可用性和自愈能力的核心手段。</p>
-<p>健康检查的目的：</p>
-<ol>
-<li>故障自动恢复：快速发现不可用实例并触发重启（如 Kubernetes 的 livenessProbe）。</li>
-<li>流量控制：避免将请求转发到未就绪或异常的服务（如 readinessProbe 控制 Pod 是否加入 Service Endpoints）。</li>
-<li>状态可视化：为监控系统（Prometheus、Zabbix）提供健康状态指标。</li>
-<li>优雅启停：确保应用完成初始化后再接收流量，关闭前完成未处理请求。</li></ol>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2025/04/03/k8s/k8s%E4%B8%AD%E5%AF%B9grpc%E6%9C%8D%E5%8A%A1%E8%BF%9B%E8%A1%8C%E5%81%A5%E5%BA%B7%E6%A3%80%E6%9F%A5/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
   </div>
 
   
@@ -1344,20 +1787,20 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">129</span>
+          <span class="site-state-item-count">130</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
             <a href="/categories/">
           
-        <span class="site-state-item-count">21</span>
+        <span class="site-state-item-count">22</span>
         <span class="site-state-item-name">分类</span></a>
       </div>
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">95</span>
+        <span class="site-state-item-count">96</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>

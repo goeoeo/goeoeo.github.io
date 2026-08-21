@@ -210,7 +210,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://phpdi.github.io/2023/01/11/go/gomod/">
+    <link itemprop="mainEntityOfPage" href="https://phpdi.github.io/2023/01/11/go/golang%E9%A1%B9%E7%9B%AE%E7%BB%93%E6%9E%84%E8%A7%84%E8%8C%83/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/head.jpeg">
@@ -224,7 +224,7 @@
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
           
-            <a href="/2023/01/11/go/gomod/" class="post-title-link" itemprop="url">gomod</a>
+            <a href="/2023/01/11/go/golang%E9%A1%B9%E7%9B%AE%E7%BB%93%E6%9E%84%E8%A7%84%E8%8C%83/" class="post-title-link" itemprop="url">golang项目结构规范</a>
         </h2>
 
         <div class="post-meta">
@@ -241,7 +241,7 @@
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2023-09-14 10:40:47" itemprop="dateModified" datetime="2023-09-14T10:40:47+08:00">2023-09-14</time>
+                <time title="修改时间：2023-09-14 10:39:45" itemprop="dateModified" datetime="2023-09-14T10:39:45+08:00">2023-09-14</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -266,26 +266,97 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <h2 id="环境变量GO111MODULE"><a href="#环境变量GO111MODULE" class="headerlink" title="环境变量GO111MODULE"></a>环境变量GO111MODULE</h2><ul>
-<li><p>GO111MODULE&#x3D;off </p>
-<blockquote>
-<p>go命令从不使用新模块支持。使用GOPATH模式(查找vendor目录和GOPATH路径下的依赖)</p>
-</blockquote>
-</li>
-<li><p>GO111MODULE&#x3D;on </p>
-<blockquote>
-<p>go命令开启模块支持,此时执行go get 命令,所有依赖都会下到$GOPATH&#x2F;pkg&#x2F;mod ,go依赖查找也只会到$GOPATH&#x2F;pkg&#x2F;mod进行查找</p>
-</blockquote>
-</li>
-<li><p>GO111MODULE&#x3D;auto </p>
-<blockquote>
-<p>默认值,go命令根据当前目录启用或禁用模块支持。仅当当前目录位于$GOPATH&#x2F;src之外并且其本身包含go.mod文件或位于包含go.mod文件的目录下时，才启用模块支持。简而言之,就是项目包含go.mod文件时会开启模块支持</p>
-</blockquote>
-</li>
-</ul>
+          <h1 id="golang项目结构规范"><a href="#golang项目结构规范" class="headerlink" title="golang项目结构规范"></a>golang项目结构规范</h1><p><a target="_blank" rel="noopener" href="https://github.com/golang-standards/project-layout">https://github.com/golang-standards/project-layout</a> 项目总结了 Go 项目的布局，这是Go应用程序项目的基本布局，并不是Go核心开发团队<br>定义的官方标准；但是，这是Go生态系统中的一种常见的项目布局模式。</p>
           <!--noindex-->
             <div class="post-button">
-              <a class="btn" href="/2023/01/11/go/gomod/#more" rel="contents">
+              <a class="btn" href="/2023/01/11/go/golang%E9%A1%B9%E7%9B%AE%E7%BB%93%E6%9E%84%E8%A7%84%E8%8C%83/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+        
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://phpdi.github.io/2023/01/11/go/golang%E9%9D%A2%E8%AF%95%E9%A2%98/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/head.jpeg">
+      <meta itemprop="name" content="Chen Yu">
+      <meta itemprop="description" content="自律给我自由">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="goeoeo">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2023/01/11/go/golang%E9%9D%A2%E8%AF%95%E9%A2%98/" class="post-title-link" itemprop="url">golang面试题</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2023-01-11 22:59:23" itemprop="dateCreated datePublished" datetime="2023-01-11T22:59:23+08:00">2023-01-11</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2023-09-14 10:39:45" itemprop="dateModified" datetime="2023-09-14T10:39:45+08:00">2023-09-14</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/go/" itemprop="url" rel="index">
+                    <span itemprop="name">go</span>
+                  </a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h2 id="golang-调度"><a href="#golang-调度" class="headerlink" title="golang 调度"></a>golang 调度</h2><ul>
+<li>CSP(通信顺序进程)</li>
+<li>顺序一致性模型 <blockquote>
+<p>1.Go语言中，同一个Goroutine线程内部，顺序一致性内存模型是得到保证的;<br>  2.不同的Goroutine之间，并不满足顺序一致性内存模型，需要通过明确定义的同步事件来作为同步的参考</p>
+</blockquote></li></ul>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2023/01/11/go/golang%E9%9D%A2%E8%AF%95%E9%A2%98/#more" rel="contents">
                 阅读全文 &raquo;
               </a>
             </div>
@@ -475,7 +546,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://phpdi.github.io/2023/01/11/go/golang%E9%9D%A2%E8%AF%95%E9%A2%98/">
+    <link itemprop="mainEntityOfPage" href="https://phpdi.github.io/2023/01/11/go/gomod/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/head.jpeg">
@@ -489,7 +560,7 @@
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
           
-            <a href="/2023/01/11/go/golang%E9%9D%A2%E8%AF%95%E9%A2%98/" class="post-title-link" itemprop="url">golang面试题</a>
+            <a href="/2023/01/11/go/gomod/" class="post-title-link" itemprop="url">gomod</a>
         </h2>
 
         <div class="post-meta">
@@ -506,7 +577,7 @@
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2023-09-14 10:39:45" itemprop="dateModified" datetime="2023-09-14T10:39:45+08:00">2023-09-14</time>
+                <time title="修改时间：2023-09-14 10:40:47" itemprop="dateModified" datetime="2023-09-14T10:40:47+08:00">2023-09-14</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -531,14 +602,26 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <h2 id="golang-调度"><a href="#golang-调度" class="headerlink" title="golang 调度"></a>golang 调度</h2><ul>
-<li>CSP(通信顺序进程)</li>
-<li>顺序一致性模型 <blockquote>
-<p>1.Go语言中，同一个Goroutine线程内部，顺序一致性内存模型是得到保证的;<br>  2.不同的Goroutine之间，并不满足顺序一致性内存模型，需要通过明确定义的同步事件来作为同步的参考</p>
-</blockquote></li></ul>
+          <h2 id="环境变量GO111MODULE"><a href="#环境变量GO111MODULE" class="headerlink" title="环境变量GO111MODULE"></a>环境变量GO111MODULE</h2><ul>
+<li><p>GO111MODULE&#x3D;off </p>
+<blockquote>
+<p>go命令从不使用新模块支持。使用GOPATH模式(查找vendor目录和GOPATH路径下的依赖)</p>
+</blockquote>
+</li>
+<li><p>GO111MODULE&#x3D;on </p>
+<blockquote>
+<p>go命令开启模块支持,此时执行go get 命令,所有依赖都会下到$GOPATH&#x2F;pkg&#x2F;mod ,go依赖查找也只会到$GOPATH&#x2F;pkg&#x2F;mod进行查找</p>
+</blockquote>
+</li>
+<li><p>GO111MODULE&#x3D;auto </p>
+<blockquote>
+<p>默认值,go命令根据当前目录启用或禁用模块支持。仅当当前目录位于$GOPATH&#x2F;src之外并且其本身包含go.mod文件或位于包含go.mod文件的目录下时，才启用模块支持。简而言之,就是项目包含go.mod文件时会开启模块支持</p>
+</blockquote>
+</li>
+</ul>
           <!--noindex-->
             <div class="post-button">
-              <a class="btn" href="/2023/01/11/go/golang%E9%9D%A2%E8%AF%95%E9%A2%98/#more" rel="contents">
+              <a class="btn" href="/2023/01/11/go/gomod/#more" rel="contents">
                 阅读全文 &raquo;
               </a>
             </div>
@@ -812,89 +895,6 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://phpdi.github.io/2023/01/11/git/gitlab%E9%85%8D%E7%BD%AE%E4%BB%A3%E7%A0%81%E8%A6%86%E7%9B%96%E7%8E%87/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/head.jpeg">
-      <meta itemprop="name" content="Chen Yu">
-      <meta itemprop="description" content="自律给我自由">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="goeoeo">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2023/01/11/git/gitlab%E9%85%8D%E7%BD%AE%E4%BB%A3%E7%A0%81%E8%A6%86%E7%9B%96%E7%8E%87/" class="post-title-link" itemprop="url">gitlab配置代码覆盖率</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2023-01-11 22:59:23" itemprop="dateCreated datePublished" datetime="2023-01-11T22:59:23+08:00">2023-01-11</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2023-09-14 10:37:09" itemprop="dateModified" datetime="2023-09-14T10:37:09+08:00">2023-09-14</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/git/" itemprop="url" rel="index">
-                    <span itemprop="name">git</span>
-                  </a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <p>gitlab 中配置golang单元测试已经代码覆盖率</p>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2023/01/11/git/gitlab%E9%85%8D%E7%BD%AE%E4%BB%A3%E7%A0%81%E8%A6%86%E7%9B%96%E7%8E%87/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-        
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="https://phpdi.github.io/2023/01/11/git/git%E7%9B%B8%E5%85%B3%E9%97%AE%E9%A2%98/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -975,7 +975,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://phpdi.github.io/2023/01/11/git/%E5%9F%BA%E4%BA%8Egit_rebase%E7%9A%84%E5%BC%80%E5%8F%91%E6%B5%81%E7%A8%8B/">
+    <link itemprop="mainEntityOfPage" href="https://phpdi.github.io/2023/01/11/git/gitlab%E9%85%8D%E7%BD%AE%E4%BB%A3%E7%A0%81%E8%A6%86%E7%9B%96%E7%8E%87/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/head.jpeg">
@@ -989,7 +989,7 @@
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
           
-            <a href="/2023/01/11/git/%E5%9F%BA%E4%BA%8Egit_rebase%E7%9A%84%E5%BC%80%E5%8F%91%E6%B5%81%E7%A8%8B/" class="post-title-link" itemprop="url">基于git_rebase的开发流程</a>
+            <a href="/2023/01/11/git/gitlab%E9%85%8D%E7%BD%AE%E4%BB%A3%E7%A0%81%E8%A6%86%E7%9B%96%E7%8E%87/" class="post-title-link" itemprop="url">gitlab配置代码覆盖率</a>
         </h2>
 
         <div class="post-meta">
@@ -1006,7 +1006,7 @@
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2023-09-14 10:37:32" itemprop="dateModified" datetime="2023-09-14T10:37:32+08:00">2023-09-14</time>
+                <time title="修改时间：2023-09-14 10:37:09" itemprop="dateModified" datetime="2023-09-14T10:37:09+08:00">2023-09-14</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -1031,14 +1031,10 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <h2 id="分支"><a href="#分支" class="headerlink" title="分支"></a>分支</h2><ul>
-<li>master  #不能直接推送</li>
-<li>staging  #开发主流程分支</li>
-<li>self_branch #自己的开发分支，从staging 打出</li>
-</ul>
+          <p>gitlab 中配置golang单元测试已经代码覆盖率</p>
           <!--noindex-->
             <div class="post-button">
-              <a class="btn" href="/2023/01/11/git/%E5%9F%BA%E4%BA%8Egit_rebase%E7%9A%84%E5%BC%80%E5%8F%91%E6%B5%81%E7%A8%8B/#more" rel="contents">
+              <a class="btn" href="/2023/01/11/git/gitlab%E9%85%8D%E7%BD%AE%E4%BB%A3%E7%A0%81%E8%A6%86%E7%9B%96%E7%8E%87/#more" rel="contents">
                 阅读全文 &raquo;
               </a>
             </div>
@@ -1130,20 +1126,20 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">129</span>
+          <span class="site-state-item-count">130</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
             <a href="/categories/">
           
-        <span class="site-state-item-count">21</span>
+        <span class="site-state-item-count">22</span>
         <span class="site-state-item-name">分类</span></a>
       </div>
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">95</span>
+        <span class="site-state-item-count">96</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>

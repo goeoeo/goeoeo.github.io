@@ -210,6 +210,89 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://phpdi.github.io/2025/04/03/k8s/k8s%E4%B8%AD%E5%AF%B9grpc%E6%9C%8D%E5%8A%A1%E8%BF%9B%E8%A1%8C%E5%81%A5%E5%BA%B7%E6%A3%80%E6%9F%A5/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/head.jpeg">
+      <meta itemprop="name" content="Chen Yu">
+      <meta itemprop="description" content="自律给我自由">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="goeoeo">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2025/04/03/k8s/k8s%E4%B8%AD%E5%AF%B9grpc%E6%9C%8D%E5%8A%A1%E8%BF%9B%E8%A1%8C%E5%81%A5%E5%BA%B7%E6%A3%80%E6%9F%A5/" class="post-title-link" itemprop="url">k8s中对grpc服务进行健康检查</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2025-04-03 14:37:34 / 修改时间：15:00:58" itemprop="dateCreated datePublished" datetime="2025-04-03T14:37:34+08:00">2025-04-03</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/k8s/" itemprop="url" rel="index">
+                    <span itemprop="name">k8s</span>
+                  </a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="健康检查"><a href="#健康检查" class="headerlink" title="健康检查"></a>健康检查</h1><p>健康检查（Health Check）是一种用于探测应用或服务是否处于正常运行状态的机制，通常通过预设规则主动检测系统组件（如容器、微服务、数据库等）的可用性，是保障应用高可用性和自愈能力的核心手段。</p>
+<p>健康检查的目的：</p>
+<ol>
+<li>故障自动恢复：快速发现不可用实例并触发重启（如 Kubernetes 的 livenessProbe）。</li>
+<li>流量控制：避免将请求转发到未就绪或异常的服务（如 readinessProbe 控制 Pod 是否加入 Service Endpoints）。</li>
+<li>状态可视化：为监控系统（Prometheus、Zabbix）提供健康状态指标。</li>
+<li>优雅启停：确保应用完成初始化后再接收流量，关闭前完成未处理请求。</li></ol>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2025/04/03/k8s/k8s%E4%B8%AD%E5%AF%B9grpc%E6%9C%8D%E5%8A%A1%E8%BF%9B%E8%A1%8C%E5%81%A5%E5%BA%B7%E6%A3%80%E6%9F%A5/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+        
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="https://phpdi.github.io/2025/03/27/cloud/telegraf/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1062,132 +1145,6 @@
   
   
 
-        
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://phpdi.github.io/2024/07/29/python/python%E4%BD%BF%E7%94%A8ZeroMQ/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/head.jpeg">
-      <meta itemprop="name" content="Chen Yu">
-      <meta itemprop="description" content="自律给我自由">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="goeoeo">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2024/07/29/python/python%E4%BD%BF%E7%94%A8ZeroMQ/" class="post-title-link" itemprop="url">python使用ZeroMQ</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2024-07-29 14:34:03" itemprop="dateCreated datePublished" datetime="2024-07-29T14:34:03+08:00">2024-07-29</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2024-07-30 17:14:41" itemprop="dateModified" datetime="2024-07-30T17:14:41+08:00">2024-07-30</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/python/" itemprop="url" rel="index">
-                    <span itemprop="name">python</span>
-                  </a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h1 id="什么是-ZMQ"><a href="#什么是-ZMQ" class="headerlink" title="什么是 ZMQ"></a>什么是 ZMQ</h1><p>ZeroMQ 是一种通信框架，可以与多种编程语言和操作系统集成使用，但在具体实现中需要注意相应的语言和平台特性。<br>ZeroMQ 是一种高性能、异步的消息传递库，可以在多个进程,线程和计算机之间传递消息，支持多种协议和通信模式。<br>通信协议包含：进程内(线程)、进程间、机器间、广播，格式分别为：inproc:&#x2F;&#x2F;、ipc:&#x2F;&#x2F;、tcp:&#x2F;&#x2F;、pgm:&#x2F;&#x2F;。<br>模式包含：独占对模式（PAIR），请求&#x2F;应答(REQ&#x2F;REP)，请求&#x2F;应答代理(Router&#x2F;Dealer)，发布&#x2F;订阅(PUB&#x2F;SUB)，管道(PUSH&#x2F;PULL)</p>
-<h1 id="ZMQ-基本概念"><a href="#ZMQ-基本概念" class="headerlink" title="ZMQ 基本概念"></a>ZMQ 基本概念</h1><ul>
-<li>Socket（套接字）：zmq的核心概念之一，它表示一个进程中用于发送或接收消息的一端。zmq中有多种不同类型的socket，每种类型都有不同的行为和使用场景。</li>
-<li>Message（消息）：zmq中的基本数据单位，它可以是任何形式的数据，例如字符串、字节序列、JSON对象等。zmq的消息传递是基于异步的消息队列实现的，发送方发送消息到队列中，接收方从队列中获取消息。</li>
-<li>Context（上下文）：zmq中所有socket的创建都需要一个context对象，它负责管理所有socket的生命周期和线程安全性。</li>
-<li>Pattern（模式）：zmq中有多种不同类型的socket，每种类型都有不同的通信模式，例如：REQ&#x2F;REP、PUB&#x2F;SUB、PUSH&#x2F;PULL等。</li>
-</ul>
-<h2 id="Socket（套接字）"><a href="#Socket（套接字）" class="headerlink" title="Socket（套接字）"></a>Socket（套接字）</h2><p>Socket 是 ZeroMQ 的核心概念，它表示一种通信模式和协议，用于在进程或计算机之间传递消息</p>
-<h2 id="Context"><a href="#Context" class="headerlink" title="Context"></a>Context</h2><p>Context 是 ZeroMQ 中用于创建和管理 Socket 和线程的对象，它包含全局状态和运行环境。在一个应用中，通常只需要创建一个 Context 对象，然后通过它创建和管理多个 Socket 和线程。</p>
-<h2 id="Message"><a href="#Message" class="headerlink" title="Message"></a>Message</h2><p>Message 是 ZeroMQ 中用于传递数据的基本单位，它可以包含多个帧（Frame），每个帧都是一个二进制数据块，最大长度为 2^63 字节。消息是 ZeroMQ 的基本数据类型，可以在 Socket 之间传递和交换。</p>
-<h2 id="Endpoint"><a href="#Endpoint" class="headerlink" title="Endpoint"></a>Endpoint</h2><p>Endpoint 是 ZeroMQ 中表示网络地址的概念，它由协议、IP 地址和端口号组成，用于标识 Socket 的网络位置。Endpoint 格式根据协议的不同而不同，例如 TCP 协议的 Endpoint 格式为 “tcp:&#x2F;&#x2F;IP:Port”，in-process 协议的 Endpoint 格式为 “inproc:&#x2F;&#x2F;Name”。</p>
-<h2 id="基本通信流程"><a href="#基本通信流程" class="headerlink" title="基本通信流程"></a>基本通信流程</h2><ol>
-<li>创建 Context 对象，用于管理 Socket 和线程。</li>
-<li>创建 Socket 对象，选择合适的通信模式和协议。</li>
-<li>绑定或连接 Socket，指定网络地址和端口号。</li>
-<li>发送消息，使用 send() 方法将消息发送给远程 Socket。</li>
-<li>接收消息，使用 recv() 方法从本地 Socket 接收消息。</li>
-<li>关闭 Socket 和 Context 对象，释放资源。</li>
-</ol>
-<h1 id="通信模式"><a href="#通信模式" class="headerlink" title="通信模式"></a>通信模式</h1><h2 id="REQ-REP"><a href="#REQ-REP" class="headerlink" title="REQ&#x2F;REP"></a>REQ&#x2F;REP</h2><p>REQ&#x2F;REP 模式是一种简单的请求-响应模式，用于一对一的通信。在该模式下，客户端发送请求消息给服务端，服务端接收并处理请求，然后发送响应消息给客户端。<br>该模式的优点：简单、易于理解和使用，缺点是单向流量、同步阻塞和无法扩展。在高并发和高可用性的场景下，不适合使用该模式。  </p>
-<h2 id="PUB-SUB"><a href="#PUB-SUB" class="headerlink" title="PUB&#x2F;SUB"></a>PUB&#x2F;SUB</h2><p>PUB&#x2F;SUB 模式是一种发布-订阅模式，用于一对多的通信。在该模式下，发布者（PUB）将消息广播给多个订阅者（SUB），订阅者接收并处理消息。<br>该模式的优点是灵活、可扩展和异步非阻塞，缺点是无法保证消息的可靠性和顺序性。在需要高可靠性和消息顺序的场景下，不适合使用该模式。  </p>
-<h2 id="PUSH-PULL"><a href="#PUSH-PULL" class="headerlink" title="PUSH&#x2F;PULL"></a>PUSH&#x2F;PULL</h2><p>PUSH&#x2F;PULL 模式是一种多对多的通信模式，用于推-拉模式的数据传输。在该模式下，Pusher（PUSH）将消息推送给多个 Puller（PULL），Puller 按顺序接收消息并处理。<br>该模式的优点是高效、可扩展和异步非阻塞，缺点是无法保证消息的可靠性和顺序性。在需要高可靠性和消息顺序的场景下，不适合使用该模式。  </p>
-<h2 id="PAIR"><a href="#PAIR" class="headerlink" title="PAIR"></a>PAIR</h2><p>PAIR 模式是一种简单的对等通信模式，用于一对一的通信。在该模式下，两个 Socket 直接互相发送消息，没有中间的调度器。<br>该模式的优点是简单、高效、可靠，缺点是无法扩展。在需要多对多的通信或需要扩展的场景下，不适合使用该模式。  </p>
-<h2 id="DEALER-ROUTER"><a href="#DEALER-ROUTER" class="headerlink" title="DEALER&#x2F;ROUTER"></a>DEALER&#x2F;ROUTER</h2><p>EALER&#x2F;ROUTER 模式是一种分布式哈希表模式，通常用于多个进程之间的负载均衡和故障转移。DEALER Socket 充当工作线程，ROUTER Socket 充当调度器，将工作任务平均地分配给每个工作线程，并在某个工作线程出现故障时自动重新分配任务。</p>
-<p>该模式的优点是可扩展、高效、可靠和动态故障转移，缺点是复杂度高、消息顺序性难以保证。在需要动态负载均衡和高可用性的场景下，适合使用该模式。  </p>
-<h1 id="ZeroMQ-的高级特性"><a href="#ZeroMQ-的高级特性" class="headerlink" title="ZeroMQ 的高级特性"></a>ZeroMQ 的高级特性</h1><ul>
-<li>消息队列 ZeroMQ 支持基于 Socket 的消息队列，可以存储和缓冲消息，实现异步处理和流量控制。消息队列可以通过设置 Socket 的高水位线和低水位线来控制。</li>
-<li>消息过滤 ZeroMQ 支持基于消息内容的订阅和过滤，可以根据消息的标签、类型和内容进行订阅和过滤。通过设置 Socket 的过滤规则，可以实现消息的精确过滤和路由。</li>
-<li>多路复用 ZeroMQ 支持多路复用（Multiplexing），可以在单个 Socket 上实现多个通信模式和协议的混合使用。通过使用不同的消息头和消息体，可以实现多种通信模式的无缝切换和共存。</li>
-<li>安全性 ZeroMQ 支持基于 SSL&#x2F;TLS 的加密和认证，可以保证通信的安全性和机密性。通过使用 CurveZMQ 或 GSSAPI 机制，可以实现更高级的身份验证和加密算法。</li>
-<li>多线程支持 支持多线程并发操作，可以实现多个线程同时处理不同的消息，并避免线程间的竞争和阻塞。</li>
-<li>异步处理 支持异步消息处理，可以实现消息的快速发送和接收，避免线程的阻塞和等待。</li>
-<li>数据序列化 ZeroMQ 支持多种数据序列化方式，如 JSON、MessagePack、Protobuf 等，可以实现数据的高效传输和存储。</li>
-</ul>
-<h1 id="ZMQ的API"><a href="#ZMQ的API" class="headerlink" title="ZMQ的API"></a>ZMQ的API</h1><p>ZMQ的API主要分为两类：一类是基于socket的API，它提供了socket的创建、配置、发送和接收等功能；另一类是基于context的API，它提供了context的创建和销毁等功能。</p>
-<h2 id="Socket-API"><a href="#Socket-API" class="headerlink" title="Socket API"></a>Socket API</h2><ul>
-<li>zmq_socket：创建一个socket，需要指定socket类型和context对象。</li>
-<li>zmq_bind：将socket绑定到一个地址上，使得其他进程可以通过该地址与此socket进行通信。</li>
-<li>zmq_connect：将socket连接到一个地址上，使得此socket可以与该地址对应的socket进行通信。</li>
-<li>zmq_send：将一个消息发送到指定的socket上。</li>
-<li>zmq_recv：从指定的socket上接收一个消息。</li>
-<li>zmq_setsockopt：设置socket的选项，例如设置超时时间、设置是否启用心跳检测等。</li>
-<li>zmq_getsockopt：获取socket的选项值。</li>
-<li>zmq_close：关闭socket。</li>
-</ul>
-<h2 id="Context-API"><a href="#Context-API" class="headerlink" title="Context API"></a>Context API</h2><ul>
-<li>zmq_ctx_new：创建一个新的context对象。</li>
-<li>zmq_ctx_term：销毁一个context对象。</li>
-<li>zmq_ctx_set：设置context的选项，例如设置最大线程数、设置IO线程数等。</li>
-<li>zmq_ctx_get：获取context的选项值</li>
-</ul>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
   </div>
 
   
@@ -1260,20 +1217,20 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">129</span>
+          <span class="site-state-item-count">130</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
             <a href="/categories/">
           
-        <span class="site-state-item-count">21</span>
+        <span class="site-state-item-count">22</span>
         <span class="site-state-item-name">分类</span></a>
       </div>
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">95</span>
+        <span class="site-state-item-count">96</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
